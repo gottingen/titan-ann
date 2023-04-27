@@ -1,0 +1,94 @@
+#
+# Copyright 2023 The Tann Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+load(
+    "//:copts/configure_copts.bzl",
+    "TURBO_DEFAULT_COPTS",
+    "TURBO_DEFAULT_LINKOPTS",
+    "TURBO_TEST_COPTS",
+)
+package(default_visibility = ["//visibility:public"])
+LIBTEXT_ALL_SRC = [
+    "common/prefix_map.cc",
+    "common/prefix_matcher.cc",
+    "normalize/emoji_filter.cc",
+    "normalize/emoji_unicode_alias_codes_en.cc",
+    "normalize/emoji_unicode_codes_en.cc",
+        ]
+
+TANN_HEADER = [
+    "aligned_file_reader.h",
+    "cached_io.h",
+    "cosine_similarity.h",
+    "exceptions.h",
+    "locking.h",
+    "math_utils.h",
+    "natural_number_set.h",
+    "partition.h",
+    "pq.h",
+    "timer.h",
+    "windows_customizations.h",
+    "ann_exception.h",
+    "common_includes.h",
+    "disk_utils.h",
+    "index.h",
+    "logger.h",
+    "memory_mapper.h",
+    "neighbor.h",
+    "percentile_stats.h",
+    "scratch.h",
+    "utils.h",
+    "windows_slim_lock.h",
+    "boost_dynamic_bitset_fwd.h",
+    "concurrent_queue.h",
+    "distance.h",
+    "linux_aligned_file_reader.h",
+    "logger_impl.h",
+    "natural_number_map.h",
+    "parameters.h",
+    "pq_flash_index.h",
+    "simd_utils.h",
+    "windows_aligned_file_reader.h",
+]
+
+TANN_SRC  = [
+            "ann_exception.cc",
+            "disk_utils.cc",
+            "distance.cc",
+            "index.cc",
+            "linux_aligned_file_reader.cc",
+            "logger.cc",
+            "math_utils.cc",
+            "memory_mapper.cc",
+            "natural_number_map.cc",
+            "natural_number_set.cc",
+            "partition.cc",
+            "pq.cc",
+            "pq_flash_index.cc",
+            "scratch.cc",
+            "utils.cc",
+            "windows_aligned_file_reader.cc",]
+
+cc_library(
+    name = "tann",
+    srcs = TANN_SRC,
+    hdrs = TANN_HEADER,
+    copts = TURBO_DEFAULT_COPTS,
+    linkopts = TURBO_DEFAULT_LINKOPTS,
+    includes = ["@com_gottingen_turbo//turbo:turbo"],
+    deps = ["@com_gottingen_turbo//turbo:turbo", "//thirdparty/mkl:mkl"]
+)
+
