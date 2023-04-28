@@ -23,10 +23,10 @@
 
 namespace tann {
 #ifdef _WINDOWS
-  using non_recursive_mutex = windows_exclusive_slim_lock;
-  using LockGuard = windows_exclusive_slim_lock_guard;
+    using non_recursive_mutex = windows_exclusive_slim_lock;
+    using LockGuard = windows_exclusive_slim_lock_guard;
 #else
-  using non_recursive_mutex = std::mutex;
-  using LockGuard = std::lock_guard<non_recursive_mutex>;
+    using non_recursive_mutex = std::mutex;
+    using LockGuard = std::lock_guard<non_recursive_mutex>;
 #endif
 }  // namespace tann

@@ -126,7 +126,7 @@ io_context_t &LinuxAlignedFileReader::get_ctx() {
     std::unique_lock<std::mutex> lk(ctx_mut);
     // perform checks only in DEBUG mode
     if (ctx_map.find(std::this_thread::get_id()) == ctx_map.end()) {
-        TURBO_LOG(ERROR)<< "bad thread access; returning -1 as io_context_t";
+        TURBO_LOG(ERROR) << "bad thread access; returning -1 as io_context_t";
         return this->bad_ctx;
     } else {
         return ctx_map[std::this_thread::get_id()];

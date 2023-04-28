@@ -15,10 +15,8 @@
 // limitations under the License.
 //
 
+#include "tann/scratch.h"
 #include <vector>
-#include <boost/dynamic_bitset.hpp>
-
-#include "scratch.h"
 
 namespace tann {
   //
@@ -49,7 +47,7 @@ namespace tann {
       _pq_scratch = nullptr;
 
     _occlude_factor.reserve(maxc);
-    _inserted_into_pool_bs = new boost::dynamic_bitset<>();
+    _inserted_into_pool_bs = new turbo::dynamic_bitset<>();
     _id_scratch.reserve(std::ceil(1.5 * GRAPH_SLACK_FACTOR * _R));
     _dist_scratch.reserve(std::ceil(1.5 * GRAPH_SLACK_FACTOR * _R));
 

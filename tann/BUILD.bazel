@@ -43,7 +43,6 @@ TANN_HEADER = [
     "scratch.h",
     "utils.h",
     "windows_slim_lock.h",
-    "boost_dynamic_bitset_fwd.h",
     "concurrent_queue.h",
     "distance.h",
     "linux_aligned_file_reader.h",

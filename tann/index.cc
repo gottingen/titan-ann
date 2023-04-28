@@ -19,10 +19,10 @@
 #include <omp.h>
 
 #include "turbo/container/flat_hash_set.h"
-#include "boost/dynamic_bitset.hpp"
+#include "turbo/container/dynamic_bitset.h"
 
-#include "memory_mapper.h"
-#include "timer.h"
+#include "tann/memory_mapper.h"
+#include "tann/timer.h"
 #include "turbo/platform/port.h"
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && \
     defined(TANN_BUILD)
@@ -32,7 +32,7 @@
 #ifdef _WINDOWS
 #include <xmmintrin.h>
 #endif
-#include "index.h"
+#include "tann/index.h"
 
 #define MAX_POINTS_FOR_USING_BITSET 10000000
 
@@ -823,7 +823,7 @@ namespace tann {
     best_L_nodes.reserve(Lsize);
     turbo::flat_hash_set<unsigned> &inserted_into_pool_rs =
         scratch->inserted_into_pool_rs();
-    boost::dynamic_bitset<> &inserted_into_pool_bs =
+    turbo::dynamic_bitset<> &inserted_into_pool_bs =
         scratch->inserted_into_pool_bs();
     std::vector<unsigned> &id_scratch = scratch->id_scratch();
     std::vector<float>    &dist_scratch = scratch->dist_scratch();
@@ -2794,7 +2794,7 @@ namespace tann {
   void Index<T, TagT, LabelT>::count_nodes_at_bfs_levels() {
     std::unique_lock<std::shared_timed_mutex> ul(_update_lock);
 
-    boost::dynamic_bitset<> visited(_max_points + _num_frozen_pts);
+    turbo::dynamic_bitset<> visited(_max_points + _num_frozen_pts);
 
     size_t MAX_BFS_LEVELS = 32;
     auto   bfs_sets = new turbo::flat_hash_set<unsigned>[MAX_BFS_LEVELS];
@@ -2868,7 +2868,7 @@ namespace tann {
     NeighborPriorityQueue retset(L);
     std::vector<unsigned> init_ids(L);
 
-    boost::dynamic_bitset<> flags{_nd, 0};
+    turbo::dynamic_bitset<> flags{_nd, 0};
     unsigned                tmp_l = 0;
     unsigned               *neighbors =
         (unsigned *) (_opt_graph + _node_size * _start + _data_len);
