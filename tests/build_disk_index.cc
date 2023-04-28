@@ -25,7 +25,6 @@
 #include "tann/partition.h"
 
 namespace po = boost::program_options;
-
 int main(int argc, char **argv) {
     std::string data_type, dist_fn, data_path, index_path_prefix, label_file,
             universal_label, label_type;
