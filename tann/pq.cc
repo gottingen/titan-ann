@@ -944,10 +944,10 @@ namespace tann {
 #endif
       TURBO_LOG(INFO) << ".done." << std::endl;
     }
-// Gopal. Splitting diskann_dll into separate DLLs for search and build.
+// Gopal. Splitting tann_dll into separate DLLs for search and build.
 // This code should only be available in the "build" DLL.
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && \
-    defined(DISKANN_BUILD)
+    defined(TANN_BUILD)
     MallocExtension::instance()->ReleaseFreeMemory();
 #endif
     compressed_file_writer.close();

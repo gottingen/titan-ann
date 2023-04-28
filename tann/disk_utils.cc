@@ -18,7 +18,7 @@
 #include "common_includes.h"
 
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && \
-    defined(DISKANN_BUILD)
+    defined(TANN_BUILD)
 #include "gperftools/malloc_extension.h"
 #endif
 
@@ -793,7 +793,7 @@ namespace tann {
         return 0;
     }
 
-    // General purpose support for DiskANN interface
+    // General purpose support for TANN interface
 
     // optimizes the beamwidth to maximize QPS for a given L_search subject to
     // 99.9 latency not blowing up
@@ -902,7 +902,7 @@ namespace tann {
         size_t actual_file_size = get_file_size(mem_index_file);
         TURBO_LOG(INFO) << "Vamana index file size=" << actual_file_size;
         std::ifstream vamana_reader(mem_index_file, std::ios::binary);
-        cached_ofstream diskann_writer(output_file, write_blk_size);
+        cached_ofstream tann_writer(output_file, write_blk_size);
 
         // metadata: width, medoid
         unsigned width_u32, medoid_u32;
@@ -976,7 +976,7 @@ namespace tann {
         }
         output_file_meta.push_back(disk_index_file_size);
 
-        diskann_writer.write(sector_buf.get(), SECTOR_LEN);
+        tann_writer.write(sector_buf.get(), SECTOR_LEN);
 
         std::unique_ptr<T[]> cur_node_coords = std::make_unique<T[]>(ndims_64);
         TURBO_LOG(INFO) << "# sectors: " << n_sectors;
@@ -1027,7 +1027,7 @@ namespace tann {
                 cur_node_id++;
             }
             // flush sector to disk
-            diskann_writer.write(sector_buf.get(), SECTOR_LEN);
+            tann_writer.write(sector_buf.get(), SECTOR_LEN);
         }
         if (append_reorder_data) {
             TURBO_LOG(INFO) << "Index written. Appending reorder data...";
@@ -1054,10 +1054,10 @@ namespace tann {
                            vec_len);
                 }
                 // flush sector to disk
-                diskann_writer.write(sector_buf.get(), SECTOR_LEN);
+                tann_writer.write(sector_buf.get(), SECTOR_LEN);
             }
         }
-        diskann_writer.close();
+        tann_writer.close();
         tann::save_bin<_u64>(output_file, output_file_meta.data(),
                              output_file_meta.size(), 1, 0);
         TURBO_LOG(INFO) << "Output disk index file written to " << output_file;
@@ -1096,7 +1096,7 @@ namespace tann {
         if (!std::is_same<T, float>::value &&
             compareMetric == tann::Metric::INNER_PRODUCT) {
             std::stringstream stream;
-            stream << "DiskANN currently only supports floating point data for Max "
+            stream << "tann currently only supports floating point data for Max "
                       "Inner Product Search. "
                    << std::endl;
             throw tann::ANNException(stream.str(), -1);
@@ -1259,10 +1259,10 @@ namespace tann {
                                    num_pq_chunks, use_opq);
         TURBO_LOG(INFO) << timer.elapsed_seconds_for_step("generating quantized data");
 
-// Gopal. Splitting diskann_dll into separate DLLs for search and build.
+// Gopal. Splitting tann_dll into separate DLLs for search and build.
 // This code should only be available in the "build" DLL.
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && \
-    defined(DISKANN_BUILD)
+    defined(TANN_BUILD)
         MallocExtension::instance()->ReleaseFreeMemory();
 #endif
 

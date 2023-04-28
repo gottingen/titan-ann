@@ -853,7 +853,7 @@ namespace tann {
                                   __LINE__);
     }
 
-    // setting up concept of frozen points in disk index for streaming-DiskANN
+    // setting up concept of frozen points in disk index for streaming-TANN
     READ_U64(index_metadata, this->num_frozen_points);
     _u64 file_frozen_id;
     READ_U64(index_metadata, file_frozen_id);

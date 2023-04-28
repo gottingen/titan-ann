@@ -26,7 +26,7 @@
 namespace tann {
   // A map whose key is a natural number (from 0 onwards) and maps to a value.
   // Made as both memory and performance efficient map for scenario such as
-  // DiskANN location-to-tag map. There, the pool of numbers is consecutive from
+  // TANN location-to-tag map. There, the pool of numbers is consecutive from
   // zero to some max value, and it's expected that most if not all keys from 0
   // up to some current maximum will be present in the map. The memory usage of
   // the map is determined by the largest inserted key since it uses vector as a
@@ -96,7 +96,7 @@ namespace tann {
     //
     // Use a pointer here to allow for forward declaration of dynamic_bitset
     // in public headers to avoid making boost a dependency for clients
-    // of DiskANN.
+    // of TANN.
     std::unique_ptr<boost::dynamic_bitset<>> _values_bitset;
   };
 }  // namespace tann

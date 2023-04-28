@@ -408,7 +408,7 @@ generate_label_specific_vector_files_compat(
 
 /*
  * Using passed in parameters and files generated from step 3,
- * builds a vanilla diskANN index for each label.
+ * builds a vanilla tann index for each label.
  *
  * Each index is saved under the following path:
  *  final_index_path_prefix + "_" + label
@@ -498,7 +498,7 @@ load_label_index_return_values load_label_index(path label_index_path,
 
 /*
  * Custom index save to write the in-memory index to disk.
- * Also writes required files for diskANN API -
+ * Also writes required files for tann API -
  *  1. labels_to_medoids
  *  2. universal_label
  *  3. data (redundant for static indices)
@@ -713,7 +713,7 @@ void prune_and_save(path final_index_path_prefix, path full_index_path_prefix,
  * In the process of creating the stitched index, some temporary artifacts are
  * created:
  * 1. the separate bin files for each labels' points
- * 2. the separate diskANN indices built for each label
+ * 2. the separate tann indices built for each label
  * 3. the '.data' file created while generating the indices
  */
 void clean_up_artifacts(path input_data_path, path final_index_path_prefix,
@@ -798,7 +798,7 @@ int main(int argc, char **argv) {
       throw;
 #endif
 
-    // 4. for each created data file, create a vanilla diskANN index
+    // 4. for each created data file, create a vanilla tann index
     if (data_type == "uint8")
         generate_label_indices<uint8_t>(input_data_path, final_index_path_prefix,
                                         all_labels, R, L, alpha, num_threads);

@@ -26,7 +26,7 @@
 #include "turbo/container/flat_hash_map.h"
 
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && \
-    defined(DISKANN_BUILD)
+    defined(TANN_BUILD)
 #include "gperftools/malloc_extension.h"
 #endif
 

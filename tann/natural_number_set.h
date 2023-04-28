@@ -58,7 +58,7 @@ namespace tann {
     //
     // Use a pointer here to allow for forward declaration of dynamic_bitset
     // in public headers to avoid making boost a dependency for clients
-    // of DiskANN.
+    // of TANN.
     std::unique_ptr<boost::dynamic_bitset<>> _values_bitset;
   };
 }  // namespace tann

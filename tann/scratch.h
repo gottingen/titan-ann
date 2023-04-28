@@ -143,7 +143,7 @@ namespace tann {
 
         // Use a pointer here to allow for forward declaration of dynamic_bitset
         // in public headers to avoid making boost a dependency for clients
-        // of DiskANN.
+        // of TANN.
         boost::dynamic_bitset<> *_inserted_into_pool_bs;
 
         // _id_scratch.size() must be > R*GRAPH_SLACK_FACTOR for iterate_to_fp
