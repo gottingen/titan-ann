@@ -1335,109 +1335,109 @@ namespace tann {
     return 0;
   }
 
-  template DISKANN_DLLEXPORT void create_disk_layout<int8_t>(
+  template TURBO_DLL void create_disk_layout<int8_t>(
       const std::string base_file, const std::string mem_index_file,
       const std::string output_file, const std::string reorder_data_file);
-  template DISKANN_DLLEXPORT void create_disk_layout<uint8_t>(
+  template TURBO_DLL void create_disk_layout<uint8_t>(
       const std::string base_file, const std::string mem_index_file,
       const std::string output_file, const std::string reorder_data_file);
-  template DISKANN_DLLEXPORT void create_disk_layout<float>(
+  template TURBO_DLL void create_disk_layout<float>(
       const std::string base_file, const std::string mem_index_file,
       const std::string output_file, const std::string reorder_data_file);
 
-  template DISKANN_DLLEXPORT int8_t *load_warmup<int8_t>(
+  template TURBO_DLL int8_t *load_warmup<int8_t>(
       const std::string &cache_warmup_file, uint64_t &warmup_num,
       uint64_t warmup_dim, uint64_t warmup_aligned_dim);
-  template DISKANN_DLLEXPORT uint8_t *load_warmup<uint8_t>(
+  template TURBO_DLL uint8_t *load_warmup<uint8_t>(
       const std::string &cache_warmup_file, uint64_t &warmup_num,
       uint64_t warmup_dim, uint64_t warmup_aligned_dim);
-  template DISKANN_DLLEXPORT float *load_warmup<float>(
+  template TURBO_DLL float *load_warmup<float>(
       const std::string &cache_warmup_file, uint64_t &warmup_num,
       uint64_t warmup_dim, uint64_t warmup_aligned_dim);
 
 #ifdef EXEC_ENV_OLS
-  template DISKANN_DLLEXPORT int8_t *load_warmup<int8_t>(
+  template TURBO_DLL int8_t *load_warmup<int8_t>(
       MemoryMappedFiles &files, const std::string &cache_warmup_file,
       uint64_t &warmup_num, uint64_t warmup_dim, uint64_t warmup_aligned_dim);
-  template DISKANN_DLLEXPORT uint8_t *load_warmup<uint8_t>(
+  template TURBO_DLL uint8_t *load_warmup<uint8_t>(
       MemoryMappedFiles &files, const std::string &cache_warmup_file,
       uint64_t &warmup_num, uint64_t warmup_dim, uint64_t warmup_aligned_dim);
-  template DISKANN_DLLEXPORT float *load_warmup<float>(
+  template TURBO_DLL float *load_warmup<float>(
       MemoryMappedFiles &files, const std::string &cache_warmup_file,
       uint64_t &warmup_num, uint64_t warmup_dim, uint64_t warmup_aligned_dim);
 #endif
 
-  template DISKANN_DLLEXPORT uint32_t optimize_beamwidth<int8_t, uint32_t>(
+  template TURBO_DLL uint32_t optimize_beamwidth<int8_t, uint32_t>(
       std::unique_ptr<tann::PQFlashIndex<int8_t, uint32_t>> &pFlashIndex,
       int8_t *tuning_sample, _u64 tuning_sample_num,
       _u64 tuning_sample_aligned_dim, uint32_t L, uint32_t nthreads,
       uint32_t start_bw);
-  template DISKANN_DLLEXPORT uint32_t optimize_beamwidth<uint8_t, uint32_t>(
+  template TURBO_DLL uint32_t optimize_beamwidth<uint8_t, uint32_t>(
       std::unique_ptr<tann::PQFlashIndex<uint8_t, uint32_t>> &pFlashIndex,
       uint8_t *tuning_sample, _u64 tuning_sample_num,
       _u64 tuning_sample_aligned_dim, uint32_t L, uint32_t nthreads,
       uint32_t start_bw);
-  template DISKANN_DLLEXPORT uint32_t optimize_beamwidth<float, uint32_t>(
+  template TURBO_DLL uint32_t optimize_beamwidth<float, uint32_t>(
       std::unique_ptr<tann::PQFlashIndex<float, uint32_t>> &pFlashIndex,
       float *tuning_sample, _u64 tuning_sample_num,
       _u64 tuning_sample_aligned_dim, uint32_t L, uint32_t nthreads,
       uint32_t start_bw);
 
-  template DISKANN_DLLEXPORT uint32_t optimize_beamwidth<int8_t, uint16_t>(
+  template TURBO_DLL uint32_t optimize_beamwidth<int8_t, uint16_t>(
       std::unique_ptr<tann::PQFlashIndex<int8_t, uint16_t>> &pFlashIndex,
       int8_t *tuning_sample, _u64 tuning_sample_num,
       _u64 tuning_sample_aligned_dim, uint32_t L, uint32_t nthreads,
       uint32_t start_bw);
-  template DISKANN_DLLEXPORT uint32_t optimize_beamwidth<uint8_t, uint16_t>(
+  template TURBO_DLL uint32_t optimize_beamwidth<uint8_t, uint16_t>(
       std::unique_ptr<tann::PQFlashIndex<uint8_t, uint16_t>> &pFlashIndex,
       uint8_t *tuning_sample, _u64 tuning_sample_num,
       _u64 tuning_sample_aligned_dim, uint32_t L, uint32_t nthreads,
       uint32_t start_bw);
-  template DISKANN_DLLEXPORT uint32_t optimize_beamwidth<float, uint16_t>(
+  template TURBO_DLL uint32_t optimize_beamwidth<float, uint16_t>(
       std::unique_ptr<tann::PQFlashIndex<float, uint16_t>> &pFlashIndex,
       float *tuning_sample, _u64 tuning_sample_num,
       _u64 tuning_sample_aligned_dim, uint32_t L, uint32_t nthreads,
       uint32_t start_bw);
 
-  template DISKANN_DLLEXPORT int build_disk_index<int8_t, uint32_t>(
+  template TURBO_DLL int build_disk_index<int8_t, uint32_t>(
       const char *dataFilePath, const char *indexFilePath,
       const char *indexBuildParameters, tann::Metric compareMetric,
       bool use_opq, bool use_filters, const std::string &label_file,
       const std::string &universal_label, const _u32 filter_threshold,
       const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_disk_index<uint8_t, uint32_t>(
+  template TURBO_DLL int build_disk_index<uint8_t, uint32_t>(
       const char *dataFilePath, const char *indexFilePath,
       const char *indexBuildParameters, tann::Metric compareMetric,
       bool use_opq, bool use_filters, const std::string &label_file,
       const std::string &universal_label, const _u32 filter_threshold,
       const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_disk_index<float, uint32_t>(
+  template TURBO_DLL int build_disk_index<float, uint32_t>(
       const char *dataFilePath, const char *indexFilePath,
       const char *indexBuildParameters, tann::Metric compareMetric,
       bool use_opq, bool use_filters, const std::string &label_file,
       const std::string &universal_label, const _u32 filter_threshold,
       const _u32 Lf);
   // LabelT = uint16
-  template DISKANN_DLLEXPORT int build_disk_index<int8_t, uint16_t>(
+  template TURBO_DLL int build_disk_index<int8_t, uint16_t>(
       const char *dataFilePath, const char *indexFilePath,
       const char *indexBuildParameters, tann::Metric compareMetric,
       bool use_opq, bool use_filters, const std::string &label_file,
       const std::string &universal_label, const _u32 filter_threshold,
       const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_disk_index<uint8_t, uint16_t>(
+  template TURBO_DLL int build_disk_index<uint8_t, uint16_t>(
       const char *dataFilePath, const char *indexFilePath,
       const char *indexBuildParameters, tann::Metric compareMetric,
       bool use_opq, bool use_filters, const std::string &label_file,
       const std::string &universal_label, const _u32 filter_threshold,
       const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_disk_index<float, uint16_t>(
+  template TURBO_DLL int build_disk_index<float, uint16_t>(
       const char *dataFilePath, const char *indexFilePath,
       const char *indexBuildParameters, tann::Metric compareMetric,
       bool use_opq, bool use_filters, const std::string &label_file,
       const std::string &universal_label, const _u32 filter_threshold,
       const _u32 Lf);
 
-  template DISKANN_DLLEXPORT int build_merged_vamana_index<int8_t, uint32_t>(
+  template TURBO_DLL int build_merged_vamana_index<int8_t, uint32_t>(
       std::string base_file, tann::Metric compareMetric, unsigned L,
       unsigned R, double sampling_rate, double ram_budget,
       std::string mem_index_path, std::string medoids_path,
@@ -1445,7 +1445,7 @@ namespace tann {
       bool use_filters, const std::string &label_file,
       const std::string &labels_to_medoids_file,
       const std::string &universal_label, const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_merged_vamana_index<float, uint32_t>(
+  template TURBO_DLL int build_merged_vamana_index<float, uint32_t>(
       std::string base_file, tann::Metric compareMetric, unsigned L,
       unsigned R, double sampling_rate, double ram_budget,
       std::string mem_index_path, std::string medoids_path,
@@ -1453,7 +1453,7 @@ namespace tann {
       bool use_filters, const std::string &label_file,
       const std::string &labels_to_medoids_file,
       const std::string &universal_label, const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_merged_vamana_index<uint8_t, uint32_t>(
+  template TURBO_DLL int build_merged_vamana_index<uint8_t, uint32_t>(
       std::string base_file, tann::Metric compareMetric, unsigned L,
       unsigned R, double sampling_rate, double ram_budget,
       std::string mem_index_path, std::string medoids_path,
@@ -1462,7 +1462,7 @@ namespace tann {
       const std::string &labels_to_medoids_file,
       const std::string &universal_label, const _u32 Lf);
   // Label=16_t
-  template DISKANN_DLLEXPORT int build_merged_vamana_index<int8_t, uint16_t>(
+  template TURBO_DLL int build_merged_vamana_index<int8_t, uint16_t>(
       std::string base_file, tann::Metric compareMetric, unsigned L,
       unsigned R, double sampling_rate, double ram_budget,
       std::string mem_index_path, std::string medoids_path,
@@ -1470,7 +1470,7 @@ namespace tann {
       bool use_filters, const std::string &label_file,
       const std::string &labels_to_medoids_file,
       const std::string &universal_label, const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_merged_vamana_index<float, uint16_t>(
+  template TURBO_DLL int build_merged_vamana_index<float, uint16_t>(
       std::string base_file, tann::Metric compareMetric, unsigned L,
       unsigned R, double sampling_rate, double ram_budget,
       std::string mem_index_path, std::string medoids_path,
@@ -1478,7 +1478,7 @@ namespace tann {
       bool use_filters, const std::string &label_file,
       const std::string &labels_to_medoids_file,
       const std::string &universal_label, const _u32 Lf);
-  template DISKANN_DLLEXPORT int build_merged_vamana_index<uint8_t, uint16_t>(
+  template TURBO_DLL int build_merged_vamana_index<uint8_t, uint16_t>(
       std::string base_file, tann::Metric compareMetric, unsigned L,
       unsigned R, double sampling_rate, double ram_budget,
       std::string mem_index_path, std::string medoids_path,

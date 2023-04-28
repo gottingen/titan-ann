@@ -21,13 +21,6 @@ load(
     "TURBO_TEST_COPTS",
 )
 package(default_visibility = ["//visibility:public"])
-LIBTEXT_ALL_SRC = [
-    "common/prefix_map.cc",
-    "common/prefix_matcher.cc",
-    "normalize/emoji_filter.cc",
-    "normalize/emoji_unicode_alias_codes_en.cc",
-    "normalize/emoji_unicode_codes_en.cc",
-        ]
 
 TANN_HEADER = [
     "aligned_file_reader.h",
@@ -40,7 +33,6 @@ TANN_HEADER = [
     "partition.h",
     "pq.h",
     "timer.h",
-    "windows_customizations.h",
     "ann_exception.h",
     "common_includes.h",
     "disk_utils.h",

@@ -626,12 +626,12 @@ namespace tann {
     }
   }
 
-  template DISKANN_DLLEXPORT class DistanceInnerProduct<float>;
-  template DISKANN_DLLEXPORT class DistanceInnerProduct<int8_t>;
-  template DISKANN_DLLEXPORT class DistanceInnerProduct<uint8_t>;
+  template TURBO_DLL class DistanceInnerProduct<float>;
+  template TURBO_DLL class DistanceInnerProduct<int8_t>;
+  template TURBO_DLL class DistanceInnerProduct<uint8_t>;
 
-  template DISKANN_DLLEXPORT class DistanceFastL2<float>;
-  template DISKANN_DLLEXPORT class DistanceFastL2<int8_t>;
-  template DISKANN_DLLEXPORT class DistanceFastL2<uint8_t>;
+  template TURBO_DLL class DistanceFastL2<float>;
+  template TURBO_DLL class DistanceFastL2<int8_t>;
+  template TURBO_DLL class DistanceFastL2<uint8_t>;
 
 }  // namespace tann

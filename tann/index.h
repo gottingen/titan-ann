@@ -30,7 +30,7 @@
 #include "neighbor.h"
 #include "parameters.h"
 #include "utils.h"
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 #include "scratch.h"
 
 #define OVERHEAD_FACTOR 1.1
@@ -88,7 +88,7 @@ namespace tann {
     public:
         // Constructor for Bulk operations and for creating the index object solely
         // for loading a prexisting index.
-        DISKANN_DLLEXPORT Index(Metric m, const size_t dim,
+        TURBO_DLL Index(Metric m, const size_t dim,
                                 const size_t max_points = 1,
                                 const bool dynamic_index = false,
                                 const bool enable_tags = false,
@@ -98,7 +98,7 @@ namespace tann {
                                 const bool use_opq = false);
 
         // Constructor for incremental index
-        DISKANN_DLLEXPORT Index(Metric m, const size_t dim, const size_t max_points,
+        TURBO_DLL Index(Metric m, const size_t dim, const size_t max_points,
                                 const bool dynamic_index,
                                 const Parameters &indexParameters,
                                 const Parameters &searchParameters,
@@ -108,134 +108,134 @@ namespace tann {
                                 const size_t num_pq_chunks = 0,
                                 const bool use_opq = false);
 
-        DISKANN_DLLEXPORT ~Index();
+        TURBO_DLL ~Index();
 
         // Saves graph, data, metadata and associated tags.
-        DISKANN_DLLEXPORT void save(const char *filename,
+        TURBO_DLL void save(const char *filename,
                                     bool compact_before_save = false);
 
         // Load functions
 #ifdef EXEC_ENV_OLS
-        DISKANN_DLLEXPORT void load(AlignedFileReader &reader, uint32_t num_threads,
+        TURBO_DLL void load(AlignedFileReader &reader, uint32_t num_threads,
                                     uint32_t search_l);
 #else
-        DISKANN_DLLEXPORT void load(const char *index_file, uint32_t num_threads,
+        TURBO_DLL void load(const char *index_file, uint32_t num_threads,
                                     uint32_t search_l);
 
 #endif
 
         // get some private variables
-        DISKANN_DLLEXPORT size_t get_num_points();
+        TURBO_DLL size_t get_num_points();
 
-        DISKANN_DLLEXPORT size_t get_max_points();
+        TURBO_DLL size_t get_max_points();
 
         // Batch build from a file. Optionally pass tags vector.
-        DISKANN_DLLEXPORT void build(
+        TURBO_DLL void build(
                 const char *filename, const size_t num_points_to_load,
                 Parameters &parameters,
                 const std::vector<TagT> &tags = std::vector<TagT>());
 
         // Batch build from a file. Optionally pass tags file.
-        DISKANN_DLLEXPORT void build(const char *filename,
+        TURBO_DLL void build(const char *filename,
                                      const size_t num_points_to_load,
                                      Parameters &parameters,
                                      const char *tag_filename);
 
         // Batch build from a data array, which must pad vectors to aligned_dim
-        DISKANN_DLLEXPORT void build(const T *data, const size_t num_points_to_load,
+        TURBO_DLL void build(const T *data, const size_t num_points_to_load,
                                      Parameters &parameters,
                                      const std::vector<TagT> &tags);
 
         // Filtered Support
-        DISKANN_DLLEXPORT void build_filtered_index(
+        TURBO_DLL void build_filtered_index(
                 const char *filename, const std::string &label_file,
                 const size_t num_points_to_load, Parameters &parameters,
                 const std::vector<TagT> &tags = std::vector<TagT>());
 
-        DISKANN_DLLEXPORT void set_universal_label(const LabelT &label);
+        TURBO_DLL void set_universal_label(const LabelT &label);
 
         // Get converted integer label from string to int map (_label_map)
-        DISKANN_DLLEXPORT LabelT get_converted_label(const std::string &raw_label);
+        TURBO_DLL LabelT get_converted_label(const std::string &raw_label);
 
         // Set starting point of an index before inserting any points incrementally
-        DISKANN_DLLEXPORT void set_start_point(T *data);
+        TURBO_DLL void set_start_point(T *data);
         // Set starting point to a random point on a sphere of certain radius
-        DISKANN_DLLEXPORT void set_start_point_at_random(T radius);
+        TURBO_DLL void set_start_point_at_random(T radius);
 
         // For FastL2 search on a static index, we interleave the data with graph
-        DISKANN_DLLEXPORT void optimize_index_layout();
+        TURBO_DLL void optimize_index_layout();
 
         // For FastL2 search on optimized layout
-        DISKANN_DLLEXPORT void search_with_optimized_layout(const T *query,
+        TURBO_DLL void search_with_optimized_layout(const T *query,
                                                             size_t K, size_t L,
                                                             unsigned *indices);
 
         // Added search overload that takes L as parameter, so that we
         // can customize L on a per-query basis without tampering with "Parameters"
         template<typename IDType>
-        DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t> search(
+        TURBO_DLL std::pair<uint32_t, uint32_t> search(
                 const T *query, const size_t K, const unsigned L, IDType *indices,
                 float *distances = nullptr);
 
         // Initialize space for res_vectors before calling.
-        DISKANN_DLLEXPORT size_t search_with_tags(const T *query, const uint64_t K,
+        TURBO_DLL size_t search_with_tags(const T *query, const uint64_t K,
                                                   const unsigned L, TagT *tags,
                                                   float *distances,
                                                   std::vector<T *> &res_vectors);
 
         // Filter support search
         template<typename IndexType>
-        DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t> search_with_filters(
+        TURBO_DLL std::pair<uint32_t, uint32_t> search_with_filters(
                 const T *query, const LabelT &filter_label, const size_t K,
                 const unsigned L, IndexType *indices, float *distances);
 
         // Will fail if tag already in the index or if tag=0.
-        DISKANN_DLLEXPORT int insert_point(const T *point, const TagT tag);
+        TURBO_DLL int insert_point(const T *point, const TagT tag);
 
         // call this before issuing deletions to sets relevant flags
-        DISKANN_DLLEXPORT int enable_delete();
+        TURBO_DLL int enable_delete();
 
         // Record deleted point now and restructure graph later. Return -1 if tag
         // not found, 0 if OK.
-        DISKANN_DLLEXPORT int lazy_delete(const TagT &tag);
+        TURBO_DLL int lazy_delete(const TagT &tag);
 
         // Record deleted points now and restructure graph later. Add to failed_tags
         // if tag not found.
-        DISKANN_DLLEXPORT void lazy_delete(const std::vector<TagT> &tags,
+        TURBO_DLL void lazy_delete(const std::vector<TagT> &tags,
                                            std::vector<TagT> &failed_tags);
 
         // Call after a series of lazy deletions
         // Returns number of live points left after consolidation
         // If _conc_consolidates is set in the ctor, then this call can be invoked
         // alongside inserts and lazy deletes, else it acquires _update_lock
-        DISKANN_DLLEXPORT consolidation_report
+        TURBO_DLL consolidation_report
         consolidate_deletes(const Parameters &parameters);
 
-        DISKANN_DLLEXPORT void prune_all_nbrs(const Parameters &parameters);
+        TURBO_DLL void prune_all_nbrs(const Parameters &parameters);
 
-        DISKANN_DLLEXPORT bool is_index_saved();
+        TURBO_DLL bool is_index_saved();
 
         // repositions frozen points to the end of _data - if they have been moved
         // during deletion
-        DISKANN_DLLEXPORT void reposition_frozen_point_to_end();
+        TURBO_DLL void reposition_frozen_point_to_end();
 
-        DISKANN_DLLEXPORT void reposition_point(unsigned old_location,
+        TURBO_DLL void reposition_point(unsigned old_location,
                                                 unsigned new_location);
 
-        // DISKANN_DLLEXPORT void save_index_as_one_file(bool flag);
+        // TURBO_DLL void save_index_as_one_file(bool flag);
 
-        DISKANN_DLLEXPORT void get_active_tags(turbo::flat_hash_set<TagT> &active_tags);
+        TURBO_DLL void get_active_tags(turbo::flat_hash_set<TagT> &active_tags);
 
         // memory should be allocated for vec before calling this function
-        DISKANN_DLLEXPORT int get_vector_by_tag(TagT &tag, T *vec);
+        TURBO_DLL int get_vector_by_tag(TagT &tag, T *vec);
 
-        DISKANN_DLLEXPORT void print_status();
+        TURBO_DLL void print_status();
 
-        DISKANN_DLLEXPORT void count_nodes_at_bfs_levels();
+        TURBO_DLL void count_nodes_at_bfs_levels();
 
         // This variable MUST be updated if the number of entries in the metadata
         // change.
-        DISKANN_DLLEXPORT static const int METADATA_ROWS = 5;
+        TURBO_DLL static const int METADATA_ROWS = 5;
 
         // ********************************
         //
@@ -323,9 +323,9 @@ namespace tann {
         // Renumber nodes, update tag and location maps and compact the
         // graph, mode = _consolidated_order in case of lazy deletion and
         // _compacted_order in case of eager deletion
-        DISKANN_DLLEXPORT void compact_data();
+        TURBO_DLL void compact_data();
 
-        DISKANN_DLLEXPORT void compact_frozen_point();
+        TURBO_DLL void compact_frozen_point();
 
         // Remove deleted nodes from adjacency list of node loc
         // Replace removed neighbors with second order neighbors.
@@ -340,29 +340,29 @@ namespace tann {
 
         // Do not call without acquiring appropriate locks
         // call public member functions save and load to invoke these.
-        DISKANN_DLLEXPORT _u64 save_graph(std::string filename);
+        TURBO_DLL _u64 save_graph(std::string filename);
 
-        DISKANN_DLLEXPORT _u64 save_data(std::string filename);
+        TURBO_DLL _u64 save_data(std::string filename);
 
-        DISKANN_DLLEXPORT _u64 save_tags(std::string filename);
+        TURBO_DLL _u64 save_tags(std::string filename);
 
-        DISKANN_DLLEXPORT _u64 save_delete_list(const std::string &filename);
+        TURBO_DLL _u64 save_delete_list(const std::string &filename);
 
 #ifdef EXEC_ENV_OLS
-        DISKANN_DLLEXPORT size_t load_graph(AlignedFileReader &reader,
+        TURBO_DLL size_t load_graph(AlignedFileReader &reader,
                                             size_t             expected_num_points);
-        DISKANN_DLLEXPORT size_t load_data(AlignedFileReader &reader);
-        DISKANN_DLLEXPORT size_t load_tags(AlignedFileReader &reader);
-        DISKANN_DLLEXPORT size_t load_delete_set(AlignedFileReader &reader);
+        TURBO_DLL size_t load_data(AlignedFileReader &reader);
+        TURBO_DLL size_t load_tags(AlignedFileReader &reader);
+        TURBO_DLL size_t load_delete_set(AlignedFileReader &reader);
 #else
-        DISKANN_DLLEXPORT size_t load_graph(const std::string filename,
+        TURBO_DLL size_t load_graph(const std::string filename,
                                             size_t expected_num_points);
 
-        DISKANN_DLLEXPORT size_t load_data(std::string filename0);
+        TURBO_DLL size_t load_data(std::string filename0);
 
-        DISKANN_DLLEXPORT size_t load_tags(const std::string tag_file_name);
+        TURBO_DLL size_t load_tags(const std::string tag_file_name);
 
-        DISKANN_DLLEXPORT size_t load_delete_set(const std::string &filename);
+        TURBO_DLL size_t load_delete_set(const std::string &filename);
 
 #endif
 

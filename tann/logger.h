@@ -18,16 +18,16 @@
 
 #include <functional>
 #include <iostream>
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 
 namespace tann {
-  DISKANN_DLLEXPORT extern std::basic_ostream<char> cout;
-  DISKANN_DLLEXPORT extern std::basic_ostream<char> cerr;
+  TURBO_DLL extern std::basic_ostream<char> cout;
+  TURBO_DLL extern std::basic_ostream<char> cerr;
 
-  enum class DISKANN_DLLEXPORT LogLevel { LL_Info = 0, LL_Error, LL_Count };
+  enum class TURBO_DLL LogLevel { LL_Info = 0, LL_Error, LL_Count };
 
 #ifdef EXEC_ENV_OLS
-  DISKANN_DLLEXPORT void SetCustomLogger(
+  TURBO_DLL void SetCustomLogger(
       std::function<void(LogLevel, const char*)> logger);
 #endif
 }  // namespace tann

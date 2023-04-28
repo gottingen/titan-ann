@@ -19,7 +19,7 @@
 #include <string>
 #include <stdexcept>
 #include <system_error>
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 
 #ifndef _WINDOWS
 #define __FUNCSIG__ __PRETTY_FUNCTION__
@@ -29,8 +29,8 @@ namespace tann {
 
   class ANNException : public std::runtime_error {
    public:
-    DISKANN_DLLEXPORT ANNException(const std::string& message, int errorCode);
-    DISKANN_DLLEXPORT ANNException(const std::string& message, int errorCode,
+    TURBO_DLL ANNException(const std::string& message, int errorCode);
+    TURBO_DLL ANNException(const std::string& message, int errorCode,
                                    const std::string& funcSig,
                                    const std::string& fileName,
                                    unsigned int       lineNum);
@@ -41,7 +41,7 @@ namespace tann {
 
   class FileException : public ANNException {
    public:
-    DISKANN_DLLEXPORT FileException(const std::string& filename,
+    TURBO_DLL FileException(const std::string& filename,
                                     std::system_error& e,
                                     const std::string& funcSig,
                                     const std::string& fileName,

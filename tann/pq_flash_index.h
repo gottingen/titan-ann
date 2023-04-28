@@ -25,7 +25,7 @@
 #include "percentile_stats.h"
 #include "pq.h"
 #include "utils.h"
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 #include "scratch.h"
 #include "turbo/container/flat_hash_set.h"
 #include "turbo/container/flat_hash_map.h"
@@ -37,74 +37,74 @@ namespace tann {
   template<typename T, typename LabelT = uint32_t>
   class PQFlashIndex {
    public:
-    DISKANN_DLLEXPORT PQFlashIndex(
+    TURBO_DLL PQFlashIndex(
         std::shared_ptr<AlignedFileReader> &fileReader,
         tann::Metric                     metric = tann::Metric::L2);
-    DISKANN_DLLEXPORT ~PQFlashIndex();
+    TURBO_DLL ~PQFlashIndex();
 
 #ifdef EXEC_ENV_OLS
-    DISKANN_DLLEXPORT int load(tann::MemoryMappedFiles &files,
+    TURBO_DLL int load(tann::MemoryMappedFiles &files,
                                uint32_t num_threads, const char *index_prefix);
 #else
     // load compressed data, and obtains the handle to the disk-resident index
-    DISKANN_DLLEXPORT int load(uint32_t num_threads, const char *index_prefix);
+    TURBO_DLL int load(uint32_t num_threads, const char *index_prefix);
 #endif
 
 #ifdef EXEC_ENV_OLS
-    DISKANN_DLLEXPORT int load_from_separate_paths(
+    TURBO_DLL int load_from_separate_paths(
         tann::MemoryMappedFiles &files, uint32_t num_threads,
         const char *index_filepath, const char *pivots_filepath,
         const char *compressed_filepath);
 #else
-    DISKANN_DLLEXPORT int load_from_separate_paths(
+    TURBO_DLL int load_from_separate_paths(
         uint32_t num_threads, const char *index_filepath,
         const char *pivots_filepath, const char *compressed_filepath);
 #endif
 
-    DISKANN_DLLEXPORT void load_cache_list(std::vector<uint32_t> &node_list);
+    TURBO_DLL void load_cache_list(std::vector<uint32_t> &node_list);
 
 #ifdef EXEC_ENV_OLS
-    DISKANN_DLLEXPORT void generate_cache_list_from_sample_queries(
+    TURBO_DLL void generate_cache_list_from_sample_queries(
         MemoryMappedFiles &files, std::string sample_bin, _u64 l_search,
         _u64 beamwidth, _u64 num_nodes_to_cache, uint32_t nthreads,
         std::vector<uint32_t> &node_list);
 #else
-    DISKANN_DLLEXPORT void generate_cache_list_from_sample_queries(
+    TURBO_DLL void generate_cache_list_from_sample_queries(
         std::string sample_bin, _u64 l_search, _u64 beamwidth,
         _u64 num_nodes_to_cache, uint32_t num_threads,
         std::vector<uint32_t> &node_list);
 #endif
 
-    DISKANN_DLLEXPORT void cache_bfs_levels(_u64 num_nodes_to_cache,
+    TURBO_DLL void cache_bfs_levels(_u64 num_nodes_to_cache,
                                             std::vector<uint32_t> &node_list,
                                             const bool shuffle = false);
 
-    DISKANN_DLLEXPORT void cached_beam_search(
+    TURBO_DLL void cached_beam_search(
         const T *query, const _u64 k_search, const _u64 l_search, _u64 *res_ids,
         float *res_dists, const _u64 beam_width,
         const bool use_reorder_data = false, QueryStats *stats = nullptr);
 
-    DISKANN_DLLEXPORT void cached_beam_search(
+    TURBO_DLL void cached_beam_search(
         const T *query, const _u64 k_search, const _u64 l_search, _u64 *res_ids,
         float *res_dists, const _u64 beam_width, const bool use_filter,
         const LabelT &filter_label, const bool use_reorder_data = false,
         QueryStats *stats = nullptr);
 
-    DISKANN_DLLEXPORT void cached_beam_search(
+    TURBO_DLL void cached_beam_search(
         const T *query, const _u64 k_search, const _u64 l_search, _u64 *res_ids,
         float *res_dists, const _u64 beam_width, const _u32 io_limit,
         const bool use_reorder_data = false, QueryStats *stats = nullptr);
 
-    DISKANN_DLLEXPORT void cached_beam_search(
+    TURBO_DLL void cached_beam_search(
         const T *query, const _u64 k_search, const _u64 l_search, _u64 *res_ids,
         float *res_dists, const _u64 beam_width, const bool use_filter,
         const LabelT &filter_label, const _u32 io_limit,
         const bool use_reorder_data = false, QueryStats *stats = nullptr);
 
-    DISKANN_DLLEXPORT LabelT
+    TURBO_DLL LabelT
     get_converted_label(const std::string &filter_label);
 
-    DISKANN_DLLEXPORT _u32 range_search(const T *query1, const double range,
+    TURBO_DLL _u32 range_search(const T *query1, const double range,
                                         const _u64          min_l_search,
                                         const _u64          max_l_search,
                                         std::vector<_u64>  &indices,
@@ -112,29 +112,29 @@ namespace tann {
                                         const _u64          min_beam_width,
                                         QueryStats         *stats = nullptr);
 
-    DISKANN_DLLEXPORT _u64 get_data_dim();
+    TURBO_DLL _u64 get_data_dim();
 
     std::shared_ptr<AlignedFileReader> &reader;
 
-    DISKANN_DLLEXPORT tann::Metric get_metric();
+    TURBO_DLL tann::Metric get_metric();
 
    protected:
-    DISKANN_DLLEXPORT void use_medoids_data_as_centroids();
-    DISKANN_DLLEXPORT void setup_thread_data(_u64 nthreads,
+    TURBO_DLL void use_medoids_data_as_centroids();
+    TURBO_DLL void setup_thread_data(_u64 nthreads,
                                              _u64 visited_reserve = 4096);
 
-    DISKANN_DLLEXPORT void set_universal_label(const LabelT &label);
+    TURBO_DLL void set_universal_label(const LabelT &label);
 
    private:
-    DISKANN_DLLEXPORT inline bool point_has_label(_u32 point_id, _u32 label_id);
+    TURBO_DLL inline bool point_has_label(_u32 point_id, _u32 label_id);
     std::unordered_map<std::string, LabelT> load_label_map(
         const std::string &map_file);
-    DISKANN_DLLEXPORT void parse_label_file(const std::string &map_file,
+    TURBO_DLL void parse_label_file(const std::string &map_file,
                                             size_t            &num_pts_labels);
-    DISKANN_DLLEXPORT void get_label_file_metadata(std::string map_file,
+    TURBO_DLL void get_label_file_metadata(std::string map_file,
                                                    _u32       &num_pts,
                                                    _u32 &num_total_labels);
-    DISKANN_DLLEXPORT inline int32_t get_filter_number(
+    TURBO_DLL inline int32_t get_filter_number(
         const LabelT &filter_label);
 
     // index info

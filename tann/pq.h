@@ -121,12 +121,12 @@ namespace tann {
                       const _u64 pq_nchunks, const float* pq_dists,
                       float* dists_out);
 
-  DISKANN_DLLEXPORT int generate_pq_pivots(
+  TURBO_DLL int generate_pq_pivots(
       const float* const train_data, size_t num_train, unsigned dim,
       unsigned num_centers, unsigned num_pq_chunks, unsigned max_k_means_reps,
       std::string pq_pivots_path, bool make_zero_mean = false);
 
-  DISKANN_DLLEXPORT int generate_opq_pivots(const float* train_data,
+  TURBO_DLL int generate_opq_pivots(const float* train_data,
                                             size_t num_train, unsigned dim,
                                             unsigned    num_centers,
                                             unsigned    num_pq_chunks,

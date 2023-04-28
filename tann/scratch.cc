@@ -145,15 +145,15 @@ namespace tann {
     scratch.reset();
   }
 
-  template DISKANN_DLLEXPORT class InMemQueryScratch<int8_t>;
-  template DISKANN_DLLEXPORT class InMemQueryScratch<uint8_t>;
-  template DISKANN_DLLEXPORT class InMemQueryScratch<float>;
+  template TURBO_DLL class InMemQueryScratch<int8_t>;
+  template TURBO_DLL class InMemQueryScratch<uint8_t>;
+  template TURBO_DLL class InMemQueryScratch<float>;
 
-  template DISKANN_DLLEXPORT class SSDQueryScratch<_u8>;
-  template DISKANN_DLLEXPORT class SSDQueryScratch<_s8>;
-  template DISKANN_DLLEXPORT class SSDQueryScratch<float>;
+  template TURBO_DLL class SSDQueryScratch<_u8>;
+  template TURBO_DLL class SSDQueryScratch<_s8>;
+  template TURBO_DLL class SSDQueryScratch<float>;
 
-  template DISKANN_DLLEXPORT class SSDThreadData<_u8>;
-  template DISKANN_DLLEXPORT class SSDThreadData<_s8>;
-  template DISKANN_DLLEXPORT class SSDThreadData<float>;
+  template TURBO_DLL class SSDThreadData<_u8>;
+  template TURBO_DLL class SSDThreadData<_s8>;
+  template TURBO_DLL class SSDThreadData<float>;
 }  // namespace tann

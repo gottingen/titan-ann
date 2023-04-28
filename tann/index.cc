@@ -23,7 +23,7 @@
 
 #include "memory_mapper.h"
 #include "timer.h"
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && \
     defined(DISKANN_BUILD)
 #include "gperftools/malloc_extension.h"
@@ -2945,276 +2945,276 @@ namespace tann {
   const float Index<T, TagT, LabelT>::INDEX_GROWTH_FACTOR = 1.5f;
 
   // EXPORTS
-  template DISKANN_DLLEXPORT class Index<float, int32_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, int32_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, int32_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<float, uint32_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, uint32_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, uint32_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<float, int64_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, int64_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, int64_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<float, uint64_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, uint64_t, uint32_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, uint64_t, uint32_t>;
+  template TURBO_DLL class Index<float, int32_t, uint32_t>;
+  template TURBO_DLL class Index<int8_t, int32_t, uint32_t>;
+  template TURBO_DLL class Index<uint8_t, int32_t, uint32_t>;
+  template TURBO_DLL class Index<float, uint32_t, uint32_t>;
+  template TURBO_DLL class Index<int8_t, uint32_t, uint32_t>;
+  template TURBO_DLL class Index<uint8_t, uint32_t, uint32_t>;
+  template TURBO_DLL class Index<float, int64_t, uint32_t>;
+  template TURBO_DLL class Index<int8_t, int64_t, uint32_t>;
+  template TURBO_DLL class Index<uint8_t, int64_t, uint32_t>;
+  template TURBO_DLL class Index<float, uint64_t, uint32_t>;
+  template TURBO_DLL class Index<int8_t, uint64_t, uint32_t>;
+  template TURBO_DLL class Index<uint8_t, uint64_t, uint32_t>;
   // Label with short int 2 byte
-  template DISKANN_DLLEXPORT class Index<float, int32_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, int32_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, int32_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<float, uint32_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, uint32_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, uint32_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<float, int64_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, int64_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, int64_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<float, uint64_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<int8_t, uint64_t, uint16_t>;
-  template DISKANN_DLLEXPORT class Index<uint8_t, uint64_t, uint16_t>;
+  template TURBO_DLL class Index<float, int32_t, uint16_t>;
+  template TURBO_DLL class Index<int8_t, int32_t, uint16_t>;
+  template TURBO_DLL class Index<uint8_t, int32_t, uint16_t>;
+  template TURBO_DLL class Index<float, uint32_t, uint16_t>;
+  template TURBO_DLL class Index<int8_t, uint32_t, uint16_t>;
+  template TURBO_DLL class Index<uint8_t, uint32_t, uint16_t>;
+  template TURBO_DLL class Index<float, int64_t, uint16_t>;
+  template TURBO_DLL class Index<int8_t, int64_t, uint16_t>;
+  template TURBO_DLL class Index<uint8_t, int64_t, uint16_t>;
+  template TURBO_DLL class Index<float, uint64_t, uint16_t>;
+  template TURBO_DLL class Index<int8_t, uint64_t, uint16_t>;
+  template TURBO_DLL class Index<uint8_t, uint64_t, uint16_t>;
 
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint32_t>::search<uint64_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint64_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint32_t>::search<uint32_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint32_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint32_t>::search<uint64_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint64_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint32_t>::search<uint32_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint32_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint32_t>::search<uint64_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint64_t      *indices,
                                                       float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint32_t>::search<uint32_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint32_t      *indices,
                                                       float         *distances);
   // TagT==uint32_t
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint32_t>::search<uint64_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint64_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint32_t>::search<uint32_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint32_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint32_t>::search<uint64_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint64_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint32_t>::search<uint32_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint32_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint32_t>::search<uint64_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint64_t      *indices,
                                                       float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint32_t>::search<uint32_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint32_t      *indices,
                                                       float         *distances);
 
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint32_t>::search_with_filters<uint64_t>(
       const float *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint32_t>::search_with_filters<uint32_t>(
       const float *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint32_t>::search_with_filters<uint64_t>(
       const uint8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint32_t>::search_with_filters<uint32_t>(
       const uint8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint32_t>::search_with_filters<uint64_t>(
       const int8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint32_t>::search_with_filters<uint32_t>(
       const int8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
   // TagT==uint32_t
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint32_t>::search_with_filters<uint64_t>(
       const float *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint32_t>::search_with_filters<uint32_t>(
       const float *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint32_t>::search_with_filters<uint64_t>(
       const uint8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint32_t>::search_with_filters<uint32_t>(
       const uint8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint32_t>::search_with_filters<uint64_t>(
       const int8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint32_t>::search_with_filters<uint32_t>(
       const int8_t *query, const uint32_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
 
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint16_t>::search<uint64_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint64_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint16_t>::search<uint32_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint32_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint16_t>::search<uint64_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint64_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint16_t>::search<uint32_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint32_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint16_t>::search<uint64_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint64_t      *indices,
                                                       float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint16_t>::search<uint32_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint32_t      *indices,
                                                       float         *distances);
   // TagT==uint32_t
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint16_t>::search<uint64_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint64_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint16_t>::search<uint32_t>(const float   *query,
                                                      const size_t   K,
                                                      const unsigned L,
                                                      uint32_t      *indices,
                                                      float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint16_t>::search<uint64_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint64_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint16_t>::search<uint32_t>(const uint8_t *query,
                                                        const size_t   K,
                                                        const unsigned L,
                                                        uint32_t      *indices,
                                                        float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint16_t>::search<uint64_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint64_t      *indices,
                                                       float         *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint16_t>::search<uint32_t>(const int8_t  *query,
                                                       const size_t   K,
                                                       const unsigned L,
                                                       uint32_t      *indices,
                                                       float         *distances);
 
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint16_t>::search_with_filters<uint64_t>(
       const float *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint64_t, uint16_t>::search_with_filters<uint32_t>(
       const float *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint16_t>::search_with_filters<uint64_t>(
       const uint8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint64_t, uint16_t>::search_with_filters<uint32_t>(
       const uint8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint16_t>::search_with_filters<uint64_t>(
       const int8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint64_t, uint16_t>::search_with_filters<uint32_t>(
       const int8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
   // TagT==uint32_t
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint16_t>::search_with_filters<uint64_t>(
       const float *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<float, uint32_t, uint16_t>::search_with_filters<uint32_t>(
       const float *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint16_t>::search_with_filters<uint64_t>(
       const uint8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<uint8_t, uint32_t, uint16_t>::search_with_filters<uint32_t>(
       const uint8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint16_t>::search_with_filters<uint64_t>(
       const int8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint64_t *indices, float *distances);
-  template DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t>
+  template TURBO_DLL std::pair<uint32_t, uint32_t>
   Index<int8_t, uint32_t, uint16_t>::search_with_filters<uint32_t>(
       const int8_t *query, const uint16_t &filter_label, const size_t K,
       const unsigned L, uint32_t *indices, float *distances);

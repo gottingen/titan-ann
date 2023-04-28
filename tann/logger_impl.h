@@ -26,16 +26,16 @@
 namespace tann {
   class ANNStreamBuf : public std::basic_streambuf<char> {
    public:
-    DISKANN_DLLEXPORT explicit ANNStreamBuf(FILE* fp);
-    DISKANN_DLLEXPORT ~ANNStreamBuf();
+    TURBO_DLL explicit ANNStreamBuf(FILE* fp);
+    TURBO_DLL ~ANNStreamBuf();
 
-    DISKANN_DLLEXPORT bool is_open() const {
+    TURBO_DLL bool is_open() const {
       return true;  // because stdout and stderr are always open.
     }
-    DISKANN_DLLEXPORT void        close();
-    DISKANN_DLLEXPORT virtual int underflow();
-    DISKANN_DLLEXPORT virtual int overflow(int c);
-    DISKANN_DLLEXPORT virtual int sync();
+    TURBO_DLL void        close();
+    TURBO_DLL virtual int underflow();
+    TURBO_DLL virtual int overflow(int c);
+    TURBO_DLL virtual int sync();
 
    private:
     FILE*      _fp;

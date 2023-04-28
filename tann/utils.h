@@ -42,7 +42,7 @@ typedef int FileHandle;
 #include "logger.h"
 #include "cached_io.h"
 #include "ann_exception.h"
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 #include "turbo/container/flat_hash_set.h"
 
 #ifdef EXEC_ENV_OLS
@@ -391,20 +391,20 @@ namespace tann {
                    2 * sizeof(uint32_t));  // No need to copy!
     }
 
-    DISKANN_DLLEXPORT void get_bin_metadata(AlignedFileReader& reader,
+    TURBO_DLL void get_bin_metadata(AlignedFileReader& reader,
                                             size_t& npts, size_t& ndim,
                                             size_t offset = 0);
     template<typename T>
-    DISKANN_DLLEXPORT void load_bin(AlignedFileReader& reader, T*& data,
+    TURBO_DLL void load_bin(AlignedFileReader& reader, T*& data,
                                     size_t& npts, size_t& ndim,
                                     size_t offset = 0);
     template<typename T>
-    DISKANN_DLLEXPORT void load_bin(AlignedFileReader&    reader,
+    TURBO_DLL void load_bin(AlignedFileReader&    reader,
                                     std::unique_ptr<T[]>& data, size_t& npts,
                                     size_t& ndim, size_t offset = 0);
 
     template<typename T>
-    DISKANN_DLLEXPORT void copy_aligned_data_from_file(AlignedFileReader& reader,
+    TURBO_DLL void copy_aligned_data_from_file(AlignedFileReader& reader,
                                                        T*& data, size_t& npts,
                                                        size_t&       dim,
                                                        const size_t& rounded_dim,
@@ -412,11 +412,11 @@ namespace tann {
 
     // Unlike load_bin, assumes that data is already allocated 'size' entries
     template<typename T>
-    DISKANN_DLLEXPORT void read_array(AlignedFileReader& reader, T* data,
+    TURBO_DLL void read_array(AlignedFileReader& reader, T* data,
                                       size_t size, size_t offset = 0);
 
     template<typename T>
-    DISKANN_DLLEXPORT void read_value(AlignedFileReader& reader, T& value,
+    TURBO_DLL void read_value(AlignedFileReader& reader, T& value,
                                       size_t offset = 0);
 #endif
 
@@ -649,16 +649,16 @@ namespace tann {
         dest.close();
     }
 
-    DISKANN_DLLEXPORT double calculate_recall(
+    TURBO_DLL double calculate_recall(
             unsigned num_queries, unsigned *gold_std, float *gs_dist, unsigned dim_gs,
             unsigned *our_results, unsigned dim_or, unsigned recall_at);
 
-    DISKANN_DLLEXPORT double calculate_recall(
+    TURBO_DLL double calculate_recall(
             unsigned num_queries, unsigned *gold_std, float *gs_dist, unsigned dim_gs,
             unsigned *our_results, unsigned dim_or, unsigned recall_at,
             const turbo::flat_hash_set<unsigned> &active_tags);
 
-    DISKANN_DLLEXPORT double calculate_range_search_recall(
+    TURBO_DLL double calculate_range_search_recall(
             unsigned num_queries, std::vector<std::vector<_u32>> &groundtruth,
             std::vector<std::vector<_u32>> &our_results);
 
@@ -975,7 +975,7 @@ namespace tann {
     void block_convert(std::ofstream &writr, std::ifstream &readr,
                        float *read_buf, _u64 npts, _u64 ndims);
 
-    DISKANN_DLLEXPORT void normalize_data_file(const std::string &inFileName,
+    TURBO_DLL void normalize_data_file(const std::string &inFileName,
                                                const std::string &outFileName);
 
 };  // namespace tann

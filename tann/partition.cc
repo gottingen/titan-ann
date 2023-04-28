@@ -637,62 +637,62 @@ int partition_with_ram_budget(const std::string data_file,
 
 // Instantations of supported templates
 
-template void DISKANN_DLLEXPORT
+template void TURBO_DLL
 gen_random_slice<int8_t>(const std::string base_file,
                          const std::string output_prefix, double sampling_rate);
-template void DISKANN_DLLEXPORT gen_random_slice<uint8_t>(
+template void TURBO_DLL gen_random_slice<uint8_t>(
     const std::string base_file, const std::string output_prefix,
     double sampling_rate);
-template void DISKANN_DLLEXPORT
+template void TURBO_DLL
 gen_random_slice<float>(const std::string base_file,
                         const std::string output_prefix, double sampling_rate);
 
-template void DISKANN_DLLEXPORT
+template void TURBO_DLL
 gen_random_slice<float>(const float *inputdata, size_t npts, size_t ndims,
                         double p_val, float *&sampled_data, size_t &slice_size);
-template void DISKANN_DLLEXPORT gen_random_slice<uint8_t>(
+template void TURBO_DLL gen_random_slice<uint8_t>(
     const uint8_t *inputdata, size_t npts, size_t ndims, double p_val,
     float *&sampled_data, size_t &slice_size);
-template void DISKANN_DLLEXPORT gen_random_slice<int8_t>(
+template void TURBO_DLL gen_random_slice<int8_t>(
     const int8_t *inputdata, size_t npts, size_t ndims, double p_val,
     float *&sampled_data, size_t &slice_size);
 
-template void DISKANN_DLLEXPORT gen_random_slice<float>(
+template void TURBO_DLL gen_random_slice<float>(
     const std::string data_file, double p_val, float *&sampled_data,
     size_t &slice_size, size_t &ndims);
-template void DISKANN_DLLEXPORT gen_random_slice<uint8_t>(
+template void TURBO_DLL gen_random_slice<uint8_t>(
     const std::string data_file, double p_val, float *&sampled_data,
     size_t &slice_size, size_t &ndims);
-template void DISKANN_DLLEXPORT gen_random_slice<int8_t>(
+template void TURBO_DLL gen_random_slice<int8_t>(
     const std::string data_file, double p_val, float *&sampled_data,
     size_t &slice_size, size_t &ndims);
 
-template DISKANN_DLLEXPORT int partition<int8_t>(
+template TURBO_DLL int partition<int8_t>(
     const std::string data_file, const float sampling_rate, size_t num_centers,
     size_t max_k_means_reps, const std::string prefix_path, size_t k_base);
-template DISKANN_DLLEXPORT int partition<uint8_t>(
+template TURBO_DLL int partition<uint8_t>(
     const std::string data_file, const float sampling_rate, size_t num_centers,
     size_t max_k_means_reps, const std::string prefix_path, size_t k_base);
-template DISKANN_DLLEXPORT int partition<float>(
+template TURBO_DLL int partition<float>(
     const std::string data_file, const float sampling_rate, size_t num_centers,
     size_t max_k_means_reps, const std::string prefix_path, size_t k_base);
 
-template DISKANN_DLLEXPORT int partition_with_ram_budget<int8_t>(
+template TURBO_DLL int partition_with_ram_budget<int8_t>(
     const std::string data_file, const double sampling_rate, double ram_budget,
     size_t graph_degree, const std::string prefix_path, size_t k_base);
-template DISKANN_DLLEXPORT int partition_with_ram_budget<uint8_t>(
+template TURBO_DLL int partition_with_ram_budget<uint8_t>(
     const std::string data_file, const double sampling_rate, double ram_budget,
     size_t graph_degree, const std::string prefix_path, size_t k_base);
-template DISKANN_DLLEXPORT int partition_with_ram_budget<float>(
+template TURBO_DLL int partition_with_ram_budget<float>(
     const std::string data_file, const double sampling_rate, double ram_budget,
     size_t graph_degree, const std::string prefix_path, size_t k_base);
 
-template DISKANN_DLLEXPORT int retrieve_shard_data_from_ids<float>(
+template TURBO_DLL int retrieve_shard_data_from_ids<float>(
     const std::string data_file, std::string idmap_filename,
     std::string data_filename);
-template DISKANN_DLLEXPORT int retrieve_shard_data_from_ids<uint8_t>(
+template TURBO_DLL int retrieve_shard_data_from_ids<uint8_t>(
     const std::string data_file, std::string idmap_filename,
     std::string data_filename);
-template DISKANN_DLLEXPORT int retrieve_shard_data_from_ids<int8_t>(
+template TURBO_DLL int retrieve_shard_data_from_ids<int8_t>(
     const std::string data_file, std::string idmap_filename,
     std::string data_filename);

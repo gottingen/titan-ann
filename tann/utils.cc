@@ -423,85 +423,85 @@ namespace tann {
     read_array(reader, &value, 1, offset);
   }
 
-  template DISKANN_DLLEXPORT void load_bin<uint8_t>(
+  template TURBO_DLL void load_bin<uint8_t>(
       AlignedFileReader& reader, std::unique_ptr<uint8_t[]>& data, size_t& npts,
       size_t& ndim, size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<int8_t>(
+  template TURBO_DLL void load_bin<int8_t>(
       AlignedFileReader& reader, std::unique_ptr<int8_t[]>& data, size_t& npts,
       size_t& ndim, size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<uint32_t>(
+  template TURBO_DLL void load_bin<uint32_t>(
       AlignedFileReader& reader, std::unique_ptr<uint32_t[]>& data,
       size_t& npts, size_t& ndim, size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<uint64_t>(
+  template TURBO_DLL void load_bin<uint64_t>(
       AlignedFileReader& reader, std::unique_ptr<uint64_t[]>& data,
       size_t& npts, size_t& ndim, size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<int64_t>(
+  template TURBO_DLL void load_bin<int64_t>(
       AlignedFileReader& reader, std::unique_ptr<int64_t[]>& data, size_t& npts,
       size_t& ndim, size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<float>(
+  template TURBO_DLL void load_bin<float>(
       AlignedFileReader& reader, std::unique_ptr<float[]>& data, size_t& npts,
       size_t& ndim, size_t offset);
 
-  template DISKANN_DLLEXPORT void load_bin<uint8_t>(AlignedFileReader& reader,
+  template TURBO_DLL void load_bin<uint8_t>(AlignedFileReader& reader,
                                                     uint8_t*&          data,
                                                     size_t& npts, size_t& ndim,
                                                     size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<int64_t>(AlignedFileReader& reader,
+  template TURBO_DLL void load_bin<int64_t>(AlignedFileReader& reader,
                                                     int64_t*&          data,
                                                     size_t& npts, size_t& ndim,
                                                     size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<uint64_t>(AlignedFileReader& reader,
+  template TURBO_DLL void load_bin<uint64_t>(AlignedFileReader& reader,
                                                      uint64_t*&         data,
                                                      size_t& npts, size_t& ndim,
                                                      size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<uint32_t>(AlignedFileReader& reader,
+  template TURBO_DLL void load_bin<uint32_t>(AlignedFileReader& reader,
                                                      uint32_t*&         data,
                                                      size_t& npts, size_t& ndim,
                                                      size_t offset);
-  template DISKANN_DLLEXPORT void load_bin<int32_t>(AlignedFileReader& reader,
+  template TURBO_DLL void load_bin<int32_t>(AlignedFileReader& reader,
                                                     int32_t*&          data,
                                                     size_t& npts, size_t& ndim,
                                                     size_t offset);
 
-  template DISKANN_DLLEXPORT void copy_aligned_data_from_file<uint8_t>(
+  template TURBO_DLL void copy_aligned_data_from_file<uint8_t>(
       AlignedFileReader& reader, uint8_t*& data, size_t& npts, size_t& dim,
       const size_t& rounded_dim, size_t offset);
-  template DISKANN_DLLEXPORT void copy_aligned_data_from_file<int8_t>(
+  template TURBO_DLL void copy_aligned_data_from_file<int8_t>(
       AlignedFileReader& reader, int8_t*& data, size_t& npts, size_t& dim,
       const size_t& rounded_dim, size_t offset);
-  template DISKANN_DLLEXPORT void copy_aligned_data_from_file<float>(
+  template TURBO_DLL void copy_aligned_data_from_file<float>(
       AlignedFileReader& reader, float*& data, size_t& npts, size_t& dim,
       const size_t& rounded_dim, size_t offset);
 
-  template DISKANN_DLLEXPORT void read_array<char>(AlignedFileReader& reader,
+  template TURBO_DLL void read_array<char>(AlignedFileReader& reader,
                                                    char* data, size_t size,
                                                    size_t offset);
 
-  template DISKANN_DLLEXPORT void read_array<uint8_t>(AlignedFileReader& reader,
+  template TURBO_DLL void read_array<uint8_t>(AlignedFileReader& reader,
                                                       uint8_t*           data,
                                                       size_t             size,
                                                       size_t offset);
-  template DISKANN_DLLEXPORT void read_array<int8_t>(AlignedFileReader& reader,
+  template TURBO_DLL void read_array<int8_t>(AlignedFileReader& reader,
                                                      int8_t* data, size_t size,
                                                      size_t offset);
-  template DISKANN_DLLEXPORT void read_array<uint32_t>(
+  template TURBO_DLL void read_array<uint32_t>(
       AlignedFileReader& reader, uint32_t* data, size_t size, size_t offset);
-  template DISKANN_DLLEXPORT void read_array<float>(AlignedFileReader& reader,
+  template TURBO_DLL void read_array<float>(AlignedFileReader& reader,
                                                     float* data, size_t size,
                                                     size_t offset);
 
-  template DISKANN_DLLEXPORT void read_value<uint8_t>(AlignedFileReader& reader,
+  template TURBO_DLL void read_value<uint8_t>(AlignedFileReader& reader,
                                                       uint8_t&           value,
                                                       size_t offset);
-  template DISKANN_DLLEXPORT void read_value<int8_t>(AlignedFileReader& reader,
+  template TURBO_DLL void read_value<int8_t>(AlignedFileReader& reader,
                                                      int8_t&            value,
                                                      size_t             offset);
-  template DISKANN_DLLEXPORT void read_value<float>(AlignedFileReader& reader,
+  template TURBO_DLL void read_value<float>(AlignedFileReader& reader,
                                                     float&             value,
                                                     size_t             offset);
-  template DISKANN_DLLEXPORT void read_value<uint32_t>(
+  template TURBO_DLL void read_value<uint32_t>(
       AlignedFileReader& reader, uint32_t& value, size_t offset);
-  template DISKANN_DLLEXPORT void read_value<uint64_t>(
+  template TURBO_DLL void read_value<uint64_t>(
       AlignedFileReader& reader, uint64_t& value, size_t offset);
 
 #endif

@@ -16,7 +16,7 @@
 //
 
 #pragma once
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 
 namespace tann {
   enum Metric { L2 = 0, INNER_PRODUCT = 1, COSINE = 2, FAST_L2 = 3 };
@@ -31,36 +31,36 @@ namespace tann {
 
   class DistanceCosineInt8 : public Distance<int8_t> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const int8_t *a, const int8_t *b,
+    TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b,
                                             uint32_t length) const;
   };
 
   class DistanceL2Int8 : public Distance<int8_t> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const int8_t *a, const int8_t *b,
+    TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b,
                                             uint32_t size) const;
   };
 
   // AVX implementations. Borrowed from HNSW code.
   class AVXDistanceL2Int8 : public Distance<int8_t> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const int8_t *a, const int8_t *b,
+    TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b,
                                             uint32_t length) const;
   };
 
   class DistanceCosineFloat : public Distance<float> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const float *a, const float *b,
+    TURBO_DLL virtual float compare(const float *a, const float *b,
                                             uint32_t length) const;
   };
 
   class DistanceL2Float : public Distance<float> {
    public:
 #ifdef _WINDOWS
-    DISKANN_DLLEXPORT virtual float compare(const float *a, const float *b,
+    TURBO_DLL virtual float compare(const float *a, const float *b,
                                             uint32_t size) const;
 #else
-    DISKANN_DLLEXPORT virtual float compare(const float *a, const float *b,
+    TURBO_DLL virtual float compare(const float *a, const float *b,
                                             uint32_t size) const
         __attribute__((hot));
 #endif
@@ -68,25 +68,25 @@ namespace tann {
 
   class AVXDistanceL2Float : public Distance<float> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const float *a, const float *b,
+    TURBO_DLL virtual float compare(const float *a, const float *b,
                                             uint32_t length) const;
   };
 
   class SlowDistanceL2Float : public Distance<float> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const float *a, const float *b,
+    TURBO_DLL virtual float compare(const float *a, const float *b,
                                             uint32_t length) const;
   };
 
   class SlowDistanceCosineUInt8 : public Distance<uint8_t> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const uint8_t *a, const uint8_t *b,
+    TURBO_DLL virtual float compare(const uint8_t *a, const uint8_t *b,
                                             uint32_t length) const;
   };
 
   class DistanceL2UInt8 : public Distance<uint8_t> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const uint8_t *a, const uint8_t *b,
+    TURBO_DLL virtual float compare(const uint8_t *a, const uint8_t *b,
                                             uint32_t size) const;
   };
 
@@ -95,7 +95,7 @@ namespace tann {
   class SlowDistanceL2Int : public Distance<T> {
    public:
     // Implementing here because this is a template function
-    DISKANN_DLLEXPORT virtual float compare(const T *a, const T *b,
+    TURBO_DLL virtual float compare(const T *a, const T *b,
                                             uint32_t length) const {
       uint32_t result = 0;
       for (uint32_t i = 0; i < length; i++) {
@@ -131,7 +131,7 @@ namespace tann {
 
   class AVXDistanceInnerProductFloat : public Distance<float> {
    public:
-    DISKANN_DLLEXPORT virtual float compare(const float *a, const float *b,
+    TURBO_DLL virtual float compare(const float *a, const float *b,
                                             uint32_t length) const;
   };
 
@@ -140,7 +140,7 @@ namespace tann {
     AVXDistanceInnerProductFloat _innerProduct;
 
    public:
-    DISKANN_DLLEXPORT virtual float compare(const float *a, const float *b,
+    TURBO_DLL virtual float compare(const float *a, const float *b,
                                             uint32_t length) const {
       // Inner product returns negative values to indicate distance.
       // This will ensure that cosine is between -1 and 1.

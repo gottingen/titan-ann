@@ -19,15 +19,15 @@
 #include <iostream>
 
 #include "logger_impl.h"
-#include "windows_customizations.h"
+#include "turbo/platform/port.h"
 
 namespace tann {
 
-  DISKANN_DLLEXPORT ANNStreamBuf coutBuff(stdout);
-  DISKANN_DLLEXPORT ANNStreamBuf cerrBuff(stderr);
+  TURBO_DLL ANNStreamBuf coutBuff(stdout);
+  TURBO_DLL ANNStreamBuf cerrBuff(stderr);
 
-  DISKANN_DLLEXPORT std::basic_ostream<char> cout(&coutBuff);
-  DISKANN_DLLEXPORT std::basic_ostream<char> cerr(&cerrBuff);
+  TURBO_DLL std::basic_ostream<char> cout(&coutBuff);
+  TURBO_DLL std::basic_ostream<char> cerr(&cerrBuff);
 
 #ifdef EXEC_ENV_OLS
   std::function<void(LogLevel, const char*)> g_logger;

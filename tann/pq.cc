@@ -1032,47 +1032,47 @@ namespace tann {
 
   // Instantations of supported templates
 
-  template DISKANN_DLLEXPORT int generate_pq_data_from_pivots<int8_t>(
+  template TURBO_DLL int generate_pq_data_from_pivots<int8_t>(
       const std::string data_file, unsigned num_centers, unsigned num_pq_chunks,
       std::string pq_pivots_path, std::string pq_compressed_vectors_path,
       bool use_opq);
-  template DISKANN_DLLEXPORT int generate_pq_data_from_pivots<uint8_t>(
+  template TURBO_DLL int generate_pq_data_from_pivots<uint8_t>(
       const std::string data_file, unsigned num_centers, unsigned num_pq_chunks,
       std::string pq_pivots_path, std::string pq_compressed_vectors_path,
       bool use_opq);
-  template DISKANN_DLLEXPORT int generate_pq_data_from_pivots<float>(
+  template TURBO_DLL int generate_pq_data_from_pivots<float>(
       const std::string data_file, unsigned num_centers, unsigned num_pq_chunks,
       std::string pq_pivots_path, std::string pq_compressed_vectors_path,
       bool use_opq);
 
-  template DISKANN_DLLEXPORT void generate_disk_quantized_data<int8_t>(
+  template TURBO_DLL void generate_disk_quantized_data<int8_t>(
       const std::string data_file_to_use, const std::string disk_pq_pivots_path,
       const std::string disk_pq_compressed_vectors_path,
       tann::Metric compareMetric, const double p_val, size_t& disk_pq_dims);
 
-  template DISKANN_DLLEXPORT void generate_disk_quantized_data<uint8_t>(
+  template TURBO_DLL void generate_disk_quantized_data<uint8_t>(
       const std::string data_file_to_use, const std::string disk_pq_pivots_path,
       const std::string disk_pq_compressed_vectors_path,
       tann::Metric compareMetric, const double p_val, size_t& disk_pq_dims);
 
-  template DISKANN_DLLEXPORT void generate_disk_quantized_data<float>(
+  template TURBO_DLL void generate_disk_quantized_data<float>(
       const std::string data_file_to_use, const std::string disk_pq_pivots_path,
       const std::string disk_pq_compressed_vectors_path,
       tann::Metric compareMetric, const double p_val, size_t& disk_pq_dims);
 
-  template DISKANN_DLLEXPORT void generate_quantized_data<int8_t>(
+  template TURBO_DLL void generate_quantized_data<int8_t>(
       const std::string data_file_to_use, const std::string pq_pivots_path,
       const std::string pq_compressed_vectors_path,
       tann::Metric compareMetric, const double p_val,
       const size_t num_pq_chunks, const bool use_opq);
 
-  template DISKANN_DLLEXPORT void generate_quantized_data<uint8_t>(
+  template TURBO_DLL void generate_quantized_data<uint8_t>(
       const std::string data_file_to_use, const std::string pq_pivots_path,
       const std::string pq_compressed_vectors_path,
       tann::Metric compareMetric, const double p_val,
       const size_t num_pq_chunks, const bool use_opq);
 
-  template DISKANN_DLLEXPORT void generate_quantized_data<float>(
+  template TURBO_DLL void generate_quantized_data<float>(
       const std::string data_file_to_use, const std::string pq_pivots_path,
       const std::string pq_compressed_vectors_path,
       tann::Metric compareMetric, const double p_val,
