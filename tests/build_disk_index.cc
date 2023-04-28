@@ -178,7 +178,7 @@ int main(int argc, char **argv) {
                         metric, use_opq, use_filters, label_file, universal_label,
                         filter_threshold, Lf);
             else {
-                tann::cerr << "Error. Unsupported data type" << std::endl;
+                TURBO_LOG(ERROR) << "Error. Unsupported data type" << std::endl;
                 return -1;
             }
         } else {
@@ -198,13 +198,13 @@ int main(int argc, char **argv) {
                         metric, use_opq, use_filters, label_file, universal_label,
                         filter_threshold, Lf);
             else {
-                tann::cerr << "Error. Unsupported data type" << std::endl;
+                TURBO_LOG(ERROR) << "Error. Unsupported data type" << std::endl;
                 return -1;
             }
         }
     } catch (const std::exception &e) {
         std::cout << std::string(e.what()) << std::endl;
-        tann::cerr << "Index build failed." << std::endl;
+        TURBO_LOG(ERROR) << "Index build failed." << std::endl;
         return -1;
     }
 }

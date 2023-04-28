@@ -178,9 +178,8 @@ int main(int argc, char **argv) {
     }
 
     try {
-        tann::cout << "Starting index build with R: " << R << "  Lbuild: " << L
-                   << "  alpha: " << alpha << "  #threads: " << num_threads
-                   << std::endl;
+        TURBO_LOG(INFO) << "Starting index build with R: " << R << "  Lbuild: " << L
+                   << "  alpha: " << alpha << "  #threads: " << num_threads;
         if (label_file != "" && label_type == "ushort") {
             if (data_type == std::string("int8"))
                 return build_in_memory_index<int8_t, uint32_t, uint16_t>(
@@ -226,7 +225,7 @@ int main(int argc, char **argv) {
         }
     } catch (const std::exception &e) {
         std::cout << std::string(e.what()) << std::endl;
-        tann::cerr << "Index build failed." << std::endl;
+        TURBO_LOG(ERROR) << "Index build failed." << std::endl;
         return -1;
     }
 }

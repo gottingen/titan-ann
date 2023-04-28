@@ -131,7 +131,7 @@ namespace tann {
       // This is safe because T is float inside the if block.
       this->_distance = (Distance<T> *) new AVXNormalizedCosineDistanceFloat();
       this->_normalize_vecs = true;
-      tann::cout << "Normalizing vectors and using L2 for cosine "
+      TURBO_LOG(INFO) << "Normalizing vectors and using L2 for cosine "
                        "AVXNormalizedCosineDistanceFloat()."
                     << std::endl;
     } else {
@@ -190,7 +190,7 @@ namespace tann {
   template<typename T, typename TagT, typename LabelT>
   _u64 Index<T, TagT, LabelT>::save_tags(std::string tags_file) {
     if (!_enable_tags) {
-      tann::cout << "Not saving tags as they are not enabled." << std::endl;
+      TURBO_LOG(INFO) << "Not saving tags as they are not enabled." << std::endl;
       return 0;
     }
     size_t tag_bytes_written;
@@ -347,14 +347,14 @@ namespace tann {
       delete_file(delete_list_file);
       save_delete_list(delete_list_file);
     } else {
-      tann::cout << "Save index in a single file currently not supported. "
+      TURBO_LOG(INFO) << "Save index in a single file currently not supported. "
                        "Not saving the index."
                     << std::endl;
     }
 
     reposition_frozen_point_to_end();
 
-    tann::cout << "Time taken for save: " << timer.elapsed() / 1000000.0
+    TURBO_LOG(INFO) << "Time taken for save: " << timer.elapsed() / 1000000.0
                   << "s." << std::endl;
   }
 
@@ -365,13 +365,13 @@ namespace tann {
   template<typename T, typename TagT, typename LabelT>
   size_t Index<T, TagT, LabelT>::load_tags(const std::string tag_filename) {
     if (_enable_tags && !file_exists(tag_filename)) {
-      tann::cerr << "Tag file provided does not exist!" << std::endl;
+      TURBO_LOG(ERROR) << "Tag file provided does not exist!" << std::endl;
       throw tann::ANNException("Tag file provided does not exist!", -1,
                                   __FUNCSIG__, __FILE__, __LINE__);
     }
 #endif
     if (!_enable_tags) {
-      tann::cout << "Tags not loaded as tags not enabled." << std::endl;
+      TURBO_LOG(INFO) << "Tags not loaded as tags not enabled." << std::endl;
       return 0;
     }
 
@@ -388,7 +388,7 @@ namespace tann {
       std::stringstream stream;
       stream << "ERROR: Found " << file_dim << " dimensions for tags,"
              << "but tag file must have 1 dimension." << std::endl;
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
       delete[] tag_data;
       throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
@@ -405,7 +405,7 @@ namespace tann {
         _tag_to_location[tag] = i;
       }
     }
-    tann::cout << "Tags loaded." << std::endl;
+    TURBO_LOG(INFO) << "Tags loaded." << std::endl;
     delete[] tag_data;
     return file_num_points;
   }
@@ -424,7 +424,7 @@ namespace tann {
       std::stringstream stream;
       stream << "ERROR: data file " << filename << " does not exist."
              << std::endl;
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
       aligned_free(_data);
       throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
@@ -439,7 +439,7 @@ namespace tann {
       std::stringstream stream;
       stream << "ERROR: Driver requests loading " << _dim << " dimension,"
              << "but file has " << file_dim << " dimension." << std::endl;
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
       aligned_free(_data);
       throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
@@ -525,7 +525,7 @@ namespace tann {
 #endif
 
     } else {
-      tann::cout << "Single index file saving/loading support not yet "
+      TURBO_LOG(INFO) << "Single index file saving/loading support not yet "
                        "enabled. Not loading the index."
                     << std::endl;
       return;
@@ -539,7 +539,7 @@ namespace tann {
              << " from graph, and " << tags_file_num_pts
              << " tags, with num_frozen_pts being set to " << _num_frozen_pts
              << " in constructor." << std::endl;
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
       aligned_free(_data);
       throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
@@ -598,7 +598,7 @@ namespace tann {
     }
 
     reposition_frozen_point_to_end();
-    tann::cout << "Num frozen points:" << _num_frozen_pts << " _nd: " << _nd
+    TURBO_LOG(INFO) << "Num frozen points:" << _num_frozen_pts << " _nd: " << _nd
                   << " _start: " << _start
                   << " size(_location_to_tag): " << _location_to_tag.size()
                   << " size(_tag_to_location):" << _tag_to_location.size()
@@ -654,7 +654,7 @@ namespace tann {
         sizeof(_u64) + sizeof(_u32) + sizeof(_u32) + sizeof(_u64);
 
 #endif
-    tann::cout << "From graph header, expected_file_size: "
+    TURBO_LOG(INFO) << "From graph header, expected_file_size: "
                   << expected_file_size
                   << ", _max_observed_degree: " << _max_observed_degree
                   << ", _start: " << _start
@@ -671,22 +671,22 @@ namespace tann {
                   "constructor asks for dynamic index. Exitting."
                << std::endl;
       }
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
       aligned_free(_data);
       throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
     }
 
 #ifdef EXEC_ENV_OLS
-    tann::cout << "Loading vamana graph from reader..." << std::flush;
+    TURBO_LOG(INFO) << "Loading vamana graph from reader..." << std::flush;
 #else
-    tann::cout << "Loading vamana graph " << filename << "..." << std::flush;
+    TURBO_LOG(INFO) << "Loading vamana graph " << filename << "..." << std::flush;
 #endif
 
     // If user provides more points than max_points
     // resize the _final_graph to the larger size.
     if (_max_points < expected_num_points) {
-      tann::cout << "Number of points in data: " << expected_num_points
+      TURBO_LOG(INFO) << "Number of points in data: " << expected_num_points
                     << " is greater than max_points: " << _max_points
                     << " Setting max points to: " << expected_num_points
                     << std::endl;
@@ -709,7 +709,7 @@ namespace tann {
       _final_graph[nodes_read].swap(tmp);
       nodes_read++;
       if (nodes_read % 1000000 == 0) {
-        tann::cout << "." << std::flush;
+        TURBO_LOG(INFO) << "." << std::flush;
       }
       if (k > _max_range_of_loaded_graph) {
         _max_range_of_loaded_graph = k;
@@ -724,7 +724,7 @@ namespace tann {
       in.read((char *) &k, sizeof(unsigned));
 
       if (k == 0) {
-        tann::cerr << "ERROR: Point found with no out-neighbors, point#"
+        TURBO_LOG(ERROR) << "ERROR: Point found with no out-neighbors, point#"
                       << nodes_read << std::endl;
       }
 
@@ -736,14 +736,14 @@ namespace tann {
       _final_graph[nodes_read - 1].swap(tmp);
       bytes_read += sizeof(uint32_t) * ((_u64) k + 1);
       if (nodes_read % 10000000 == 0)
-        tann::cout << "." << std::flush;
+        TURBO_LOG(INFO) << "." << std::flush;
       if (k > _max_range_of_loaded_graph) {
         _max_range_of_loaded_graph = k;
       }
     }
 #endif
 
-    tann::cout << "done. Index has " << nodes_read << " nodes and " << cc
+    TURBO_LOG(INFO) << "done. Index has " << nodes_read << " nodes and " << cc
                   << " out-edges, _start is set to " << _start << std::endl;
     return nodes_read;
   }
@@ -752,7 +752,7 @@ namespace tann {
   int Index<T, TagT, LabelT>::get_vector_by_tag(TagT &tag, T *vec) {
     std::shared_lock<std::shared_timed_mutex> lock(_tag_lock);
     if (_tag_to_location.find(tag) == _tag_to_location.end()) {
-      tann::cout << "Tag " << tag << " does not exist" << std::endl;
+      TURBO_LOG(INFO) << "Tag " << tag << " does not exist" << std::endl;
       return -1;
     }
 
@@ -899,7 +899,7 @@ namespace tann {
     // Initialize the candidate pool with starting points
     for (auto id : init_ids) {
       if (id >= _max_points + _num_frozen_pts) {
-        tann::cerr << "Out of range loc found as an edge : " << id
+        TURBO_LOG(ERROR) << "Out of range loc found as an edge : " << id
                       << std::endl;
         throw tann::ANNException(
             std::string("Wrong loc") + std::to_string(id), -1, __FUNCSIG__,
@@ -1361,13 +1361,13 @@ namespace tann {
       inter_insert(node, pruned_list, scratch);
 
       if (node_ctr % 100000 == 0) {
-        tann::cout << "\r" << (100.0 * node_ctr) / (visit_order.size())
+        TURBO_LOG(INFO) << "\r" << (100.0 * node_ctr) / (visit_order.size())
                       << "% of index build completed." << std::flush;
       }
     }
 
     if (_nd > 0) {
-      tann::cout << "Starting final cleanup.." << std::flush;
+      TURBO_LOG(INFO) << "Starting final cleanup.." << std::flush;
     }
 #pragma omp parallel for schedule(dynamic, 2048)
     for (_s64 node_ctr = 0; node_ctr < (_s64) (visit_order.size());
@@ -1400,7 +1400,7 @@ namespace tann {
       }
     }
     if (_nd > 0) {
-      tann::cout << "done. Link time: "
+      TURBO_LOG(INFO) << "done. Link time: "
                     << ((double) link_timer.elapsed() / (double) 1000000) << "s"
                     << std::endl;
     }
@@ -1446,7 +1446,7 @@ namespace tann {
       }
     }
 
-    tann::cout << "Prune time : " << timer.elapsed() / 1000 << "ms"
+    TURBO_LOG(INFO) << "Prune time : " << timer.elapsed() / 1000 << "ms"
                   << std::endl;
     size_t max = 0, min = 1 << 30, total = 0, cnt = 0;
     for (size_t i = 0; i < (_nd + _num_frozen_pts); i++) {
@@ -1460,7 +1460,7 @@ namespace tann {
     if (min > max)
       min = max;
     if (_nd > 0) {
-      tann::cout << "Index built with degree: max:" << max << "  avg:"
+      TURBO_LOG(INFO) << "Index built with degree: max:" << max << "  avg:"
                     << (float) total / (float) (_nd + _num_frozen_pts)
                     << "  min:" << min << "  count(deg<2):" << cnt << std::endl;
     }
@@ -1476,7 +1476,7 @@ namespace tann {
 
     memcpy(_data + _aligned_dim * _max_points, data, _aligned_dim * sizeof(T));
     _has_built = true;
-    tann::cout << "Index start point set" << std::endl;
+    TURBO_LOG(INFO) << "Index start point set" << std::endl;
   }
 
   template<typename T, typename TagT, typename LabelT>
@@ -1503,7 +1503,7 @@ namespace tann {
   template<typename T, typename TagT, typename LabelT>
   void Index<T, TagT, LabelT>::build_with_data_populated(
       Parameters &parameters, const std::vector<TagT> &tags) {
-    tann::cout << "Starting index build with " << _nd << " points... "
+    TURBO_LOG(INFO) << "Starting index build with " << _nd << " points... "
                   << std::endl;
 
     if (_nd < 1)
@@ -1515,7 +1515,7 @@ namespace tann {
       stream << "ERROR: Driver requests loading " << _nd << " points from file,"
              << "but tags vector is of size " << tags.size() << "."
              << std::endl;
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
       aligned_free(_data);
       throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
@@ -1549,7 +1549,7 @@ namespace tann {
       if (pool.size() < 2)
         cnt++;
     }
-    tann::cout << "Index built with degree: max:" << max
+    TURBO_LOG(INFO) << "Index built with degree: max:" << max
                   << "  avg:" << (float) total / (float) (_nd + _num_frozen_pts)
                   << "  min:" << min << "  count(deg<2):" << cnt << std::endl;
 
@@ -1604,7 +1604,7 @@ namespace tann {
       std::stringstream stream;
       stream << "ERROR: Data file " << filename << " does not exist."
              << std::endl;
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
       throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
     }
@@ -1649,7 +1649,7 @@ namespace tann {
       std::stringstream stream;
       stream << "ERROR: Driver requests loading " << _dim << " dimension,"
              << "but file has " << file_dim << " dimension." << std::endl;
-      tann::cerr << stream.str() << std::endl;
+      TURBO_LOG(ERROR) << stream.str() << std::endl;
 
       if (_pq_dist)
         aligned_free(_pq_data);
@@ -1691,7 +1691,7 @@ namespace tann {
       }
     }
 
-    tann::cout << "Using only first " << num_points_to_load
+    TURBO_LOG(INFO) << "Using only first " << num_points_to_load
                   << " from file.. " << std::endl;
 
     {
@@ -1715,7 +1715,7 @@ namespace tann {
                            -1, __FUNCSIG__, __FILE__, __LINE__);
       } else {
         if (file_exists(tag_filename)) {
-          tann::cout << "Loading tags from " << tag_filename
+          TURBO_LOG(INFO) << "Loading tags from " << tag_filename
                         << " for vamana index build" << std::endl;
           TagT  *tag_data = nullptr;
           size_t npts, ndim;
@@ -1769,7 +1769,7 @@ namespace tann {
     }
     std::stringstream stream;
     stream << "Unable to find label in the Label Map";
-    tann::cerr << stream.str() << std::endl;
+    TURBO_LOG(ERROR) << stream.str() << std::endl;
     throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                 __LINE__);
     exit(-1);
@@ -1811,14 +1811,14 @@ namespace tann {
         _labels.insert(token_as_num);
       }
       if (lbls.size() <= 0) {
-        tann::cout << "No label found";
+        TURBO_LOG(INFO) << "No label found";
         exit(-1);
       }
       std::sort(lbls.begin(), lbls.end());
       _pts_to_labels[line_cnt] = lbls;
       line_cnt++;
     }
-    tann::cout << "Identified " << _labels.size() << " distinct label(s)"
+    TURBO_LOG(INFO) << "Identified " << _labels.size() << " distinct label(s)"
                   << std::endl;
   }
 
@@ -1909,11 +1909,11 @@ namespace tann {
     auto                                      scratch = manager.scratch_space();
 
     if (L > scratch->get_L()) {
-      tann::cout << "Attempting to expand query scratch_space. Was created "
+      TURBO_LOG(INFO) << "Attempting to expand query scratch_space. Was created "
                     << "with Lsize: " << scratch->get_L()
                     << " but search L is: " << L << std::endl;
       scratch->resize_for_new_L(L);
-      tann::cout << "Resize completed. New scratch->L is "
+      TURBO_LOG(INFO) << "Resize completed. New scratch->L is "
                     << scratch->get_L() << std::endl;
     }
 
@@ -1949,7 +1949,7 @@ namespace tann {
         break;
     }
     if (pos < K) {
-      tann::cerr << "Found fewer than K elements for query" << std::endl;
+      TURBO_LOG(ERROR) << "Found fewer than K elements for query" << std::endl;
     }
 
     return retval;
@@ -1969,11 +1969,11 @@ namespace tann {
     auto                                      scratch = manager.scratch_space();
 
     if (L > scratch->get_L()) {
-      tann::cout << "Attempting to expand query scratch_space. Was created "
+      TURBO_LOG(INFO) << "Attempting to expand query scratch_space. Was created "
                     << "with Lsize: " << scratch->get_L()
                     << " but search L is: " << L << std::endl;
       scratch->resize_for_new_L(L);
-      tann::cout << "Resize completed. New scratch->L is "
+      TURBO_LOG(INFO) << "Resize completed. New scratch->L is "
                     << scratch->get_L() << std::endl;
     }
 
@@ -1985,7 +1985,7 @@ namespace tann {
     if (_label_to_medoid_id.find(filter_label) != _label_to_medoid_id.end()) {
       init_ids.emplace_back(_label_to_medoid_id[filter_label]);
     } else {
-      tann::cout
+      TURBO_LOG(INFO)
           << "No filtered medoid found. exitting "
           << std::endl;  // RKNOTE: If universal label found start there
       throw tann::ANNException("No filtered medoid found. exitting ", -1);
@@ -2022,7 +2022,7 @@ namespace tann {
         break;
     }
     if (pos < K) {
-      tann::cerr << "Found fewer than K elements for query" << std::endl;
+      TURBO_LOG(ERROR) << "Found fewer than K elements for query" << std::endl;
     }
 
     return retval;
@@ -2040,11 +2040,11 @@ namespace tann {
     auto                                      scratch = manager.scratch_space();
 
     if (L > scratch->get_L()) {
-      tann::cout << "Attempting to expand query scratch_space. Was created "
+      TURBO_LOG(INFO) << "Attempting to expand query scratch_space. Was created "
                     << "with Lsize: " << scratch->get_L()
                     << " but search L is: " << L << std::endl;
       scratch->resize_for_new_L(L);
-      tann::cout << "Resize completed. New scratch->L is "
+      TURBO_LOG(INFO) << "Resize completed. New scratch->L is "
                     << scratch->get_L() << std::endl;
     }
 
@@ -2133,7 +2133,7 @@ namespace tann {
     assert(_enable_tags);
 
     if (!_enable_tags) {
-      tann::cerr << "Tags must be instantiated for deletions" << std::endl;
+      TURBO_LOG(ERROR) << "Tags must be instantiated for deletions" << std::endl;
       return -2;
     }
 
@@ -2227,12 +2227,12 @@ namespace tann {
       std::shared_lock<std::shared_timed_mutex> dl(_delete_lock);
       if (_empty_slots.size() + _nd != _max_points) {
         std::string err = "#empty slots + nd != max points";
-        tann::cerr << err << std::endl;
+        TURBO_LOG(ERROR) << err << std::endl;
         throw ANNException(err, -1, __FUNCSIG__, __FILE__, __LINE__);
       }
 
       if (_location_to_tag.size() + _delete_set->size() != _nd) {
-        tann::cerr << "Error: _location_to_tag.size ("
+        TURBO_LOG(ERROR) << "Error: _location_to_tag.size ("
                       << _location_to_tag.size() << ")  + _delete_set->size ("
                       << _delete_set->size() << ") != _nd(" << _nd << ") ";
         return consolidation_report(tann::consolidation_report::status_code::
@@ -2255,7 +2255,7 @@ namespace tann {
     std::unique_lock<std::shared_timed_mutex> cl(_consolidate_lock,
                                                  std::defer_lock);
     if (!cl.try_lock()) {
-      tann::cerr
+      TURBO_LOG(ERROR)
           << "Consildate delete function failed to acquire consolidate lock"
           << std::endl;
       return consolidation_report(
@@ -2263,7 +2263,7 @@ namespace tann {
           0, 0);
     }
 
-    tann::cout << "Starting consolidate_deletes... ";
+    TURBO_LOG(INFO) << "Starting consolidate_deletes... ";
 
     std::unique_ptr<turbo::flat_hash_set<unsigned>> old_delete_set(
         new turbo::flat_hash_set<unsigned>);
@@ -2319,7 +2319,7 @@ namespace tann {
     }
 
     double duration = timer.elapsed() / 1000000.0;
-    tann::cout << " done in " << duration << " seconds." << std::endl;
+    TURBO_LOG(INFO) << " done in " << duration << " seconds." << std::endl;
     return consolidation_report(
         tann::consolidation_report::status_code::SUCCESS, ret_nd, max_points,
         empty_slots_size, old_delete_set_size, delete_set_size,
@@ -2361,7 +2361,7 @@ namespace tann {
                          __FILE__, __LINE__);
 
     if (_data_compacted) {
-      tann::cerr
+      TURBO_LOG(ERROR)
           << "Warning! Calling compact_data() when _data_compacted is true!"
           << std::endl;
       return;
@@ -2411,7 +2411,7 @@ namespace tann {
         for (auto ngh_iter : _final_graph[old]) {
           if (empty_locations.find(ngh_iter) != empty_locations.end()) {
             ++num_dangling;
-            tann::cerr << "Error in compact_data(). _final_graph[" << old
+            TURBO_LOG(ERROR) << "Error in compact_data(). _final_graph[" << old
                           << "] has neighbor " << ngh_iter
                           << " which is a location not associated with any tag."
                           << std::endl;
@@ -2435,7 +2435,7 @@ namespace tann {
         _final_graph[old].clear();
       }
     }
-    tann::cerr << "#dangling references after data compaction: "
+    TURBO_LOG(ERROR) << "#dangling references after data compaction: "
                   << num_dangling << std::endl;
 
     _tag_to_location.clear();
@@ -2458,7 +2458,7 @@ namespace tann {
     }
 
     _data_compacted = true;
-    tann::cout << "Time taken for compact_data: "
+    TURBO_LOG(INFO) << "Time taken for compact_data: "
                   << timer.elapsed() / 1000000. << "s." << std::endl;
   }
 
@@ -2548,7 +2548,7 @@ namespace tann {
       return;
 
     if (_nd == _max_points) {
-      tann::cout
+      TURBO_LOG(INFO)
           << "Not repositioning frozen point as it is already at the end."
           << std::endl;
       return;
@@ -2588,7 +2588,7 @@ namespace tann {
     }
 
     auto stop = std::chrono::high_resolution_clock::now();
-    tann::cout << "Resizing took: "
+    TURBO_LOG(INFO) << "Resizing took: "
                   << std::chrono::duration<double>(stop - start).count() << "s"
                   << std::endl;
   }
@@ -2714,7 +2714,7 @@ namespace tann {
     _data_compacted = false;
 
     if (_tag_to_location.find(tag) == _tag_to_location.end()) {
-      tann::cerr << "Delete tag not found " << tag << std::endl;
+      TURBO_LOG(ERROR) << "Delete tag not found " << tag << std::endl;
       return -1;
     }
     assert(_tag_to_location[tag] < _max_points);
@@ -2773,19 +2773,19 @@ namespace tann {
     std::shared_lock<std::shared_timed_mutex> tl(_tag_lock);
     std::shared_lock<std::shared_timed_mutex> dl(_delete_lock);
 
-    tann::cout << "------------------- Index object: " << (uint64_t) this
+    TURBO_LOG(INFO) << "------------------- Index object: " << (uint64_t) this
                   << " -------------------" << std::endl;
-    tann::cout << "Number of points: " << _nd << std::endl;
-    tann::cout << "Graph size: " << _final_graph.size() << std::endl;
-    tann::cout << "Location to tag size: " << _location_to_tag.size()
+    TURBO_LOG(INFO) << "Number of points: " << _nd << std::endl;
+    TURBO_LOG(INFO) << "Graph size: " << _final_graph.size() << std::endl;
+    TURBO_LOG(INFO) << "Location to tag size: " << _location_to_tag.size()
                   << std::endl;
-    tann::cout << "Tag to location size: " << _tag_to_location.size()
+    TURBO_LOG(INFO) << "Tag to location size: " << _tag_to_location.size()
                   << std::endl;
-    tann::cout << "Number of empty slots: " << _empty_slots.size()
+    TURBO_LOG(INFO) << "Number of empty slots: " << _empty_slots.size()
                   << std::endl;
-    tann::cout << std::boolalpha
+    TURBO_LOG(INFO) << std::boolalpha
                   << "Data compacted: " << this->_data_compacted << std::endl;
-    tann::cout << "---------------------------------------------------------"
+    TURBO_LOG(INFO) << "---------------------------------------------------------"
                      "------------"
                   << std::endl;
   }
@@ -2810,7 +2810,7 @@ namespace tann {
     }
 
     for (size_t l = 0; l < MAX_BFS_LEVELS - 1; ++l) {
-      tann::cout << "Number of nodes at BFS level " << l << " is "
+      TURBO_LOG(INFO) << "Number of nodes at BFS level " << l << " is "
                     << bfs_sets[l].size() << std::endl;
       if (bfs_sets[l].size() == 0)
         break;

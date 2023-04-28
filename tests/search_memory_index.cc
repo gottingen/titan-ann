@@ -68,8 +68,8 @@ int search_memory_index(tann::Metric &metric, const std::string &index_path,
         }
         calc_recall_flag = true;
     } else {
-        tann::cout << " Truthset file " << truthset_file
-                   << " not found. Not computing recall." << std::endl;
+        TURBO_LOG(INFO) << " Truthset file " << truthset_file
+                   << " not found. Not computing recall.";
     }
 
     bool filtered_search = false;
@@ -134,8 +134,8 @@ int search_memory_index(tann::Metric &metric, const std::string &index_path,
     for (uint32_t test_id = 0; test_id < Lvec.size(); test_id++) {
         _u64 L = Lvec[test_id];
         if (L < recall_at) {
-            tann::cout << "Ignoring search with L:" << L
-                       << " since it's smaller than K:" << recall_at << std::endl;
+            TURBO_LOG(INFO) << "Ignoring search with L:" << L
+                       << " since it's smaller than K:" << recall_at;
             continue;
         }
 
@@ -227,8 +227,8 @@ int search_memory_index(tann::Metric &metric, const std::string &index_path,
     _u64 test_id = 0;
     for (auto L: Lvec) {
         if (L < recall_at) {
-            tann::cout << "Ignoring search with L:" << L
-                       << " since it's smaller than K:" << recall_at << std::endl;
+            TURBO_LOG(INFO) << "Ignoring search with L:" << L
+                       << " since it's smaller than K:" << recall_at;
             continue;
         }
         std::string cur_result_path =
@@ -395,7 +395,7 @@ int main(int argc, char **argv) {
         }
     } catch (std::exception &e) {
         std::cout << std::string(e.what()) << std::endl;
-        tann::cerr << "Index search failed." << std::endl;
+        TURBO_LOG(ERROR) << "Index search failed." << std::endl;
         return -1;
     }
 }

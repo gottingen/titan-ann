@@ -150,13 +150,13 @@ void delete_and_consolidate(tann::Index<T, TagT, LabelT> &index,
             int wait_time = 5;
             if (report._status ==
                 tann::consolidation_report::status_code::LOCK_FAIL) {
-                tann::cerr << "Unable to acquire consolidate delete lock after "
+                TURBO_LOG(ERROR) << "Unable to acquire consolidate delete lock after "
                            << "deleting points " << start << " to " << end
                            << ". Will retry in " << wait_time << "seconds."
                            << std::endl;
             } else if (report._status == tann::consolidation_report::status_code::
             INCONSISTENT_COUNT_ERROR) {
-                tann::cerr << "Inconsistent counts in data structure. "
+                TURBO_LOG(ERROR) << "Inconsistent counts in data structure. "
                            << "Will retry in " << wait_time << "seconds."
                            << std::endl;
             } else {

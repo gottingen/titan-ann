@@ -19,7 +19,7 @@
 #include <malloc.h>
 #include "math_utils.h"
 #include "mkl/mkl.h"
-#include "logger.h"
+#include "turbo/log/logging.h"
 #include "utils.h"
 
 namespace math_utils {
@@ -50,16 +50,16 @@ namespace math_utils {
                             bool transpose_rot) {
     CBLAS_TRANSPOSE transpose = CblasNoTrans;
     if (transpose_rot) {
-      tann::cout << "Transposing rotation matrix.." << std::flush;
+      TURBO_LOG(INFO) << "Transposing rotation matrix.." << std::flush;
       transpose = CblasTrans;
     }
-    tann::cout << "done Rotating data with random matrix.." << std::flush;
+    TURBO_LOG(INFO) << "done Rotating data with random matrix.." << std::flush;
 
     cblas_sgemm(CblasRowMajor, CblasNoTrans, transpose, (MKL_INT) num_points,
                 (MKL_INT) dim, (MKL_INT) dim, 1.0, data, (MKL_INT) dim, rot_mat,
                 (MKL_INT) dim, 0, new_mat, (MKL_INT) dim);
 
-    tann::cout << "done." << std::endl;
+    TURBO_LOG(INFO) << "done." << std::endl;
   }
 
   // calculate k closest centers to data of num_points * dim (row major)
@@ -78,7 +78,7 @@ namespace math_utils {
       const float* const docs_l2sq, const float* const centers_l2sq,
       uint32_t* center_index, float* const dist_matrix, size_t k) {
     if (k > num_centers) {
-      tann::cout << "ERROR: k (" << k << ") > num_center(" << num_centers
+      TURBO_LOG(INFO) << "ERROR: k (" << k << ") > num_center(" << num_centers
                     << ")" << std::endl;
       return;
     }
@@ -156,7 +156,7 @@ namespace math_utils {
                                std::vector<size_t>* inverted_index,
                                float*               pts_norms_squared) {
     if (k > num_centers) {
-      tann::cout << "ERROR: k (" << k << ") > num_center(" << num_centers
+      TURBO_LOG(INFO) << "ERROR: k (" << k << ") > num_center(" << num_centers
                     << ")" << std::endl;
       return;
     }
@@ -219,7 +219,7 @@ namespace math_utils {
   void process_residuals(float* data_load, size_t num_points, size_t dim,
                          float* cur_pivot_data, size_t num_centers,
                          uint32_t* closest_centers, bool to_subtract) {
-    tann::cout << "Processing residuals of " << num_points << " points in "
+    TURBO_LOG(INFO) << "Processing residuals of " << num_points << " points in "
                   << dim << " dimensions using " << num_centers << " centers "
                   << std::endl;
 #pragma omp parallel for schedule(static, 8192)
@@ -349,7 +349,7 @@ namespace kmeans {
 
       if (((i != 0) && ((old_residual - residual) / residual) < 0.00001) ||
           (residual < std::numeric_limits<float>::epsilon())) {
-        tann::cout << "Residuals unchanged: " << old_residual << " becomes "
+        TURBO_LOG(INFO) << "Residuals unchanged: " << old_residual << " becomes "
                       << residual << ". Early termination." << std::endl;
         break;
       }
@@ -389,11 +389,10 @@ namespace kmeans {
   void kmeanspp_selecting_pivots(float* data, size_t num_points, size_t dim,
                                  float* pivot_data, size_t num_centers) {
     if (num_points > 1 << 23) {
-      tann::cout << "ERROR: n_pts " << num_points
+      TURBO_LOG(INFO) << "ERROR: n_pts " << num_points
                     << " currently not supported for k-means++, maximum is "
                        "8388608. Falling back to random pivot "
-                       "selection."
-                    << std::endl;
+                       "selection.";
       selecting_pivots(data, num_points, dim, pivot_data, num_centers);
       return;
     }

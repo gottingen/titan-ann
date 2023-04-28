@@ -69,7 +69,7 @@ namespace tann {
     bool use_old_filetype = false;
 
     if (nr != 4 && nr != 5) {
-      tann::cout << "Error reading pq_pivots file " << pq_table_file
+      TURBO_LOG(INFO) << "Error reading pq_pivots file " << pq_table_file
                     << ". Offsets dont contain correct metadata, # offsets = "
                     << nr << ", but expecting " << 4 << " or " << 5;
       throw tann::ANNException(
@@ -78,14 +78,14 @@ namespace tann {
     }
 
     if (nr == 4) {
-      tann::cout << "Offsets: " << file_offset_data[0] << " "
+      TURBO_LOG(INFO) << "Offsets: " << file_offset_data[0] << " "
                     << file_offset_data[1] << " " << file_offset_data[2] << " "
                     << file_offset_data[3] << std::endl;
     } else if (nr == 5) {
       use_old_filetype = true;
-      tann::cout << "Offsets: " << file_offset_data[0] << " "
+      TURBO_LOG(INFO) << "Offsets: " << file_offset_data[0] << " "
                     << file_offset_data[1] << " " << file_offset_data[2] << " "
-                    << file_offset_data[3] << file_offset_data[4] << std::endl;
+                    << file_offset_data[3] << file_offset_data[4];
     } else {
       throw tann::ANNException("Wrong number of offsets in pq_pivots", -1,
                                   __FUNCSIG__, __FILE__, __LINE__);
@@ -101,7 +101,7 @@ namespace tann {
 #endif
 
     if ((nr != NUM_PQ_CENTROIDS)) {
-      tann::cout << "Error reading pq_pivots file " << pq_table_file
+      TURBO_LOG(INFO) << "Error reading pq_pivots file " << pq_table_file
                     << ". file_num_centers  = " << nr << " but expecting "
                     << NUM_PQ_CENTROIDS << " centers";
       throw tann::ANNException(
@@ -120,7 +120,7 @@ namespace tann {
 #endif
 
     if ((nr != this->ndims) || (nc != 1)) {
-      tann::cerr << "Error reading centroids from pq_pivots file "
+      TURBO_LOG(ERROR) << "Error reading centroids from pq_pivots file "
                     << pq_table_file << ". file_dim  = " << nr
                     << ", file_cols = " << nc << " but expecting "
                     << this->ndims << " entries in 1 dimension.";
@@ -142,18 +142,17 @@ namespace tann {
 #endif
 
     if (nc != 1 || (nr != num_chunks + 1 && num_chunks != 0)) {
-      tann::cerr << "Error loading chunk offsets file. numc: " << nc
+      TURBO_LOG(ERROR) << "Error loading chunk offsets file. numc: " << nc
                     << " (should be 1). numr: " << nr << " (should be "
-                    << num_chunks + 1 << " or 0 if we need to infer)"
-                    << std::endl;
+                    << num_chunks + 1 << " or 0 if we need to infer)";
       throw tann::ANNException("Error loading chunk offsets file", -1,
                                   __FUNCSIG__, __FILE__, __LINE__);
     }
 
     this->n_chunks = nr - 1;
-    tann::cout << "Loaded PQ Pivots: #ctrs: " << NUM_PQ_CENTROIDS
+    TURBO_LOG(INFO) << "Loaded PQ Pivots: #ctrs: " << NUM_PQ_CENTROIDS
                   << ", #dims: " << this->ndims
-                  << ", #chunks: " << this->n_chunks << std::endl;
+                  << ", #chunks: " << this->n_chunks;
 
     if (file_exists(rotmat_file)) {
 #ifdef EXEC_ENV_OLS
@@ -162,7 +161,7 @@ namespace tann {
       tann::load_bin<float>(rotmat_file, rotmat_tr, nr, nc);
 #endif
       if (nr != this->ndims || nc != this->ndims) {
-        tann::cerr << "Error loading rotation matrix file" << std::endl;
+        TURBO_LOG(ERROR) << "Error loading rotation matrix file" << std::endl;
         throw tann::ANNException("Error loading rotation matrix file", -1,
                                     __FUNCSIG__, __FILE__, __LINE__);
       }
@@ -343,7 +342,7 @@ namespace tann {
                          unsigned num_pq_chunks, unsigned max_k_means_reps,
                          std::string pq_pivots_path, bool make_zero_mean) {
     if (num_pq_chunks > dim) {
-      tann::cout << " Error: number of chunks more than dimension"
+      TURBO_LOG(INFO) << " Error: number of chunks more than dimension"
                     << std::endl;
       return -1;
     }
@@ -360,7 +359,7 @@ namespace tann {
       tann::load_bin<float>(pq_pivots_path, full_pivot_data,
                                file_num_centers, file_dim, METADATA_SIZE);
       if (file_dim == dim && file_num_centers == num_centers) {
-        tann::cout << "PQ pivot file exists. Not generating again"
+        TURBO_LOG(INFO) << "PQ pivot file exists. Not generating again"
                       << std::endl;
         return -1;
       }
@@ -447,7 +446,7 @@ namespace tann {
       std::unique_ptr<uint32_t[]> closest_center =
           std::make_unique<uint32_t[]>(num_train);
 
-      tann::cout << "Processing chunk " << i << " with dimensions ["
+      TURBO_LOG(INFO) << "Processing chunk " << i << " with dimensions ["
                     << chunk_offsets[i] << ", " << chunk_offsets[i + 1] << ")"
                     << std::endl;
 
@@ -490,7 +489,7 @@ namespace tann {
     tann::save_bin<_u64>(pq_pivots_path.c_str(), cumul_bytes.data(),
                             cumul_bytes.size(), 1, 0);
 
-    tann::cout << "Saved pq pivot data to " << pq_pivots_path << " of size "
+    TURBO_LOG(INFO) << "Saved pq pivot data to " << pq_pivots_path << " of size "
                   << cumul_bytes[cumul_bytes.size() - 1] << "B." << std::endl;
 
     return 0;
@@ -501,7 +500,7 @@ namespace tann {
                           unsigned num_pq_chunks, std::string opq_pivots_path,
                           bool make_zero_mean) {
     if (num_pq_chunks > dim) {
-      tann::cout << " Error: number of chunks more than dimension"
+      TURBO_LOG(INFO) << " Error: number of chunks more than dimension"
                     << std::endl;
       return -1;
     }
@@ -621,7 +620,7 @@ namespace tann {
         std::unique_ptr<uint32_t[]> closest_center =
             std::make_unique<uint32_t[]>(num_train);
 
-        tann::cout << "Processing chunk " << i << " with dimensions ["
+        TURBO_LOG(INFO) << "Processing chunk " << i << " with dimensions ["
                       << chunk_offsets[i] << ", " << chunk_offsets[i + 1] << ")"
                       << std::endl;
 
@@ -709,7 +708,7 @@ namespace tann {
     tann::save_bin<_u64>(opq_pivots_path.c_str(), cumul_bytes.data(),
                             cumul_bytes.size(), 1, 0);
 
-    tann::cout << "Saved opq pivot data to " << opq_pivots_path
+    TURBO_LOG(INFO) << "Saved opq pivot data to " << opq_pivots_path
                   << " of size " << cumul_bytes[cumul_bytes.size() - 1] << "B."
                   << std::endl;
 
@@ -757,7 +756,7 @@ namespace tann {
                               0);
 
       if (nr != 4) {
-        tann::cout << "Error reading pq_pivots file " << pq_pivots_path
+        TURBO_LOG(INFO) << "Error reading pq_pivots file " << pq_pivots_path
                       << ". Offsets dont contain correct metadata, # offsets = "
                       << nr << ", but expecting 4.";
         throw tann::ANNException(
@@ -769,7 +768,7 @@ namespace tann {
                                file_offset_data[0]);
 
       if ((nr != num_centers) || (nc != dim)) {
-        tann::cout << "Error reading pq_pivots file " << pq_pivots_path
+        TURBO_LOG(INFO) << "Error reading pq_pivots file " << pq_pivots_path
                       << ". file_num_centers  = " << nr << ", file_dim = " << nc
                       << " but expecting " << num_centers << " centers in "
                       << dim << " dimensions.";
@@ -782,7 +781,7 @@ namespace tann {
                                file_offset_data[1]);
 
       if ((nr != dim) || (nc != 1)) {
-        tann::cout << "Error reading pq_pivots file " << pq_pivots_path
+        TURBO_LOG(INFO) << "Error reading pq_pivots file " << pq_pivots_path
                       << ". file_dim  = " << nr << ", file_cols = " << nc
                       << " but expecting " << dim << " entries in 1 dimension.";
         throw tann::ANNException(
@@ -794,7 +793,7 @@ namespace tann {
                                   file_offset_data[2]);
 
       if (nr != (uint64_t) num_pq_chunks + 1 || nc != 1) {
-        tann::cout
+        TURBO_LOG(INFO)
             << "Error reading pq_pivots file at chunk offsets; file has nr="
             << nr << ",nc=" << nc << ", expecting nr=" << num_pq_chunks + 1
             << ", nc=1." << std::endl;
@@ -807,13 +806,13 @@ namespace tann {
         std::string rotmat_path = pq_pivots_path + "_rotation_matrix.bin";
         tann::load_bin<float>(rotmat_path.c_str(), rotmat_tr, nr, nc);
         if (nr != (uint64_t) dim || nc != dim) {
-          tann::cout << "Error reading rotation matrix file." << std::endl;
+          TURBO_LOG(INFO) << "Error reading rotation matrix file." << std::endl;
           throw tann::ANNException("Error reading rotation matrix file.", -1,
                                       __FUNCSIG__, __FILE__, __LINE__);
         }
       }
 
-      tann::cout << "Loaded PQ pivot information" << std::endl;
+      TURBO_LOG(INFO) << "Loaded PQ pivot information" << std::endl;
     }
 
     std::ofstream compressed_file_writer(pq_compressed_vectors_path,
@@ -858,7 +857,7 @@ namespace tann {
       tann::convert_types<T, float>(block_data_T.get(), block_data_tmp.get(),
                                        cur_blk_size, dim);
 
-      tann::cout << "Processing points  [" << start_id << ", " << end_id
+      TURBO_LOG(INFO) << "Processing points  [" << start_id << ", " << end_id
                     << ").." << std::flush;
 
       for (uint64_t p = 0; p < cur_blk_size; p++) {
@@ -943,7 +942,7 @@ namespace tann {
       inflated_file_writer.write((char*) (block_inflated_base.get()),
                                  cur_blk_size * dim * sizeof(float));
 #endif
-      tann::cout << ".done." << std::endl;
+      TURBO_LOG(INFO) << ".done." << std::endl;
     }
 // Gopal. Splitting diskann_dll into separate DLLs for search and build.
 // This code should only be available in the "build" DLL.
@@ -969,7 +968,7 @@ namespace tann {
     // instantiates train_data with random sample updates train_size
     gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size,
                         train_dim);
-    tann::cout << "Training data with " << train_size << " samples loaded."
+    TURBO_LOG(INFO) << "Training data with " << train_size << " samples loaded."
                   << std::endl;
 
     if (disk_pq_dims > train_dim)
@@ -1005,7 +1004,7 @@ namespace tann {
     // instantiates train_data with random sample updates train_size
     gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size,
                         train_dim);
-    tann::cout << "Training data with " << train_size << " samples loaded."
+    TURBO_LOG(INFO) << "Training data with " << train_size << " samples loaded."
                   << std::endl;
 
     bool make_zero_mean = true;

@@ -69,8 +69,8 @@ void gen_random_slice(const std::string base_file,
 
   base_reader.read((char *) &npts_u32, sizeof(uint32_t));
   base_reader.read((char *) &nd_u32, sizeof(uint32_t));
-  tann::cout << "Loading base " << base_file << ". #points: " << npts_u32
-                << ". #dim: " << nd_u32 << "." << std::endl;
+  TURBO_LOG(INFO) << "Loading base " << base_file << ". #points: " << npts_u32
+                << ". #dim: " << nd_u32 << ".";
   sample_writer.write((char *) &num_sampled_pts_u32, sizeof(uint32_t));
   sample_writer.write((char *) &nd_u32, sizeof(uint32_t));
   sample_id_writer.write((char *) &num_sampled_pts_u32, sizeof(uint32_t));
@@ -96,9 +96,8 @@ void gen_random_slice(const std::string base_file,
   sample_id_writer.write((char *) &num_sampled_pts_u32, sizeof(uint32_t));
   sample_writer.close();
   sample_id_writer.close();
-  tann::cout << "Wrote " << num_sampled_pts_u32
-                << " points to sample file: " << output_prefix + "_data.bin"
-                << std::endl;
+  TURBO_LOG(INFO) << "Wrote " << num_sampled_pts_u32
+                << " points to sample file: " << output_prefix + "_data.bin";
 }
 
 // streams data from the file, and samples each vector with probability p_val
@@ -227,13 +226,14 @@ int estimate_cluster_sizes(float *test_data_float, size_t num_test,
     }
   }
 
-  tann::cout << "Estimated cluster sizes: ";
+  std::stringstream ss;
+  ss << "Estimated cluster sizes: ";
   for (size_t i = 0; i < num_centers; i++) {
     _u32 cur_shard_count = (_u32) shard_counts[i];
     cluster_sizes.push_back((size_t) cur_shard_count);
-    tann::cout << cur_shard_count << " ";
+    ss<< cur_shard_count << " ";
   }
-  tann::cout << std::endl;
+  TURBO_LOG(INFO) << ss.str();
   delete[] shard_counts;
   delete[] block_closest_centers;
   return 0;
@@ -253,8 +253,7 @@ int shard_data_into_clusters(const std::string data_file, float *pivots,
   base_reader.read((char *) &basedim32, sizeof(uint32_t));
   size_t num_points = npts32;
   if (basedim32 != dim) {
-    tann::cout << "Error. dimensions dont match for train set and base set"
-                  << std::endl;
+    TURBO_LOG(ERROR) << "Error. dimensions dont match for train set and base set";
     return -1;
   }
 
@@ -318,11 +317,11 @@ int shard_data_into_clusters(const std::string data_file, float *pivots,
   }
 
   size_t total_count = 0;
-  tann::cout << "Actual shard sizes: " << std::flush;
+  TURBO_LOG(INFO) << "Actual shard sizes: " << std::flush;
   for (size_t i = 0; i < num_centers; i++) {
     _u32 cur_shard_count = (_u32) shard_counts[i];
     total_count += cur_shard_count;
-    tann::cout << cur_shard_count << " ";
+    TURBO_LOG(INFO) << cur_shard_count << " ";
     shard_data_writer[i].seekp(0);
     shard_data_writer[i].write((char *) &cur_shard_count, sizeof(uint32_t));
     shard_data_writer[i].close();
@@ -331,10 +330,9 @@ int shard_data_into_clusters(const std::string data_file, float *pivots,
     shard_idmap_writer[i].close();
   }
 
-  tann::cout << "\n Partitioned " << num_points
+  TURBO_LOG(INFO) << "\n Partitioned " << num_points
                 << " with replication factor " << k_base << " to get "
-                << total_count << " points across " << num_centers << " shards "
-                << std::endl;
+                << total_count << " points across " << num_centers << " shards ";
   return 0;
 }
 
@@ -355,8 +353,7 @@ int shard_data_into_clusters_only_ids(const std::string data_file,
   base_reader.read((char *) &basedim32, sizeof(uint32_t));
   size_t num_points = npts32;
   if (basedim32 != dim) {
-    tann::cout << "Error. dimensions dont match for train set and base set"
-                  << std::endl;
+    TURBO_LOG(INFO) << "Error. dimensions dont match for train set and base set";
     return -1;
   }
 
@@ -412,20 +409,19 @@ int shard_data_into_clusters_only_ids(const std::string data_file,
   }
 
   size_t total_count = 0;
-  tann::cout << "Actual shard sizes: " << std::flush;
+  TURBO_LOG(INFO) << "Actual shard sizes: " << std::flush;
   for (size_t i = 0; i < num_centers; i++) {
     _u32 cur_shard_count = (_u32) shard_counts[i];
     total_count += cur_shard_count;
-    tann::cout << cur_shard_count << " ";
+    TURBO_LOG(INFO) << cur_shard_count << " ";
     shard_idmap_writer[i].seekp(0);
     shard_idmap_writer[i].write((char *) &cur_shard_count, sizeof(uint32_t));
     shard_idmap_writer[i].close();
   }
 
-  tann::cout << "\n Partitioned " << num_points
+  TURBO_LOG(INFO) << "\n Partitioned " << num_points
                 << " with replication factor " << k_base << " to get "
-                << total_count << " points across " << num_centers << " shards "
-                << std::endl;
+                << total_count << " points across " << num_centers << " shards ";
   return 0;
 }
 
@@ -456,7 +452,7 @@ int retrieve_shard_data_from_ids(const std::string data_file,
 
   _u32 cur_pos = 0;
   _u32 num_written = 0;
-  std::cout << "Shard has " << shard_size << " points" << std::endl;
+  std::cout << "Shard has " << shard_size << " points";
 
   size_t block_size = num_points <= BLOCK_SIZE ? num_points : BLOCK_SIZE;
   std::unique_ptr<T[]> block_data_T = std::make_unique<T[]>(block_size * dim);
@@ -486,8 +482,7 @@ int retrieve_shard_data_from_ids(const std::string data_file,
       break;
   }
 
-  tann::cout << "Written file with " << num_written << " points"
-                << std::endl;
+  TURBO_LOG(INFO) << "Written file with " << num_written << " points";
 
   shard_data_writer.seekp(0);
   shard_data_writer.write((char *) &num_written, sizeof(uint32_t));
@@ -526,15 +521,14 @@ int partition(const std::string data_file, const float sampling_rate,
   pivot_data = new float[num_parts * train_dim];
 
   // Process Global k-means for kmeans_partitioning Step
-  tann::cout << "Processing global k-means (kmeans_partitioning Step)"
-                << std::endl;
+  TURBO_LOG(INFO) << "Processing global k-means (kmeans_partitioning Step)";
   kmeans::kmeanspp_selecting_pivots(train_data_float, num_train, train_dim,
                                     pivot_data, num_parts);
 
   kmeans::run_lloyds(train_data_float, num_train, train_dim, pivot_data,
                      num_parts, max_k_means_reps, NULL, NULL);
 
-  tann::cout << "Saving global k-center pivots" << std::endl;
+  TURBO_LOG(INFO) << "Saving global k-center pivots";
   tann::save_bin<float>(output_file.c_str(), pivot_data, (size_t) num_parts,
                            train_dim);
 
@@ -589,8 +583,7 @@ int partition_with_ram_budget(const std::string data_file,
 
     pivot_data = new float[num_parts * train_dim];
     // Process Global k-means for kmeans_partitioning Step
-    tann::cout << "Processing global k-means (kmeans_partitioning Step)"
-                  << std::endl;
+    TURBO_LOG(INFO) << "Processing global k-means (kmeans_partitioning Step)";
     kmeans::kmeanspp_selecting_pivots(train_data_float, num_train, train_dim,
                                       pivot_data, num_parts);
 
@@ -614,16 +607,16 @@ int partition_with_ram_budget(const std::string data_file,
       if (cur_shard_ram_estimate > max_ram_usage)
         max_ram_usage = cur_shard_ram_estimate;
     }
-    tann::cout << "With " << num_parts << " parts, max estimated RAM usage: "
+    TURBO_LOG(INFO) << "With " << num_parts << " parts, max estimated RAM usage: "
                   << max_ram_usage / (1024 * 1024 * 1024)
-                  << "GB, budget given is " << ram_budget << std::endl;
+                  << "GB, budget given is " << ram_budget;
     if (max_ram_usage > 1024 * 1024 * 1024 * ram_budget) {
       fit_in_ram = false;
       num_parts += 2;
     }
   }
 
-  tann::cout << "Saving global k-center pivots" << std::endl;
+  TURBO_LOG(INFO) << "Saving global k-center pivots";
   tann::save_bin<float>(output_file.c_str(), pivot_data, (size_t) num_parts,
                            train_dim);
 

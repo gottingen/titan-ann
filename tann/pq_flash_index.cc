@@ -61,15 +61,13 @@ namespace tann {
       : reader(fileReader), metric(m) {
     if (m == tann::Metric::COSINE || m == tann::Metric::INNER_PRODUCT) {
       if (std::is_floating_point<T>::value) {
-        tann::cout << "Cosine metric chosen for (normalized) float data."
-                         "Changing distance to L2 to boost accuracy."
-                      << std::endl;
+        TURBO_LOG(INFO) << "Cosine metric chosen for (normalized) float data."
+                         "Changing distance to L2 to boost accuracy.";
         metric = tann::Metric::L2;
       } else {
-        tann::cerr << "WARNING: Cannot normalize integral data types."
+          TURBO_LOG(WARNING) << "WARNING: Cannot normalize integral data types."
                       << " This may result in erroneous results or poor recall."
-                      << " Consider using L2 distance with integral data types."
-                      << std::endl;
+                      << " Consider using L2 distance with integral data types.";
       }
     }
 
@@ -94,7 +92,7 @@ namespace tann {
     }
 
     if (load_flag) {
-      tann::cout << "Clearing scratch" << std::endl;
+      TURBO_LOG(INFO) << "Clearing scratch";
       ScratchStoreManager<SSDThreadData<T>> manager(this->thread_data);
       manager.destroy();
       this->reader->deregister_all_threads();
@@ -112,8 +110,8 @@ namespace tann {
   template<typename T, typename LabelT>
   void PQFlashIndex<T, LabelT>::setup_thread_data(_u64 nthreads,
                                                   _u64 visited_reserve) {
-    tann::cout << "Setting up thread-specific contexts for nthreads: "
-                  << nthreads << std::endl;
+    TURBO_LOG(INFO) << "Setting up thread-specific contexts for nthreads: "
+                  << nthreads;
 // omp parallel for to generate unique thread IDs
 #pragma omp parallel for num_threads((int) nthreads)
     for (_s64 thread = 0; thread < (_s64) nthreads; thread++) {
@@ -132,7 +130,7 @@ namespace tann {
   template<typename T, typename LabelT>
   void PQFlashIndex<T, LabelT>::load_cache_list(
       std::vector<uint32_t> &node_list) {
-    tann::cout << "Loading the cache list into memory.." << std::flush;
+    TURBO_LOG(INFO) << "Loading the cache list into memory..";
     _u64 num_cached_nodes = node_list.size();
 
     // borrow thread data
@@ -199,7 +197,7 @@ namespace tann {
         node_idx++;
       }
     }
-    tann::cout << "..done." << std::endl;
+    TURBO_LOG(INFO) << "..done." << std::endl;
   }
 
 #ifdef EXEC_ENV_OLS
@@ -238,7 +236,7 @@ namespace tann {
     }
 #endif
     else {
-      tann::cerr << "Sample bin file not found. Not generating cache."
+      TURBO_LOG(ERROR) << "Sample bin file not found. Not generating cache."
                     << std::endl;
       return;
     }
@@ -280,13 +278,13 @@ namespace tann {
     // Do not cache more than 10% of the nodes in the index
     _u64 tenp_nodes = (_u64) (std::round(this->num_points * 0.1));
     if (num_nodes_to_cache > tenp_nodes) {
-      tann::cout << "Reducing nodes to cache from: " << num_nodes_to_cache
+      TURBO_LOG(INFO) << "Reducing nodes to cache from: " << num_nodes_to_cache
                     << " to: " << tenp_nodes
                     << "(10 percent of total nodes:" << this->num_points << ")"
                     << std::endl;
       num_nodes_to_cache = tenp_nodes == 0 ? 1 : tenp_nodes;
     }
-    tann::cout << "Caching " << num_nodes_to_cache << "..." << std::endl;
+    TURBO_LOG(INFO) << "Caching " << num_nodes_to_cache << "..." << std::endl;
 
     // borrow thread data
     ScratchStoreManager<SSDThreadData<T>> manager(this->thread_data);
@@ -325,13 +323,13 @@ namespace tann {
       else
         std::sort(nodes_to_expand.begin(), nodes_to_expand.end());
 
-      tann::cout << "Level: " << lvl << std::flush;
+      TURBO_LOG(INFO) << "Level: " << lvl << std::flush;
       bool finish_flag = false;
 
       uint64_t BLOCK_SIZE = 1024;
       uint64_t nblocks = DIV_ROUND_UP(nodes_to_expand.size(), BLOCK_SIZE);
       for (size_t block = 0; block < nblocks && !finish_flag; block++) {
-        tann::cout << "." << std::flush;
+        TURBO_LOG(INFO) << "." << std::flush;
         size_t start = block * BLOCK_SIZE;
         size_t end =
             (std::min)((block + 1) * BLOCK_SIZE, nodes_to_expand.size());
@@ -380,7 +378,7 @@ namespace tann {
         }
       }
 
-      tann::cout << ". #nodes: " << node_set.size() - prev_node_set_size
+      TURBO_LOG(INFO) << ". #nodes: " << node_set.size() - prev_node_set_size
                     << ", #nodes thus far: " << node_list.size() << std::endl;
       prev_node_set_size = node_set.size();
       lvl++;
@@ -396,10 +394,10 @@ namespace tann {
     for (auto node : *cur_level)
       node_list.push_back(node);
 
-    tann::cout << "Level: " << lvl << std::flush;
-    tann::cout << ". #nodes: " << node_list.size() - prev_node_set_size
+    TURBO_LOG(INFO) << "Level: " << lvl << std::flush;
+    TURBO_LOG(INFO) << ". #nodes: " << node_list.size() - prev_node_set_size
                   << ", #nodes thus far: " << node_list.size() << std::endl;
-    tann::cout << "done" << std::endl;
+    TURBO_LOG(INFO) << "done" << std::endl;
   }
 
   template<typename T, typename LabelT>
@@ -414,7 +412,7 @@ namespace tann {
     ScratchStoreManager<SSDThreadData<T>> manager(this->thread_data);
     auto                                  data = manager.scratch_space();
     IOContext                            &ctx = data->ctx;
-    tann::cout << "Loading centroid data from medoids vector data of "
+    TURBO_LOG(INFO) << "Loading centroid data from medoids vector data of "
                   << num_medoids << " medoid(s)" << std::endl;
     for (uint64_t cur_m = 0; cur_m < num_medoids; cur_m++) {
       auto medoid = medoids[cur_m];
@@ -488,7 +486,7 @@ namespace tann {
     }
     std::stringstream stream;
     stream << "Unable to find label in the Label Map";
-    tann::cerr << stream.str() << std::endl;
+    TURBO_LOG(ERROR) << stream.str() << std::endl;
     throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                 __LINE__);
     exit(-1);
@@ -512,7 +510,7 @@ namespace tann {
       num_pts++;
     }
 
-    tann::cout << "Labels file metadata: num_points: " << num_pts
+    TURBO_LOG(INFO) << "Labels file metadata: num_points: " << num_pts
                   << ", #total_labels: " << num_total_labels << std::endl;
     infile.close();
   }
@@ -572,7 +570,7 @@ namespace tann {
         }
         int32_t filter_num = get_filter_number(token_as_num);
         if (filter_num == -1) {
-          tann::cout << "Error!! " << std::endl;
+          TURBO_LOG(INFO) << "Error!! " << std::endl;
           exit(-1);
         }
         _pts_to_labels[counter++] = filter_num;
@@ -581,7 +579,7 @@ namespace tann {
       }
 
       if (num_lbls_in_cur_pt == 0) {
-        tann::cout << "No label found for point " << line_cnt << std::endl;
+        TURBO_LOG(INFO) << "No label found for point " << line_cnt << std::endl;
         exit(-1);
       }
       line_cnt++;
@@ -594,7 +592,7 @@ namespace tann {
   void PQFlashIndex<T, LabelT>::set_universal_label(const LabelT &label) {
     int32_t temp_filter_num = get_filter_number(label);
     if (temp_filter_num == -1) {
-      tann::cout << "Error, could not find universal label. Exitting."
+      TURBO_LOG(INFO) << "Error, could not find universal label. Exitting."
                     << std::endl;
       exit(-1);
     } else {
@@ -668,7 +666,7 @@ namespace tann {
     this->disk_index_file = disk_index_file;
 
     if (pq_file_num_centroids != 256) {
-      tann::cout << "Error. Number of PQ centroids is not 256. Exiting."
+      TURBO_LOG(INFO) << "Error. Number of PQ centroids is not 256. Exiting."
                     << std::endl;
       return -1;
     }
@@ -760,7 +758,7 @@ namespace tann {
           _real_to_dummy_map[real_id].emplace_back(dummy_id);
         }
         dummy_map_stream.close();
-        tann::cout << "Loaded dummy map" << std::endl;
+        TURBO_LOG(INFO) << "Loaded dummy map" << std::endl;
       }
     }
 
@@ -770,7 +768,7 @@ namespace tann {
     pq_table.load_pq_centroid_bin(pq_table_bin.c_str(), nchunks_u64);
 #endif
 
-    tann::cout
+    TURBO_LOG(INFO)
         << "Loaded PQ centroids and in-memory compressed vectors. #points: "
         << num_points << " #dim: " << data_dim
         << " #aligned_dim: " << aligned_dim << " #chunks: " << n_chunks
@@ -801,7 +799,7 @@ namespace tann {
       disk_bytes_per_point =
           disk_pq_n_chunks *
           sizeof(_u8);  // revising disk_bytes_per_point since DISK PQ is used.
-      tann::cout << "Disk index uses PQ data compressed down to "
+      TURBO_LOG(INFO) << "Disk index uses PQ data compressed down to "
                     << disk_pq_n_chunks << " bytes per point." << std::endl;
     }
 
@@ -834,7 +832,7 @@ namespace tann {
     READ_U64(index_metadata, disk_ndims);
 
     if (disk_nnodes != num_points) {
-      tann::cout << "Mismatch in #points for compressed data file and disk "
+      TURBO_LOG(INFO) << "Mismatch in #points for compressed data file and disk "
                        "index file: "
                     << disk_nnodes << " vs " << num_points << std::endl;
       return -1;
@@ -862,7 +860,7 @@ namespace tann {
     if (this->num_frozen_points == 1)
       this->frozen_location = file_frozen_id;
     if (this->num_frozen_points == 1) {
-      tann::cout << " Detected frozen point in index at location "
+      TURBO_LOG(INFO) << " Detected frozen point in index at location "
                     << this->frozen_location
                     << ". Will not output it at search time." << std::endl;
     }
@@ -879,10 +877,10 @@ namespace tann {
       READ_U64(index_metadata, this->nvecs_per_sector);
     }
 
-    tann::cout << "Disk-Index File Meta-data: ";
-    tann::cout << "# nodes per sector: " << nnodes_per_sector;
-    tann::cout << ", max node len (bytes): " << max_node_len;
-    tann::cout << ", max node degree: " << max_degree << std::endl;
+    TURBO_LOG(INFO) << "Disk-Index File Meta-data: ";
+    TURBO_LOG(INFO) << "# nodes per sector: " << nnodes_per_sector;
+    TURBO_LOG(INFO) << ", max node len (bytes): " << max_node_len;
+    TURBO_LOG(INFO) << ", max node degree: " << max_degree << std::endl;
 
 #ifdef EXEC_ENV_OLS
     delete[] bytes;
@@ -923,7 +921,7 @@ namespace tann {
 #else
       if (!file_exists(centroids_file)) {
 #endif
-        tann::cout
+        TURBO_LOG(INFO)
             << "Centroid data file not found. Using corresponding vectors "
                "for the medoids "
             << std::endl;
@@ -945,7 +943,7 @@ namespace tann {
                     "m times data_dim vector of float, where m is number of "
                     "medoids "
                     "in medoids file.";
-          tann::cerr << stream.str() << std::endl;
+          TURBO_LOG(ERROR) << stream.str() << std::endl;
           throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                       __LINE__);
         }
@@ -964,11 +962,11 @@ namespace tann {
       float *norm_val;
       tann::load_bin<float>(norm_file, norm_val, dumr, dumc);
       this->max_base_norm = norm_val[0];
-      tann::cout << "Setting re-scaling factor of base vectors to "
+      TURBO_LOG(INFO) << "Setting re-scaling factor of base vectors to "
                     << this->max_base_norm << std::endl;
       delete[] norm_val;
     }
-    tann::cout << "done.." << std::endl;
+    TURBO_LOG(INFO) << "done.." << std::endl;
     return 0;
   }
 

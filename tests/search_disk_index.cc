@@ -40,22 +40,23 @@
 #endif
 #endif
 
+#include <iostream>
 #define WARMUP false
 
 namespace po = boost::program_options;
 
 void print_stats(std::string category, std::vector<float> percentiles,
                  std::vector<float> results) {
-  tann::cout << std::setw(20) << category << ": " << std::flush;
+  std::cout << std::setw(20) << category << ": " << std::flush;
   for (uint32_t s = 0; s < percentiles.size(); s++) {
-    tann::cout << std::setw(8) << percentiles[s] << "%";
+    std::cout << std::setw(8) << percentiles[s] << "%";
   }
-  tann::cout << std::endl;
-  tann::cout << std::setw(22) << " " << std::flush;
+  std::cout << std::endl;
+  std::cout << std::setw(22) << " " << std::flush;
   for (uint32_t s = 0; s < percentiles.size(); s++) {
-    tann::cout << std::setw(9) << results[s];
+    std::cout << std::setw(9) << results[s];
   }
-  tann::cout << std::endl;
+  std::cout << std::endl;
 }
 
 template<typename T, typename LabelT = uint32_t>
@@ -67,15 +68,15 @@ int search_disk_index(
     const _u32 search_io_limit, const std::vector<unsigned>& Lvec,
     const float fail_if_recall_below, const bool use_reorder_data = false,
     const std::string& filter_label = "") {
-  tann::cout << "Search parameters: #threads: " << num_threads << ", ";
+  std::cout << "Search parameters: #threads: " << num_threads << ", ";
   if (beamwidth <= 0)
-    tann::cout << "beamwidth to be optimized for each L value" << std::flush;
+    std::cout << "beamwidth to be optimized for each L value" << std::flush;
   else
-    tann::cout << " beamwidth: " << beamwidth << std::flush;
+    std::cout << " beamwidth: " << beamwidth << std::flush;
   if (search_io_limit == std::numeric_limits<_u32>::max())
-    tann::cout << "." << std::endl;
+    std::cout << "." << std::endl;
   else
-    tann::cout << ", io_limit: " << search_io_limit << "." << std::endl;
+    std::cout << ", io_limit: " << search_io_limit << "." << std::endl;
 
   bool filtered_search = false;
   if (filter_label != "")
@@ -96,7 +97,7 @@ int search_disk_index(
       file_exists(gt_file)) {
     tann::load_truthset(gt_file, gt_ids, gt_dists, gt_num, gt_dim);
     if (gt_num != query_num) {
-      tann::cout
+      std::cout
           << "Error. Mismatch in number of queries and ground truth data"
           << std::endl;
     }
@@ -124,7 +125,7 @@ int search_disk_index(
   }
   // cache bfs levels
   std::vector<uint32_t> node_list;
-  tann::cout << "Caching " << num_nodes_to_cache
+  std::cout << "Caching " << num_nodes_to_cache
                 << " BFS nodes around medoid(s)" << std::endl;
   //_pFlashIndex->cache_bfs_levels(num_nodes_to_cache, node_list);
   if (num_nodes_to_cache > 0)
@@ -161,7 +162,7 @@ int search_disk_index(
         }
       }
     }
-    tann::cout << "Warming up index... " << std::flush;
+    std::cout << "Warming up index... " << std::flush;
     std::vector<uint64_t> warmup_result_ids_64(warmup_num, 0);
     std::vector<float>    warmup_result_dists(warmup_num, 0);
 
@@ -172,22 +173,22 @@ int search_disk_index(
                                        warmup_result_ids_64.data() + (i * 1),
                                        warmup_result_dists.data() + (i * 1), 4);
     }
-    tann::cout << "..done" << std::endl;
+    std::cout << "..done" << std::endl;
   }
 
-  tann::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
-  tann::cout.precision(2);
+  std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
+  std::cout.precision(2);
 
   std::string recall_string = "Recall@" + std::to_string(recall_at);
-  tann::cout << std::setw(6) << "L" << std::setw(12) << "Beamwidth"
+  std::cout << std::setw(6) << "L" << std::setw(12) << "Beamwidth"
                 << std::setw(16) << "QPS" << std::setw(16) << "Mean Latency"
                 << std::setw(16) << "99.9 Latency" << std::setw(16)
                 << "Mean IOs" << std::setw(16) << "CPU (s)";
   if (calc_recall_flag) {
-    tann::cout << std::setw(16) << recall_string << std::endl;
+    std::cout << std::setw(16) << recall_string << std::endl;
   } else
-    tann::cout << std::endl;
-  tann::cout
+    std::cout << std::endl;
+  std::cout
       << "==============================================================="
          "======================================================="
       << std::endl;
@@ -203,13 +204,13 @@ int search_disk_index(
     _u64 L = Lvec[test_id];
 
     if (L < recall_at) {
-      tann::cout << "Ignoring search with L:" << L
+      std::cout << "Ignoring search with L:" << L
                     << " since it's smaller than K:" << recall_at << std::endl;
       continue;
     }
 
     if (beamwidth <= 0) {
-      tann::cout << "Tuning beamwidth.." << std::endl;
+      std::cout << "Tuning beamwidth.." << std::endl;
       optimized_beamwidth =
           optimize_beamwidth(_pFlashIndex, warmup, warmup_num,
                              warmup_aligned_dim, L, optimized_beamwidth);
@@ -275,18 +276,18 @@ int search_disk_index(
       best_recall = std::max(recall, best_recall);
     }
 
-    tann::cout << std::setw(6) << L << std::setw(12) << optimized_beamwidth
+    std::cout << std::setw(6) << L << std::setw(12) << optimized_beamwidth
                   << std::setw(16) << qps << std::setw(16) << mean_latency
                   << std::setw(16) << latency_999 << std::setw(16) << mean_ios
                   << std::setw(16) << mean_cpuus;
     if (calc_recall_flag) {
-      tann::cout << std::setw(16) << recall << std::endl;
+      std::cout << std::setw(16) << recall << std::endl;
     } else
-      tann::cout << std::endl;
+      std::cout << std::endl;
     delete[] stats;
   }
 
-  tann::cout << "Done searching. Now saving results " << std::endl;
+  std::cout << "Done searching. Now saving results " << std::endl;
   _u64 test_id = 0;
   for (auto L : Lvec) {
     if (L < recall_at)
@@ -466,7 +467,7 @@ int main(int argc, char** argv) {
     }
   } catch (const std::exception& e) {
     std::cout << std::string(e.what()) << std::endl;
-    tann::cerr << "Index search failed." << std::endl;
+    TURBO_LOG(ERROR) << "Index search failed." << std::endl;
     return -1;
   }
 }

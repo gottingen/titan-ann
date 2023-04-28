@@ -475,7 +475,7 @@ int aux_main(const std::string &base_file, const std::string &label_file,
     tann::load_bin<std::uint32_t>(tags_file, tag_data, tag_file_npts,
                                      tag_file_ndims);
     if (tag_file_ndims != 1) {
-      tann::cerr << "tags file error" << std::endl;
+      TURBO_LOG(ERROR) << "tags file error" << std::endl;
       throw tann::ANNException("tag file error", -1, __FUNCSIG__, __FILE__,
                                   __LINE__);
     }
@@ -484,7 +484,7 @@ int aux_main(const std::string &base_file, const std::string &label_file,
     size_t base_file_npts, base_file_ndims;
     tann::get_bin_metadata(base_file, base_file_npts, base_file_ndims);
     if (base_file_npts != tag_file_npts) {
-      tann::cerr << "point num in tags file mismatch" << std::endl;
+      TURBO_LOG(ERROR) << "point num in tags file mismatch" << std::endl;
       throw tann::ANNException("point num in tags file mismatch", -1,
                                   __FUNCSIG__, __FILE__, __LINE__);
     }
@@ -671,7 +671,7 @@ int main(int argc, char **argv) {
                         filter_label, universal_label, metric, tags_file);
   } catch (const std::exception &e) {
     std::cout << std::string(e.what()) << std::endl;
-    tann::cerr << "Compute GT failed." << std::endl;
+    TURBO_LOG(ERROR) << "Compute GT failed." << std::endl;
     return -1;
   }
 }

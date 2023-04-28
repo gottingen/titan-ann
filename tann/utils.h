@@ -39,7 +39,7 @@ typedef int FileHandle;
 #endif
 
 #include "distance.h"
-#include "logger.h"
+#include "turbo/log/logging.h"
 #include "cached_io.h"
 #include "ann_exception.h"
 #include "turbo/platform/port.h"
@@ -93,13 +93,13 @@ inline bool file_exists(const std::string &name, bool dirCheck = false) {
     if (val != 0) {
         switch (errno) {
             case EINVAL:
-                tann::cout << "Invalid argument passed to stat()" << std::endl;
+                TURBO_LOG(ERROR) << "Invalid argument passed to stat()";
                 break;
             case ENOENT:
                 // file is not existing, not an issue, so we won't cout anything.
                 break;
             default:
-                tann::cout << "Unexpected error in stat():" << errno << std::endl;
+                TURBO_LOG(ERROR) << "Unexpected error in stat():" << errno << std::endl;
                 break;
         }
         return false;
@@ -133,9 +133,8 @@ inline void open_file_to_write(std::ofstream &writer,
 #else
         strerror_r(errno, buff, 1024);
 #endif
-        tann::cerr << std::string("Failed to open file") + filename +
-                      " for write because " + buff
-                   << std::endl;
+        TURBO_LOG(ERROR)<< std::string("Failed to open file") + filename +
+                      " for write because " + buff;
         throw tann::ANNException(std::string("Failed to open file ") + filename +
                                  " for write because: " + buff,
                                  -1);
@@ -149,7 +148,7 @@ inline _u64 get_file_size(const std::string &fname) {
         reader.close();
         return end_pos;
     } else {
-        tann::cerr << "Could not open file: " << fname << std::endl;
+        TURBO_LOG(ERROR) << "Could not open file: " << fname;
         return 0;
     }
 }
@@ -158,11 +157,10 @@ inline int delete_file(const std::string &fileName) {
     if (file_exists(fileName)) {
         auto rc = ::remove(fileName.c_str());
         if (rc != 0) {
-            tann::cerr
+            TURBO_LOG(ERROR)
                     << "Could not delete file: " << fileName
                     << " even though it exists. This might indicate a permissions issue. "
-                       "If you see this message, please contact the tann team."
-                    << std::endl;
+                       "If you see this message, please contact the tann team.";
         }
         return rc;
     } else {
@@ -220,7 +218,7 @@ namespace tann {
     static const size_t MAX_SIZE_OF_STREAMBUF = 2LL * 1024 * 1024 * 1024;
 
     inline void print_error_and_terminate(std::stringstream &error_stream) {
-        tann::cerr << error_stream.str() << std::endl;
+        TURBO_LOG(ERROR) << error_stream.str() << std::endl;
         throw tann::ANNException(error_stream.str(), -1, __FUNCSIG__, __FILE__,
                                  __LINE__);
     }
@@ -257,9 +255,8 @@ namespace tann {
 #ifdef _WINDOWS
         *ptr = ::_aligned_realloc(*ptr, size, align);
 #else
-        tann::cerr << "No aligned realloc on GCC. Must malloc and mem_align, "
-                      "left it out for now."
-                   << std::endl;
+        TURBO_LOG(ERROR) << "No aligned realloc on GCC. Must malloc and mem_align, "
+                            "left it out for now.";
 #endif
         if (*ptr == nullptr)
             report_memory_allocation_failure();
@@ -267,7 +264,7 @@ namespace tann {
 
     inline void check_stop(std::string arnd) {
         int brnd;
-        tann::cout << arnd << std::endl;
+        TURBO_LOG(INFO) << arnd;
         std::cin >> brnd;
     }
 
@@ -318,7 +315,7 @@ namespace tann {
     inline void get_bin_metadata(MemoryMappedFiles& files,
                                  const std::string& bin_file, size_t& nrows,
                                  size_t& ncols, size_t offset = 0) {
-      tann::cout << "Getting metadata for file: " << bin_file << std::endl;
+      TURBO_LOG(INFO) << "Getting metadata for file: " << bin_file;
       auto fc = files.getContent(bin_file);
       // auto                     cb = ContentBuf((char*) fc._content, fc._size);
       // std::basic_istream<char> reader(&cb);
@@ -375,8 +372,8 @@ namespace tann {
     template<typename T>
     inline void load_bin(MemoryMappedFiles& files, const std::string& bin_file,
                          T*& data, size_t& npts, size_t& dim, size_t offset = 0) {
-      tann::cout << "Reading bin file " << bin_file.c_str()
-                    << " at offset: " << offset << "..." << std::endl;
+      TURBO_LOG(INFO) << "Reading bin file " << bin_file.c_str()
+                    << " at offset: " << offset << "...";
       auto fc = files.getContent(bin_file);
 
       uint32_t  t_npts, t_dim;
@@ -423,21 +420,19 @@ namespace tann {
     template<typename T>
     inline void load_bin(const std::string &bin_file, T *&data, size_t &npts,
                          size_t &dim, size_t offset = 0) {
-        tann::cout << "Reading bin file " << bin_file.c_str() << " ..."
-                   << std::endl;
+        TURBO_LOG(INFO) << "Reading bin file " << bin_file.c_str() << " ...";
         std::ifstream reader;
         reader.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
         try {
-            tann::cout << "Opening bin file " << bin_file.c_str() << "... "
-                       << std::endl;
+            TURBO_LOG(INFO) << "Opening bin file " << bin_file.c_str() << "... ";
             reader.open(bin_file, std::ios::binary | std::ios::ate);
             reader.seekg(0);
             load_bin_impl<T>(reader, data, npts, dim, offset);
         } catch (std::system_error &e) {
             throw FileException(bin_file, e, __FUNCSIG__, __FILE__, __LINE__);
         }
-        tann::cout << "done." << std::endl;
+        TURBO_LOG(INFO) << "done.";
     }
 
     inline void wait_for_keystroke() {
@@ -451,8 +446,7 @@ namespace tann {
                               float *&dists, size_t &npts, size_t &dim) {
         _u64 read_blk_size = 64 * 1024 * 1024;
         cached_ifstream reader(bin_file, read_blk_size);
-        tann::cout << "Reading truthset file " << bin_file.c_str() << " ..."
-                   << std::endl;
+        TURBO_LOG(INFO) << "Reading truthset file " << bin_file.c_str() << " ...";
         size_t actual_file_size = reader.get_file_size();
 
         int npts_i32, dim_i32;
@@ -461,8 +455,8 @@ namespace tann {
         npts = (unsigned) npts_i32;
         dim = (unsigned) dim_i32;
 
-        tann::cout << "Metadata: #pts = " << npts << ", #dims = " << dim
-                   << "... " << std::endl;
+        TURBO_LOG(INFO) << "Metadata: #pts = " << npts << ", #dims = " << dim
+                   << "... ";
 
         int truthset_type = -1;  // 1 means truthset has ids and distances, 2 means
         // only ids, -1 is error
@@ -486,7 +480,7 @@ namespace tann {
                    << actual_file_size
                    << ", expected: " << expected_file_size_with_dists << " or "
                    << expected_file_size_just_ids;
-            tann::cout << stream.str();
+            TURBO_LOG(INFO) << stream.str();
             throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                      __LINE__);
         }
@@ -505,8 +499,7 @@ namespace tann {
             std::vector<std::vector<_u32>> &groundtruth, size_t &npts) {
         _u64 read_blk_size = 64 * 1024 * 1024;
         cached_ifstream reader(bin_file, read_blk_size);
-        tann::cout << "Reading truthset file " << bin_file.c_str() << "... "
-                   << std::endl;
+        TURBO_LOG(INFO) << "Reading truthset file " << bin_file.c_str() << "... ";
         size_t actual_file_size = reader.get_file_size();
 
         int npts_i32, dim_i32;
@@ -517,8 +510,8 @@ namespace tann {
         _u32 *ids;
         float *dists;
 
-        tann::cout << "Metadata: #pts = " << npts << ", #dims = " << dim
-                   << "... " << std::endl;
+        TURBO_LOG(INFO) << "Metadata: #pts = " << npts << ", #dims = " << dim
+                   << "... ";
 
         int truthset_type = -1;  // 1 means truthset has ids and distances, 2 means
         // only ids, -1 is error
@@ -535,7 +528,7 @@ namespace tann {
                       "followed by npts*ngt distance values; actual size: "
                    << actual_file_size
                    << ", expected: " << expected_file_size_with_dists;
-            tann::cout << stream.str();
+            TURBO_LOG(INFO) << stream.str();
             throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                      __LINE__);
         }
@@ -574,8 +567,7 @@ namespace tann {
                                     _u64 &gt_num) {
         _u64 read_blk_size = 64 * 1024 * 1024;
         cached_ifstream reader(bin_file, read_blk_size);
-        tann::cout << "Reading truthset file " << bin_file.c_str() << "... "
-                   << std::flush;
+        TURBO_LOG(INFO) << "Reading truthset file " << bin_file.c_str() << "... ";
         size_t actual_file_size = reader.get_file_size();
 
         int npts_u32, total_u32;
@@ -585,8 +577,8 @@ namespace tann {
         gt_num = (_u64) npts_u32;
         _u64 total_res = (_u64) total_u32;
 
-        tann::cout << "Metadata: #pts = " << gt_num
-                   << ", #total_results = " << total_res << "..." << std::endl;
+        TURBO_LOG(INFO) << "Metadata: #pts = " << gt_num
+                   << ", #total_results = " << total_res << "...";
 
         size_t expected_file_size =
                 2 * sizeof(_u32) + gt_num * sizeof(_u32) + total_res * sizeof(_u32);
@@ -595,7 +587,7 @@ namespace tann {
             std::stringstream stream;
             stream << "Error. File size mismatch in range truthset. actual size: "
                    << actual_file_size << ", expected: " << expected_file_size;
-            tann::cout << stream.str();
+            TURBO_LOG(INFO) << stream.str();
             throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                      __LINE__);
         }
@@ -687,7 +679,7 @@ namespace tann {
 #endif
             std::string error_message = std::string("Failed to open file") +
                                         filename + " for write because " + buff;
-            tann::cerr << error_message << std::endl;
+            TURBO_LOG(ERROR) << error_message << std::endl;
             throw tann::ANNException(error_message, -1);
         }
     }
@@ -698,18 +690,18 @@ namespace tann {
         std::ofstream writer;
         open_file_to_write(writer, filename);
 
-        tann::cout << "Writing bin: " << filename.c_str() << std::endl;
+        TURBO_LOG(INFO) << "Writing bin: " << filename.c_str() ;
         writer.seekp(offset, writer.beg);
         int npts_i32 = (int) npts, ndims_i32 = (int) ndims;
         size_t bytes_written = npts * ndims * sizeof(T) + 2 * sizeof(uint32_t);
         writer.write((char *) &npts_i32, sizeof(int));
         writer.write((char *) &ndims_i32, sizeof(int));
-        tann::cout << "bin: #pts = " << npts << ", #dims = " << ndims
-                   << ", size = " << bytes_written << "B" << std::endl;
+        TURBO_LOG(INFO) << "bin: #pts = " << npts << ", #dims = " << ndims
+                   << ", size = " << bytes_written << "B" ;
 
         writer.write((char *) data, npts * ndims * sizeof(T));
         writer.close();
-        tann::cout << "Finished writing bin." << std::endl;
+        TURBO_LOG(INFO) << "Finished writing bin.";
         return bytes_written;
     }
     // load_aligned_bin functions START
@@ -733,25 +725,24 @@ namespace tann {
                    << " while expected size is  " << expected_actual_file_size
                    << " npts = " << npts << " dim = " << dim
                    << " size of <T>= " << sizeof(T) << std::endl;
-            tann::cout << stream.str() << std::endl;
+            TURBO_LOG(INFO) << stream.str();
             throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__,
                                      __LINE__);
         }
         rounded_dim = ROUND_UP(dim, 8);
-        tann::cout << "Metadata: #pts = " << npts << ", #dims = " << dim
-                   << ", aligned_dim = " << rounded_dim << "... " << std::flush;
+        TURBO_LOG(INFO) << "Metadata: #pts = " << npts << ", #dims = " << dim
+                   << ", aligned_dim = " << rounded_dim << "... ";
         size_t allocSize = npts * rounded_dim * sizeof(T);
-        tann::cout << "allocating aligned memory of " << allocSize
-                   << " bytes... " << std::flush;
+        TURBO_LOG(INFO) << "allocating aligned memory of " << allocSize
+                   << " bytes... ";
         alloc_aligned(((void **) &data), allocSize, 8 * sizeof(T));
-        tann::cout << "done. Copying data to mem_aligned buffer..."
-                   << std::flush;
+        TURBO_LOG(INFO) << "done. Copying data to mem_aligned buffer...";
 
         for (size_t i = 0; i < npts; i++) {
             reader.read((char *) (data + i * rounded_dim), dim * sizeof(T));
             memset(data + i * rounded_dim + dim, 0, (rounded_dim - dim) * sizeof(T));
         }
-        tann::cout << " done." << std::endl;
+        TURBO_LOG(INFO) << " done.";
     }
 
 #ifdef EXEC_ENV_OLS
@@ -760,7 +751,7 @@ namespace tann {
                                  const std::string& bin_file, T*& data,
                                  size_t& npts, size_t& dim, size_t& rounded_dim) {
       try {
-        tann::cout << "Opening bin file " << bin_file << " ..." << std::flush;
+        TURBO_LOG(INFO) << "Opening bin file " << bin_file << " ...";
         FileContent              fc = files.getContent(bin_file);
         ContentBuf               buf((char*) fc._content, fc._size);
         std::basic_istream<char> reader(&buf);
@@ -781,8 +772,8 @@ namespace tann {
         reader.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
         try {
-            tann::cout << "Reading (with alignment) bin file " << bin_file
-                       << " ..." << std::flush;
+            TURBO_LOG(INFO) << "Reading (with alignment) bin file " << bin_file
+                       << " ...";
             reader.open(bin_file, std::ios::binary | std::ios::ate);
 
             uint64_t fsize = reader.tellg();
@@ -933,7 +924,7 @@ namespace tann {
                                             const size_t &rounded_dim,
                                             size_t offset = 0) {
         if (data == nullptr) {
-            tann::cerr << "Memory was not allocated for " << data
+            TURBO_LOG(ERROR) << "Memory was not allocated for " << data
                        << " before calling the load function. Exiting..."
                        << std::endl;
             throw tann::ANNException(
@@ -1011,10 +1002,9 @@ inline bool validate_index_file_size(std::ifstream &in) {
     in.read((char *) &expected_file_size, sizeof(uint64_t));
     in.seekg(0, in.beg);
     if (actual_file_size != expected_file_size) {
-        tann::cerr << "Index file size error. Expected size (metadata): "
+        TURBO_LOG(ERROR) << "Index file size error. Expected size (metadata): "
                    << expected_file_size
-                   << ", actual file size : " << actual_file_size << "."
-                   << std::endl;
+                   << ", actual file size : " << actual_file_size << ".";
         return false;
     }
     return true;
@@ -1070,13 +1060,12 @@ inline void printProcessMemory(const char* message) {
   PROCESS_MEMORY_COUNTERS counters;
   HANDLE                  h = GetCurrentProcess();
   GetProcessMemoryInfo(h, &counters, sizeof(counters));
-  tann::cout << message << " [Peaking Working Set size: "
+  TURBO_LOG(INFO) << message << " [Peaking Working Set size: "
                 << counters.PeakWorkingSetSize * 1.0 / (1024.0 * 1024 * 1024)
                 << "GB Working set size: "
                 << counters.WorkingSetSize * 1.0 / (1024.0 * 1024 * 1024)
                 << "GB Private bytes "
-                << counters.PagefileUsage * 1.0 / (1024 * 1024 * 1024) << "GB]"
-                << std::endl;
+                << counters.PagefileUsage * 1.0 / (1024 * 1024 * 1024) << "GB]";
 }
 #else
 

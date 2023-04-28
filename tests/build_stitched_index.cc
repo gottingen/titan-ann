@@ -430,7 +430,6 @@ void generate_label_indices(path input_data_path, path final_index_path_prefix,
     // for each label, build an index on resp. points
     double total_indexing_time = 0.0, indexing_percentage = 0.0;
     std::cout.setstate(std::ios_base::failbit);
-    tann::cout.setstate(std::ios_base::failbit);
     for (const auto &lbl: all_labels) {
         path curr_label_input_data_path(input_data_path + "_" + lbl);
         path curr_label_index_path(final_index_path_prefix + "_" + lbl);
@@ -454,7 +453,6 @@ void generate_label_indices(path input_data_path, path final_index_path_prefix,
         index.save(curr_label_index_path.c_str());
     }
     std::cout.clear();
-    tann::cout.clear();
 
     std::cout << "\nDone. Generated per-label indices in " << total_indexing_time
               << " seconds\n"
@@ -681,7 +679,6 @@ void prune_and_save(path final_index_path_prefix, path full_index_path_prefix,
                     std::string universal_label, path label_data_path,
                     unsigned num_threads) {
     size_t dimension, number_of_label_points;
-    auto diskann_cout_buffer = tann::cout.rdbuf(nullptr);
     auto std_cout_buffer = std::cout.rdbuf(nullptr);
     auto pruning_index_timer = std::chrono::high_resolution_clock::now();
 
@@ -703,7 +700,6 @@ void prune_and_save(path final_index_path_prefix, path full_index_path_prefix,
     index.prune_all_nbrs(paras);
     index.save((final_index_path_prefix).c_str());
 
-    tann::cout.rdbuf(diskann_cout_buffer);
     std::cout.rdbuf(std_cout_buffer);
     std::chrono::duration<double> pruning_index_time =
             std::chrono::high_resolution_clock::now() - pruning_index_timer;

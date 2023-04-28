@@ -91,9 +91,9 @@ namespace tann {
             } else {
                 T ret = this->q.front();
                 this->q.pop();
-                // tann::cout << "thread_id: " << std::this_thread::get_id() << ",
+                // TURBO_LOG(INFO) << "thread_id: " << std::this_thread::get_id() << ",
                 // ctx: "
-                // << ret.ctx << "\n";
+                // << ret.ctx;
                 lk.unlock();
                 return ret;
             }
