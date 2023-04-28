@@ -199,7 +199,7 @@ int main(int argc, char** argv) {
 
   } catch (const std::exception& e) {
     std::cout << std::string(e.what()) << std::endl;
-    tann::cerr << "Index build failed." << std::endl;
+    TURBO_LOG(ERROR) << "Index build failed." << std::endl;
     return -1;
   }
 

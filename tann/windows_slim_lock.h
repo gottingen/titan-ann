@@ -25,7 +25,7 @@ namespace tann {
   // SlimReaderWriterLock.
   //
   // The SlimReaderWriterLock is simpler/more lightweight than std::mutex
-  // (8 bytes vs 80 bytes), which is useful in the scenario where DiskANN has
+  // (8 bytes vs 80 bytes), which is useful in the scenario where TANN has
   // one lock per vector in the index. It does not support recursive locking and
   // requires Windows Vista or later.
   //

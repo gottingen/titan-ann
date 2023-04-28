@@ -25,7 +25,6 @@
 #include "tann/partition.h"
 
 namespace po = boost::program_options;
-
 int main(int argc, char **argv) {
     std::string data_type, dist_fn, data_path, index_path_prefix, label_file,
             universal_label, label_type;
@@ -178,7 +177,7 @@ int main(int argc, char **argv) {
                         metric, use_opq, use_filters, label_file, universal_label,
                         filter_threshold, Lf);
             else {
-                tann::cerr << "Error. Unsupported data type" << std::endl;
+                TURBO_LOG(ERROR) << "Error. Unsupported data type" << std::endl;
                 return -1;
             }
         } else {
@@ -198,13 +197,13 @@ int main(int argc, char **argv) {
                         metric, use_opq, use_filters, label_file, universal_label,
                         filter_threshold, Lf);
             else {
-                tann::cerr << "Error. Unsupported data type" << std::endl;
+                TURBO_LOG(ERROR) << "Error. Unsupported data type" << std::endl;
                 return -1;
             }
         }
     } catch (const std::exception &e) {
         std::cout << std::string(e.what()) << std::endl;
-        tann::cerr << "Index build failed." << std::endl;
+        TURBO_LOG(ERROR) << "Index build failed." << std::endl;
         return -1;
     }
 }

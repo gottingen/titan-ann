@@ -20,7 +20,7 @@
 #include <boost/program_options.hpp>
 #include <math.h>
 #include <cmath>
-#include "utils.h"
+#include "tann/utils.h"
 
 namespace po = boost::program_options;
 class ZipfDistribution {

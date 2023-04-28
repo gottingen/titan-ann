@@ -45,10 +45,10 @@ typedef HANDLE FileHandle;
 typedef int FileHandle;
 #endif
 
-#include "cached_io.h"
-#include "common_includes.h"
+#include "tann/cached_io.h"
+#include "tann/common_includes.h"
 
-#include "utils.h"
+#include "tann/utils.h"
 #include "turbo/platform/port.h"
 
 namespace tann {

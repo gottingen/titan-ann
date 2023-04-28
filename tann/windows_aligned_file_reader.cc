@@ -19,7 +19,7 @@
 #ifndef USE_BING_INFRA
 #include "windows_aligned_file_reader.h"
 #include <iostream>
-#include "utils.h"
+#include "tann/utils.h"
 
 #define SECTOR_LEN 4096
 
@@ -38,8 +38,8 @@ void WindowsAlignedFileReader::close() {
 void WindowsAlignedFileReader::register_thread() {
   std::unique_lock<std::mutex> lk(this->ctx_mut);
   if (this->ctx_map.find(std::this_thread::get_id()) != ctx_map.end()) {
-    tann::cout << "Warning:: Duplicate registration for thread_id : "
-                  << std::this_thread::get_id() << std::endl;
+    TURBO_LOG(INFO) << "Warning:: Duplicate registration for thread_id : "
+                  << std::this_thread::get_id() ;
   }
 
   IOContext ctx;
@@ -49,9 +49,9 @@ void WindowsAlignedFileReader::register_thread() {
                                FILE_FLAG_OVERLAPPED | FILE_FLAG_RANDOM_ACCESS,
                            NULL);
   if (ctx.fhandle == INVALID_HANDLE_VALUE) {
-    tann::cout << "Error opening "
+    TURBO_LOG(INFO) << "Error opening "
                   << std::string(m_filename.begin(), m_filename.end())
-                  << " -- error=" << GetLastError() << std::endl;
+                  << " -- error=" << GetLastError();
   }
 
   // create IOCompletionPort
@@ -96,7 +96,7 @@ void WindowsAlignedFileReader::read(std::vector<AlignedRead>& read_reqs,
 
       /*
         if (ResetEvent(os.hEvent) == 0) {
-          tann::cerr << "ResetEvent failed" << std::endl;
+          TURBO_LOG(ERROR) << "ResetEvent failed" << std::endl;
           exit(-3);
         }
       */
@@ -127,10 +127,10 @@ void WindowsAlignedFileReader::read(std::vector<AlignedRead>& read_reqs,
       if (ret == FALSE) {
         auto error = GetLastError();
         if (error != ERROR_IO_PENDING) {
-          tann::cerr << "Error queuing IO -- " << error << "\n";
+          TURBO_LOG(ERROR) << "Error queuing IO -- " << error << "\n";
         }
       } else {
-        tann::cerr << "Error queueing IO -- ReadFile returned TRUE"
+        TURBO_LOG(ERROR) << "Error queueing IO -- ReadFile returned TRUE"
                       << std::endl;
       }
     }
@@ -148,7 +148,7 @@ void WindowsAlignedFileReader::read(std::vector<AlignedRead>& read_reqs,
         if (lp_os == NULL) {
           DWORD error = GetLastError();
           if (error != WAIT_TIMEOUT) {
-            tann::cerr << "GetQueuedCompletionStatus() failed with error = "
+            TURBO_LOG(ERROR) << "GetQueuedCompletionStatus() failed with error = "
                           << error << std::endl;
             throw tann::ANNException(
                 "GetQueuedCompletionStatus failed with error: ", error,

@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
       bfs_count<float>(index_path_prefix, data_dims);
   } catch (std::exception& e) {
     std::cout << std::string(e.what()) << std::endl;
-    tann::cerr << "Index BFS failed." << std::endl;
+    TURBO_LOG(ERROR) << "Index BFS failed." << std::endl;
     return -1;
   }
 }

@@ -17,21 +17,21 @@
 
 #pragma once
 
-#include "common_includes.h"
+#include "tann/common_includes.h"
 
 #ifdef EXEC_ENV_OLS
-#include "aligned_file_reader.h"
+#include "tann/aligned_file_reader.h"
 #endif
 
-#include "distance.h"
+#include "tann/distance.h"
 #include "locking.h"
 #include "natural_number_map.h"
 #include "natural_number_set.h"
-#include "neighbor.h"
-#include "parameters.h"
-#include "utils.h"
+#include "tann/neighbor.h"
+#include "tann/parameters.h"
+#include "tann/utils.h"
 #include "turbo/platform/port.h"
-#include "scratch.h"
+#include "tann/scratch.h"
 
 #define OVERHEAD_FACTOR 1.1
 #define EXPAND_IF_FULL 0
@@ -89,30 +89,30 @@ namespace tann {
         // Constructor for Bulk operations and for creating the index object solely
         // for loading a prexisting index.
         TURBO_DLL Index(Metric m, const size_t dim,
-                                const size_t max_points = 1,
-                                const bool dynamic_index = false,
-                                const bool enable_tags = false,
-                                const bool concurrent_consolidate = false,
-                                const bool pq_dist_build = false,
-                                const size_t num_pq_chunks = 0,
-                                const bool use_opq = false);
+                        const size_t max_points = 1,
+                        const bool dynamic_index = false,
+                        const bool enable_tags = false,
+                        const bool concurrent_consolidate = false,
+                        const bool pq_dist_build = false,
+                        const size_t num_pq_chunks = 0,
+                        const bool use_opq = false);
 
         // Constructor for incremental index
         TURBO_DLL Index(Metric m, const size_t dim, const size_t max_points,
-                                const bool dynamic_index,
-                                const Parameters &indexParameters,
-                                const Parameters &searchParameters,
-                                const bool enable_tags = false,
-                                const bool concurrent_consolidate = false,
-                                const bool pq_dist_build = false,
-                                const size_t num_pq_chunks = 0,
-                                const bool use_opq = false);
+                        const bool dynamic_index,
+                        const Parameters &indexParameters,
+                        const Parameters &searchParameters,
+                        const bool enable_tags = false,
+                        const bool concurrent_consolidate = false,
+                        const bool pq_dist_build = false,
+                        const size_t num_pq_chunks = 0,
+                        const bool use_opq = false);
 
         TURBO_DLL ~Index();
 
         // Saves graph, data, metadata and associated tags.
         TURBO_DLL void save(const char *filename,
-                                    bool compact_before_save = false);
+                            bool compact_before_save = false);
 
         // Load functions
 #ifdef EXEC_ENV_OLS
@@ -120,7 +120,7 @@ namespace tann {
                                     uint32_t search_l);
 #else
         TURBO_DLL void load(const char *index_file, uint32_t num_threads,
-                                    uint32_t search_l);
+                            uint32_t search_l);
 
 #endif
 
@@ -137,14 +137,14 @@ namespace tann {
 
         // Batch build from a file. Optionally pass tags file.
         TURBO_DLL void build(const char *filename,
-                                     const size_t num_points_to_load,
-                                     Parameters &parameters,
-                                     const char *tag_filename);
+                             const size_t num_points_to_load,
+                             Parameters &parameters,
+                             const char *tag_filename);
 
         // Batch build from a data array, which must pad vectors to aligned_dim
         TURBO_DLL void build(const T *data, const size_t num_points_to_load,
-                                     Parameters &parameters,
-                                     const std::vector<TagT> &tags);
+                             Parameters &parameters,
+                             const std::vector<TagT> &tags);
 
         // Filtered Support
         TURBO_DLL void build_filtered_index(
@@ -167,8 +167,8 @@ namespace tann {
 
         // For FastL2 search on optimized layout
         TURBO_DLL void search_with_optimized_layout(const T *query,
-                                                            size_t K, size_t L,
-                                                            unsigned *indices);
+                                                    size_t K, size_t L,
+                                                    unsigned *indices);
 
         // Added search overload that takes L as parameter, so that we
         // can customize L on a per-query basis without tampering with "Parameters"
@@ -179,9 +179,9 @@ namespace tann {
 
         // Initialize space for res_vectors before calling.
         TURBO_DLL size_t search_with_tags(const T *query, const uint64_t K,
-                                                  const unsigned L, TagT *tags,
-                                                  float *distances,
-                                                  std::vector<T *> &res_vectors);
+                                          const unsigned L, TagT *tags,
+                                          float *distances,
+                                          std::vector<T *> &res_vectors);
 
         // Filter support search
         template<typename IndexType>
@@ -202,7 +202,7 @@ namespace tann {
         // Record deleted points now and restructure graph later. Add to failed_tags
         // if tag not found.
         TURBO_DLL void lazy_delete(const std::vector<TagT> &tags,
-                                           std::vector<TagT> &failed_tags);
+                                   std::vector<TagT> &failed_tags);
 
         // Call after a series of lazy deletions
         // Returns number of live points left after consolidation
@@ -220,7 +220,7 @@ namespace tann {
         TURBO_DLL void reposition_frozen_point_to_end();
 
         TURBO_DLL void reposition_point(unsigned old_location,
-                                                unsigned new_location);
+                                        unsigned new_location);
 
         // TURBO_DLL void save_index_as_one_file(bool flag);
 
@@ -356,7 +356,7 @@ namespace tann {
         TURBO_DLL size_t load_delete_set(AlignedFileReader &reader);
 #else
         TURBO_DLL size_t load_graph(const std::string filename,
-                                            size_t expected_num_points);
+                                    size_t expected_num_points);
 
         TURBO_DLL size_t load_data(std::string filename0);
 
@@ -444,7 +444,7 @@ namespace tann {
         // immediately available for insert. consolidate_delete will release these
         // slots to _empty_slots.
         natural_number_set<unsigned> _empty_slots;
-        std::unique_ptr<turbo::flat_hash_set< unsigned>> _delete_set;
+        std::unique_ptr<turbo::flat_hash_set<unsigned>> _delete_set;
 
         bool _data_compacted = true;  // true if data has been compacted
         bool _is_saved = false;  // Gopal. Checking if the index is already saved.

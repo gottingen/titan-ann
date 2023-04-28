@@ -408,7 +408,7 @@ generate_label_specific_vector_files_compat(
 
 /*
  * Using passed in parameters and files generated from step 3,
- * builds a vanilla diskANN index for each label.
+ * builds a vanilla tann index for each label.
  *
  * Each index is saved under the following path:
  *  final_index_path_prefix + "_" + label
@@ -430,7 +430,6 @@ void generate_label_indices(path input_data_path, path final_index_path_prefix,
     // for each label, build an index on resp. points
     double total_indexing_time = 0.0, indexing_percentage = 0.0;
     std::cout.setstate(std::ios_base::failbit);
-    tann::cout.setstate(std::ios_base::failbit);
     for (const auto &lbl: all_labels) {
         path curr_label_input_data_path(input_data_path + "_" + lbl);
         path curr_label_index_path(final_index_path_prefix + "_" + lbl);
@@ -454,7 +453,6 @@ void generate_label_indices(path input_data_path, path final_index_path_prefix,
         index.save(curr_label_index_path.c_str());
     }
     std::cout.clear();
-    tann::cout.clear();
 
     std::cout << "\nDone. Generated per-label indices in " << total_indexing_time
               << " seconds\n"
@@ -500,7 +498,7 @@ load_label_index_return_values load_label_index(path label_index_path,
 
 /*
  * Custom index save to write the in-memory index to disk.
- * Also writes required files for diskANN API -
+ * Also writes required files for tann API -
  *  1. labels_to_medoids
  *  2. universal_label
  *  3. data (redundant for static indices)
@@ -681,7 +679,6 @@ void prune_and_save(path final_index_path_prefix, path full_index_path_prefix,
                     std::string universal_label, path label_data_path,
                     unsigned num_threads) {
     size_t dimension, number_of_label_points;
-    auto diskann_cout_buffer = tann::cout.rdbuf(nullptr);
     auto std_cout_buffer = std::cout.rdbuf(nullptr);
     auto pruning_index_timer = std::chrono::high_resolution_clock::now();
 
@@ -703,7 +700,6 @@ void prune_and_save(path final_index_path_prefix, path full_index_path_prefix,
     index.prune_all_nbrs(paras);
     index.save((final_index_path_prefix).c_str());
 
-    tann::cout.rdbuf(diskann_cout_buffer);
     std::cout.rdbuf(std_cout_buffer);
     std::chrono::duration<double> pruning_index_time =
             std::chrono::high_resolution_clock::now() - pruning_index_timer;
@@ -717,7 +713,7 @@ void prune_and_save(path final_index_path_prefix, path full_index_path_prefix,
  * In the process of creating the stitched index, some temporary artifacts are
  * created:
  * 1. the separate bin files for each labels' points
- * 2. the separate diskANN indices built for each label
+ * 2. the separate tann indices built for each label
  * 3. the '.data' file created while generating the indices
  */
 void clean_up_artifacts(path input_data_path, path final_index_path_prefix,
@@ -802,7 +798,7 @@ int main(int argc, char **argv) {
       throw;
 #endif
 
-    // 4. for each created data file, create a vanilla diskANN index
+    // 4. for each created data file, create a vanilla tann index
     if (data_type == "uint8")
         generate_label_indices<uint8_t>(input_data_path, final_index_path_prefix,
                                         all_labels, R, L, alpha, num_threads);

@@ -18,16 +18,13 @@
 #pragma once
 
 #include <vector>
-
-#include "boost_dynamic_bitset_fwd.h"
-//#include "boost/dynamic_bitset.hpp"
 #include "turbo/container/flat_hash_set.h"
 #include "turbo/container/flat_hash_map.h"
-
-#include "neighbor.h"
-#include "concurrent_queue.h"
-#include "pq.h"
-#include "aligned_file_reader.h"
+#include "turbo/container/dynamic_bitset.h"
+#include "tann/neighbor.h"
+#include "tann/concurrent_queue.h"
+#include "tann/pq.h"
+#include "tann/aligned_file_reader.h"
 
 
 // In-mem index related limits
@@ -91,7 +88,7 @@ namespace tann {
             return _inserted_into_pool_rs;
         }
 
-        inline boost::dynamic_bitset<> &inserted_into_pool_bs() {
+        inline turbo::dynamic_bitset<> &inserted_into_pool_bs() {
             return *_inserted_into_pool_bs;
         }
 
@@ -142,9 +139,7 @@ namespace tann {
         turbo::flat_hash_set<unsigned> _inserted_into_pool_rs;
 
         // Use a pointer here to allow for forward declaration of dynamic_bitset
-        // in public headers to avoid making boost a dependency for clients
-        // of DiskANN.
-        boost::dynamic_bitset<> *_inserted_into_pool_bs;
+        turbo::dynamic_bitset<> *_inserted_into_pool_bs;
 
         // _id_scratch.size() must be > R*GRAPH_SLACK_FACTOR for iterate_to_fp
         std::vector<unsigned> _id_scratch;

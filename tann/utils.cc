@@ -15,12 +15,12 @@
 // limitations under the License.
 //
 
-#include "utils.h"
+#include "tann/utils.h"
 
 #include <stdio.h>
 
 #ifdef EXEC_ENV_OLS
-#include "aligned_file_reader.h"
+#include "tann/aligned_file_reader.h"
 #endif
 
 const uint32_t MAX_REQUEST_SIZE = 1024 * 1024 * 1024;  // 64MB
@@ -114,14 +114,12 @@ namespace tann {
     writr.write((char*) &ndims_s32, sizeof(_s32));
 
     _u64 npts = (_u64) npts_s32, ndims = (_u64) ndims_s32;
-    tann::cout << "Normalizing FLOAT vectors in file: " << inFileName
-                  << std::endl;
-    tann::cout << "Dataset: #pts = " << npts << ", # dims = " << ndims
-                  << std::endl;
+    TURBO_LOG(INFO) << "Normalizing FLOAT vectors in file: " << inFileName;
+    TURBO_LOG(INFO) << "Dataset: #pts = " << npts << ", # dims = " << ndims;
 
     _u64 blk_size = 131072;
     _u64 nblks = ROUND_UP(npts, blk_size) / blk_size;
-    tann::cout << "# blks: " << nblks << std::endl;
+    TURBO_LOG(INFO) << "# blks: " << nblks;
 
     float* read_buf = new float[npts * ndims];
     for (_u64 i = 0; i < nblks; i++) {
@@ -130,8 +128,7 @@ namespace tann {
     }
     delete[] read_buf;
 
-    tann::cout << "Wrote normalized points to file: " << outFileName
-                  << std::endl;
+    TURBO_LOG(INFO) << "Wrote normalized points to file: " << outFileName;
   }
 
   double calculate_recall(unsigned num_queries, unsigned* gold_std,
@@ -197,12 +194,11 @@ namespace tann {
 
       if ((active_points_count < recall_at && !active_tags.empty()) &&
           !printed) {
-        tann::cout << "Warning: Couldn't find enough closest neighbors "
+          TURBO_LOG(INFO) << "Warning: Couldn't find enough closest neighbors "
                       << active_points_count << "/" << recall_at
                       << " from "
                          "truthset for query # "
-                      << i << ". Will result in under-reported value of recall."
-                      << std::endl;
+                      << i << ". Will result in under-reported value of recall.";
         printed = true;
       }
       if (gs_dist != nullptr) {
@@ -270,8 +266,8 @@ namespace tann {
     if ((*(ctx.m_pRequestsStatus))[0] == IOContext::READ_SUCCESS) {
       npts = buf[0];
       ndim = buf[1];
-      tann::cout << "File has: " << npts << " points, " << ndim
-                    << " dimensions at offset: " << offset << std::endl;
+      TURBO_LOG(INFO) << "File has: " << npts << " points, " << ndim
+                    << " dimensions at offset: " << offset;
     } else {
       std::stringstream str;
       str << "Could not read binary metadata from index file at offset: "
@@ -332,7 +328,7 @@ namespace tann {
                                    size_t& npts, size_t& ndim,
                                    const size_t& rounded_dim, size_t offset) {
     if (data == nullptr) {
-      tann::cerr << "Memory was not allocated for " << data
+      TURBO_LOG(ERROR) << "Memory was not allocated for " << data
                     << " before calling the load function. Exiting..."
                     << std::endl;
       throw tann::ANNException(
