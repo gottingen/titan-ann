@@ -69,7 +69,7 @@ int search_memory_index(tann::Metric &metric, const std::string &index_path,
         calc_recall_flag = true;
     } else {
         TURBO_LOG(INFO) << " Truthset file " << truthset_file
-                   << " not found. Not computing recall.";
+                        << " not found. Not computing recall.";
     }
 
     bool filtered_search = false;
@@ -135,7 +135,7 @@ int search_memory_index(tann::Metric &metric, const std::string &index_path,
         _u64 L = Lvec[test_id];
         if (L < recall_at) {
             TURBO_LOG(INFO) << "Ignoring search with L:" << L
-                       << " since it's smaller than K:" << recall_at;
+                            << " since it's smaller than K:" << recall_at;
             continue;
         }
 
@@ -228,7 +228,7 @@ int search_memory_index(tann::Metric &metric, const std::string &index_path,
     for (auto L: Lvec) {
         if (L < recall_at) {
             TURBO_LOG(INFO) << "Ignoring search with L:" << L
-                       << " since it's smaller than K:" << recall_at;
+                            << " since it's smaller than K:" << recall_at;
             continue;
         }
         std::string cur_result_path =

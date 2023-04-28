@@ -18,7 +18,7 @@
 #pragma once
 #include <sstream>
 #include <typeinfo>
-#include <unordered_map>
+#include "turbo/container/flat_hash_map.h"
 
 namespace tann {
 
@@ -76,7 +76,7 @@ namespace tann {
     }
 
    private:
-    std::unordered_map<std::string, void *> params;
+    turbo::flat_hash_map<std::string, void *> params;
 
     Parameters(const Parameters &);
     Parameters &operator=(const Parameters &);
