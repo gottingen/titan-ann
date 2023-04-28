@@ -16,6 +16,7 @@
 //
 
 #pragma once
+
 #include <string>
 #include <stdexcept>
 #include <system_error>
@@ -27,24 +28,25 @@
 
 namespace tann {
 
-  class ANNException : public std::runtime_error {
-   public:
-    TURBO_DLL ANNException(const std::string& message, int errorCode);
-    TURBO_DLL ANNException(const std::string& message, int errorCode,
-                                   const std::string& funcSig,
-                                   const std::string& fileName,
-                                   unsigned int       lineNum);
+    class ANNException : public std::runtime_error {
+    public:
+        TURBO_DLL ANNException(const std::string &message, int errorCode);
 
-   private:
-    int _errorCode;
-  };
+        TURBO_DLL ANNException(const std::string &message, int errorCode,
+                               const std::string &funcSig,
+                               const std::string &fileName,
+                               unsigned int lineNum);
 
-  class FileException : public ANNException {
-   public:
-    TURBO_DLL FileException(const std::string& filename,
-                                    std::system_error& e,
-                                    const std::string& funcSig,
-                                    const std::string& fileName,
-                                    unsigned int       lineNum);
-  };
+    private:
+        int _errorCode;
+    };
+
+    class FileException : public ANNException {
+    public:
+        TURBO_DLL FileException(const std::string &filename,
+                                std::system_error &e,
+                                const std::string &funcSig,
+                                const std::string &fileName,
+                                unsigned int lineNum);
+    };
 }  // namespace tann
