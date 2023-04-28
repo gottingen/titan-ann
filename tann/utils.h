@@ -19,7 +19,7 @@
 
 #include <errno.h>
 #include <memory>
-#include "common_includes.h"
+#include "tann/common_includes.h"
 
 #ifdef __APPLE__
 #else
@@ -38,10 +38,10 @@ typedef HANDLE FileHandle;
 typedef int FileHandle;
 #endif
 
-#include "distance.h"
+#include "tann/distance.h"
 #include "turbo/log/logging.h"
-#include "cached_io.h"
-#include "ann_exception.h"
+#include "tann/cached_io.h"
+#include "tann/ann_exception.h"
 #include "turbo/platform/port.h"
 #include "turbo/container/flat_hash_set.h"
 
@@ -133,8 +133,8 @@ inline void open_file_to_write(std::ofstream &writer,
 #else
         strerror_r(errno, buff, 1024);
 #endif
-        TURBO_LOG(ERROR)<< std::string("Failed to open file") + filename +
-                      " for write because " + buff;
+        TURBO_LOG(ERROR) << std::string("Failed to open file") + filename +
+                            " for write because " + buff;
         throw tann::ANNException(std::string("Failed to open file ") + filename +
                                  " for write because: " + buff,
                                  -1);
@@ -158,9 +158,9 @@ inline int delete_file(const std::string &fileName) {
         auto rc = ::remove(fileName.c_str());
         if (rc != 0) {
             TURBO_LOG(ERROR)
-                    << "Could not delete file: " << fileName
-                    << " even though it exists. This might indicate a permissions issue. "
-                       "If you see this message, please contact the tann team.";
+                            << "Could not delete file: " << fileName
+                            << " even though it exists. This might indicate a permissions issue. "
+                               "If you see this message, please contact the tann team.";
         }
         return rc;
     } else {
@@ -253,7 +253,7 @@ namespace tann {
         if (IS_ALIGNED(size, align) == 0)
             report_misalignment_of_requested_size(align);
 #ifdef _WINDOWS
-        *ptr = ::_aligned_realloc(*ptr, size, align);
+            *ptr = ::_aligned_realloc(*ptr, size, align);
 #else
         TURBO_LOG(ERROR) << "No aligned realloc on GCC. Must malloc and mem_align, "
                             "left it out for now.";
@@ -456,7 +456,7 @@ namespace tann {
         dim = (unsigned) dim_i32;
 
         TURBO_LOG(INFO) << "Metadata: #pts = " << npts << ", #dims = " << dim
-                   << "... ";
+                        << "... ";
 
         int truthset_type = -1;  // 1 means truthset has ids and distances, 2 means
         // only ids, -1 is error
@@ -511,7 +511,7 @@ namespace tann {
         float *dists;
 
         TURBO_LOG(INFO) << "Metadata: #pts = " << npts << ", #dims = " << dim
-                   << "... ";
+                        << "... ";
 
         int truthset_type = -1;  // 1 means truthset has ids and distances, 2 means
         // only ids, -1 is error
@@ -578,7 +578,7 @@ namespace tann {
         _u64 total_res = (_u64) total_u32;
 
         TURBO_LOG(INFO) << "Metadata: #pts = " << gt_num
-                   << ", #total_results = " << total_res << "...";
+                        << ", #total_results = " << total_res << "...";
 
         size_t expected_file_size =
                 2 * sizeof(_u32) + gt_num * sizeof(_u32) + total_res * sizeof(_u32);
@@ -690,14 +690,14 @@ namespace tann {
         std::ofstream writer;
         open_file_to_write(writer, filename);
 
-        TURBO_LOG(INFO) << "Writing bin: " << filename.c_str() ;
+        TURBO_LOG(INFO) << "Writing bin: " << filename.c_str();
         writer.seekp(offset, writer.beg);
         int npts_i32 = (int) npts, ndims_i32 = (int) ndims;
         size_t bytes_written = npts * ndims * sizeof(T) + 2 * sizeof(uint32_t);
         writer.write((char *) &npts_i32, sizeof(int));
         writer.write((char *) &ndims_i32, sizeof(int));
         TURBO_LOG(INFO) << "bin: #pts = " << npts << ", #dims = " << ndims
-                   << ", size = " << bytes_written << "B" ;
+                        << ", size = " << bytes_written << "B";
 
         writer.write((char *) data, npts * ndims * sizeof(T));
         writer.close();
@@ -731,10 +731,10 @@ namespace tann {
         }
         rounded_dim = ROUND_UP(dim, 8);
         TURBO_LOG(INFO) << "Metadata: #pts = " << npts << ", #dims = " << dim
-                   << ", aligned_dim = " << rounded_dim << "... ";
+                        << ", aligned_dim = " << rounded_dim << "... ";
         size_t allocSize = npts * rounded_dim * sizeof(T);
         TURBO_LOG(INFO) << "allocating aligned memory of " << allocSize
-                   << " bytes... ";
+                        << " bytes... ";
         alloc_aligned(((void **) &data), allocSize, 8 * sizeof(T));
         TURBO_LOG(INFO) << "done. Copying data to mem_aligned buffer...";
 
@@ -773,7 +773,7 @@ namespace tann {
 
         try {
             TURBO_LOG(INFO) << "Reading (with alignment) bin file " << bin_file
-                       << " ...";
+                            << " ...";
             reader.open(bin_file, std::ios::binary | std::ios::ate);
 
             uint64_t fsize = reader.tellg();
@@ -925,8 +925,8 @@ namespace tann {
                                             size_t offset = 0) {
         if (data == nullptr) {
             TURBO_LOG(ERROR) << "Memory was not allocated for " << data
-                       << " before calling the load function. Exiting..."
-                       << std::endl;
+                             << " before calling the load function. Exiting..."
+                             << std::endl;
             throw tann::ANNException(
                     "Null pointer passed to copy_aligned_data_from_file function", -1,
                     __FUNCSIG__, __FILE__, __LINE__);
@@ -967,7 +967,7 @@ namespace tann {
                        float *read_buf, _u64 npts, _u64 ndims);
 
     TURBO_DLL void normalize_data_file(const std::string &inFileName,
-                                               const std::string &outFileName);
+                                       const std::string &outFileName);
 
 };  // namespace tann
 
@@ -1003,8 +1003,8 @@ inline bool validate_index_file_size(std::ifstream &in) {
     in.seekg(0, in.beg);
     if (actual_file_size != expected_file_size) {
         TURBO_LOG(ERROR) << "Index file size error. Expected size (metadata): "
-                   << expected_file_size
-                   << ", actual file size : " << actual_file_size << ".";
+                         << expected_file_size
+                         << ", actual file size : " << actual_file_size << ".";
         return false;
     }
     return true;

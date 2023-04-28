@@ -32,7 +32,7 @@
 #include <typeinfo>
 
 #include "partition.h"
-#include "utils.h"
+#include "tann/utils.h"
 
 template<typename T>
 int analyze_norm(std::string base_file) {

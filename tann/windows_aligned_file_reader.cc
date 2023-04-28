@@ -19,7 +19,7 @@
 #ifndef USE_BING_INFRA
 #include "windows_aligned_file_reader.h"
 #include <iostream>
-#include "utils.h"
+#include "tann/utils.h"
 
 #define SECTOR_LEN 4096
 

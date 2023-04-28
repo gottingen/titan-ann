@@ -17,7 +17,7 @@
 
 #include "mkl/mkl.h"
 
-#include "pq.h"
+#include "tann/pq.h"
 #include "partition.h"
 #include "math_utils.h"
 #include "turbo/container/flat_hash_map.h"

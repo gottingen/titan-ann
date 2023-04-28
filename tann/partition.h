@@ -21,10 +21,10 @@
 #include <stack>
 #include <string>
 
-#include "neighbor.h"
-#include "parameters.h"
+#include "tann/neighbor.h"
+#include "tann/parameters.h"
 #include "turbo/container/flat_hash_set.h"
-#include "utils.h"
+#include "tann/utils.h"
 
 #include "turbo/platform/port.h"
 

@@ -18,7 +18,7 @@
 #pragma once
 #ifndef _WINDOWS
 
-#include "aligned_file_reader.h"
+#include "tann/aligned_file_reader.h"
 
 class LinuxAlignedFileReader : public AlignedFileReader {
 private:

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "utils.h"
+#include "tann/utils.h"
 
 #define NUM_PQ_BITS 8
 #define NUM_PQ_CENTROIDS (1 << NUM_PQ_BITS)

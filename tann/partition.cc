@@ -30,10 +30,10 @@
 #include "gperftools/malloc_extension.h"
 #endif
 
-#include "utils.h"
+#include "tann/utils.h"
 #include "math_utils.h"
 #include "index.h"
-#include "parameters.h"
+#include "tann/parameters.h"
 #include "memory_mapper.h"
 #include "partition.h"
 #ifdef _WINDOWS

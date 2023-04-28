@@ -15,12 +15,12 @@
 // limitations under the License.
 //
 
-#include "utils.h"
+#include "tann/utils.h"
 
 #include <stdio.h>
 
 #ifdef EXEC_ENV_OLS
-#include "aligned_file_reader.h"
+#include "tann/aligned_file_reader.h"
 #endif
 
 const uint32_t MAX_REQUEST_SIZE = 1024 * 1024 * 1024;  // 64MB

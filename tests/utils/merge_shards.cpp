@@ -25,8 +25,8 @@
 #include <vector>
 
 #include "disk_utils.h"
-#include "cached_io.h"
-#include "utils.h"
+#include "tann/cached_io.h"
+#include "tann/utils.h"
 
 int main(int argc, char **argv) {
   if (argc != 9) {

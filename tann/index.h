@@ -17,21 +17,21 @@
 
 #pragma once
 
-#include "common_includes.h"
+#include "tann/common_includes.h"
 
 #ifdef EXEC_ENV_OLS
-#include "aligned_file_reader.h"
+#include "tann/aligned_file_reader.h"
 #endif
 
-#include "distance.h"
+#include "tann/distance.h"
 #include "locking.h"
 #include "natural_number_map.h"
 #include "natural_number_set.h"
-#include "neighbor.h"
-#include "parameters.h"
-#include "utils.h"
+#include "tann/neighbor.h"
+#include "tann/parameters.h"
+#include "tann/utils.h"
 #include "turbo/platform/port.h"
-#include "scratch.h"
+#include "tann/scratch.h"
 
 #define OVERHEAD_FACTOR 1.1
 #define EXPAND_IF_FULL 0

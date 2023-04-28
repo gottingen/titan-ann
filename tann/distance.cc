@@ -28,14 +28,14 @@
 
 #endif
 
-#include "simd_utils.h"
-#include "cosine_similarity.h"
+#include "tann/simd_utils.h"
+#include "tann/cosine_similarity.h"
 #include <iostream>
 
-#include "distance.h"
-#include "utils.h"
+#include "tann/distance.h"
+#include "tann/utils.h"
 #include "turbo/log/logging.h"
-#include "ann_exception.h"
+#include "tann/ann_exception.h"
 
 namespace tann {
 

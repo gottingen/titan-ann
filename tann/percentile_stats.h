@@ -27,8 +27,8 @@
 #include <string>
 #include <vector>
 
-#include "distance.h"
-#include "parameters.h"
+#include "tann/distance.h"
+#include "tann/parameters.h"
 
 namespace tann {
   struct QueryStats {

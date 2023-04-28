@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include "common_includes.h"
-#include "utils.h"
+#include "tann/common_includes.h"
+#include "tann/utils.h"
 
 namespace math_utils {
 

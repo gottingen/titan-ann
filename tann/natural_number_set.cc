@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-#include "ann_exception.h"
+#include "tann/ann_exception.h"
 #include "natural_number_set.h"
 
 namespace tann {

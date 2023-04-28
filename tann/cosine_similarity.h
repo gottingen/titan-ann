@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "simd_utils.h"
+#include "tann/simd_utils.h"
 
 extern bool Avx2SupportedCPU;
 

@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-#include "common_includes.h"
+#include "tann/common_includes.h"
 
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && \
     defined(TANN_BUILD)
@@ -24,11 +24,11 @@
 
 #include "turbo/log/logging.h"
 #include "disk_utils.h"
-#include "cached_io.h"
+#include "tann/cached_io.h"
 #include "index.h"
 #include "mkl/mkl.h"
 #include "omp.h"
-#include "percentile_stats.h"
+#include "tann/percentile_stats.h"
 #include "partition.h"
 #include "pq_flash_index.h"
 #include "timer.h"
