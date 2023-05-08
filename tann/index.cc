@@ -84,7 +84,7 @@ namespace tann {
               _use_opq(use_opq),
               _num_pq_chunks(num_pq_chunks),
               _delete_set(new turbo::flat_hash_set<unsigned>),
-              _conc_consolidate(concurrent_consolidate){
+              _conc_consolidate(concurrent_consolidate) {
         if (dynamic_index && !enable_tags) {
             throw ANNException("ERROR: Dynamic Indexing must have tags enabled.", -1,
                                __FUNCSIG__, __FILE__, __LINE__);

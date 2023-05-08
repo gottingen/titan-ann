@@ -131,7 +131,7 @@ public:
             assert(cache_size > 0);
             cache_buf = new char[cache_size];
             TURBO_LOG(INFO) << "Opened: " << filename.c_str()
-                       << ", cache_size: " << cache_size;
+                            << ", cache_size: " << cache_size;
         } catch (std::system_error &e) {
             throw tann::FileException(filename, e, __FUNCSIG__, __FILE__,
                                       __LINE__);
