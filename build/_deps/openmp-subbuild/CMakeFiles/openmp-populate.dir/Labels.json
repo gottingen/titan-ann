@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/CMakeFiles/openmp-populate"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/CMakeFiles/openmp-populate.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/CMakeFiles/openmp-populate-complete.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-build.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-configure.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-download.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-install.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-patch.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-test.rule"
+		},
+		{
+			"file" : "/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-subbuild/openmp-populate-prefix/src/openmp-populate-stamp/openmp-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"openmp-populate"
+		],
+		"name" : "openmp-populate"
+	}
+}

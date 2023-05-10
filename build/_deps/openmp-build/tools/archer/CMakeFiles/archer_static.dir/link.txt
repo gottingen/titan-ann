@@ -1,0 +1,2 @@
+/usr/bin/ar qc libarcher_static.a CMakeFiles/archer_static.dir/ompt-tsan.cpp.o
+/usr/bin/ranlib libarcher_static.a

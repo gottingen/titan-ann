@@ -1,0 +1,516 @@
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_1_1 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-z2KiYG
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_5e176 && [1/2] Building CXX object CMakeFiles/cmTC_5e176.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_5e176.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_1_1  -msse4.1 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_5e176.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-z2KiYG/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-z2KiYG/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-z2KiYG/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-z2KiYG/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                                        ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0};
+    __m128i res = _mm_max_epi8(a, b); // SSE4_1
+
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_1_2 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-3ImORK
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_f80a5 && [1/2] Building CXX object CMakeFiles/cmTC_f80a5.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_f80a5.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_1_2  -msse4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_f80a5.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-3ImORK/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-3ImORK/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-3ImORK/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-3ImORK/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                                        ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0};
+    __m128i res = _mm_max_epi8(a, b); // SSE4_1
+
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_1_3 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xKcn4I
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_c0e67 && [1/2] Building CXX object CMakeFiles/cmTC_c0e67.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_c0e67.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_1_3  /arch:SSE4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_c0e67.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xKcn4I/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xKcn4I/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xKcn4I/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xKcn4I/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                                        ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0};
+    __m128i res = _mm_max_epi8(a, b); // SSE4_1
+
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_2_1 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-SRkBgB
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_cc01c && [1/2] Building CXX object CMakeFiles/cmTC_cc01c.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_cc01c.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_2_1  -msse4.2 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_cc01c.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-SRkBgB/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-SRkBgB/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-SRkBgB/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-SRkBgB/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                        ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-SRkBgB/src.cxx:6:55: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                                       ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+    c = _mm_cmpgt_epi64(a, b);  // SSE4_2
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_2_2 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-VUqiba
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_d8fae && [1/2] Building CXX object CMakeFiles/cmTC_d8fae.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_d8fae.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_2_2  -msse4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_d8fae.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-VUqiba/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-VUqiba/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-VUqiba/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-VUqiba/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                        ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-VUqiba/src.cxx:6:55: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                                       ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+    c = _mm_cmpgt_epi64(a, b);  // SSE4_2
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_2_3 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-9JpVon
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_12d01 && [1/2] Building CXX object CMakeFiles/cmTC_12d01.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_12d01.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_2_3  /arch:SSE4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_12d01.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-9JpVon/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-9JpVon/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-9JpVon/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-9JpVon/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                        ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-9JpVon/src.cxx:6:55: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                                       ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+    c = _mm_cmpgt_epi64(a, b);  // SSE4_2
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_AVX512_1 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-TVSHx3
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_c12f5 && [1/2] Building CXX object CMakeFiles/cmTC_c12f5.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_c12f5.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_AVX512_1  -mavx512 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_c12f5.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-TVSHx3/src.cxx
+c++: error: unrecognized command-line option ‘-mavx512’; did you mean ‘-mavx512f’?
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+#if defined __AVX512__ || defined __AVX512F__
+#include <immintrin.h>
+void test()
+{
+    __m512i zmm = _mm512_setzero_si512();
+#if defined __GNUC__ && defined __x86_64__
+    asm volatile ("" : : : "zmm16", "zmm17", "zmm18", "zmm19");
+#endif
+}
+#else
+#error "AVX512 is not supported"
+#endif
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test CXX_HAS_AVX512_2 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-c3mCkS
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_82a51 && [1/2] Building CXX object CMakeFiles/cmTC_82a51.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_82a51.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_AVX512_2  /arch:AVX512 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_82a51.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-c3mCkS/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-c3mCkS/src.cxx:12:2: error: #error "AVX512 is not supported"
+   12 | #error "AVX512 is not supported"
+      |  ^~~~~
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+#if defined __AVX512__ || defined __AVX512F__
+#include <immintrin.h>
+void test()
+{
+    __m512i zmm = _mm512_setzero_si512();
+#if defined __GNUC__ && defined __x86_64__
+    asm volatile ("" : : : "zmm16", "zmm17", "zmm18", "zmm19");
+#endif
+}
+#else
+#error "AVX512 is not supported"
+#endif
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_1_1 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-LHnEHI
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_de923 && [1/2] Building CXX object CMakeFiles/cmTC_de923.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_de923.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_1_1  -msse4.1 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_de923.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-LHnEHI/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-LHnEHI/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-LHnEHI/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-LHnEHI/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                                        ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0};
+    __m128i res = _mm_max_epi8(a, b); // SSE4_1
+
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_1_2 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-IwpOOe
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_506d1 && [1/2] Building CXX object CMakeFiles/cmTC_506d1.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_506d1.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_1_2  -msse4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_506d1.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-IwpOOe/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-IwpOOe/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-IwpOOe/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-IwpOOe/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                                        ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0};
+    __m128i res = _mm_max_epi8(a, b); // SSE4_1
+
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_1_3 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-itTofs
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_9d891 && [1/2] Building CXX object CMakeFiles/cmTC_9d891.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_9d891.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_1_3  /arch:SSE4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_9d891.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-itTofs/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-itTofs/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-itTofs/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-itTofs/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0};
+      |                                        ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0};
+    __m128i res = _mm_max_epi8(a, b); // SSE4_1
+
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_2_1 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-jXfAi9
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_4fed8 && [1/2] Building CXX object CMakeFiles/cmTC_4fed8.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_4fed8.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_2_1  -msse4.2 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_4fed8.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-jXfAi9/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-jXfAi9/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-jXfAi9/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-jXfAi9/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                        ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-jXfAi9/src.cxx:6:55: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                                       ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+    c = _mm_cmpgt_epi64(a, b);  // SSE4_2
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_2_2 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-NwOqvb
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_64865 && [1/2] Building CXX object CMakeFiles/cmTC_64865.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_64865.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_2_2  -msse4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_64865.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-NwOqvb/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-NwOqvb/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-NwOqvb/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-NwOqvb/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                        ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-NwOqvb/src.cxx:6:55: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                                       ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+    c = _mm_cmpgt_epi64(a, b);  // SSE4_2
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE4_2_3 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-C5TJpH
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_60196 && [1/2] Building CXX object CMakeFiles/cmTC_60196.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_60196.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_SSE4_2_3  /arch:SSE4 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_60196.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-C5TJpH/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-C5TJpH/src.cxx: In function ‘int main()’:
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-C5TJpH/src.cxx:6:25: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                         ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-C5TJpH/src.cxx:6:40: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                        ^
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-C5TJpH/src.cxx:6:55: error: too many initializers for ‘__m128i’
+    6 |     __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+      |                                                       ^
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a = {0,0,0,0}, b = {0,0,0,0}, c = {0,0,0,0};
+    c = _mm_cmpgt_epi64(a, b);  // SSE4_2
+    return 0;
+  }
+
+
+Performing C++ SOURCE FILE Test CXX_HAS_AVX512_1 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-sdaBr1
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_e0789 && [1/2] Building CXX object CMakeFiles/cmTC_e0789.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_e0789.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_AVX512_1  -mavx512 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_e0789.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-sdaBr1/src.cxx
+c++: error: unrecognized command-line option ‘-mavx512’; did you mean ‘-mavx512f’?
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+#if defined __AVX512__ || defined __AVX512F__
+#include <immintrin.h>
+void test()
+{
+    __m512i zmm = _mm512_setzero_si512();
+#if defined __GNUC__ && defined __x86_64__
+    asm volatile ("" : : : "zmm16", "zmm17", "zmm18", "zmm19");
+#endif
+}
+#else
+#error "AVX512 is not supported"
+#endif
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test CXX_HAS_AVX512_2 failed with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kQIs7S
+
+Run Build Command(s):/opt/clion/clion-2023.1.1/bin/ninja/linux/x64/ninja cmTC_18cc7 && [1/2] Building CXX object CMakeFiles/cmTC_18cc7.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_18cc7.dir/src.cxx.o 
+/usr/bin/c++ -DCXX_HAS_AVX512_2  /arch:AVX512 -fdiagnostics-color=always -std=gnu++17 -o CMakeFiles/cmTC_18cc7.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kQIs7S/src.cxx
+/home/ubuntu/github/gottingen/titan-ann/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kQIs7S/src.cxx:12:2: error: #error "AVX512 is not supported"
+   12 | #error "AVX512 is not supported"
+      |  ^~~~~
+ninja: build stopped: subcommand failed.
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+#if defined __AVX512__ || defined __AVX512F__
+#include <immintrin.h>
+void test()
+{
+    __m512i zmm = _mm512_setzero_si512();
+#if defined __GNUC__ && defined __x86_64__
+    asm volatile ("" : : : "zmm16", "zmm17", "zmm18", "zmm19");
+#endif
+}
+#else
+#error "AVX512 is not supported"
+#endif
+int main() { return 0; }
+

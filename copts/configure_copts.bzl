@@ -39,7 +39,7 @@ TURBO_TEST_COPTS = select({
 
 TURBO_DEFAULT_LINKOPTS = select({
     "//:msvc_compiler": TURBO_MSVC_LINKOPTS,
-    "//conditions:default": ["-lmkl_intel_ilp64", "-lmkl_intel_thread", "-lmkl_core","-liomp5","-lpthread", "-lm", "-ldl"],
+    "//conditions:default": [],
 })
 
 # TURBO_RANDOM_RANDEN_COPTS blaze copts flags which are required by each

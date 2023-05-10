@@ -1,0 +1,1452 @@
+The system is: Linux - 5.19.0-41-generic - x86_64
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /usr/bin/c++ 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is GNU, found in "/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/3.22.1/CompilerIdCXX/a.out"
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_7a3bc/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_7a3bc.dir/build.make CMakeFiles/cmTC_7a3bc.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++   -v -o CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp
+Using built-in specs.
+COLLECT_GCC=/usr/bin/c++
+OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7a3bc.dir/'
+ /usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_7a3bc.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccrgvEW6.s
+GNU C++17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 11.3.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/11"
+ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/include-fixed"
+ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/../../../../x86_64-linux-gnu/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ /usr/include/c++/11
+ /usr/include/x86_64-linux-gnu/c++/11
+ /usr/include/c++/11/backward
+ /usr/lib/gcc/x86_64-linux-gnu/11/include
+ /usr/local/include
+ /usr/include/x86_64-linux-gnu
+ /usr/include
+End of search list.
+GNU C++17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 11.3.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 449548cbb29044828dc7ea158b577b98
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7a3bc.dir/'
+ as -v --64 -o CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccrgvEW6.s
+GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.'
+Linking CXX executable cmTC_7a3bc
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7a3bc.dir/link.txt --verbose=1
+/usr/bin/c++  -v CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_7a3bc 
+Using built-in specs.
+COLLECT_GCC=/usr/bin/c++
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) 
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7a3bc' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_7a3bc.'
+ /usr/lib/gcc/x86_64-linux-gnu/11/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZsRTvM.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_7a3bc /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/11/../../.. CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7a3bc' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_7a3bc.'
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+
+Parsed CXX implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/usr/include/c++/11]
+    add: [/usr/include/x86_64-linux-gnu/c++/11]
+    add: [/usr/include/c++/11/backward]
+    add: [/usr/lib/gcc/x86_64-linux-gnu/11/include]
+    add: [/usr/local/include]
+    add: [/usr/include/x86_64-linux-gnu]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/usr/include/c++/11] ==> [/usr/include/c++/11]
+  collapse include dir [/usr/include/x86_64-linux-gnu/c++/11] ==> [/usr/include/x86_64-linux-gnu/c++/11]
+  collapse include dir [/usr/include/c++/11/backward] ==> [/usr/include/c++/11/backward]
+  collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/11/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/11/include]
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/usr/include/c++/11;/usr/include/x86_64-linux-gnu/c++/11;/usr/include/c++/11/backward;/usr/lib/gcc/x86_64-linux-gnu/11/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_7a3bc/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_7a3bc.dir/build.make CMakeFiles/cmTC_7a3bc.dir/build]
+  ignore line: [gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building CXX object CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/c++]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+  ignore line: [Thread model: posix]
+  ignore line: [Supported LTO compression algorithms: zlib zstd]
+  ignore line: [gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7a3bc.dir/']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_7a3bc.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccrgvEW6.s]
+  ignore line: [GNU C++17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 11.3.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/11"]
+  ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/include-fixed"]
+  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/../../../../x86_64-linux-gnu/include"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /usr/include/c++/11]
+  ignore line: [ /usr/include/x86_64-linux-gnu/c++/11]
+  ignore line: [ /usr/include/c++/11/backward]
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/11/include]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /usr/include/x86_64-linux-gnu]
+  ignore line: [ /usr/include]
+  ignore line: [End of search list.]
+  ignore line: [GNU C++17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 11.3.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [Compiler executable checksum: 449548cbb29044828dc7ea158b577b98]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7a3bc.dir/']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccrgvEW6.s]
+  ignore line: [GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.']
+  ignore line: [Linking CXX executable cmTC_7a3bc]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7a3bc.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++  -v CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_7a3bc ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/c++]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+  ignore line: [Thread model: posix]
+  ignore line: [Supported LTO compression algorithms: zlib zstd]
+  ignore line: [gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) ]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7a3bc' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_7a3bc.']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/11/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZsRTvM.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_7a3bc /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/11/../../.. CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccZsRTvM.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-pie] ==> ignore
+    arg [-znow] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_7a3bc] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../..]
+    arg [CMakeFiles/cmTC_7a3bc.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o]
+  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11] ==> [/usr/lib/gcc/x86_64-linux-gnu/11]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../..] ==> [/usr/lib]
+  implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+  implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+  implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/11;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+  implicit fwks: []
+
+
+Performing C++ SOURCE FILE Test TURBO_INTERNAL_AT_LEAST_CXX17 succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_eb0a5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_eb0a5.dir/build.make CMakeFiles/cmTC_eb0a5.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_eb0a5.dir/src.cxx.o
+/usr/bin/c++ -DTURBO_INTERNAL_AT_LEAST_CXX17   -o CMakeFiles/cmTC_eb0a5.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_eb0a5
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_eb0a5.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_eb0a5.dir/src.cxx.o -o cmTC_eb0a5 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+#ifdef _MSC_VER
+#  if _MSVC_LANG < 201700L
+#    error "The compiler defaults or is configured for C++ < 17"
+#  endif
+#elif __cplusplus < 201700L
+#  error "The compiler defaults or is configured for C++ < 17"
+#endif
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test CXX_HAS_SSE1_1 succeeded with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_c0140/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c0140.dir/build.make CMakeFiles/cmTC_c0140.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_c0140.dir/src.cxx.o
+/usr/bin/c++ -DCXX_HAS_SSE1_1  -msse -o CMakeFiles/cmTC_c0140.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c0140
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c0140.dir/link.txt --verbose=1
+/usr/bin/c++  -msse CMakeFiles/cmTC_c0140.dir/src.cxx.o -o cmTC_c0140 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <xmmintrin.h>
+
+  int main()
+  {
+    __m128 a;
+    float vals[4] = {0,0,0,0};
+    a = _mm_loadu_ps(vals);  // SSE1
+    return 0;
+  }
+Performing C++ SOURCE FILE Test CXX_HAS_SSE2_1 succeeded with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_89f30/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_89f30.dir/build.make CMakeFiles/cmTC_89f30.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_89f30.dir/src.cxx.o
+/usr/bin/c++ -DCXX_HAS_SSE2_1  -msse2 -o CMakeFiles/cmTC_89f30.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_89f30
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_89f30.dir/link.txt --verbose=1
+/usr/bin/c++  -msse2 CMakeFiles/cmTC_89f30.dir/src.cxx.o -o cmTC_89f30 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <emmintrin.h>
+
+  int main()
+  {
+    __m128d a;
+    double vals[2] = {0,0};
+    a = _mm_loadu_pd(vals);  // SSE2
+    return 0;
+  }
+Performing C++ SOURCE FILE Test CXX_HAS_SSE3_1 succeeded with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_2ffcb/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2ffcb.dir/build.make CMakeFiles/cmTC_2ffcb.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_2ffcb.dir/src.cxx.o
+/usr/bin/c++ -DCXX_HAS_SSE3_1  -msse3 -o CMakeFiles/cmTC_2ffcb.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_2ffcb
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2ffcb.dir/link.txt --verbose=1
+/usr/bin/c++  -msse3 CMakeFiles/cmTC_2ffcb.dir/src.cxx.o -o cmTC_2ffcb 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+#include <pmmintrin.h>
+int main() {
+    __m128 u, v;
+    u = _mm_set1_ps(0.0f);
+    v = _mm_moveldup_ps(u); // SSE3
+    return 0;
+}
+Performing C++ SOURCE FILE Test CXX_HAS_SSSE3_1 succeeded with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_feb25/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_feb25.dir/build.make CMakeFiles/cmTC_feb25.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_feb25.dir/src.cxx.o
+/usr/bin/c++ -DCXX_HAS_SSSE3_1  -mssse3 -o CMakeFiles/cmTC_feb25.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_feb25
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_feb25.dir/link.txt --verbose=1
+/usr/bin/c++  -mssse3 CMakeFiles/cmTC_feb25.dir/src.cxx.o -o cmTC_feb25 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+  #include <tmmintrin.h>
+  const double v = 0;
+  int main() {
+    __m128i a = _mm_setzero_si128();
+    __m128i b = _mm_abs_epi32(a); // SSSE3
+    return 0;
+  }
+Performing C++ SOURCE FILE Test CXX_HAS_AVX_1 succeeded with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_a5a33/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a5a33.dir/build.make CMakeFiles/cmTC_a5a33.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_a5a33.dir/src.cxx.o
+/usr/bin/c++ -DCXX_HAS_AVX_1  -mavx -o CMakeFiles/cmTC_a5a33.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_a5a33
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a5a33.dir/link.txt --verbose=1
+/usr/bin/c++  -mavx CMakeFiles/cmTC_a5a33.dir/src.cxx.o -o cmTC_a5a33 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+#if !defined __AVX__ // MSVC supports this flag since MSVS 2013
+#error "__AVX__ define is missing"
+#endif
+#include <immintrin.h>
+void test()
+{
+    __m256 a = _mm256_set1_ps(0.0f);
+}
+int main() { return 0; }
+Performing C++ SOURCE FILE Test CXX_HAS_AVX2_1 succeeded with the following compile output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_45a34/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_45a34.dir/build.make CMakeFiles/cmTC_45a34.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_45a34.dir/src.cxx.o
+/usr/bin/c++ -DCXX_HAS_AVX2_1  -mavx2 -o CMakeFiles/cmTC_45a34.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_45a34
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_45a34.dir/link.txt --verbose=1
+/usr/bin/c++  -mavx2 CMakeFiles/cmTC_45a34.dir/src.cxx.o -o cmTC_45a34 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+...and run output:
+
+Return value: 1
+Source file was:
+
+#if !defined __AVX2__ // MSVC supports this flag since MSVS 2013
+#error "__AVX2__ define is missing"
+#endif
+#include <immintrin.h>
+void test()
+{
+    int data[8] = {0,0,0,0, 0,0,0,0};
+    __m256i a = _mm256_loadu_si256((const __m256i *)data);
+    __m256i b = _mm256_bslli_epi128(a, 1);  // available in GCC 4.9.3+
+}
+int main() { return 0; }
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_0bbe0/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0bbe0.dir/build.make CMakeFiles/cmTC_0bbe0.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_0bbe0.dir/CheckIncludeFile.cxx.o
+/usr/bin/c++    -o CMakeFiles/cmTC_0bbe0.dir/CheckIncludeFile.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+Linking CXX executable cmTC_0bbe0
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0bbe0.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_0bbe0.dir/CheckIncludeFile.cxx.o -o cmTC_0bbe0 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+
+Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_de38c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_de38c.dir/build.make CMakeFiles/cmTC_de38c.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_de38c.dir/src.cxx.o
+/usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_de38c.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_de38c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_de38c.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_de38c.dir/src.cxx.o -o cmTC_de38c 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/bin/cc 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is GNU, found in "/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/3.22.1/CompilerIdC/a.out"
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_bb6d7/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_bb6d7.dir/build.make CMakeFiles/cmTC_bb6d7.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc   -v -o CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake-3.22/Modules/CMakeCCompilerABI.c
+Using built-in specs.
+COLLECT_GCC=/usr/bin/cc
+OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bb6d7.dir/'
+ /usr/lib/gcc/x86_64-linux-gnu/11/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/share/cmake-3.22/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_bb6d7.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccA1jfGy.s
+GNU C17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 11.3.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/include-fixed"
+ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/../../../../x86_64-linux-gnu/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ /usr/lib/gcc/x86_64-linux-gnu/11/include
+ /usr/local/include
+ /usr/include/x86_64-linux-gnu
+ /usr/include
+End of search list.
+GNU C17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 11.3.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 3f6cb05d963ad324b8f9442822c95179
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bb6d7.dir/'
+ as -v --64 -o CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o /tmp/ccA1jfGy.s
+GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.'
+Linking C executable cmTC_bb6d7
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bb6d7.dir/link.txt --verbose=1
+/usr/bin/cc  -v CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o -o cmTC_bb6d7 
+Using built-in specs.
+COLLECT_GCC=/usr/bin/cc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) 
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bb6d7' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_bb6d7.'
+ /usr/lib/gcc/x86_64-linux-gnu/11/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper -plugin-opt=-fresolution=/tmp/cc3DUYzY.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_bb6d7 /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/11/../../.. CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bb6d7' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_bb6d7.'
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+
+Parsed C implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/usr/lib/gcc/x86_64-linux-gnu/11/include]
+    add: [/usr/local/include]
+    add: [/usr/include/x86_64-linux-gnu]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/11/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/11/include]
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/usr/lib/gcc/x86_64-linux-gnu/11/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_bb6d7/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_bb6d7.dir/build.make CMakeFiles/cmTC_bb6d7.dir/build]
+  ignore line: [gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building C object CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake-3.22/Modules/CMakeCCompilerABI.c]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/cc]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+  ignore line: [Thread model: posix]
+  ignore line: [Supported LTO compression algorithms: zlib zstd]
+  ignore line: [gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bb6d7.dir/']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/11/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/share/cmake-3.22/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_bb6d7.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccA1jfGy.s]
+  ignore line: [GNU C17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 11.3.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/include-fixed"]
+  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/11/../../../../x86_64-linux-gnu/include"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/11/include]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /usr/include/x86_64-linux-gnu]
+  ignore line: [ /usr/include]
+  ignore line: [End of search list.]
+  ignore line: [GNU C17 (Ubuntu 11.3.0-1ubuntu1~22.04) version 11.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 11.3.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [Compiler executable checksum: 3f6cb05d963ad324b8f9442822c95179]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bb6d7.dir/']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o /tmp/ccA1jfGy.s]
+  ignore line: [GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.']
+  ignore line: [Linking C executable cmTC_bb6d7]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bb6d7.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc  -v CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o -o cmTC_bb6d7 ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/cc]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.3.0-1ubuntu1~22.04' --with-bugurl=file:///usr/share/doc/gcc-11/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-11 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-11-xKiWfi/gcc-11-11.3.0/debian/tmp-gcn/usr --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+  ignore line: [Thread model: posix]
+  ignore line: [Supported LTO compression algorithms: zlib zstd]
+  ignore line: [gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) ]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bb6d7' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_bb6d7.']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/11/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper -plugin-opt=-fresolution=/tmp/cc3DUYzY.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_bb6d7 /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/11/../../.. CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cc3DUYzY.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-pie] ==> ignore
+    arg [-znow] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_bb6d7] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/11/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../..]
+    arg [CMakeFiles/cmTC_bb6d7.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [--push-state] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--pop-state] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [--push-state] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--pop-state] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o]
+  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11] ==> [/usr/lib/gcc/x86_64-linux-gnu/11]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/11/../../..] ==> [/usr/lib]
+  implicit libs: [gcc;gcc_s;c;gcc;gcc_s]
+  implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+  implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/11;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+  implicit fwks: []
+
+
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WALL_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_02ec3/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_02ec3.dir/build.make CMakeFiles/cmTC_02ec3.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_02ec3.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WALL_FLAG  -Wall -o CMakeFiles/cmTC_02ec3.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_02ec3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_02ec3.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_02ec3.dir/src.cxx.o -o cmTC_02ec3 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WERROR_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_24743/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_24743.dir/build.make CMakeFiles/cmTC_24743.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_24743.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WERROR_FLAG  -Werror -o CMakeFiles/cmTC_24743.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_24743
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_24743.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_24743.dir/src.cxx.o -o cmTC_24743 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WCAST_QUAL_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_8be8c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8be8c.dir/build.make CMakeFiles/cmTC_8be8c.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_8be8c.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WCAST_QUAL_FLAG  -Wcast-qual -o CMakeFiles/cmTC_8be8c.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_8be8c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8be8c.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_8be8c.dir/src.cxx.o -o cmTC_8be8c 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WIMPLICIT_FALLTHROUGH_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_9141d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9141d.dir/build.make CMakeFiles/cmTC_9141d.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_9141d.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WIMPLICIT_FALLTHROUGH_FLAG  -Wimplicit-fallthrough -o CMakeFiles/cmTC_9141d.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_9141d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9141d.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_9141d.dir/src.cxx.o -o cmTC_9141d 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WSIGN_COMPARE_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_30c70/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_30c70.dir/build.make CMakeFiles/cmTC_30c70.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_30c70.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WSIGN_COMPARE_FLAG  -Wsign-compare -o CMakeFiles/cmTC_30c70.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_30c70
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_30c70.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_30c70.dir/src.cxx.o -o cmTC_30c70 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WNO_EXTRA_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_88b2e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_88b2e.dir/build.make CMakeFiles/cmTC_88b2e.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_88b2e.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WNO_EXTRA_FLAG  -Wno-extra -o CMakeFiles/cmTC_88b2e.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_88b2e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_88b2e.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_88b2e.dir/src.cxx.o -o cmTC_88b2e 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WNO_PEDANTIC_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_0d2ba/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0d2ba.dir/build.make CMakeFiles/cmTC_0d2ba.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_0d2ba.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WNO_PEDANTIC_FLAG  -Wno-pedantic -o CMakeFiles/cmTC_0d2ba.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_0d2ba
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0d2ba.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_0d2ba.dir/src.cxx.o -o cmTC_0d2ba 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_WNO_MAYBE_UNINITIALIZED_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_96c43/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_96c43.dir/build.make CMakeFiles/cmTC_96c43.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_96c43.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_WNO_MAYBE_UNINITIALIZED_FLAG  -Wno-maybe-uninitialized -o CMakeFiles/cmTC_96c43.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_96c43
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_96c43.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_96c43.dir/src.cxx.o -o cmTC_96c43 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test OPENMP_HAVE_STD_CPP14_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_85081/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_85081.dir/build.make CMakeFiles/cmTC_85081.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_85081.dir/src.cxx.o
+/usr/bin/c++ -DOPENMP_HAVE_STD_CPP14_FLAG  -std=c++14 -o CMakeFiles/cmTC_85081.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_85081
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_85081.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_85081.dir/src.cxx.o -o cmTC_85081 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_FNO_EXCEPTIONS_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b09fd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b09fd.dir/build.make CMakeFiles/cmTC_b09fd.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_b09fd.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_FNO_EXCEPTIONS_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -fno-exceptions -o CMakeFiles/cmTC_b09fd.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_b09fd
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b09fd.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_b09fd.dir/src.cxx.o -o cmTC_b09fd 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_FNO_RTTI_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_d5a37/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d5a37.dir/build.make CMakeFiles/cmTC_d5a37.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_d5a37.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_FNO_RTTI_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -fno-rtti -o CMakeFiles/cmTC_d5a37.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_d5a37
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d5a37.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_d5a37.dir/src.cxx.o -o cmTC_d5a37 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_CLASS_MEMACCESS_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_0cd76/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0cd76.dir/build.make CMakeFiles/cmTC_0cd76.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_0cd76.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_CLASS_MEMACCESS_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-class-memaccess -o CMakeFiles/cmTC_0cd76.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_0cd76
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0cd76.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_0cd76.dir/src.cxx.o -o cmTC_0cd76 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_COVERED_SWITCH_DEFAULT_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_62eea/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_62eea.dir/build.make CMakeFiles/cmTC_62eea.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_62eea.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_COVERED_SWITCH_DEFAULT_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-covered-switch-default -o CMakeFiles/cmTC_62eea.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_62eea
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_62eea.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_62eea.dir/src.cxx.o -o cmTC_62eea 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_FRAME_ADDRESS_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_8636d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8636d.dir/build.make CMakeFiles/cmTC_8636d.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_8636d.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_FRAME_ADDRESS_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-frame-address -o CMakeFiles/cmTC_8636d.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_8636d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8636d.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_8636d.dir/src.cxx.o -o cmTC_8636d 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_STRICT_ALIASING_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_e7ef4/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e7ef4.dir/build.make CMakeFiles/cmTC_e7ef4.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_e7ef4.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_STRICT_ALIASING_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-strict-aliasing -o CMakeFiles/cmTC_e7ef4.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_e7ef4
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e7ef4.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_e7ef4.dir/src.cxx.o -o cmTC_e7ef4 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WSTRINGOP_OVERFLOW_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_5bb2d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5bb2d.dir/build.make CMakeFiles/cmTC_5bb2d.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_5bb2d.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WSTRINGOP_OVERFLOW_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wstringop-overflow=0 -o CMakeFiles/cmTC_5bb2d.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_5bb2d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5bb2d.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_5bb2d.dir/src.cxx.o -o cmTC_5bb2d 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_STRINGOP_TRUNCATION_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b1c3a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b1c3a.dir/build.make CMakeFiles/cmTC_b1c3a.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_b1c3a.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_STRINGOP_TRUNCATION_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-stringop-truncation -o CMakeFiles/cmTC_b1c3a.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_b1c3a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b1c3a.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_b1c3a.dir/src.cxx.o -o cmTC_b1c3a 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_SWITCH_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_2b251/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2b251.dir/build.make CMakeFiles/cmTC_2b251.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_2b251.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_SWITCH_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-switch -o CMakeFiles/cmTC_2b251.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_2b251
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2b251.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_2b251.dir/src.cxx.o -o cmTC_2b251 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_UNINITIALIZED_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_e9177/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e9177.dir/build.make CMakeFiles/cmTC_e9177.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_e9177.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_UNINITIALIZED_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-uninitialized -o CMakeFiles/cmTC_e9177.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_e9177
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e9177.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_e9177.dir/src.cxx.o -o cmTC_e9177 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_UNUSED_BUT_SET_VARIABLE_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_8e624/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8e624.dir/build.make CMakeFiles/cmTC_8e624.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_8e624.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_UNUSED_BUT_SET_VARIABLE_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-unused-but-set-variable -o CMakeFiles/cmTC_8e624.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_8e624
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8e624.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_8e624.dir/src.cxx.o -o cmTC_8e624 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_RETURN_TYPE_C_LINKAGE_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_32a76/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_32a76.dir/build.make CMakeFiles/cmTC_32a76.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_32a76.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_RETURN_TYPE_C_LINKAGE_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-return-type-c-linkage -o CMakeFiles/cmTC_32a76.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_32a76
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_32a76.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_32a76.dir/src.cxx.o -o cmTC_32a76 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_CAST_QUAL_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_1608f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1608f.dir/build.make CMakeFiles/cmTC_1608f.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_1608f.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_CAST_QUAL_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-cast-qual -o CMakeFiles/cmTC_1608f.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_1608f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1608f.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_1608f.dir/src.cxx.o -o cmTC_1608f 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WNO_INT_TO_VOID_POINTER_CAST_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_25c6c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_25c6c.dir/build.make CMakeFiles/cmTC_25c6c.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_25c6c.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_WNO_INT_TO_VOID_POINTER_CAST_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -Wno-int-to-void-pointer-cast -o CMakeFiles/cmTC_25c6c.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_25c6c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25c6c.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_25c6c.dir/src.cxx.o -o cmTC_25c6c 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_MSSE2_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_ac9c7/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ac9c7.dir/build.make CMakeFiles/cmTC_ac9c7.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_ac9c7.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_MSSE2_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -msse2 -o CMakeFiles/cmTC_ac9c7.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_ac9c7
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ac9c7.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_ac9c7.dir/src.cxx.o -o cmTC_ac9c7 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_FTLS_MODEL_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_9b401/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9b401.dir/build.make CMakeFiles/cmTC_9b401.dir/build
+gmake[1]: Entering directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_9b401.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_FTLS_MODEL_FLAG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14    -ftls-model=initial-exec -o CMakeFiles/cmTC_9b401.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_9b401
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9b401.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_9b401.dir/src.cxx.o -o cmTC_9b401 
+gmake[1]: Leaving directory '/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Determining if the shm_open exist passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_01b09/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_01b09.dir/build.make CMakeFiles/cmTC_01b09.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_01b09.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  -o CMakeFiles/cmTC_01b09.dir/CheckSymbolExists.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_01b09
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_01b09.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  CMakeFiles/cmTC_01b09.dir/CheckSymbolExists.c.o -o cmTC_01b09 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+File /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <sys/mman.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef shm_open
+  return ((int*)(&shm_open))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the include file xmmintrin.h exists passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_1fa2f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1fa2f.dir/build.make CMakeFiles/cmTC_1fa2f.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_1fa2f.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  -o CMakeFiles/cmTC_1fa2f.dir/CheckIncludeFile.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_1fa2f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1fa2f.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  CMakeFiles/cmTC_1fa2f.dir/CheckIncludeFile.c.o -o cmTC_1fa2f 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+
+Performing C++ SOURCE FILE Test LIBOMP_HAVE__MM_MALLOC succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_c5d89/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c5d89.dir/build.make CMakeFiles/cmTC_c5d89.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_c5d89.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE__MM_MALLOC  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  -DLIBOMP_HAVE_XMMINTRIN_H -o CMakeFiles/cmTC_c5d89.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c5d89
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c5d89.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  -DLIBOMP_HAVE_XMMINTRIN_H CMakeFiles/cmTC_c5d89.dir/src.cxx.o -o cmTC_c5d89 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+// check for _mm_malloc
+    #ifdef LIBOMP_HAVE_XMMINTRIN_H
+    #include <xmmintrin.h>
+    #endif
+    int main() { void *ptr = _mm_malloc(sizeof(int) * 1000, 64); _mm_free(ptr); return 0; }
+Determining if the aligned_alloc exist passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b1851/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b1851.dir/build.make CMakeFiles/cmTC_b1851.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_b1851.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  -o CMakeFiles/cmTC_b1851.dir/CheckSymbolExists.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_b1851
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b1851.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  CMakeFiles/cmTC_b1851.dir/CheckSymbolExists.c.o -o cmTC_b1851 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+File /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdlib.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef aligned_alloc
+  return ((int*)(&aligned_alloc))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the posix_memalign exist passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_28035/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_28035.dir/build.make CMakeFiles/cmTC_28035.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_28035.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  -o CMakeFiles/cmTC_28035.dir/CheckSymbolExists.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_28035
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_28035.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  CMakeFiles/cmTC_28035.dir/CheckSymbolExists.c.o -o cmTC_28035 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+File /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdlib.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef posix_memalign
+  return ((int*)(&posix_memalign))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Performing C Linker Flag test LIBOMP_HAVE_X_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/link_flag_check_LIBOMP_HAVE_X_FLAG/build
+
+Run Build Command(s):/usr/bin/gmake -f Makefile && Scanning dependencies of target foo
+[ 50%] Building C object CMakeFiles/foo.dir/src_to_link.c.o
+[100%] Linking C shared library libfoo.so
+[100%] Built target foo
+
+
+Source file was:
+int foo(int a) { return a*a; }
+Performing C Linker Flag test LIBOMP_HAVE_WARN_SHARED_TEXTREL_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/link_flag_check_LIBOMP_HAVE_WARN_SHARED_TEXTREL_FLAG/build
+
+Run Build Command(s):/usr/bin/gmake -f Makefile && Scanning dependencies of target foo
+[ 50%] Building C object CMakeFiles/foo.dir/src_to_link.c.o
+[100%] Linking C shared library libfoo.so
+[100%] Built target foo
+
+
+Source file was:
+int foo(int a) { return a*a; }
+Performing C Linker Flag test LIBOMP_HAVE_AS_NEEDED_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/link_flag_check_LIBOMP_HAVE_AS_NEEDED_FLAG/build
+
+Run Build Command(s):/usr/bin/gmake -f Makefile && Scanning dependencies of target foo
+[ 50%] Building C object CMakeFiles/foo.dir/src_to_link.c.o
+[100%] Linking C shared library libfoo.so
+[100%] Built target foo
+
+
+Source file was:
+int foo(int a) { return a*a; }
+Performing C Linker Flag test LIBOMP_HAVE_VERSION_SCRIPT_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/link_flag_check_LIBOMP_HAVE_VERSION_SCRIPT_FLAG/build
+
+Run Build Command(s):/usr/bin/gmake -f Makefile && Scanning dependencies of target foo
+[ 50%] Building C object CMakeFiles/foo.dir/src_to_link.c.o
+[100%] Linking C shared library libfoo.so
+[100%] Built target foo
+
+
+Source file was:
+int foo(int a) { return a*a; }
+Performing C Linker Flag test LIBOMP_HAVE_STATIC_LIBGCC_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/link_flag_check_LIBOMP_HAVE_STATIC_LIBGCC_FLAG/build
+
+Run Build Command(s):/usr/bin/gmake -f Makefile && Scanning dependencies of target foo
+[ 50%] Building C object CMakeFiles/foo.dir/src_to_link.c.o
+[100%] Linking C shared library libfoo.so
+[100%] Built target foo
+
+
+Source file was:
+int foo(int a) { return a*a; }
+Performing C Linker Flag test LIBOMP_HAVE_Z_NOEXECSTACK_FLAG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/link_flag_check_LIBOMP_HAVE_Z_NOEXECSTACK_FLAG/build
+
+Run Build Command(s):/usr/bin/gmake -f Makefile && Scanning dependencies of target foo
+[ 50%] Building C object CMakeFiles/foo.dir/src_to_link.c.o
+[100%] Linking C shared library libfoo.so
+[100%] Built target foo
+
+
+Source file was:
+int foo(int a) { return a*a; }
+Determining if the include file immintrin.h exists passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_1c84e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1c84e.dir/build.make CMakeFiles/cmTC_1c84e.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_1c84e.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  -o CMakeFiles/cmTC_1c84e.dir/CheckIncludeFile.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_1c84e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1c84e.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  CMakeFiles/cmTC_1c84e.dir/CheckIncludeFile.c.o -o cmTC_1c84e 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_ATTRIBUTE_RTM succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_58dbf/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_58dbf.dir/build.make CMakeFiles/cmTC_58dbf.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_58dbf.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_ATTRIBUTE_RTM  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  -o CMakeFiles/cmTC_58dbf.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_58dbf
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_58dbf.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_58dbf.dir/src.cxx.o -o cmTC_58dbf 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+__attribute__((target("rtm")))
+                             int main() {return 0;}
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_ATTRIBUTE_WAITPKG succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_25c0e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_25c0e.dir/build.make CMakeFiles/cmTC_25c0e.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_25c0e.dir/src.cxx.o
+/usr/bin/c++ -DLIBOMP_HAVE_ATTRIBUTE_WAITPKG  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  -o CMakeFiles/cmTC_25c0e.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_25c0e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25c0e.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_25c0e.dir/src.cxx.o -o cmTC_25c0e 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+__attribute__((target("waitpkg")))
+                            int main() {return 0;}
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_WAITPKG_INTRINSICS succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_90225/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_90225.dir/build.make CMakeFiles/cmTC_90225.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_90225.dir/src.cxx.o
+/usr/bin/c++ -DATTRIBUTE_RTM -DATTRIBUTE_WAITPKG -DIMMINTRIN_H -DLIBOMP_HAVE_WAITPKG_INTRINSICS  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  -o CMakeFiles/cmTC_90225.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_90225
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_90225.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_90225.dir/src.cxx.o -o cmTC_90225 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+// check for attribute and wait pkg intrinsics
+      #ifdef IMMINTRIN_H
+      #include <immintrin.h>
+      #endif
+      #ifdef INTRIN_H
+      #include <intrin.h>
+      #endif
+      #ifdef ATTRIBUTE_WAITPKG
+      __attribute__((target("waitpkg")))
+      #endif
+      static inline int __kmp_umwait(unsigned hint, unsigned long long counter) {
+        return _umwait(hint, counter);
+      }
+      int main() { int a = __kmp_umwait(0, 1000); return a; }
+Performing C++ SOURCE FILE Test LIBOMP_HAVE_RTM_INTRINSICS succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_9bae8/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9bae8.dir/build.make CMakeFiles/cmTC_9bae8.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building CXX object CMakeFiles/cmTC_9bae8.dir/src.cxx.o
+/usr/bin/c++ -DATTRIBUTE_RTM -DATTRIBUTE_WAITPKG -DIMMINTRIN_H -DLIBOMP_HAVE_RTM_INTRINSICS  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  -o CMakeFiles/cmTC_9bae8.dir/src.cxx.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_9bae8
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9bae8.dir/link.txt --verbose=1
+/usr/bin/c++  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14  CMakeFiles/cmTC_9bae8.dir/src.cxx.o -o cmTC_9bae8 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+// check for attribute rtm and rtm intrinsics
+      #ifdef IMMINTRIN_H
+      #include <immintrin.h>
+      #endif
+      #ifdef INTRIN_H
+      #include <intrin.h>
+      #endif
+      #ifdef ATTRIBUTE_RTM
+      __attribute__((target("rtm")))
+      #endif
+      static inline int __kmp_xbegin() {
+        return _xbegin();
+      }
+      int main() { int a = __kmp_xbegin(); return a; }
+Performing C SOURCE FILE Test LIBOMP_HAVE_VERSION_SYMBOLS succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_1e4a3/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1e4a3.dir/build.make CMakeFiles/cmTC_1e4a3.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_1e4a3.dir/src.c.o
+/usr/bin/cc -DLIBOMP_HAVE_VERSION_SYMBOLS  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -Wl,--version-script=/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build/runtime/__version_script.txt -o CMakeFiles/cmTC_1e4a3.dir/src.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_1e4a3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1e4a3.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -Wl,--version-script=/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build/runtime/__version_script.txt CMakeFiles/cmTC_1e4a3.dir/src.c.o -o cmTC_1e4a3 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+#include <stdio.h>
+    void func1() { printf("Hello"); }
+    void func2() { printf("World"); }
+    __asm__(".symver func1, func@VER1");
+    __asm__(".symver func2, func@VER2");
+    int main() {
+      func1();
+      func2();
+      return 0;
+    }
+Performing C SOURCE FILE Test LIBOMP_HAVE___BUILTIN_FRAME_ADDRESS succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_5023f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5023f.dir/build.make CMakeFiles/cmTC_5023f.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_5023f.dir/src.c.o
+/usr/bin/cc -DLIBOMP_HAVE___BUILTIN_FRAME_ADDRESS  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  -o CMakeFiles/cmTC_5023f.dir/src.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.c
+/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.c:2:9: warning: unused variable ‘p’ [-Wunused-variable]
+    2 |   void* p = __builtin_frame_address(0);
+      |         ^
+Linking C executable cmTC_5023f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5023f.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  CMakeFiles/cmTC_5023f.dir/src.c.o -o cmTC_5023f 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+int main(int argc, char** argv) {
+  void* p = __builtin_frame_address(0);
+  return 0;}
+Performing C SOURCE FILE Test LIBOMP_HAVE_WEAK_ATTRIBUTE succeeded with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_d9fd8/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d9fd8.dir/build.make CMakeFiles/cmTC_d9fd8.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_d9fd8.dir/src.c.o
+/usr/bin/cc -DLIBOMP_HAVE_WEAK_ATTRIBUTE  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  -o CMakeFiles/cmTC_d9fd8.dir/src.c.o -c /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_d9fd8
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d9fd8.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized  CMakeFiles/cmTC_d9fd8.dir/src.c.o -o cmTC_d9fd8 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+Source file was:
+__attribute__ ((weak)) int foo(int a) { return a*a; }
+  int main(int argc, char** argv) {
+  return foo(argc);}
+Determining if the function sqrt exists in the m passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_2b9b5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2b9b5.dir/build.make CMakeFiles/cmTC_2b9b5.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_2b9b5.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -DCHECK_FUNCTION_EXISTS=sqrt -o CMakeFiles/cmTC_2b9b5.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+<command-line>: warning: conflicting types for built-in function ‘sqrt’; expected ‘double(double)’ [-Wbuiltin-declaration-mismatch]
+/usr/share/cmake-3.22/Modules/CheckFunctionExists.c:7:3: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+    7 |   CHECK_FUNCTION_EXISTS(void);
+      |   ^~~~~~~~~~~~~~~~~~~~~
+/usr/share/cmake-3.22/Modules/CheckFunctionExists.c:1:1: note: ‘sqrt’ is declared in header ‘<math.h>’
+  +++ |+#include <math.h>
+    1 | #ifdef CHECK_FUNCTION_EXISTS
+Linking C executable cmTC_2b9b5
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2b9b5.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -DCHECK_FUNCTION_EXISTS=sqrt CMakeFiles/cmTC_2b9b5.dir/CheckFunctionExists.c.o -o cmTC_2b9b5  -lm 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+
+Determining if the function __atomic_load_1 exists in the atomic passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_8a65e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8a65e.dir/build.make CMakeFiles/cmTC_8a65e.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_8a65e.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -DCHECK_FUNCTION_EXISTS=__atomic_load_1 -o CMakeFiles/cmTC_8a65e.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+<command-line>: warning: conflicting types for built-in function ‘__atomic_load_1’; expected ‘unsigned char(const volatile void *, int)’ [-Wbuiltin-declaration-mismatch]
+<command-line>: note: in definition of macro ‘CHECK_FUNCTION_EXISTS’
+Linking C executable cmTC_8a65e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8a65e.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -DCHECK_FUNCTION_EXISTS=__atomic_load_1 CMakeFiles/cmTC_8a65e.dir/CheckFunctionExists.c.o -o cmTC_8a65e  -latomic 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+
+Determining if the function __atomic_load_1 exists in the atomic passed with the following output:
+Change Dir: /home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b668a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b668a.dir/build.make CMakeFiles/cmTC_b668a.dir/build
+gmake[1]: 进入目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_b668a.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -DCHECK_FUNCTION_EXISTS=__atomic_load_1 -o CMakeFiles/cmTC_b668a.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+<command-line>: warning: conflicting types for built-in function ‘__atomic_load_1’; expected ‘unsigned char(const volatile void *, int)’ [-Wbuiltin-declaration-mismatch]
+<command-line>: note: in definition of macro ‘CHECK_FUNCTION_EXISTS’
+Linking C executable cmTC_b668a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b668a.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -DCHECK_FUNCTION_EXISTS=__atomic_load_1 CMakeFiles/cmTC_b668a.dir/CheckFunctionExists.c.o -o cmTC_b668a  -latomic 
+gmake[1]: 离开目录“/home/ubuntu/github/gottingen/titan-ann/build/CMakeFiles/CMakeTmp”
+
+
+

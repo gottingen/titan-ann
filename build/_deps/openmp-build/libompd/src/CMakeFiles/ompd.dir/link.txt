@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14 -std=c++11 -O3 -DNDEBUG -shared -Wl,-soname,libompd.so -o libompd.so CMakeFiles/ompd.dir/TargetValue.cpp.o CMakeFiles/ompd.dir/omp-debug.cpp.o CMakeFiles/ompd.dir/omp-state.cpp.o CMakeFiles/ompd.dir/omp-icv.cpp.o 
