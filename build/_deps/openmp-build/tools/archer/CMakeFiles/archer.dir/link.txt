@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -std=c++14 -O3 -DNDEBUG -shared -Wl,-soname,libarcher.so -o libarcher.so CMakeFiles/archer.dir/ompt-tsan.cpp.o 

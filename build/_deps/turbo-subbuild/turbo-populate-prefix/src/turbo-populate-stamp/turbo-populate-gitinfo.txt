@@ -1,3 +1,0 @@
-repository='https://github.com/gottingen/turbo.git'
-module=''
-tag='origin'

@@ -1,2 +1,0 @@
-/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build/DetectTestCompiler/CMakeFiles/edit_cache.dir
-/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build/DetectTestCompiler/CMakeFiles/rebuild_cache.dir

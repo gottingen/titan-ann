@@ -1,3 +1,0 @@
-repository='https://github.com/gottingen/openmp.git'
-module=''
-tag='origin'

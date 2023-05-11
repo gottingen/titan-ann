@@ -1,1 +1,0 @@
-/usr/bin/cc;GNU;11.3.0;-fopenmp ;1
