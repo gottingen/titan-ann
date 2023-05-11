@@ -172,8 +172,8 @@ find_package(OpenMP)
 find_package(MKL REQUIRED)
 
 if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -Ofast")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -Ofast")
 else()
     message(FATAL_ERROR "No OpenMP support")
 endif()
@@ -207,7 +207,7 @@ if (TURBO_ENABLE_INSTALL)
 
     # install as a subdirectory only
     install(EXPORT ${PROJECT_NAME}Targets
-            NAMESPACE turbo::
+            NAMESPACE tann::
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
             )
 
