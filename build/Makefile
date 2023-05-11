@@ -769,6 +769,422 @@ tann/fast:
 	$(MAKE) $(MAKESILENT) -f tann/CMakeFiles/tann.dir/build.make tann/CMakeFiles/tann.dir/build
 .PHONY : tann/fast
 
+#=============================================================================
+# Target rules for targets named build_disk_index
+
+# Build rule for target.
+build_disk_index: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 build_disk_index
+.PHONY : build_disk_index
+
+# fast build rule for target.
+build_disk_index/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/build_disk_index.dir/build.make tests/CMakeFiles/build_disk_index.dir/build
+.PHONY : build_disk_index/fast
+
+#=============================================================================
+# Target rules for targets named build_memory_index
+
+# Build rule for target.
+build_memory_index: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 build_memory_index
+.PHONY : build_memory_index
+
+# fast build rule for target.
+build_memory_index/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/build_memory_index.dir/build.make tests/CMakeFiles/build_memory_index.dir/build
+.PHONY : build_memory_index/fast
+
+#=============================================================================
+# Target rules for targets named build_stitched_index
+
+# Build rule for target.
+build_stitched_index: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 build_stitched_index
+.PHONY : build_stitched_index
+
+# fast build rule for target.
+build_stitched_index/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/build_stitched_index.dir/build.make tests/CMakeFiles/build_stitched_index.dir/build
+.PHONY : build_stitched_index/fast
+
+#=============================================================================
+# Target rules for targets named range_search_disk_index
+
+# Build rule for target.
+range_search_disk_index: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 range_search_disk_index
+.PHONY : range_search_disk_index
+
+# fast build rule for target.
+range_search_disk_index/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/range_search_disk_index.dir/build.make tests/CMakeFiles/range_search_disk_index.dir/build
+.PHONY : range_search_disk_index/fast
+
+#=============================================================================
+# Target rules for targets named search_disk_index
+
+# Build rule for target.
+search_disk_index: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 search_disk_index
+.PHONY : search_disk_index
+
+# fast build rule for target.
+search_disk_index/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/search_disk_index.dir/build.make tests/CMakeFiles/search_disk_index.dir/build
+.PHONY : search_disk_index/fast
+
+#=============================================================================
+# Target rules for targets named search_memory_index
+
+# Build rule for target.
+search_memory_index: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 search_memory_index
+.PHONY : search_memory_index
+
+# fast build rule for target.
+search_memory_index/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/search_memory_index.dir/build.make tests/CMakeFiles/search_memory_index.dir/build
+.PHONY : search_memory_index/fast
+
+#=============================================================================
+# Target rules for targets named test_insert_deletes_consolidate
+
+# Build rule for target.
+test_insert_deletes_consolidate: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_insert_deletes_consolidate
+.PHONY : test_insert_deletes_consolidate
+
+# fast build rule for target.
+test_insert_deletes_consolidate/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_insert_deletes_consolidate.dir/build.make tests/CMakeFiles/test_insert_deletes_consolidate.dir/build
+.PHONY : test_insert_deletes_consolidate/fast
+
+#=============================================================================
+# Target rules for targets named test_streaming_scenario
+
+# Build rule for target.
+test_streaming_scenario: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_streaming_scenario
+.PHONY : test_streaming_scenario
+
+# fast build rule for target.
+test_streaming_scenario/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_streaming_scenario.dir/build.make tests/CMakeFiles/test_streaming_scenario.dir/build
+.PHONY : test_streaming_scenario/fast
+
+#=============================================================================
+# Target rules for targets named fvecs_to_bin
+
+# Build rule for target.
+fvecs_to_bin: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 fvecs_to_bin
+.PHONY : fvecs_to_bin
+
+# fast build rule for target.
+fvecs_to_bin/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/fvecs_to_bin.dir/build.make tests/CMakeFiles/fvecs_to_bin.dir/build
+.PHONY : fvecs_to_bin/fast
+
+#=============================================================================
+# Target rules for targets named fvecs_to_bvecs
+
+# Build rule for target.
+fvecs_to_bvecs: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 fvecs_to_bvecs
+.PHONY : fvecs_to_bvecs
+
+# fast build rule for target.
+fvecs_to_bvecs/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/fvecs_to_bvecs.dir/build.make tests/CMakeFiles/fvecs_to_bvecs.dir/build
+.PHONY : fvecs_to_bvecs/fast
+
+#=============================================================================
+# Target rules for targets named rand_data_gen
+
+# Build rule for target.
+rand_data_gen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 rand_data_gen
+.PHONY : rand_data_gen
+
+# fast build rule for target.
+rand_data_gen/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/rand_data_gen.dir/build.make tests/CMakeFiles/rand_data_gen.dir/build
+.PHONY : rand_data_gen/fast
+
+#=============================================================================
+# Target rules for targets named float_bin_to_int8
+
+# Build rule for target.
+float_bin_to_int8: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 float_bin_to_int8
+.PHONY : float_bin_to_int8
+
+# fast build rule for target.
+float_bin_to_int8/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/float_bin_to_int8.dir/build.make tests/CMakeFiles/float_bin_to_int8.dir/build
+.PHONY : float_bin_to_int8/fast
+
+#=============================================================================
+# Target rules for targets named ivecs_to_bin
+
+# Build rule for target.
+ivecs_to_bin: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ivecs_to_bin
+.PHONY : ivecs_to_bin
+
+# fast build rule for target.
+ivecs_to_bin/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ivecs_to_bin.dir/build.make tests/CMakeFiles/ivecs_to_bin.dir/build
+.PHONY : ivecs_to_bin/fast
+
+#=============================================================================
+# Target rules for targets named count_bfs_levels
+
+# Build rule for target.
+count_bfs_levels: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 count_bfs_levels
+.PHONY : count_bfs_levels
+
+# fast build rule for target.
+count_bfs_levels/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/count_bfs_levels.dir/build.make tests/CMakeFiles/count_bfs_levels.dir/build
+.PHONY : count_bfs_levels/fast
+
+#=============================================================================
+# Target rules for targets named tsv_to_bin
+
+# Build rule for target.
+tsv_to_bin: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tsv_to_bin
+.PHONY : tsv_to_bin
+
+# fast build rule for target.
+tsv_to_bin/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tsv_to_bin.dir/build.make tests/CMakeFiles/tsv_to_bin.dir/build
+.PHONY : tsv_to_bin/fast
+
+#=============================================================================
+# Target rules for targets named bin_to_tsv
+
+# Build rule for target.
+bin_to_tsv: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bin_to_tsv
+.PHONY : bin_to_tsv
+
+# fast build rule for target.
+bin_to_tsv/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bin_to_tsv.dir/build.make tests/CMakeFiles/bin_to_tsv.dir/build
+.PHONY : bin_to_tsv/fast
+
+#=============================================================================
+# Target rules for targets named int8_to_float
+
+# Build rule for target.
+int8_to_float: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 int8_to_float
+.PHONY : int8_to_float
+
+# fast build rule for target.
+int8_to_float/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/int8_to_float.dir/build.make tests/CMakeFiles/int8_to_float.dir/build
+.PHONY : int8_to_float/fast
+
+#=============================================================================
+# Target rules for targets named int8_to_float_scale
+
+# Build rule for target.
+int8_to_float_scale: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 int8_to_float_scale
+.PHONY : int8_to_float_scale
+
+# fast build rule for target.
+int8_to_float_scale/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/int8_to_float_scale.dir/build.make tests/CMakeFiles/int8_to_float_scale.dir/build
+.PHONY : int8_to_float_scale/fast
+
+#=============================================================================
+# Target rules for targets named create_disk_layout
+
+# Build rule for target.
+create_disk_layout: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 create_disk_layout
+.PHONY : create_disk_layout
+
+# fast build rule for target.
+create_disk_layout/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/create_disk_layout.dir/build.make tests/CMakeFiles/create_disk_layout.dir/build
+.PHONY : create_disk_layout/fast
+
+#=============================================================================
+# Target rules for targets named compute_groundtruth
+
+# Build rule for target.
+compute_groundtruth: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 compute_groundtruth
+.PHONY : compute_groundtruth
+
+# fast build rule for target.
+compute_groundtruth/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/compute_groundtruth.dir/build.make tests/CMakeFiles/compute_groundtruth.dir/build
+.PHONY : compute_groundtruth/fast
+
+#=============================================================================
+# Target rules for targets named calculate_recall
+
+# Build rule for target.
+calculate_recall: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 calculate_recall
+.PHONY : calculate_recall
+
+# fast build rule for target.
+calculate_recall/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/calculate_recall.dir/build.make tests/CMakeFiles/calculate_recall.dir/build
+.PHONY : calculate_recall/fast
+
+#=============================================================================
+# Target rules for targets named generate_synthetic_labels
+
+# Build rule for target.
+generate_synthetic_labels: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 generate_synthetic_labels
+.PHONY : generate_synthetic_labels
+
+# fast build rule for target.
+generate_synthetic_labels/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/generate_synthetic_labels.dir/build.make tests/CMakeFiles/generate_synthetic_labels.dir/build
+.PHONY : generate_synthetic_labels/fast
+
+#=============================================================================
+# Target rules for targets named gen_random_slice
+
+# Build rule for target.
+gen_random_slice: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gen_random_slice
+.PHONY : gen_random_slice
+
+# fast build rule for target.
+gen_random_slice/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/gen_random_slice.dir/build.make tests/CMakeFiles/gen_random_slice.dir/build
+.PHONY : gen_random_slice/fast
+
+#=============================================================================
+# Target rules for targets named generate_pq
+
+# Build rule for target.
+generate_pq: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 generate_pq
+.PHONY : generate_pq
+
+# fast build rule for target.
+generate_pq/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/generate_pq.dir/build.make tests/CMakeFiles/generate_pq.dir/build
+.PHONY : generate_pq/fast
+
+#=============================================================================
+# Target rules for targets named partition_with_ram_budget
+
+# Build rule for target.
+partition_with_ram_budget: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 partition_with_ram_budget
+.PHONY : partition_with_ram_budget
+
+# fast build rule for target.
+partition_with_ram_budget/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/partition_with_ram_budget.dir/build.make tests/CMakeFiles/partition_with_ram_budget.dir/build
+.PHONY : partition_with_ram_budget/fast
+
+#=============================================================================
+# Target rules for targets named simulate_aggregate_recall
+
+# Build rule for target.
+simulate_aggregate_recall: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simulate_aggregate_recall
+.PHONY : simulate_aggregate_recall
+
+# fast build rule for target.
+simulate_aggregate_recall/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/simulate_aggregate_recall.dir/build.make tests/CMakeFiles/simulate_aggregate_recall.dir/build
+.PHONY : simulate_aggregate_recall/fast
+
+#=============================================================================
+# Target rules for targets named stats_label_data
+
+# Build rule for target.
+stats_label_data: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 stats_label_data
+.PHONY : stats_label_data
+
+# fast build rule for target.
+stats_label_data/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/stats_label_data.dir/build.make tests/CMakeFiles/stats_label_data.dir/build
+.PHONY : stats_label_data/fast
+
+#=============================================================================
+# Target rules for targets named uint8_to_float
+
+# Build rule for target.
+uint8_to_float: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 uint8_to_float
+.PHONY : uint8_to_float
+
+# fast build rule for target.
+uint8_to_float/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/uint8_to_float.dir/build.make tests/CMakeFiles/uint8_to_float.dir/build
+.PHONY : uint8_to_float/fast
+
+#=============================================================================
+# Target rules for targets named uint32_to_uint8
+
+# Build rule for target.
+uint32_to_uint8: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 uint32_to_uint8
+.PHONY : uint32_to_uint8
+
+# fast build rule for target.
+uint32_to_uint8/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/uint32_to_uint8.dir/build.make tests/CMakeFiles/uint32_to_uint8.dir/build
+.PHONY : uint32_to_uint8/fast
+
+#=============================================================================
+# Target rules for targets named vector_analysis
+
+# Build rule for target.
+vector_analysis: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 vector_analysis
+.PHONY : vector_analysis
+
+# fast build rule for target.
+vector_analysis/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/vector_analysis.dir/build.make tests/CMakeFiles/vector_analysis.dir/build
+.PHONY : vector_analysis/fast
+
+#=============================================================================
+# Target rules for targets named merge_shards
+
+# Build rule for target.
+merge_shards: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 merge_shards
+.PHONY : merge_shards
+
+# fast build rule for target.
+merge_shards/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/merge_shards.dir/build.make tests/CMakeFiles/merge_shards.dir/build
+.PHONY : merge_shards/fast
+
+#=============================================================================
+# Target rules for targets named partition_data
+
+# Build rule for target.
+partition_data: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 partition_data
+.PHONY : partition_data
+
+# fast build rule for target.
+partition_data/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/partition_data.dir/build.make tests/CMakeFiles/partition_data.dir/build
+.PHONY : partition_data/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -824,10 +1240,42 @@ help:
 	@echo "... libomp-test-touch"
 	@echo "... archer"
 	@echo "... archer_static"
+	@echo "... bin_to_tsv"
+	@echo "... build_disk_index"
+	@echo "... build_memory_index"
+	@echo "... build_stitched_index"
+	@echo "... calculate_recall"
+	@echo "... compute_groundtruth"
+	@echo "... count_bfs_levels"
+	@echo "... create_disk_layout"
+	@echo "... float_bin_to_int8"
+	@echo "... fvecs_to_bin"
+	@echo "... fvecs_to_bvecs"
+	@echo "... gen_random_slice"
+	@echo "... generate_pq"
+	@echo "... generate_synthetic_labels"
+	@echo "... int8_to_float"
+	@echo "... int8_to_float_scale"
+	@echo "... ivecs_to_bin"
+	@echo "... merge_shards"
 	@echo "... omp"
 	@echo "... ompd"
+	@echo "... partition_data"
+	@echo "... partition_with_ram_budget"
+	@echo "... rand_data_gen"
+	@echo "... range_search_disk_index"
+	@echo "... search_disk_index"
+	@echo "... search_memory_index"
+	@echo "... simulate_aggregate_recall"
+	@echo "... stats_label_data"
 	@echo "... tann"
+	@echo "... test_insert_deletes_consolidate"
+	@echo "... test_streaming_scenario"
+	@echo "... tsv_to_bin"
 	@echo "... turbo"
+	@echo "... uint32_to_uint8"
+	@echo "... uint8_to_float"
+	@echo "... vector_analysis"
 .PHONY : help
 
 

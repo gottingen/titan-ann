@@ -1,5 +1,5 @@
 #
-# Copyright 2020 The Turbo Authors.
+# Copyright 2023 The Tann Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -85,7 +85,6 @@ endif ()
 option(TURBO_USE_SYSTEM_INCLUDES
         "Silence warnings in Turbo headers by marking them as SYSTEM includes"
         OFF)
-option(TURBO_USE_CXX_ABI "USE_CXX11_ABI" ON)
 
 list(APPEND CMAKE_MODULE_PATH
         ${CMAKE_CURRENT_LIST_DIR}/CMake
@@ -119,11 +118,6 @@ else ()
     set(TURBO_USING_CLANG OFF)
 endif ()
 
-if (TURBO_USE_CXX_ABI)
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-else ()
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-endif ()
 
 # find dependencies
 ## pthread
@@ -174,6 +168,16 @@ endif ()
 
 include(deps)
 
+find_package(OpenMP)
+find_package(MKL REQUIRED)
+
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+else()
+    message(FATAL_ERROR "No OpenMP support")
+endif()
+
 include_directories(${turbo_SOURCE_DIR})
 message(STATUS ${turbo_SOUECE_DIR})
 include_directories(${openmp_SOURCE_DIR})
@@ -182,6 +186,10 @@ add_subdirectory(tann)
 
 if (TURBO_BUILD_EXAMPLE)
     add_subdirectory(examples)
+endif ()
+
+if(TURBO_BUILD_TESTING)
+    add_subdirectory(tests)
 endif ()
 
 if (TURBO_ENABLE_INSTALL)

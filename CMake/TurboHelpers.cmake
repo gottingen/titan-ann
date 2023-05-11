@@ -44,14 +44,14 @@ endif()
 # COPTS: List of private compile options
 # DEFINES: List of public defines
 # LINKOPTS: List of link options
-# PUBLIC: Add this so that this library will be exported under libtext::
+# PUBLIC: Add this so that this library will be exported under tann::
 # Also in IDE, target will appear in Turbo folder while non PUBLIC will be in Turbo/internal.
 # TESTONLY: When added, this target will only be built if both
 #           BUILD_TESTING=ON and TURBO_BUILD_TESTING=ON.
 #
 # Note:
 # By default, turbo_cc_library will always create a library named ${NAME},
-# and alias target libtext::${NAME}.  The libtext:: form should always be used.
+# and alias target tann::${NAME}.  The tann:: form should always be used.
 # This is to reduce namespace pollution.
 #
 # turbo_cc_library(
@@ -68,7 +68,7 @@ endif()
 #   SRCS
 #     "b.cc"
 #   DEPS
-#     libtext::awesome # not "awesome" !
+#     tann::awesome # not "awesome" !
 #   PUBLIC
 # )
 #
@@ -77,7 +77,7 @@ endif()
 #     main_lib
 #   ...
 #   DEPS
-#     libtext::fantastic_lib
+#     tann::fantastic_lib
 # )
 #
 # TODO: Implement "ALWAYSLINK"
@@ -158,12 +158,12 @@ function(turbo_cc_library)
         set(PC_VERSION "head")
       endif()
       foreach(dep ${TURBO_CC_LIB_DEPS})
-        if(${dep} MATCHES "^libtext::(.*)")
+        if(${dep} MATCHES "^tann::(.*)")
           # for DLL builds many libs are not created, but add
           # the pkgconfigs nevertheless, pointing to the dll.
           if(_build_type STREQUAL "dll")
             # hide this MATCHES in an if-clause so it doesn't overwrite
-            # the CMAKE_MATCH_1 from (${dep} MATCHES "^libtext::(.*)")
+            # the CMAKE_MATCH_1 from (${dep} MATCHES "^tann::(.*)")
             if(NOT PC_DEPS MATCHES "turbo_dll")
               # Join deps with commas.
               if(PC_DEPS)
@@ -338,7 +338,7 @@ Cflags: -I\${includedir}${PC_CFLAGS}\n")
     )
   endif()
 
-    add_library(libtext::${TURBO_CC_LIB_NAME} ALIAS ${_NAME})
+    add_library(tann::${TURBO_CC_LIB_NAME} ALIAS ${_NAME})
 endfunction()
 
 # turbo_cc_test()
@@ -374,7 +374,7 @@ endfunction()
 #   SRCS
 #     "awesome_test.cc"
 #   DEPS
-#     libtext::awesome
+#     tann::awesome
 #     GTest::gmock
 #     GTest::gtest_main
 # )
@@ -473,7 +473,7 @@ endfunction()
 #   SRCS
 #     "awesome_test.cc"
 #   DEPS
-#     libtext::awesome
+#     tann::awesome
 #     GTest::gmock
 #     GTest::gtest_main
 # )

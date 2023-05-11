@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-#include "disk_utils.h"
+#include "tann/disk_utils.h"
 #include "tann/cached_io.h"
 #include "tann/utils.h"
 

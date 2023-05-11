@@ -7,3 +7,4 @@
 subdirs("_deps/openmp-build")
 subdirs("_deps/turbo-build")
 subdirs("tann")
+subdirs("tests")

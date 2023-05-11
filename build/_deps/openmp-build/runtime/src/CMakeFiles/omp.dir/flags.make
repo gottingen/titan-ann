@@ -3,13 +3,13 @@
 
 # compile C with /usr/bin/cc
 # compile CXX with /usr/bin/c++
-C_DEFINES = -DUSE_AVX2 -D_GLIBCXX_USE_CXX11_ABI=1 -Domp_EXPORTS
+C_DEFINES = -DUSE_AVX2 -Domp_EXPORTS
 
 C_INCLUDES = -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build/runtime/src -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src/i18n -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src/include -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src/thirdparty/ittnotify
 
 C_FLAGS =  -Wall -Wcast-qual -Wimplicit-fallthrough -Wsign-compare -Wno-extra -Wno-pedantic -Wno-maybe-uninitialized -O3 -DNDEBUG -fPIC   -D _GNU_SOURCE -D _REENTRANT
 
-CXX_DEFINES = -DUSE_AVX2 -D_GLIBCXX_USE_CXX11_ABI=1 -Domp_EXPORTS
+CXX_DEFINES = -DUSE_AVX2 -Domp_EXPORTS
 
 CXX_INCLUDES = -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build/runtime/src -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src/i18n -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src/include -I/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src/runtime/src/thirdparty/ittnotify
 

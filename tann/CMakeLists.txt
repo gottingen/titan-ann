@@ -27,6 +27,9 @@ turbo_cc_library(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
+        aio
         ${TURBO_DYLINK}
+        ${${MKL_LIBRARIES}}
+        turbo
 )
 

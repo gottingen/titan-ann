@@ -26,7 +26,7 @@
 #include "disk_utils.h"
 #include "tann/cached_io.h"
 #include "index.h"
-#include "mkl/mkl.h"
+//#include "mkl/mkl.h"
 #include "omp.h"
 #include "tann/percentile_stats.h"
 #include "partition.h"
@@ -1200,7 +1200,7 @@ namespace tann {
 
         if (num_threads != 0) {
             omp_set_num_threads(num_threads);
-            mkl_set_num_threads(num_threads);
+            //mkl_set_num_threads(num_threads);
         }
 
         TURBO_LOG(INFO) << "Starting index build: R=" << R << " L=" << L

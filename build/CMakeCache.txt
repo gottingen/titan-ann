@@ -14,8 +14,35 @@
 # EXTERNAL cache entries
 ########################
 
+//Path to a library.
+BLAS_gomp_LIBRARY:FILEPATH=BLAS_gomp_LIBRARY-NOTFOUND
+
+//Path to a library.
+BLAS_guide_LIBRARY:FILEPATH=BLAS_guide_LIBRARY-NOTFOUND
+
+//Path to a library.
+BLAS_mkl_core_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libmkl_core.so
+
+//Path to a library.
+BLAS_mkl_gnu_thread_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libmkl_gnu_thread.so
+
+//Path to a library.
+BLAS_mkl_intel_LIBRARY:FILEPATH=BLAS_mkl_intel_LIBRARY-NOTFOUND
+
+//Path to a library.
+BLAS_mkl_intel_lp64_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libmkl_intel_lp64.so
+
+//Path to a library.
+BLAS_mkl_sequential_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libmkl_sequential.so
+
 //Build the testing tree.
 BUILD_TESTING:BOOL=ON
+
+//The directory containing a CMake configuration file for Boost.
+Boost_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0
+
+//Path to a file.
+Boost_INCLUDE_DIR:PATH=/usr/include
 
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
@@ -288,6 +315,10 @@ CPM_SOURCE_CACHE:PATH=OFF
 //Always try to use `find_package` to get dependencies
 CPM_USE_LOCAL_PACKAGES:BOOL=OFF
 
+//Use additional directory of package name in cache on the most
+// nested level.
+CPM_USE_NAMED_CACHE_DIRECTORIES:BOOL=OFF
+
 //How many times to retry timed-out CTest submissions.
 CTEST_SUBMIT_RETRY_COUNT:STRING=3
 
@@ -491,6 +522,18 @@ OPENMP_TEST_FLAGS:STRING=
 //OpenMP compiler flag to use for testing OpenMP runtime libraries.
 OPENMP_TEST_OPENMP_FLAGS:STRING='-fopenmp '
 
+//CXX compiler flags for OpenMP parallelization
+OpenMP_CXX_FLAGS:STRING=-fopenmp
+
+//CXX compiler libraries for OpenMP parallelization
+OpenMP_CXX_LIB_NAMES:STRING=gomp;pthread
+
+//Path to the gomp library for OpenMP
+OpenMP_gomp_LIBRARY:FILEPATH=/usr/lib/gcc/x86_64-linux-gnu/11/libgomp.so
+
+//Path to the pthread library for OpenMP
+OpenMP_pthread_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libpthread.a
+
 //Path to a program.
 PERL_EXECUTABLE:FILEPATH=/usr/bin/perl
 
@@ -539,6 +582,9 @@ TURBO_USE_GOOGLETEST_HEAD:BOOL=ON
 //Silence warnings in Turbo headers by marking them as SYSTEM includes
 TURBO_USE_SYSTEM_INCLUDES:BOOL=OFF
 
+//The directory containing a CMake configuration file for boost_headers.
+boost_headers_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_headers-1.74.0
+
 //Value Computed by CMake
 libompd_BINARY_DIR:STATIC=/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build/libompd/src
 
@@ -580,6 +626,24 @@ turbo_SOURCE_DIR:STATIC=/home/ubuntu/github/gottingen/titan-ann/build/_deps/turb
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: BLAS_gomp_LIBRARY
+BLAS_gomp_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: BLAS_guide_LIBRARY
+BLAS_guide_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: BLAS_mkl_core_LIBRARY
+BLAS_mkl_core_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: BLAS_mkl_gnu_thread_LIBRARY
+BLAS_mkl_gnu_thread_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: BLAS_mkl_intel_LIBRARY
+BLAS_mkl_intel_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: BLAS_mkl_intel_lp64_LIBRARY
+BLAS_mkl_intel_lp64_LIBRARY-ADVANCED:INTERNAL=1
+//Have function sgemm_
+BLAS_mkl_intel_lp64_threadlibs_mkl_sequential_threadlibs_mkl_core_threadlibs_WORKS:INTERNAL=1
+//ADVANCED property for variable: BLAS_mkl_sequential_LIBRARY
+BLAS_mkl_sequential_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_DIR
+Boost_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_ADDR2LINE
 CMAKE_ADDR2LINE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
@@ -718,7 +782,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=17
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=18
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -765,17 +829,21 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 COVERAGE_COMMAND-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: COVERAGE_EXTRA_FLAGS
 COVERAGE_EXTRA_FLAGS-ADVANCED:INTERNAL=1
-CPM_DIRECTORY:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/cmake
+CPM_DIRECTORY:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/CMake
 //Don't download or configure dependencies (for testing)
 CPM_DRY_RUN:INTERNAL=OFF
-CPM_FILE:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/cmake/CPM_0.32.3.cmake
+CPM_FILE:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/CMake/CPM_v0380.cmake
 CPM_INDENT:INTERNAL=CPM:
 CPM_MODULE_PATH:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/CPM_modules
 CPM_PACKAGES:INTERNAL=openmp;turbo
 CPM_PACKAGE_LOCK_FILE:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/cpm-package-lock.cmake
+CPM_PACKAGE_openmp_BINARY_DIR:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-build
+CPM_PACKAGE_openmp_SOURCE_DIR:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/_deps/openmp-src
 CPM_PACKAGE_openmp_VERSION:INTERNAL=0
+CPM_PACKAGE_turbo_BINARY_DIR:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/_deps/turbo-build
+CPM_PACKAGE_turbo_SOURCE_DIR:INTERNAL=/home/ubuntu/github/gottingen/titan-ann/build/_deps/turbo-src
 CPM_PACKAGE_turbo_VERSION:INTERNAL=0.8.6
-CPM_VERSION:INTERNAL=0.32.3
+CPM_VERSION:INTERNAL=1.0.0-development-version
 //ADVANCED property for variable: CTEST_SUBMIT_RETRY_COUNT
 CTEST_SUBMIT_RETRY_COUNT-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CTEST_SUBMIT_RETRY_DELAY
@@ -850,6 +918,14 @@ CXX_HAS_SSSE3_1_COMPILED:INTERNAL=TRUE
 CXX_HAS_SSSE3_1_EXITCODE:INTERNAL=0
 //ADVANCED property for variable: DART_TESTING_TIMEOUT
 DART_TESTING_TIMEOUT-ADVANCED:INTERNAL=1
+//Details about finding Boost
+FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake][c ][v1.74.0()]
+//Details about finding MKL
+FIND_PACKAGE_MESSAGE_DETAILS_MKL:INTERNAL=[/usr/lib/x86_64-linux-gnu/libmkl_intel_lp64.so;/usr/lib/x86_64-linux-gnu/libmkl_sequential.so;/usr/lib/x86_64-linux-gnu/libmkl_core.so;-lm;-ldl][v()]
+//Details about finding OpenMP
+FIND_PACKAGE_MESSAGE_DETAILS_OpenMP:INTERNAL=[TRUE][c ][v4.5()]
+//Details about finding OpenMP_CXX
+FIND_PACKAGE_MESSAGE_DETAILS_OpenMP_CXX:INTERNAL=[-fopenmp][/usr/lib/gcc/x86_64-linux-gnu/11/libgomp.so][/usr/lib/x86_64-linux-gnu/libpthread.a][v4.5()]
 //Details about finding Perl
 FIND_PACKAGE_MESSAGE_DETAILS_Perl:INTERNAL=[/usr/bin/perl][v5.34.0()]
 //Details about finding PythonInterp
@@ -974,6 +1050,20 @@ OPENMP_HAVE_WNO_MAYBE_UNINITIALIZED_FLAG:INTERNAL=1
 OPENMP_HAVE_WNO_PEDANTIC_FLAG:INTERNAL=1
 //Test OPENMP_HAVE_WSIGN_COMPARE_FLAG
 OPENMP_HAVE_WSIGN_COMPARE_FLAG:INTERNAL=1
+//Result of TRY_COMPILE
+OpenMP_COMPILE_RESULT_CXX_fopenmp:INTERNAL=TRUE
+//ADVANCED property for variable: OpenMP_CXX_FLAGS
+OpenMP_CXX_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenMP_CXX_LIB_NAMES
+OpenMP_CXX_LIB_NAMES-ADVANCED:INTERNAL=1
+//CXX compiler's OpenMP specification date
+OpenMP_CXX_SPEC_DATE:INTERNAL=201511
+//Result of TRY_COMPILE
+OpenMP_SPECTEST_CXX_:INTERNAL=TRUE
+//ADVANCED property for variable: OpenMP_gomp_LIBRARY
+OpenMP_gomp_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenMP_pthread_LIBRARY
+OpenMP_pthread_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PERL_EXECUTABLE
 PERL_EXECUTABLE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PYTHON_EXECUTABLE
@@ -987,6 +1077,8 @@ TURBO_FIND_GOOGLETEST:INTERNAL=OFF
 TURBO_INTERNAL_AT_LEAST_CXX17:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
+//ADVANCED property for variable: boost_headers_DIR
+boost_headers_DIR-ADVANCED:INTERNAL=1
 //Result of TRY_COMPILE
 compile_dummy:INTERNAL=FALSE
 //Result of TRY_COMPILE

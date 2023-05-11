@@ -31,7 +31,7 @@
 #include <time.h>
 #include <typeinfo>
 
-#include "partition.h"
+#include "tann/partition.h"
 #include "tann/utils.h"
 
 template<typename T>
