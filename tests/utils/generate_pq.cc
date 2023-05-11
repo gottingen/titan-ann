@@ -15,9 +15,9 @@
 // limitations under the License.
 //
 
-#include "math_utils.h"
+#include "tann/math_utils.h"
 #include "tann/pq.h"
-#include "partition.h"
+#include "tann/partition.h"
 
 #define KMEANS_ITERS_FOR_PQ 15
 

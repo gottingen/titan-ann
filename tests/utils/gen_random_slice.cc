@@ -26,7 +26,7 @@
 #include <map>
 #include <sstream>
 #include <string>
-#include "partition.h"
+#include "tann/partition.h"
 #include "tann/utils.h"
 
 #include <fcntl.h>

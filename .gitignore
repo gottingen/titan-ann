@@ -33,3 +33,5 @@
 
 bazel-*
 .clwb
+build
+cmake-build-debug

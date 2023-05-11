@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "tann/utils.h"
-#include "disk_utils.h"
+#include "tann/disk_utils.h"
 
 int main(int argc, char** argv) {
   if (argc != 4) {

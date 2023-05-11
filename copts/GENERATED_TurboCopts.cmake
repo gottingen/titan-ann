@@ -78,6 +78,9 @@ list(APPEND TURBO_GCC_TEST_FLAGS
     "-Wno-unused-parameter"
     "-Wno-unused-private-field"
     "-Wno-noexcept-type"
+    "-fopenmp"
+    "-fopenmp-simd"
+    "-funroll-loop"
 )
 
 list(APPEND TURBO_LLVM_FLAGS
