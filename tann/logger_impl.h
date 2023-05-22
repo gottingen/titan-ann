@@ -9,32 +9,35 @@
 #include "tann/ann_exception.h"
 #include "logger.h"
 
-namespace tann
-{
-class ANNStreamBuf : public std::basic_streambuf<char>
-{
-  public:
-    TURBO_DLL explicit ANNStreamBuf(FILE *fp);
-    TURBO_DLL ~ANNStreamBuf();
+namespace tann {
+    class ANNStreamBuf : public std::basic_streambuf<char> {
+    public:
+        TURBO_DLL explicit ANNStreamBuf(FILE *fp);
 
-    TURBO_DLL bool is_open() const
-    {
-        return true; // because stdout and stderr are always open.
-    }
-    TURBO_DLL void close();
-    TURBO_DLL virtual int underflow();
-    TURBO_DLL virtual int overflow(int c);
-    TURBO_DLL virtual int sync();
+        TURBO_DLL ~ANNStreamBuf();
 
-  private:
-    FILE *_fp;
-    char *_buf;
-    int _bufIndex;
-    std::mutex _mutex;
-    LogLevel _logLevel;
+        TURBO_DLL bool is_open() const {
+            return true; // because stdout and stderr are always open.
+        }
 
-    int flush();
-    void logImpl(char *str, int numchars);
+        TURBO_DLL void close();
+
+        TURBO_DLL virtual int underflow();
+
+        TURBO_DLL virtual int overflow(int c);
+
+        TURBO_DLL virtual int sync();
+
+    private:
+        FILE *_fp;
+        char *_buf;
+        int _bufIndex;
+        std::mutex _mutex;
+        LogLevel _logLevel;
+
+        int flush();
+
+        void logImpl(char *str, int numchars);
 
 // Why the two buffer-sizes? If we are running normally, we are basically
 // interacting with a character output system, so we short-circuit the
@@ -51,15 +54,16 @@ class ANNStreamBuf : public std::basic_streambuf<char>
 // This implies calling code _must_ either print std::endl or std::flush
 // to ensure that the message is written immediately.
 #ifdef ENABLE_CUSTOM_LOGGER
-    static const int BUFFER_SIZE = 1024;
+        static const int BUFFER_SIZE = 1024;
 #else
-    // Allocating an arbitrarily small buffer here because the overflow() and
-    // other function implementations push the BUFFER_SIZE chars into the
-    // buffer before flushing to fwrite.
-    static const int BUFFER_SIZE = 4;
+        // Allocating an arbitrarily small buffer here because the overflow() and
+        // other function implementations push the BUFFER_SIZE chars into the
+        // buffer before flushing to fwrite.
+        static const int BUFFER_SIZE = 4;
 #endif
 
-    ANNStreamBuf(const ANNStreamBuf &);
-    ANNStreamBuf &operator=(const ANNStreamBuf &);
-};
+        ANNStreamBuf(const ANNStreamBuf &);
+
+        ANNStreamBuf &operator=(const ANNStreamBuf &);
+    };
 } // namespace tann

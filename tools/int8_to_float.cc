@@ -4,10 +4,8 @@
 #include <iostream>
 #include "tann/utils.h"
 
-int main(int argc, char **argv)
-{
-    if (argc != 3)
-    {
+int main(int argc, char **argv) {
+    if (argc != 3) {
         std::cout << argv[0] << " input_int8_bin output_float_bin" << std::endl;
         exit(-1);
     }

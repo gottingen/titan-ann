@@ -9,8 +9,10 @@
 #include "tann/utils.h"
 
 #ifndef _WINDOWS
+
 #include <sys/mman.h>
 #include <unistd.h>
+
 #else
 #include <Windows.h>
 #endif
@@ -20,18 +22,17 @@
 
 namespace po = boost::program_options;
 
-template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t>
+template<typename T, typename TagT = uint32_t, typename LabelT = uint32_t>
 int build_in_memory_index(const tann::Metric &metric, const std::string &data_path, const uint32_t R,
                           const uint32_t L, const float alpha, const std::string &save_path, const uint32_t num_threads,
                           const bool use_pq_build, const size_t num_pq_bytes, const bool use_opq,
-                          const std::string &label_file, const std::string &universal_label, const uint32_t Lf)
-{
+                          const std::string &label_file, const std::string &universal_label, const uint32_t Lf) {
     tann::IndexWriteParameters paras = tann::IndexWriteParametersBuilder(L, R)
-                                              .with_filter_list_size(Lf)
-                                              .with_alpha(alpha)
-                                              .with_saturate_graph(false)
-                                              .with_num_threads(num_threads)
-                                              .build();
+            .with_filter_list_size(Lf)
+            .with_alpha(alpha)
+            .with_saturate_graph(false)
+            .with_num_threads(num_threads)
+            .build();
     std::string labels_file_to_use = save_path + "_label_formatted.txt";
     std::string mem_labels_int_map_file = save_path + "_labels_map.txt";
 
@@ -39,17 +40,13 @@ int build_in_memory_index(const tann::Metric &metric, const std::string &data_pa
     tann::get_bin_metadata(data_path, data_num, data_dim);
 
     tann::Index<T, TagT, LabelT> index(metric, data_dim, data_num, false, false, false, use_pq_build, num_pq_bytes,
-                                          use_opq);
+                                       use_opq);
     auto s = std::chrono::high_resolution_clock::now();
-    if (label_file == "")
-    {
+    if (label_file == "") {
         index.build(data_path.c_str(), data_num, paras);
-    }
-    else
-    {
+    } else {
         convert_labels_string_to_int(label_file, labels_file_to_use, mem_labels_int_map_file, universal_label);
-        if (universal_label != "")
-        {
+        if (universal_label != "") {
             LabelT unv_label_as_num = 0;
             index.set_universal_label(unv_label_as_num);
         }
@@ -64,16 +61,14 @@ int build_in_memory_index(const tann::Metric &metric, const std::string &data_pa
     return 0;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     std::string data_type, dist_fn, data_path, index_path_prefix, label_file, universal_label, label_type;
     uint32_t num_threads, R, L, Lf, build_PQ_bytes;
     float alpha;
     bool use_pq_build, use_opq;
 
     po::options_description desc{"Arguments"};
-    try
-    {
+    try {
         desc.add_options()("help,h", "Print information on arguments");
         desc.add_options()("data_type", po::value<std::string>(&data_type)->required(), "data type <int8/uint8/float>");
         desc.add_options()("dist_fn", po::value<std::string>(&dist_fn)->required(),
@@ -115,8 +110,7 @@ int main(int argc, char **argv)
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
-        if (vm.count("help"))
-        {
+        if (vm.count("help")) {
             std::cout << desc;
             return 0;
         }
@@ -124,59 +118,46 @@ int main(int argc, char **argv)
         use_pq_build = (build_PQ_bytes > 0);
         use_opq = vm["use_opq"].as<bool>();
     }
-    catch (const std::exception &ex)
-    {
+    catch (const std::exception &ex) {
         std::cerr << ex.what() << '\n';
         return -1;
     }
 
     tann::Metric metric;
-    if (dist_fn == std::string("mips"))
-    {
+    if (dist_fn == std::string("mips")) {
         metric = tann::Metric::INNER_PRODUCT;
-    }
-    else if (dist_fn == std::string("l2"))
-    {
+    } else if (dist_fn == std::string("l2")) {
         metric = tann::Metric::L2;
-    }
-    else if (dist_fn == std::string("cosine"))
-    {
+    } else if (dist_fn == std::string("cosine")) {
         metric = tann::Metric::COSINE;
-    }
-    else
-    {
+    } else {
         std::cout << "Unsupported distance function. Currently only L2/ Inner "
                      "Product/Cosine are supported."
                   << std::endl;
         return -1;
     }
 
-    try
-    {
+    try {
         tann::cout << "Starting index build with R: " << R << "  Lbuild: " << L << "  alpha: " << alpha
-                      << "  #threads: " << num_threads << std::endl;
-        if (label_file != "" && label_type == "ushort")
-        {
+                   << "  #threads: " << num_threads << std::endl;
+        if (label_file != "" && label_type == "ushort") {
             if (data_type == std::string("int8"))
                 return build_in_memory_index<int8_t, uint32_t, uint16_t>(
-                    metric, data_path, R, L, alpha, index_path_prefix, num_threads, use_pq_build, build_PQ_bytes,
-                    use_opq, label_file, universal_label, Lf);
+                        metric, data_path, R, L, alpha, index_path_prefix, num_threads, use_pq_build, build_PQ_bytes,
+                        use_opq, label_file, universal_label, Lf);
             else if (data_type == std::string("uint8"))
                 return build_in_memory_index<uint8_t, uint32_t, uint16_t>(
-                    metric, data_path, R, L, alpha, index_path_prefix, num_threads, use_pq_build, build_PQ_bytes,
-                    use_opq, label_file, universal_label, Lf);
+                        metric, data_path, R, L, alpha, index_path_prefix, num_threads, use_pq_build, build_PQ_bytes,
+                        use_opq, label_file, universal_label, Lf);
             else if (data_type == std::string("float"))
                 return build_in_memory_index<float, uint32_t, uint16_t>(
-                    metric, data_path, R, L, alpha, index_path_prefix, num_threads, use_pq_build, build_PQ_bytes,
-                    use_opq, label_file, universal_label, Lf);
-            else
-            {
+                        metric, data_path, R, L, alpha, index_path_prefix, num_threads, use_pq_build, build_PQ_bytes,
+                        use_opq, label_file, universal_label, Lf);
+            else {
                 std::cout << "Unsupported type. Use one of int8, uint8 or float." << std::endl;
                 return -1;
             }
-        }
-        else
-        {
+        } else {
             if (data_type == std::string("int8"))
                 return build_in_memory_index<int8_t>(metric, data_path, R, L, alpha, index_path_prefix, num_threads,
                                                      use_pq_build, build_PQ_bytes, use_opq, label_file, universal_label,
@@ -189,15 +170,13 @@ int main(int argc, char **argv)
                 return build_in_memory_index<float>(metric, data_path, R, L, alpha, index_path_prefix, num_threads,
                                                     use_pq_build, build_PQ_bytes, use_opq, label_file, universal_label,
                                                     Lf);
-            else
-            {
+            else {
                 std::cout << "Unsupported type. Use one of int8, uint8 or float." << std::endl;
                 return -1;
             }
         }
     }
-    catch (const std::exception &e)
-    {
+    catch (const std::exception &e) {
         std::cout << std::string(e.what()) << std::endl;
         tann::cerr << "Index build failed." << std::endl;
         return -1;

@@ -6,15 +6,15 @@
 
 #include "aligned_file_reader.h"
 
-class LinuxAlignedFileReader : public AlignedFileReader
-{
-  private:
+class LinuxAlignedFileReader : public AlignedFileReader {
+private:
     uint64_t file_sz;
     FileHandle file_desc;
-    io_context_t bad_ctx = (io_context_t)-1;
+    io_context_t bad_ctx = (io_context_t) -1;
 
-  public:
+public:
     LinuxAlignedFileReader();
+
     ~LinuxAlignedFileReader();
 
     IOContext &get_ctx();
@@ -24,11 +24,13 @@ class LinuxAlignedFileReader : public AlignedFileReader
 
     // de-register thread-id for a context
     void deregister_thread();
+
     void deregister_all_threads();
 
     // Open & close ops
     // Blocking calls
     void open(const std::string &fname);
+
     void close();
 
     // process batch of aligned requests in parallel

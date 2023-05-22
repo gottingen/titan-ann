@@ -14,10 +14,8 @@
 #include "tann/cached_io.h"
 #include "tann/utils.h"
 
-int main(int argc, char **argv)
-{
-    if (argc != 9)
-    {
+int main(int argc, char **argv) {
+    if (argc != 9) {
         std::cout << argv[0]
                   << " vamana_index_prefix[1] vamana_index_suffix[2] "
                      "idmaps_prefix[3] "
@@ -32,11 +30,11 @@ int main(int argc, char **argv)
     std::string vamana_suffix(argv[2]);
     std::string idmaps_prefix(argv[3]);
     std::string idmaps_suffix(argv[4]);
-    uint64_t nshards = (uint64_t)std::atoi(argv[5]);
-    uint32_t max_degree = (uint64_t)std::atoi(argv[6]);
+    uint64_t nshards = (uint64_t) std::atoi(argv[5]);
+    uint32_t max_degree = (uint64_t) std::atoi(argv[6]);
     std::string output_index(argv[7]);
     std::string output_medoids(argv[8]);
 
     return tann::merge_shards(vamana_prefix, vamana_suffix, idmaps_prefix, idmaps_suffix, nshards, max_degree,
-                                 output_index, output_medoids);
+                              output_index, output_medoids);
 }

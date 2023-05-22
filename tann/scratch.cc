@@ -4,7 +4,7 @@
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
 
-#include "scratch.h"
+#include "tann/scratch.h"
 
 namespace tann
 {

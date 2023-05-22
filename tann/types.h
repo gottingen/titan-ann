@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace tann
-{
-typedef uint32_t location_t;
+namespace tann {
+    typedef uint32_t location_t;
 } // namespace tann

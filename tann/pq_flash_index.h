@@ -6,15 +6,15 @@
 
 #include "aligned_file_reader.h"
 #include "concurrent_queue.h"
-#include "neighbor.h"
+#include "tann/neighbor.h"
 #include "tann/parameters.h"
 #include "tann/percentile_stats.h"
 #include "tann/pq.h"
 #include "tann/utils.h"
 #include "turbo/platform/port.h"
-#include "scratch.h"
+#include "tann/scratch.h"
 #include "tsl/robin_map.h"
-#include "tsl/robin_set.h"
+#include "tann/tsl/robin_set.h"
 
 #define FULL_PRECISION_REORDER_MULTIPLIER 3
 

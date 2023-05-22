@@ -4,6 +4,7 @@
 #pragma once
 
 #ifndef _WINDOWS
+
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -13,31 +14,32 @@
 #else
 #include <Windows.h>
 #endif
+
 #include <string>
 
-namespace tann
-{
-class MemoryMapper
-{
-  private:
+namespace tann {
+    class MemoryMapper {
+    private:
 #ifndef _WINDOWS
-    int _fd;
+        int _fd;
 #else
-    HANDLE _bareFile;
-    HANDLE _fd;
+        HANDLE _bareFile;
+        HANDLE _fd;
 
 #endif
-    char *_buf;
-    size_t _fileSize;
-    const char *_fileName;
+        char *_buf;
+        size_t _fileSize;
+        const char *_fileName;
 
-  public:
-    MemoryMapper(const char *filename);
-    MemoryMapper(const std::string &filename);
+    public:
+        MemoryMapper(const char *filename);
 
-    char *getBuf();
-    size_t getFileSize();
+        MemoryMapper(const std::string &filename);
 
-    ~MemoryMapper();
-};
+        char *getBuf();
+
+        size_t getFileSize();
+
+        ~MemoryMapper();
+    };
 } // namespace tann

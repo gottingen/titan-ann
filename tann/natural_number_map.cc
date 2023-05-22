@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <boost/dynamic_bitset.hpp>
 
-#include "natural_number_map.h"
+#include "tann/natural_number_map.h"
 
 namespace tann
 {

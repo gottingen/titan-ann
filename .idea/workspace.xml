@@ -11,8 +11,41 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
-      <config projectName="tann" targetName="_tannpy" />
+      <config projectName="tann" targetName="gen_random_slice" />
+      <config projectName="tann" targetName="test_insert_deletes_consolidate" />
+      <config projectName="tann" targetName="test_streaming_scenario" />
+      <config projectName="tann" targetName="build_memory_index" />
+      <config projectName="tann" targetName="float_bin_to_int8" />
+      <config projectName="tann" targetName="partition_with_ram_budget" />
+      <config projectName="tann" targetName="count_bfs_levels" />
+      <config projectName="tann" targetName="uint32_to_uint8" />
+      <config projectName="tann" targetName="generate_synthetic_labels" />
+      <config projectName="tann" targetName="uint8_to_float" />
+      <config projectName="tann" targetName="generate_pq" />
+      <config projectName="tann" targetName="bin_to_tsv" />
+      <config projectName="tann" targetName="calculate_recall" />
+      <config projectName="tann" targetName="tsv_to_bin" />
+      <config projectName="tann" targetName="stats_label_data" />
+      <config projectName="tann" targetName="ivecs_to_bin" />
+      <config projectName="tann" targetName="search_disk_index" />
+      <config projectName="tann" targetName="simulate_aggregate_recall" />
+      <config projectName="tann" targetName="compute_groundtruth" />
+      <config projectName="tann" targetName="int8_to_float_scale" />
+      <config projectName="tann" targetName="vector_analysis" />
+      <config projectName="tann" targetName="build_stitched_index" />
+      <config projectName="tann" targetName="int8_to_float" />
       <config projectName="tann" targetName="tann" />
+      <config projectName="tann" targetName="range_search_disk_index" />
+      <config projectName="tann" targetName="rand_data_gen" />
+      <config projectName="tann" targetName="search_memory_index" />
+      <config projectName="tann" targetName="bin_to_fvecs" />
+      <config projectName="tann" targetName="create_disk_layout" />
+      <config projectName="tann" targetName="_tannpy" />
+      <config projectName="tann" targetName="fvecs_to_bin" />
+      <config projectName="tann" targetName="fvecs_to_bvecs" />
+      <config projectName="tann" targetName="partition_data" />
+      <config projectName="tann" targetName="merge_shards" />
+      <config projectName="tann" targetName="build_disk_index" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -28,87 +61,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dist/tannpy-0.5.0-cp311-cp311-linux_x86_64.whl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/apps/cluster.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/apps/in-mem-dynamic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/apps/in-mem-static.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/apps/insert-in-clustered-order.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/apps/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/_builder.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/_builder.pyi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/_common.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/_disk_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/_dynamic_memory_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/_static_memory_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/py.typed" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/tann_bindings.cc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/tannpy.egg-info/PKG-INFO" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/tannpy.egg-info/SOURCES.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/tannpy.egg-info/dependency_links.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/tannpy.egg-info/not-zip-safe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/tannpy.egg-info/requires.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/src/tannpy.egg-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/abstract_data_store.cc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/abstract_data_store.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/abstract_graph_store.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/boost_dynamic_bitset_fwd.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/defaults.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/filter_utils.cc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/filter_utils.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/in_mem_data_store.cc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/in_mem_data_store.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/in_mem_graph_store.cc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/in_mem_graph_store.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/logger.cc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/logger.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/logger_impl.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/.clang-format" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/robin_growth_policy.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/robin_hash.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/robin_map.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/robin_set.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/sparse_growth_policy.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/sparse_hash.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/sparse_map.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/tsl/sparse_set.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/types.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/fixtures/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/fixtures/build_memory_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/fixtures/create_test_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/fixtures/recall.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/test_builder.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/test_disk_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/test_dynamic_memory_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/python/test_static_memory_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/utils/compute_groundtruth_for_filters.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/titan-ann.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/titan-ann.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/abstract_data_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/abstract_data_store.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/abstract_data_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/abstract_data_store.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/abstract_graph_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/abstract_graph_store.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/aligned_file_reader.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/ann_exception.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/ann_exception.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/ann_exception.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/ann_exception.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/boost_dynamic_bitset_fwd.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/boost_dynamic_bitset_fwd.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/cached_io.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/cached_io.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/common_includes.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/common_includes.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/concurrent_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/concurrent_queue.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/cosine_similarity.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/cosine_similarity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/defaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/defaults.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/disk_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/disk_utils.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/disk_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/disk_utils.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/distance.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/distance.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/exceptions.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/exceptions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/filter_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/filter_utils.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/filter_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/filter_utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_data_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_data_store.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_data_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_data_store.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_graph_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_graph_store.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_graph_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_graph_store.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/index.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/index.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/index.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/linux_aligned_file_reader.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/linux_aligned_file_reader.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/linux_aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/linux_aligned_file_reader.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/locking.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/locking.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/logger.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/logger.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/logger.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/logger.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/logger_impl.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/logger_impl.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/math_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/math_utils.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/math_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/math_utils.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/memory_mapper.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/memory_mapper.cc" afterDir="false" />
@@ -130,44 +113,41 @@
       <change beforePath="$PROJECT_DIR$/tann/scratch.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/scratch.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/simd_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/simd_utils.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/timer.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/timer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/types.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/utils.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/windows_aligned_file_reader.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/windows_aligned_file_reader.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/windows_aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/windows_aligned_file_reader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/windows_slim_lock.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/windows_slim_lock.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/build_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build_disk_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build_memory_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build_memory_index.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build_stitched_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build_stitched_index.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/range_search_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/range_search_disk_index.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/search_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/search_disk_index.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/search_memory_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/search_memory_index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_insert_deletes_consolidate.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_insert_deletes_consolidate.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_streaming_scenario.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_streaming_scenario.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/bin_to_fvecs.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/bin_to_fvecs.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/bin_to_tsv.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/bin_to_tsv.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/calculate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/calculate_recall.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/compute_groundtruth.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/compute_groundtruth.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/count_bfs_levels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/count_bfs_levels.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/create_disk_layout.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/create_disk_layout.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/float_bin_to_int8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/float_bin_to_int8.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/fvecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/fvecs_to_bin.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/fvecs_to_bvecs.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/fvecs_to_bvecs.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/gen_random_slice.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/gen_random_slice.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/generate_pq.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/generate_pq.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/generate_synthetic_labels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/generate_synthetic_labels.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/int8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/int8_to_float.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/int8_to_float_scale.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/int8_to_float_scale.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/ivecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/ivecs_to_bin.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/merge_shards.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/merge_shards.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/partition_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/partition_data.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/partition_with_ram_budget.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/partition_with_ram_budget.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/rand_data_gen.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/rand_data_gen.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/simulate_aggregate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/simulate_aggregate_recall.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/stats_label_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/stats_label_data.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/tsv_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/tsv_to_bin.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/uint32_to_uint8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/uint32_to_uint8.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/uint8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/uint8_to_float.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/vector_analysis.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils/vector_analysis.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/bin_to_fvecs.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/bin_to_tsv.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/bin_to_tsv.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/calculate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/calculate_recall.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/compute_groundtruth.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/compute_groundtruth_for_filters.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth_for_filters.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/count_bfs_levels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/count_bfs_levels.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/create_disk_layout.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/create_disk_layout.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/float_bin_to_int8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/float_bin_to_int8.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/fvecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/fvecs_to_bin.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/fvecs_to_bvecs.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/fvecs_to_bvecs.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gen_random_slice.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/gen_random_slice.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/generate_pq.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/generate_pq.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/generate_synthetic_labels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/generate_synthetic_labels.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/int8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/int8_to_float.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/int8_to_float_scale.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/int8_to_float_scale.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/ivecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/ivecs_to_bin.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/merge_shards.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/merge_shards.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/partition_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/partition_data.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/partition_with_ram_budget.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/partition_with_ram_budget.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/rand_data_gen.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/rand_data_gen.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/simulate_aggregate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/simulate_aggregate_recall.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/stats_label_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/stats_label_data.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/tsv_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/tsv_to_bin.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/uint32_to_uint8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/uint32_to_uint8.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/uint8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/uint8_to_float.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/vector_analysis.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/vector_analysis.cc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,8 +161,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="CMakeLists.txt" />
         <option value="Python Script" />
+        <option value="CMakeLists.txt" />
       </list>
     </option>
   </component>
@@ -232,6 +212,7 @@
       <recent name="$PROJECT_DIR$/CMake" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tools" />
       <recent name="$PROJECT_DIR$/tests" />
     </key>
   </component>
@@ -246,7 +227,172 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="bin_to_fvecs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_fvecs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_fvecs">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="bin_to_tsv" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_tsv" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_tsv">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="build_disk_index" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="build_disk_index" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="build_disk_index">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="build_memory_index" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="build_memory_index" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="build_memory_index">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="build_stitched_index" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="build_stitched_index" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="build_stitched_index">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="calculate_recall" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="calculate_recall" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="calculate_recall">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="compute_groundtruth" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="compute_groundtruth" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="compute_groundtruth">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="count_bfs_levels" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="count_bfs_levels" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="count_bfs_levels">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="create_disk_layout" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="create_disk_layout" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="create_disk_layout">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="float_bin_to_int8" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="float_bin_to_int8" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="float_bin_to_int8">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="fvecs_to_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="fvecs_to_bin" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="fvecs_to_bin">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="fvecs_to_bvecs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="fvecs_to_bvecs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="fvecs_to_bvecs">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gen_random_slice" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="gen_random_slice" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="gen_random_slice">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="generate_pq" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="generate_pq" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="generate_pq">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="generate_synthetic_labels" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="generate_synthetic_labels" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="generate_synthetic_labels">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="int8_to_float" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="int8_to_float" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="int8_to_float">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="int8_to_float_scale" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="int8_to_float_scale" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="int8_to_float_scale">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ivecs_to_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="ivecs_to_bin" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="ivecs_to_bin">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="merge_shards" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="merge_shards" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="merge_shards">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="partition_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="partition_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="partition_data">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="partition_with_ram_budget" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="partition_with_ram_budget" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="partition_with_ram_budget">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="rand_data_gen" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="rand_data_gen" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="rand_data_gen">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="range_search_disk_index" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="range_search_disk_index" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="range_search_disk_index">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="search_disk_index" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="search_disk_index" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="search_disk_index">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="search_memory_index" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="search_memory_index" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="search_memory_index">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="simulate_aggregate_recall" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="simulate_aggregate_recall" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="simulate_aggregate_recall">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="stats_label_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="stats_label_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="stats_label_data">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="tann" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="tann" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test_insert_deletes_consolidate" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="test_insert_deletes_consolidate" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="test_insert_deletes_consolidate">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test_streaming_scenario" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="test_streaming_scenario" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="test_streaming_scenario">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tsv_to_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="tsv_to_bin" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="tsv_to_bin">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="uint32_to_uint8" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="uint32_to_uint8" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="uint32_to_uint8">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="uint8_to_float" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="uint8_to_float" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="uint8_to_float">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="vector_analysis" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="vector_analysis" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="vector_analysis">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -254,6 +400,39 @@
     <list>
       <item itemvalue="CMake Application._tannpy" />
       <item itemvalue="CMake Application.tann" />
+      <item itemvalue="CMake Application.bin_to_tsv" />
+      <item itemvalue="CMake Application.build_disk_index" />
+      <item itemvalue="CMake Application.build_memory_index" />
+      <item itemvalue="CMake Application.build_stitched_index" />
+      <item itemvalue="CMake Application.calculate_recall" />
+      <item itemvalue="CMake Application.compute_groundtruth" />
+      <item itemvalue="CMake Application.count_bfs_levels" />
+      <item itemvalue="CMake Application.create_disk_layout" />
+      <item itemvalue="CMake Application.float_bin_to_int8" />
+      <item itemvalue="CMake Application.fvecs_to_bin" />
+      <item itemvalue="CMake Application.fvecs_to_bvecs" />
+      <item itemvalue="CMake Application.gen_random_slice" />
+      <item itemvalue="CMake Application.generate_pq" />
+      <item itemvalue="CMake Application.generate_synthetic_labels" />
+      <item itemvalue="CMake Application.int8_to_float" />
+      <item itemvalue="CMake Application.int8_to_float_scale" />
+      <item itemvalue="CMake Application.ivecs_to_bin" />
+      <item itemvalue="CMake Application.merge_shards" />
+      <item itemvalue="CMake Application.partition_data" />
+      <item itemvalue="CMake Application.partition_with_ram_budget" />
+      <item itemvalue="CMake Application.rand_data_gen" />
+      <item itemvalue="CMake Application.range_search_disk_index" />
+      <item itemvalue="CMake Application.search_disk_index" />
+      <item itemvalue="CMake Application.search_memory_index" />
+      <item itemvalue="CMake Application.simulate_aggregate_recall" />
+      <item itemvalue="CMake Application.stats_label_data" />
+      <item itemvalue="CMake Application.test_insert_deletes_consolidate" />
+      <item itemvalue="CMake Application.test_streaming_scenario" />
+      <item itemvalue="CMake Application.bin_to_fvecs" />
+      <item itemvalue="CMake Application.tsv_to_bin" />
+      <item itemvalue="CMake Application.uint32_to_uint8" />
+      <item itemvalue="CMake Application.uint8_to_float" />
+      <item itemvalue="CMake Application.vector_analysis" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

@@ -2,16 +2,14 @@
 // Licensed under the MIT license.
 
 #pragma once
+
 #include <stdexcept>
 
-namespace tann
-{
+namespace tann {
 
-class NotImplementedException : public std::logic_error
-{
-  public:
-    NotImplementedException() : std::logic_error("Function not yet implemented.")
-    {
-    }
-};
+    class NotImplementedException : public std::logic_error {
+    public:
+        NotImplementedException() : std::logic_error("Function not yet implemented.") {
+        }
+    };
 } // namespace tann

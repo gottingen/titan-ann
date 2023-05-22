@@ -14,7 +14,7 @@
 #include "tann/cosine_similarity.h"
 #include <iostream>
 
-#include "distance.h"
+#include "tann/distance.h"
 #include "tann/utils.h"
 #include "logger.h"
 #include "tann/ann_exception.h"

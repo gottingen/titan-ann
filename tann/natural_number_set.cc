@@ -4,7 +4,7 @@
 #include <boost/dynamic_bitset.hpp>
 
 #include "tann/ann_exception.h"
-#include "natural_number_set.h"
+#include "tann/natural_number_set.h"
 
 namespace tann
 {

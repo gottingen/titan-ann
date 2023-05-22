@@ -8,28 +8,24 @@
 
 using namespace tann;
 
-MemoryMapper::MemoryMapper(const std::string &filename) : MemoryMapper(filename.c_str())
-{
+MemoryMapper::MemoryMapper(const std::string &filename) : MemoryMapper(filename.c_str()) {
 }
 
-MemoryMapper::MemoryMapper(const char *filename)
-{
+MemoryMapper::MemoryMapper(const char *filename) {
 #ifndef _WINDOWS
     _fd = open(filename, O_RDONLY);
-    if (_fd <= 0)
-    {
+    if (_fd <= 0) {
         std::cerr << "Inner vertices file not found" << std::endl;
         return;
     }
     struct stat sb;
-    if (fstat(_fd, &sb) != 0)
-    {
+    if (fstat(_fd, &sb) != 0) {
         std::cerr << "Inner vertices file not dound. " << std::endl;
         return;
     }
     _fileSize = sb.st_size;
     tann::cout << "File Size: " << _fileSize << std::endl;
-    _buf = (char *)mmap(NULL, _fileSize, PROT_READ, MAP_PRIVATE, _fd, 0);
+    _buf = (char *) mmap(NULL, _fileSize, PROT_READ, MAP_PRIVATE, _fd, 0);
 #else
     _bareFile =
         CreateFileA(filename, GENERIC_READ | GENERIC_EXECUTE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -71,18 +67,16 @@ MemoryMapper::MemoryMapper(const char *filename)
     }
 #endif
 }
-char *MemoryMapper::getBuf()
-{
+
+char *MemoryMapper::getBuf() {
     return _buf;
 }
 
-size_t MemoryMapper::getFileSize()
-{
+size_t MemoryMapper::getFileSize() {
     return _fileSize;
 }
 
-MemoryMapper::~MemoryMapper()
-{
+MemoryMapper::~MemoryMapper() {
 #ifndef _WINDOWS
     if (munmap(_buf, _fileSize) != 0)
         std::cerr << "ERROR unmapping. CHECK!" << std::endl;

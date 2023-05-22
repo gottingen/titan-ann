@@ -5,42 +5,40 @@
 
 #include "abstract_data_store.h"
 
-namespace tann
-{
+namespace tann {
 
-template <typename data_t>
-AbstractDataStore<data_t>::AbstractDataStore(const location_t capacity, const size_t dim)
-    : _capacity(capacity), _dim(dim)
-{
-}
-
-template <typename data_t> location_t AbstractDataStore<data_t>::capacity() const
-{
-    return _capacity;
-}
-
-template <typename data_t> size_t AbstractDataStore<data_t>::get_dims() const
-{
-    return _dim;
-}
-
-template <typename data_t> location_t AbstractDataStore<data_t>::resize(const location_t new_num_points)
-{
-    if (new_num_points > _capacity)
-    {
-        return expand(new_num_points);
+    template<typename data_t>
+    AbstractDataStore<data_t>::AbstractDataStore(const location_t capacity, const size_t dim)
+            : _capacity(capacity), _dim(dim) {
     }
-    else if (new_num_points < _capacity)
-    {
-        return shrink(new_num_points);
-    }
-    else
-    {
+
+    template<typename data_t>
+    location_t AbstractDataStore<data_t>::capacity() const {
         return _capacity;
     }
-}
 
-template TURBO_DLL class AbstractDataStore<float>;
-template TURBO_DLL class AbstractDataStore<int8_t>;
-template TURBO_DLL class AbstractDataStore<uint8_t>;
+    template<typename data_t>
+    size_t AbstractDataStore<data_t>::get_dims() const {
+        return _dim;
+    }
+
+    template<typename data_t>
+    location_t AbstractDataStore<data_t>::resize(const location_t new_num_points) {
+        if (new_num_points > _capacity) {
+            return expand(new_num_points);
+        } else if (new_num_points < _capacity) {
+            return shrink(new_num_points);
+        } else {
+            return _capacity;
+        }
+    }
+
+    template TURBO_DLL
+    class AbstractDataStore<float>;
+
+    template TURBO_DLL
+    class AbstractDataStore<int8_t>;
+
+    template TURBO_DLL
+    class AbstractDataStore<uint8_t>;
 } // namespace tann

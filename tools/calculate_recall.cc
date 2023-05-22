@@ -12,10 +12,8 @@
 #include "tann/utils.h"
 #include "tann/disk_utils.h"
 
-int main(int argc, char **argv)
-{
-    if (argc != 4)
-    {
+int main(int argc, char **argv) {
+    if (argc != 4) {
         std::cout << argv[0] << " <ground_truth_bin> <our_results_bin>  <r> " << std::endl;
         return -1;
     }
@@ -29,8 +27,7 @@ int main(int argc, char **argv)
     tann::load_truthset(argv[1], gold_std, gs_dist, points_num_gs, dim_gs);
     tann::load_truthset(argv[2], our_results, or_dist, points_num_or, dim_or);
 
-    if (points_num_gs != points_num_or)
-    {
+    if (points_num_gs != points_num_or) {
         std::cout << "Error. Number of queries mismatch in ground truth and "
                      "our results"
                   << std::endl;
@@ -40,15 +37,14 @@ int main(int argc, char **argv)
 
     uint32_t recall_at = std::atoi(argv[3]);
 
-    if ((dim_or < recall_at) || (recall_at > dim_gs))
-    {
+    if ((dim_or < recall_at) || (recall_at > dim_gs)) {
         std::cout << "ground truth has size " << dim_gs << "; our set has " << dim_or << " points. Asking for recall "
                   << recall_at << std::endl;
         return -1;
     }
     std::cout << "Calculating recall@" << recall_at << std::endl;
-    double recall_val = tann::calculate_recall((uint32_t)points_num, gold_std, gs_dist, (uint32_t)dim_gs,
-                                                  our_results, (uint32_t)dim_or, (uint32_t)recall_at);
+    double recall_val = tann::calculate_recall((uint32_t) points_num, gold_std, gs_dist, (uint32_t) dim_gs,
+                                               our_results, (uint32_t) dim_or, (uint32_t) recall_at);
 
     //  double avg_recall = (recall*1.0)/(points_num*1.0);
     std::cout << "Avg. recall@" << recall_at << " is " << recall_val << "\n";

@@ -12,19 +12,17 @@
 #endif // !ENABLE_CUSTOM_LOGGER
 #endif // EXEC_ENV_OLS
 
-namespace tann
-{
-TURBO_DLL extern std::basic_ostream<char> cout;
-TURBO_DLL extern std::basic_ostream<char> cerr;
+namespace tann {
+    TURBO_DLL extern std::basic_ostream<char> cout;
+    TURBO_DLL extern std::basic_ostream<char> cerr;
 
-enum class TURBO_DLL LogLevel
-{
-    LL_Info = 0,
-    LL_Error,
-    LL_Count
-};
+    enum class TURBO_DLL LogLevel {
+        LL_Info = 0,
+        LL_Error,
+        LL_Count
+    };
 
 #ifdef ENABLE_CUSTOM_LOGGER
-TURBO_DLL void SetCustomLogger(std::function<void(LogLevel, const char *)> logger);
+    TURBO_DLL void SetCustomLogger(std::function<void(LogLevel, const char *)> logger);
 #endif
 } // namespace tann

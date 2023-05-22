@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 #pragma once
+
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -11,29 +12,25 @@
 #include "tann/ann_exception.h"
 
 // sequential cached reads
-class cached_ifstream
-{
-  public:
-    cached_ifstream()
-    {
+class cached_ifstream {
+public:
+    cached_ifstream() {
     }
-    cached_ifstream(const std::string &filename, uint64_t cacheSize) : cache_size(cacheSize), cur_off(0)
-    {
+
+    cached_ifstream(const std::string &filename, uint64_t cacheSize) : cache_size(cacheSize), cur_off(0) {
         reader.exceptions(std::ifstream::failbit | std::ifstream::badbit);
         this->open(filename, cache_size);
     }
-    ~cached_ifstream()
-    {
+
+    ~cached_ifstream() {
         delete[] cache_buf;
         reader.close();
     }
 
-    void open(const std::string &filename, uint64_t cacheSize)
-    {
+    void open(const std::string &filename, uint64_t cacheSize) {
         this->cur_off = 0;
 
-        try
-        {
+        try {
             reader.open(filename, std::ios::binary | std::ios::ate);
             fsize = reader.tellg();
             reader.seekg(0, std::ios::beg);
@@ -44,36 +41,29 @@ class cached_ifstream
             cache_buf = new char[cacheSize];
             reader.read(cache_buf, cacheSize);
             tann::cout << "Opened: " << filename.c_str() << ", size: " << fsize << ", cache_size: " << cacheSize
-                          << std::endl;
+                       << std::endl;
         }
-        catch (std::system_error &e)
-        {
+        catch (std::system_error &e) {
             throw tann::FileException(filename, e, __FUNCSIG__, __FILE__, __LINE__);
         }
     }
 
-    size_t get_file_size()
-    {
+    size_t get_file_size() {
         return fsize;
     }
 
-    void read(char *read_buf, uint64_t n_bytes)
-    {
+    void read(char *read_buf, uint64_t n_bytes) {
         assert(cache_buf != nullptr);
         assert(read_buf != nullptr);
 
-        if (n_bytes <= (cache_size - cur_off))
-        {
+        if (n_bytes <= (cache_size - cur_off)) {
             // case 1: cache contains all data
             memcpy(read_buf, cache_buf + cur_off, n_bytes);
             cur_off += n_bytes;
-        }
-        else
-        {
+        } else {
             // case 2: cache contains some data
             uint64_t cached_bytes = cache_size - cur_off;
-            if (n_bytes - cached_bytes > fsize - reader.tellg())
-            {
+            if (n_bytes - cached_bytes > fsize - reader.tellg()) {
                 std::stringstream stream;
                 stream << "Reading beyond end of file" << std::endl;
                 stream << "n_bytes: " << n_bytes << " cached_bytes: " << cached_bytes << " fsize: " << fsize
@@ -90,8 +80,7 @@ class cached_ifstream
 
             uint64_t size_left = fsize - reader.tellg();
 
-            if (size_left >= cache_size)
-            {
+            if (size_left >= cache_size) {
                 reader.read(cache_buf, cache_size);
                 cur_off = 0;
             }
@@ -100,7 +89,7 @@ class cached_ifstream
         }
     }
 
-  private:
+private:
     // underlying ifstream
     std::ifstream reader;
     // # bytes to cache in one shot read
@@ -114,41 +103,33 @@ class cached_ifstream
 };
 
 // sequential cached writes
-class cached_ofstream
-{
-  public:
-    cached_ofstream(const std::string &filename, uint64_t cache_size) : cache_size(cache_size), cur_off(0)
-    {
+class cached_ofstream {
+public:
+    cached_ofstream(const std::string &filename, uint64_t cache_size) : cache_size(cache_size), cur_off(0) {
         writer.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        try
-        {
+        try {
             writer.open(filename, std::ios::binary);
             assert(writer.is_open());
             assert(cache_size > 0);
             cache_buf = new char[cache_size];
             tann::cout << "Opened: " << filename.c_str() << ", cache_size: " << cache_size << std::endl;
         }
-        catch (std::system_error &e)
-        {
+        catch (std::system_error &e) {
             throw tann::FileException(filename, e, __FUNCSIG__, __FILE__, __LINE__);
         }
     }
 
-    ~cached_ofstream()
-    {
+    ~cached_ofstream() {
         this->close();
     }
 
-    void close()
-    {
+    void close() {
         // dump any remaining data in memory
-        if (cur_off > 0)
-        {
+        if (cur_off > 0) {
             this->flush_cache();
         }
 
-        if (cache_buf != nullptr)
-        {
+        if (cache_buf != nullptr) {
             delete[] cache_buf;
             cache_buf = nullptr;
         }
@@ -158,22 +139,18 @@ class cached_ofstream
         tann::cout << "Finished writing " << fsize << "B" << std::endl;
     }
 
-    size_t get_file_size()
-    {
+    size_t get_file_size() {
         return fsize;
     }
+
     // writes n_bytes from write_buf to the underlying ofstream/cache
-    void write(char *write_buf, uint64_t n_bytes)
-    {
+    void write(char *write_buf, uint64_t n_bytes) {
         assert(cache_buf != nullptr);
-        if (n_bytes <= (cache_size - cur_off))
-        {
+        if (n_bytes <= (cache_size - cur_off)) {
             // case 1: cache can take all data
             memcpy(cache_buf + cur_off, write_buf, n_bytes);
             cur_off += n_bytes;
-        }
-        else
-        {
+        } else {
             // case 2: cache cant take all data
             // go to disk and write existing cache data
             writer.write(cache_buf, cur_off);
@@ -187,8 +164,7 @@ class cached_ofstream
         }
     }
 
-    void flush_cache()
-    {
+    void flush_cache() {
         assert(cache_buf != nullptr);
         writer.write(cache_buf, cur_off);
         fsize += cur_off;
@@ -196,13 +172,12 @@ class cached_ofstream
         cur_off = 0;
     }
 
-    void reset()
-    {
+    void reset() {
         flush_cache();
         writer.seekp(0);
     }
 
-  private:
+private:
     // underlying ofstream
     std::ofstream writer;
     // # bytes to cache for one shot write

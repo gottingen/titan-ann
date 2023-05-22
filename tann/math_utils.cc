@@ -18,9 +18,9 @@ namespace math_utils {
         return dist;
     }
 
-// compute l2-squared norms of data stored in row major num_points * dim,
-// needs
-// to be pre-allocated
+    // compute l2-squared norms of data stored in row major num_points * dim,
+    // needs
+    // to be pre-allocated
     void compute_vecs_l2sq(float *vecs_l2sq, float *data, const size_t num_points, const size_t dim) {
 #pragma omp parallel for schedule(static, 8192)
         for (int64_t n_iter = 0; n_iter < (int64_t) num_points; n_iter++) {
