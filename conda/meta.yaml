@@ -34,16 +34,13 @@ outputs:
         - boost
         - libaio
         - mkl-devel  # [x86_64]
-        - turbo
       host:
         - sysroot_linux-64=2.17 # [linux]
-        - turbo
         - boost
         - libaio
         - mkl-devel  # [x86_64]
       run:
         - sysroot_linux-64=2.17 # [linux]
-        - turbo
         - boost
         - libaio
         - mkl-devel  # [x86_64]
