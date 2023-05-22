@@ -62,22 +62,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conda/cpu/meta.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/cpu/meta.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/PKG-INFO" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/SOURCES.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/dependency_links.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/not-zip-safe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/requires.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/top_level.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/cached_io.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/cached_io.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/percentile_stats.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/percentile_stats.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/pq.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/pq.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/pq_flash_index.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/pq_flash_index.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/scratch.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/scratch.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/scratch.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/scratch.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/compute_groundtruth.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth.cc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +107,7 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann",
+    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann/conda",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -135,11 +119,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/conda" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/tests/utils" />
       <recent name="$PROJECT_DIR$/tests" />
       <recent name="$PROJECT_DIR$/tann" />
-      <recent name="$PROJECT_DIR$/CMake" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tools" />
