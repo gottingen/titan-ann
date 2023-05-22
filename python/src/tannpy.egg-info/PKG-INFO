@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: tannpy
-Version: 0.5.0
-Summary: tann Python extension module
-Author-email: Harsha Vardhan Simhadri <harshasi@microsoft.com>, Dax Pryce <daxpryce@microsoft.com>
-License: MIT License
-Requires-Python: >=3.7
-License-File: LICENSE

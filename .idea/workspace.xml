@@ -61,93 +61,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tools/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/abstract_data_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/abstract_data_store.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/abstract_data_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/abstract_data_store.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/abstract_graph_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/abstract_graph_store.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/aligned_file_reader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/ann_exception.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/ann_exception.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/boost_dynamic_bitset_fwd.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/boost_dynamic_bitset_fwd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/cpu/meta.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/cpu/meta.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/PKG-INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/SOURCES.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/dependency_links.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/not-zip-safe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/requires.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/tannpy.egg-info/top_level.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/cached_io.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/cached_io.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/concurrent_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/concurrent_queue.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/defaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/defaults.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/disk_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/disk_utils.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/disk_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/disk_utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/distance.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/distance.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/exceptions.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/exceptions.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/filter_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/filter_utils.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/filter_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/filter_utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/in_mem_data_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_data_store.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/in_mem_data_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_data_store.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/in_mem_graph_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_graph_store.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/in_mem_graph_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/in_mem_graph_store.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/index.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/index.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/linux_aligned_file_reader.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/linux_aligned_file_reader.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/linux_aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/linux_aligned_file_reader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/locking.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/locking.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/logger.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/logger.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/logger.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/logger.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/logger_impl.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/logger_impl.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/math_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/math_utils.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/math_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/math_utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/memory_mapper.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/memory_mapper.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/memory_mapper.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/memory_mapper.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/natural_number_map.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/natural_number_map.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/natural_number_map.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/natural_number_map.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/natural_number_set.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/natural_number_set.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/natural_number_set.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/natural_number_set.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/neighbor.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/neighbor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/parameters.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/parameters.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/partition.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/partition.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/partition.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/partition.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/percentile_stats.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/percentile_stats.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/pq.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/pq.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/pq.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/pq.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/pq_flash_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/pq_flash_index.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/pq_flash_index.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/pq_flash_index.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/scratch.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/scratch.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/scratch.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/scratch.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/simd_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/simd_utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/timer.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/timer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/types.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/utils.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/build_memory_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build_memory_index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/build_stitched_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build_stitched_index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/range_search_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/range_search_disk_index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/search_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/search_disk_index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/search_memory_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/search_memory_index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/bin_to_fvecs.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/bin_to_tsv.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/bin_to_tsv.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/calculate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/calculate_recall.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/compute_groundtruth.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/compute_groundtruth_for_filters.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth_for_filters.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/count_bfs_levels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/count_bfs_levels.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/create_disk_layout.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/create_disk_layout.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/float_bin_to_int8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/float_bin_to_int8.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/fvecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/fvecs_to_bin.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/fvecs_to_bvecs.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/fvecs_to_bvecs.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/gen_random_slice.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/gen_random_slice.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/generate_pq.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/generate_pq.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/generate_synthetic_labels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/generate_synthetic_labels.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/int8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/int8_to_float.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/int8_to_float_scale.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/int8_to_float_scale.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/ivecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/ivecs_to_bin.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/merge_shards.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/merge_shards.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/partition_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/partition_data.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/partition_with_ram_budget.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/partition_with_ram_budget.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/rand_data_gen.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/rand_data_gen.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/simulate_aggregate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/simulate_aggregate_recall.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/stats_label_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/stats_label_data.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/tsv_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/tsv_to_bin.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/uint32_to_uint8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/uint32_to_uint8.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/uint8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/uint8_to_float.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utils/vector_analysis.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/vector_analysis.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/compute_groundtruth.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth.cc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

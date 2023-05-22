@@ -90,7 +90,7 @@ namespace tann {
     void pq_dist_lookup(const uint8_t *pq_ids, const size_t n_pts, const size_t pq_nchunks, const float *pq_dists,
                         std::vector<float> &dists_out);
 
-// Need to replace calls to these with calls to vector& based functions above
+    // Need to replace calls to these with calls to vector& based functions above
     void aggregate_coords(const unsigned *ids, const uint64_t n_ids, const uint8_t *all_coords, const uint64_t ndims,
                           uint8_t *out);
 
