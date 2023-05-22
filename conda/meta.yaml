@@ -17,7 +17,7 @@ about:
   summary: Hercules is an ahead of time compiler for a subset of the Python language framework.
 
 source:
-  git_url: ../../
+  git_url: ../
 
 outputs:
   - name: tann
