@@ -1,31 +1,20 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-// Copyright 2023 The Tann Authors
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 
 #pragma once
 
 #include <vector>
-#include "turbo/container/flat_hash_set.h"
-#include "turbo/container/flat_hash_map.h"
-#include "turbo/container/dynamic_bitset.h"
-#include "tann/neighbor.h"
-#include "tann/concurrent_queue.h"
-#include "tann/pq.h"
-#include "tann/aligned_file_reader.h"
 
+#include "boost_dynamic_bitset_fwd.h"
+//#include "boost/dynamic_bitset.hpp"
+#include "tsl/robin_set.h"
+#include "tsl/robin_map.h"
+#include "tsl/sparse_map.h"
+
+#include "neighbor.h"
+#include "concurrent_queue.h"
+#include "tann/pq.h"
+#include "aligned_file_reader.h"
 
 // In-mem index related limits
 #define GRAPH_SLACK_FACTOR 1.3
@@ -33,209 +22,212 @@
 // SSD Index related limits
 #define MAX_GRAPH_DEGREE 512
 #define MAX_N_CMPS 16384
-#define SECTOR_LEN (_u64) 4096
+#define SECTOR_LEN (size_t)4096
 #define MAX_N_SECTOR_READS 128
 
-namespace tann {
-    //
-    // Scratch space for in-memory index based search
-    //
-    template<typename T>
-    class InMemQueryScratch {
-    public:
-        ~InMemQueryScratch();
+namespace tann
+{
 
-        InMemQueryScratch(uint32_t search_l, uint32_t indexing_l, uint32_t r,
-                          uint32_t maxc, size_t dim, bool init_pq_scratch = false);
+//
+// Scratch space for in-memory index based search
+//
+template <typename T> class InMemQueryScratch
+{
+  public:
+    ~InMemQueryScratch();
+    // REFACTOR TODO: move all parameters to a new class.
+    InMemQueryScratch(uint32_t search_l, uint32_t indexing_l, uint32_t r, uint32_t maxc, size_t dim, size_t aligned_dim,
+                      size_t alignment_factor, bool init_pq_scratch = false);
+    void resize_for_new_L(uint32_t new_search_l);
+    void clear();
 
-        void resize_for_new_L(uint32_t new_search_l);
+    inline uint32_t get_L()
+    {
+        return _L;
+    }
+    inline uint32_t get_R()
+    {
+        return _R;
+    }
+    inline uint32_t get_maxc()
+    {
+        return _maxc;
+    }
+    inline T *aligned_query()
+    {
+        return _aligned_query;
+    }
+    inline PQScratch<T> *pq_scratch()
+    {
+        return _pq_scratch;
+    }
+    inline std::vector<Neighbor> &pool()
+    {
+        return _pool;
+    }
+    inline NeighborPriorityQueue &best_l_nodes()
+    {
+        return _best_l_nodes;
+    }
+    inline std::vector<float> &occlude_factor()
+    {
+        return _occlude_factor;
+    }
+    inline tsl::robin_set<uint32_t> &inserted_into_pool_rs()
+    {
+        return _inserted_into_pool_rs;
+    }
+    inline boost::dynamic_bitset<> &inserted_into_pool_bs()
+    {
+        return *_inserted_into_pool_bs;
+    }
+    inline std::vector<uint32_t> &id_scratch()
+    {
+        return _id_scratch;
+    }
+    inline std::vector<float> &dist_scratch()
+    {
+        return _dist_scratch;
+    }
+    inline tsl::robin_set<uint32_t> &expanded_nodes_set()
+    {
+        return _expanded_nodes_set;
+    }
+    inline std::vector<Neighbor> &expanded_nodes_vec()
+    {
+        return _expanded_nghrs_vec;
+    }
+    inline std::vector<uint32_t> &occlude_list_output()
+    {
+        return _occlude_list_output;
+    }
 
-        void clear();
+  private:
+    uint32_t _L;
+    uint32_t _R;
+    uint32_t _maxc;
 
-        inline uint32_t get_L() {
-            return _L;
-        }
+    T *_aligned_query = nullptr;
 
-        inline uint32_t get_R() {
-            return _R;
-        }
+    PQScratch<T> *_pq_scratch = nullptr;
 
-        inline uint32_t get_maxc() {
-            return _maxc;
-        }
+    // _pool stores all neighbors explored from best_L_nodes.
+    // Usually around L+R, but could be higher.
+    // Initialized to 3L+R for some slack, expands as needed.
+    std::vector<Neighbor> _pool;
 
-        inline T *aligned_query() {
-            return _aligned_query;
-        }
+    // _best_l_nodes is reserved for storing best L entries
+    // Underlying storage is L+1 to support inserts
+    NeighborPriorityQueue _best_l_nodes;
 
-        inline PQScratch<T> *pq_scratch() {
-            return _pq_scratch;
-        }
+    // _occlude_factor.size() >= pool.size() in occlude_list function
+    // _pool is clipped to maxc in occlude_list before affecting _occlude_factor
+    // _occlude_factor is initialized to maxc size
+    std::vector<float> _occlude_factor;
 
-        inline std::vector<Neighbor> &pool() {
-            return _pool;
-        }
+    // Capacity initialized to 20L
+    tsl::robin_set<uint32_t> _inserted_into_pool_rs;
 
-        inline NeighborPriorityQueue &best_l_nodes() {
-            return _best_l_nodes;
-        }
+    // Use a pointer here to allow for forward declaration of dynamic_bitset
+    // in public headers to avoid making boost a dependency for clients
+    // of Tann.
+    boost::dynamic_bitset<> *_inserted_into_pool_bs;
 
-        inline std::vector<float> &occlude_factor() {
-            return _occlude_factor;
-        }
+    // _id_scratch.size() must be > R*GRAPH_SLACK_FACTOR for iterate_to_fp
+    std::vector<uint32_t> _id_scratch;
 
-        inline turbo::flat_hash_set<unsigned> &inserted_into_pool_rs() {
-            return _inserted_into_pool_rs;
-        }
+    // _dist_scratch must be > R*GRAPH_SLACK_FACTOR for iterate_to_fp
+    // _dist_scratch should be at least the size of id_scratch
+    std::vector<float> _dist_scratch;
 
-        inline turbo::dynamic_bitset<> &inserted_into_pool_bs() {
-            return *_inserted_into_pool_bs;
-        }
+    //  Buffers used in process delete, capacity increases as needed
+    tsl::robin_set<uint32_t> _expanded_nodes_set;
+    std::vector<Neighbor> _expanded_nghrs_vec;
+    std::vector<uint32_t> _occlude_list_output;
+};
 
-        inline std::vector<unsigned> &id_scratch() {
-            return _id_scratch;
-        }
+//
+// Scratch space for SSD index based search
+//
 
-        inline std::vector<float> &dist_scratch() {
-            return _dist_scratch;
-        }
+template <typename T> class SSDQueryScratch
+{
+  public:
+    T *coord_scratch = nullptr; // MUST BE AT LEAST [MAX_N_CMPS * data_dim]
+    size_t coord_idx = 0;       // index of next [data_dim] scratch to use
 
-        inline turbo::flat_hash_set<unsigned> &expanded_nodes_set() {
-            return _expanded_nodes_set;
-        }
+    char *sector_scratch = nullptr; // MUST BE AT LEAST [MAX_N_SECTOR_READS * SECTOR_LEN]
+    size_t sector_idx = 0;          // index of next [SECTOR_LEN] scratch to use
 
-        inline std::vector<Neighbor> &expanded_nodes_vec() {
-            return _expanded_nghrs_vec;
-        }
+    T *aligned_query_T = nullptr;
 
-        inline std::vector<unsigned> &occlude_list_output() {
-            return _occlude_list_output;
-        }
+    PQScratch<T> *_pq_scratch;
 
-    private:
-        uint32_t _L;
-        uint32_t _R;
-        uint32_t _maxc;
+    tsl::robin_set<size_t> visited;
+    NeighborPriorityQueue retset;
+    std::vector<Neighbor> full_retset;
 
-        T *_aligned_query = nullptr;
+    SSDQueryScratch(size_t aligned_dim, size_t visited_reserve);
+    ~SSDQueryScratch();
 
-        PQScratch<T> *_pq_scratch = nullptr;
+    void reset();
+};
 
-        // _pool stores all neighbors explored from best_L_nodes.
-        // Usually around L+R, but could be higher.
-        // Initialized to 3L+R for some slack, expands as needed.
-        std::vector<Neighbor> _pool;
+template <typename T> class SSDThreadData
+{
+  public:
+    SSDQueryScratch<T> scratch;
+    IOContext ctx;
 
-        // _best_l_nodes is reserved for storing best L entries
-        // Underlying storage is L+1 to support inserts
-        NeighborPriorityQueue _best_l_nodes;
+    SSDThreadData(size_t aligned_dim, size_t visited_reserve);
+    void clear();
+};
 
-        // _occlude_factor.size() >= pool.size() in occlude_list function
-        // _pool is clipped to maxc in occlude_list before affecting _occlude_factor
-        // _occlude_factor is initialized to maxc size
-        std::vector<float> _occlude_factor;
-
-        // Capacity initialized to 20L
-        turbo::flat_hash_set<unsigned> _inserted_into_pool_rs;
-
-        // Use a pointer here to allow for forward declaration of dynamic_bitset
-        turbo::dynamic_bitset<> *_inserted_into_pool_bs;
-
-        // _id_scratch.size() must be > R*GRAPH_SLACK_FACTOR for iterate_to_fp
-        std::vector<unsigned> _id_scratch;
-
-        // _dist_scratch must be > R*GRAPH_SLACK_FACTOR for iterate_to_fp
-        // _dist_scratch should be at least the size of id_scratch
-        std::vector<float> _dist_scratch;
-
-        //  Buffers used in process delete, capacity increases as needed
-        turbo::flat_hash_set<unsigned> _expanded_nodes_set;
-        std::vector<Neighbor> _expanded_nghrs_vec;
-        std::vector<unsigned> _occlude_list_output;
-    };
-
-    //
-    // Scratch space for SSD index based search
-    //
-
-    template<typename T>
-    class SSDQueryScratch {
-    public:
-        T *coord_scratch = nullptr;  // MUST BE AT LEAST [MAX_N_CMPS * data_dim]
-        _u64 coord_idx = 0;            // index of next [data_dim] scratch to use
-
-        char *sector_scratch =
-                nullptr;          // MUST BE AT LEAST [MAX_N_SECTOR_READS * SECTOR_LEN]
-        _u64 sector_idx = 0;  // index of next [SECTOR_LEN] scratch to use
-
-        T *aligned_query_T = nullptr;
-
-        PQScratch<T> *_pq_scratch;
-
-        turbo::flat_hash_set<_u64> visited;
-        NeighborPriorityQueue retset;
-        std::vector<Neighbor> full_retset;
-
-        SSDQueryScratch(size_t aligned_dim, size_t visited_reserve);
-
-        ~SSDQueryScratch();
-
-        void reset();
-    };
-
-    template<typename T>
-    class SSDThreadData {
-    public:
-        SSDQueryScratch<T> scratch;
-        IOContext ctx;
-
-        SSDThreadData(size_t aligned_dim, size_t visited_reserve);
-
-        void clear();
-    };
-
-    //
-    // Class to avoid the hassle of pushing and popping the query scratch.
-    //
-    template<typename T>
-    class ScratchStoreManager {
-    public:
-        ScratchStoreManager(ConcurrentQueue<T *> &query_scratch)
-                : _scratch_pool(query_scratch) {
+//
+// Class to avoid the hassle of pushing and popping the query scratch.
+//
+template <typename T> class ScratchStoreManager
+{
+  public:
+    ScratchStoreManager(ConcurrentQueue<T *> &query_scratch) : _scratch_pool(query_scratch)
+    {
+        _scratch = query_scratch.pop();
+        while (_scratch == nullptr)
+        {
+            query_scratch.wait_for_push_notify();
             _scratch = query_scratch.pop();
-            while (_scratch == nullptr) {
-                query_scratch.wait_for_push_notify();
-                _scratch = query_scratch.pop();
+        }
+    }
+    T *scratch_space()
+    {
+        return _scratch;
+    }
+
+    ~ScratchStoreManager()
+    {
+        _scratch->clear();
+        _scratch_pool.push(_scratch);
+        _scratch_pool.push_notify_all();
+    }
+
+    void destroy()
+    {
+        while (!_scratch_pool.empty())
+        {
+            auto scratch = _scratch_pool.pop();
+            while (scratch == nullptr)
+            {
+                _scratch_pool.wait_for_push_notify();
+                scratch = _scratch_pool.pop();
             }
+            delete scratch;
         }
+    }
 
-        T *scratch_space() {
-            return _scratch;
-        }
-
-        ~ScratchStoreManager() {
-            _scratch->clear();
-            _scratch_pool.push(_scratch);
-            _scratch_pool.push_notify_all();
-        }
-
-        void destroy() {
-            while (!_scratch_pool.empty()) {
-                auto scratch = _scratch_pool.pop();
-                while (scratch == nullptr) {
-                    _scratch_pool.wait_for_push_notify();
-                    scratch = _scratch_pool.pop();
-                }
-                delete scratch;
-            }
-        }
-
-    private:
-        T *_scratch;
-        ConcurrentQueue<T *> &_scratch_pool;
-
-        ScratchStoreManager(const ScratchStoreManager<T> &);
-
-        ScratchStoreManager &operator=(const ScratchStoreManager<T> &);
-    };
-}  // namespace tann
+  private:
+    T *_scratch;
+    ConcurrentQueue<T *> &_scratch_pool;
+    ScratchStoreManager(const ScratchStoreManager<T> &);
+    ScratchStoreManager &operator=(const ScratchStoreManager<T> &);
+};
+} // namespace tann

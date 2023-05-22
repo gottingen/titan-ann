@@ -76,6 +76,7 @@ include(carbin_module)
 
 add_subdirectory(tann)
 
+add_subdirectory(python)
 if (CARBIN_BUILD_TEST)
     add_subdirectory(tests)
 endif ()

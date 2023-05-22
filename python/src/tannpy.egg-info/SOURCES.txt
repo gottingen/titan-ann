@@ -1,0 +1,16 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+python/src/__init__.py
+python/src/_builder.py
+python/src/_common.py
+python/src/_disk_index.py
+python/src/_dynamic_memory_index.py
+python/src/_static_memory_index.py
+python/src/tannpy.egg-info/PKG-INFO
+python/src/tannpy.egg-info/SOURCES.txt
+python/src/tannpy.egg-info/dependency_links.txt
+python/src/tannpy.egg-info/not-zip-safe
+python/src/tannpy.egg-info/requires.txt
+python/src/tannpy.egg-info/top_level.txt
