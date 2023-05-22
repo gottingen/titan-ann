@@ -29,7 +29,7 @@
 #include <cstring>
 #include <queue>
 #include <omp.h>
-#include <mkl/mkl.h>
+#include <mkl.h>
 #include <boost/program_options.hpp>
 #include <unordered_map>
 

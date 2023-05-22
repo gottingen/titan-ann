@@ -16,10 +16,11 @@
 
 find_package(Boost REQUIRED)
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         build_disk_index
-        SRCS
+        SOURCES
         "build_disk_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -32,10 +33,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         build_memory_index
-        SRCS
+        SOURCES
         "build_memory_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -48,10 +50,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         build_stitched_index
-        SRCS
+        SOURCES
         "build_stitched_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -64,10 +67,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         range_search_disk_index
-        SRCS
+        SOURCES
         "range_search_disk_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -80,10 +84,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         search_disk_index
-        SRCS
+        SOURCES
         "search_disk_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -96,10 +101,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         search_memory_index
-        SRCS
+        SOURCES
         "search_memory_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -112,10 +118,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         test_insert_deletes_consolidate
-        SRCS
+        SOURCES
         "test_insert_deletes_consolidate.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -128,10 +135,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         test_streaming_scenario
-        SRCS
+        SOURCES
         "test_streaming_scenario.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -144,10 +152,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         fvecs_to_bin
-        SRCS
+        SOURCES
         "utils/fvecs_to_bin.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -160,10 +169,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         fvecs_to_bvecs
-        SRCS
+        SOURCES
         "utils/fvecs_to_bvecs.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -176,10 +186,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         rand_data_gen
-        SRCS
+        SOURCES
         "utils/rand_data_gen.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -192,10 +203,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         float_bin_to_int8
-        SRCS
+        SOURCES
         "utils/float_bin_to_int8.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -208,10 +220,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         ivecs_to_bin
-        SRCS
+        SOURCES
         "utils/ivecs_to_bin.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -224,10 +237,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         count_bfs_levels
-        SRCS
+        SOURCES
         "utils/count_bfs_levels.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -240,10 +254,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         tsv_to_bin
-        SRCS
+        SOURCES
         "utils/tsv_to_bin.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -256,10 +271,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         bin_to_tsv
-        SRCS
+        SOURCES
         "utils/bin_to_tsv.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -272,10 +288,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         int8_to_float
-        SRCS
+        SOURCES
         "utils/int8_to_float.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -288,10 +305,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         int8_to_float_scale
-        SRCS
+        SOURCES
         "utils/int8_to_float_scale.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -304,10 +322,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         create_disk_layout
-        SRCS
+        SOURCES
         "utils/create_disk_layout.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -320,10 +339,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         compute_groundtruth
-        SRCS
+        SOURCES
         "utils/compute_groundtruth.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -336,10 +356,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         calculate_recall
-        SRCS
+        SOURCES
         "utils/calculate_recall.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -351,10 +372,11 @@ turbo_cc_binary(
         ${MKL_LIBRARIES}
         boost_program_options
 )
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         generate_synthetic_labels
-        SRCS
+        SOURCES
         "utils/generate_synthetic_labels.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -367,10 +389,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         gen_random_slice
-        SRCS
+        SOURCES
         "utils/gen_random_slice.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -383,10 +406,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         generate_pq
-        SRCS
+        SOURCES
         "utils/generate_pq.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -399,10 +423,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         partition_with_ram_budget
-        SRCS
+        SOURCES
         "utils/partition_with_ram_budget.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -415,10 +440,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         simulate_aggregate_recall
-        SRCS
+        SOURCES
         "utils/simulate_aggregate_recall.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -431,10 +457,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         stats_label_data
-        SRCS
+        SOURCES
         "utils/stats_label_data.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -447,10 +474,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         uint8_to_float
-        SRCS
+        SOURCES
         "utils/uint8_to_float.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -464,10 +492,11 @@ turbo_cc_binary(
 )
 
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         uint32_to_uint8
-        SRCS
+        SOURCES
         "utils/uint32_to_uint8.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -480,10 +509,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         vector_analysis
-        SRCS
+        SOURCES
         "utils/vector_analysis.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -496,10 +526,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         merge_shards
-        SRCS
+        SOURCES
         "utils/merge_shards.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -512,10 +543,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         partition_data
-        SRCS
+        SOURCES
         "utils/partition_data.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}

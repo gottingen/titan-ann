@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-#include "mkl/mkl.h"
+#include "mkl.h"
 
 #include "tann/pq.h"
 #include "partition.h"

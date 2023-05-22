@@ -17,19 +17,17 @@
 file(GLOB TANN_SRC "*.cc")
 
 
-turbo_cc_library(
-        NAME
-        tann
-        SRCS
+carbin_cc_library(
+        NAMESPACE tann
+        NAME tann
+        SOURCES
         ${TANN_SRC}
         COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
+        ${CARBIN_DEFAULT_COPTS}
+        ${OpenMP_CXX_FLAGS}
+        ${USER_FLAGS}
         DEPS
-        aio
-        ${TURBO_DYLINK}
-        ${${MKL_LIBRARIES}}
-        turbo
+        ${CARBIN_DEPS_LINK}
+        PUBLIC
 )
 

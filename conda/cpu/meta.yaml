@@ -1,0 +1,53 @@
+
+{% set version = environ.get('GIT_DESCRIBE_TAG').lstrip('v') %}
+{% set number = GIT_DESCRIBE_NUMBER %}
+
+package:
+  name: hercules-pkg
+  version: {{ version }}
+
+build:
+  number: {{ number }}
+
+about:
+  home: https://github.com/gottingen/hercules
+  license: Apache License 2
+  license_family: APACHE
+  license_file: LICENSE
+  summary: Hercules is an ahead of time compiler for a subset of the Python language framework.
+
+source:
+  git_url: ../../
+
+outputs:
+  - name: hercules
+    script: bld.sh   # [not win]
+    script: bld.bat  # [win]
+    build:
+      string: "h{{ GIT_DESCRIBE_HASH }}_{{ number }}"
+      run_exports:
+        - {{ pin_compatible('hercules', exact=True) }}
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - sysroot_linux-64 =2.17  # [linux64]
+        - cmake >=3.20, <=3.23
+        - turbo
+        - pcre
+        - rapidjson
+      host:
+        - sysroot_linux-64 =2.17  # [linux64]
+        - turbo
+        - pcre
+        - rapidjson
+      run:
+        - sysroot_linux-64 =2.17  # [linux64]
+        - turbo
+        - pcre
+        - rapidjson
+    test:
+      commands:
+        - test -f $PREFIX/lib/libhercules.so              # [linux]
+        - test -f $PREFIX/lib/libhercules.dylib           # [osx]
+      #  - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
+      #  - conda inspect objects -p $PREFIX $PKG_NAME   # [osx]

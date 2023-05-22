@@ -18,7 +18,7 @@
 #include <limits>
 #include <malloc.h>
 #include "math_utils.h"
-#include "mkl/mkl.h"
+#include "mkl.h"
 #include "turbo/log/logging.h"
 #include "tann/utils.h"
 
