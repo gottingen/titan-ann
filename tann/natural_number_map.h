@@ -1,31 +1,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-// Copyright 2023 The Tann Authors
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 
 #pragma once
 
 #include <memory>
 #include <type_traits>
 #include <vector>
-#include "turbo/container/dynamic_bitset.h"
+
+#include <boost/dynamic_bitset.hpp>
 
 namespace tann {
     // A map whose key is a natural number (from 0 onwards) and maps to a value.
     // Made as both memory and performance efficient map for scenario such as
-    // TANN location-to-tag map. There, the pool of numbers is consecutive from
+    // Tann location-to-tag map. There, the pool of numbers is consecutive from
     // zero to some max value, and it's expected that most if not all keys from 0
     // up to some current maximum will be present in the map. The memory usage of
     // the map is determined by the largest inserted key since it uses vector as a
@@ -40,16 +27,15 @@ namespace tann {
         static_assert(std::is_trivial<Key>::value, "Key must be a trivial type");
         // Some of the class member prototypes are done with this assumption to
         // minimize verbosity since it's the only use case.
-        static_assert(std::is_trivial<Value>::value,
-                      "Value must be a trivial type");
+        static_assert(std::is_trivial<Value>::value, "Value must be a trivial type");
 
         // Represents a reference to a element in the map. Used while iterating
         // over map entries.
         struct position {
             size_t _key;
-            // The number of keys that were enumerated when iterating through the map
-            // so far. Used to early-terminate enumeration when ithere
-            // are no more entries in the map.
+            // The number of keys that were enumerated when iterating through the
+            // map so far. Used to early-terminate enumeration when ithere are no
+            // more entries in the map.
             size_t _keys_already_enumerated;
 
             // Returns whether it's valid to access the element at this position in
@@ -96,6 +82,9 @@ namespace tann {
         // Values that are in the set have the corresponding bit index set
         // to 1.
         //
-        std::unique_ptr<turbo::dynamic_bitset<>> _values_bitset;
+        // Use a pointer here to allow for forward declaration of dynamic_bitset
+        // in public headers to avoid making boost a dependency for clients
+        // of Tann.
+        std::unique_ptr<boost::dynamic_bitset<>> _values_bitset;
     };
-}  // namespace tann
+} // namespace tann

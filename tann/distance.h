@@ -1,154 +1,223 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license.
-// Copyright 2023 The Tann Authors
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
 #pragma once
+
 #include "turbo/platform/port.h"
+#include <cstring>
 
 namespace tann {
-  enum Metric { L2 = 0, INNER_PRODUCT = 1, COSINE = 2, FAST_L2 = 3 };
+    enum Metric {
+        L2 = 0,
+        INNER_PRODUCT = 1,
+        COSINE = 2,
+        FAST_L2 = 3
+    };
 
-  template<typename T>
-  class Distance {
-   public:
-    virtual float compare(const T *a, const T *b, uint32_t length) const = 0;
-    virtual ~Distance() {
-    }
-  };
+    template<typename T>
+    class Distance {
+    public:
+        TURBO_DLL Distance(tann::Metric dist_metric) : _distance_metric(dist_metric) {
+        }
 
-  class DistanceCosineInt8 : public Distance<int8_t> {
-   public:
-    TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b,
-                                            uint32_t length) const;
-  };
+        // distance comparison function
+        TURBO_DLL virtual float compare(const T *a, const T *b, uint32_t length) const = 0;
 
-  class DistanceL2Int8 : public Distance<int8_t> {
-   public:
-    TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b,
-                                            uint32_t size) const;
-  };
+        // Needed only for COSINE-BYTE and INNER_PRODUCT-BYTE
+        TURBO_DLL virtual float compare(const T *a, const T *b, const float normA, const float normB,
+                                        uint32_t length) const;
 
-  // AVX implementations. Borrowed from HNSW code.
-  class AVXDistanceL2Int8 : public Distance<int8_t> {
-   public:
-    TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b,
-                                            uint32_t length) const;
-  };
+        // For MIPS, normalization adds an extra dimension to the vectors.
+        // This function lets callers know if the normalization process
+        // changes the dimension.
+        TURBO_DLL virtual uint32_t post_normalization_dimension(uint32_t orig_dimension) const;
 
-  class DistanceCosineFloat : public Distance<float> {
-   public:
-    TURBO_DLL virtual float compare(const float *a, const float *b,
-                                            uint32_t length) const;
-  };
+        TURBO_DLL virtual tann::Metric get_metric() const;
 
-  class DistanceL2Float : public Distance<float> {
-   public:
+        // This is for efficiency. If no normalization is required, the callers
+        // can simply ignore the normalize_data_for_build() function.
+        TURBO_DLL virtual bool preprocessing_required() const;
+
+        // Check the preprocessing_required() function before calling this.
+        // Clients can call the function like this:
+        //
+        //  if (metric->preprocessing_required()){
+        //     T* normalized_data_batch;
+        //      Split data into batches of batch_size and for each, call:
+        //       metric->preprocess_base_points(data_batch, batch_size);
+        //
+        //  TODO: This does not take into account the case for SSD inner product
+        //  where the dimensions change after normalization.
+        TURBO_DLL virtual void preprocess_base_points(T *original_data, const size_t orig_dim,
+                                                      const size_t num_points);
+
+        // Invokes normalization for a single vector during search. The scratch space
+        // has to be created by the caller keeping track of the fact that
+        // normalization might change the dimension of the query vector.
+        TURBO_DLL virtual void preprocess_query(const T *query_vec, const size_t query_dim, T *scratch_query);
+
+        // If an algorithm has a requirement that some data be aligned to a certain
+        // boundary it can use this function to indicate that requirement. Currently,
+        // we are setting it to 8 because that works well for AVX2. If we have AVX512
+        // implementations of distance algos, they might have to set this to 16
+        // (depending on how they are implemented)
+        TURBO_DLL virtual size_t get_required_alignment() const;
+
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL virtual ~Distance();
+
+    protected:
+        tann::Metric _distance_metric;
+        size_t _alignment_factor = 8;
+    };
+
+    class DistanceCosineInt8 : public Distance<int8_t> {
+    public:
+        DistanceCosineInt8() : Distance<int8_t>(tann::Metric::COSINE) {
+        }
+
+        TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b, uint32_t length) const;
+    };
+
+    class DistanceL2Int8 : public Distance<int8_t> {
+    public:
+        DistanceL2Int8() : Distance<int8_t>(tann::Metric::L2) {
+        }
+
+        TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b, uint32_t size) const;
+    };
+
+// AVX implementations. Borrowed from HNSW code.
+    class AVXDistanceL2Int8 : public Distance<int8_t> {
+    public:
+        AVXDistanceL2Int8() : Distance<int8_t>(tann::Metric::L2) {
+        }
+
+        TURBO_DLL virtual float compare(const int8_t *a, const int8_t *b, uint32_t length) const;
+    };
+
+    class DistanceCosineFloat : public Distance<float> {
+    public:
+        DistanceCosineFloat() : Distance<float>(tann::Metric::COSINE) {
+        }
+
+        TURBO_DLL virtual float compare(const float *a, const float *b, uint32_t length) const;
+    };
+
+    class DistanceL2Float : public Distance<float> {
+    public:
+        DistanceL2Float() : Distance<float>(tann::Metric::L2) {
+        }
+
 #ifdef _WINDOWS
-    TURBO_DLL virtual float compare(const float *a, const float *b,
-                                            uint32_t size) const;
+        TURBO_DLL virtual float compare(const float *a, const float *b, uint32_t size) const;
 #else
-    TURBO_DLL virtual float compare(const float *a, const float *b,
-                                            uint32_t size) const
-        __attribute__((hot));
+        TURBO_DLL virtual float compare(const float *a, const float *b, uint32_t size) const __attribute__((hot));
+
 #endif
-  };
+    };
 
-  class AVXDistanceL2Float : public Distance<float> {
-   public:
-    TURBO_DLL virtual float compare(const float *a, const float *b,
-                                            uint32_t length) const;
-  };
+    class AVXDistanceL2Float : public Distance<float> {
+    public:
+        AVXDistanceL2Float() : Distance<float>(tann::Metric::L2) {
+        }
 
-  class SlowDistanceL2Float : public Distance<float> {
-   public:
-    TURBO_DLL virtual float compare(const float *a, const float *b,
-                                            uint32_t length) const;
-  };
+        TURBO_DLL virtual float compare(const float *a, const float *b, uint32_t length) const;
+    };
 
-  class SlowDistanceCosineUInt8 : public Distance<uint8_t> {
-   public:
-    TURBO_DLL virtual float compare(const uint8_t *a, const uint8_t *b,
-                                            uint32_t length) const;
-  };
+    template<typename T>
+    class SlowDistanceL2 : public Distance<T> {
+    public:
+        SlowDistanceL2() : Distance<T>(tann::Metric::L2) {
+        }
 
-  class DistanceL2UInt8 : public Distance<uint8_t> {
-   public:
-    TURBO_DLL virtual float compare(const uint8_t *a, const uint8_t *b,
-                                            uint32_t size) const;
-  };
+        TURBO_DLL virtual float compare(const T *a, const T *b, uint32_t length) const;
+    };
 
-  // Simple implementations for non-AVX machines. Compiler can optimize.
-  template<typename T>
-  class SlowDistanceL2Int : public Distance<T> {
-   public:
-    // Implementing here because this is a template function
-    TURBO_DLL virtual float compare(const T *a, const T *b,
-                                            uint32_t length) const {
-      uint32_t result = 0;
-      for (uint32_t i = 0; i < length; i++) {
-        result += ((int32_t) ((int16_t) a[i] - (int16_t) b[i])) *
-                  ((int32_t) ((int16_t) a[i] - (int16_t) b[i]));
-      }
-      return (float) result;
-    }
-  };
+    class SlowDistanceCosineUInt8 : public Distance<uint8_t> {
+    public:
+        SlowDistanceCosineUInt8() : Distance<uint8_t>(tann::Metric::COSINE) {
+        }
 
-  template<typename T>
-  class DistanceInnerProduct : public Distance<T> {
-   public:
-    inline float inner_product(const T *a, const T *b, unsigned size) const;
+        TURBO_DLL virtual float compare(const uint8_t *a, const uint8_t *b, uint32_t length) const;
+    };
 
-    inline float compare(const T *a, const T *b, unsigned size) const {
-      float result = inner_product(a, b, size);
-      //      if (result < 0)
-      //      return std::numeric_limits<float>::max();
-      //      else
-      return -result;
-    }
-  };
+    class DistanceL2UInt8 : public Distance<uint8_t> {
+    public:
+        DistanceL2UInt8() : Distance<uint8_t>(tann::Metric::L2) {
+        }
 
-  template<typename T>
-  class DistanceFastL2
-      : public DistanceInnerProduct<T> {  // currently defined only for float.
-                                          // templated for future use.
-   public:
-    float norm(const T *a, unsigned size) const;
-    float compare(const T *a, const T *b, float norm, unsigned size) const;
-  };
+        TURBO_DLL virtual float compare(const uint8_t *a, const uint8_t *b, uint32_t size) const;
+    };
 
-  class AVXDistanceInnerProductFloat : public Distance<float> {
-   public:
-    TURBO_DLL virtual float compare(const float *a, const float *b,
-                                            uint32_t length) const;
-  };
+    template<typename T>
+    class DistanceInnerProduct : public Distance<T> {
+    public:
+        DistanceInnerProduct() : Distance<T>(tann::Metric::INNER_PRODUCT) {
+        }
 
-  class AVXNormalizedCosineDistanceFloat : public Distance<float> {
-   private:
-    AVXDistanceInnerProductFloat _innerProduct;
+        DistanceInnerProduct(tann::Metric metric) : Distance<T>(metric) {
+        }
 
-   public:
-    TURBO_DLL virtual float compare(const float *a, const float *b,
-                                            uint32_t length) const {
-      // Inner product returns negative values to indicate distance.
-      // This will ensure that cosine is between -1 and 1.
-      return 1.0f + _innerProduct.compare(a, b, length);
-    }
-  };
+        inline float inner_product(const T *a, const T *b, unsigned size) const;
 
-  template<typename T>
-  Distance<T> *get_distance_function(Metric m);
+        inline float compare(const T *a, const T *b, unsigned size) const {
+            float result = inner_product(a, b, size);
+            //      if (result < 0)
+            //      return std::numeric_limits<float>::max();
+            //      else
+            return -result;
+        }
+    };
 
-}  // namespace tann
+    template<typename T>
+    class DistanceFastL2 : public DistanceInnerProduct<T> {
+        // currently defined only for float.
+        // templated for future use.
+    public:
+        DistanceFastL2() : DistanceInnerProduct<T>(tann::Metric::FAST_L2) {
+        }
+
+        float norm(const T *a, unsigned size) const;
+
+        float compare(const T *a, const T *b, float norm, unsigned size) const;
+    };
+
+    class AVXDistanceInnerProductFloat : public Distance<float> {
+    public:
+        AVXDistanceInnerProductFloat() : Distance<float>(tann::Metric::INNER_PRODUCT) {
+        }
+
+        TURBO_DLL virtual float compare(const float *a, const float *b, uint32_t length) const;
+    };
+
+    class AVXNormalizedCosineDistanceFloat : public Distance<float> {
+    private:
+        AVXDistanceInnerProductFloat _innerProduct;
+
+    protected:
+        void normalize_and_copy(const float *a, uint32_t length, float *a_norm) const;
+
+    public:
+        AVXNormalizedCosineDistanceFloat() : Distance<float>(tann::Metric::COSINE) {
+        }
+
+        TURBO_DLL virtual float compare(const float *a, const float *b, uint32_t length) const {
+            // Inner product returns negative values to indicate distance.
+            // This will ensure that cosine is between -1 and 1.
+            return 1.0f + _innerProduct.compare(a, b, length);
+        }
+
+        TURBO_DLL virtual uint32_t post_normalization_dimension(uint32_t orig_dimension) const override;
+
+        TURBO_DLL virtual bool preprocessing_required() const;
+
+        TURBO_DLL virtual void preprocess_base_points(float *original_data, const size_t orig_dim,
+                                                      const size_t num_points) override;
+
+        TURBO_DLL virtual void preprocess_query(const float *query_vec, const size_t query_dim,
+                                                float *scratch_query_vector) override;
+    };
+
+    template<typename T>
+    Distance<T> *get_distance_function(Metric m);
+
+} // namespace tann

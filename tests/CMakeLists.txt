@@ -16,10 +16,11 @@
 
 find_package(Boost REQUIRED)
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         build_disk_index
-        SRCS
+        SOURCES
         "build_disk_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -32,10 +33,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         build_memory_index
-        SRCS
+        SOURCES
         "build_memory_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -48,10 +50,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         build_stitched_index
-        SRCS
+        SOURCES
         "build_stitched_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -64,10 +67,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         range_search_disk_index
-        SRCS
+        SOURCES
         "range_search_disk_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -80,10 +84,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         search_disk_index
-        SRCS
+        SOURCES
         "search_disk_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -96,10 +101,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         search_memory_index
-        SRCS
+        SOURCES
         "search_memory_index.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -112,10 +118,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         test_insert_deletes_consolidate
-        SRCS
+        SOURCES
         "test_insert_deletes_consolidate.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -128,10 +135,11 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
+carbin_cc_binary(
+        NAMESPACE tann
         NAME
         test_streaming_scenario
-        SRCS
+        SOURCES
         "test_streaming_scenario.cc"
         COPTS
         ${TURBO_DEFAULT_COPTS}
@@ -144,386 +152,3 @@ turbo_cc_binary(
         boost_program_options
 )
 
-turbo_cc_binary(
-        NAME
-        fvecs_to_bin
-        SRCS
-        "utils/fvecs_to_bin.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        fvecs_to_bvecs
-        SRCS
-        "utils/fvecs_to_bvecs.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        rand_data_gen
-        SRCS
-        "utils/rand_data_gen.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        float_bin_to_int8
-        SRCS
-        "utils/float_bin_to_int8.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        ivecs_to_bin
-        SRCS
-        "utils/ivecs_to_bin.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        count_bfs_levels
-        SRCS
-        "utils/count_bfs_levels.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        tsv_to_bin
-        SRCS
-        "utils/tsv_to_bin.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        bin_to_tsv
-        SRCS
-        "utils/bin_to_tsv.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        int8_to_float
-        SRCS
-        "utils/int8_to_float.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        int8_to_float_scale
-        SRCS
-        "utils/int8_to_float_scale.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        create_disk_layout
-        SRCS
-        "utils/create_disk_layout.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        compute_groundtruth
-        SRCS
-        "utils/compute_groundtruth.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        calculate_recall
-        SRCS
-        "utils/calculate_recall.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-turbo_cc_binary(
-        NAME
-        generate_synthetic_labels
-        SRCS
-        "utils/generate_synthetic_labels.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        gen_random_slice
-        SRCS
-        "utils/gen_random_slice.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        generate_pq
-        SRCS
-        "utils/generate_pq.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        partition_with_ram_budget
-        SRCS
-        "utils/partition_with_ram_budget.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        simulate_aggregate_recall
-        SRCS
-        "utils/simulate_aggregate_recall.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        stats_label_data
-        SRCS
-        "utils/stats_label_data.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        uint8_to_float
-        SRCS
-        "utils/uint8_to_float.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-
-turbo_cc_binary(
-        NAME
-        uint32_to_uint8
-        SRCS
-        "utils/uint32_to_uint8.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        vector_analysis
-        SRCS
-        "utils/vector_analysis.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        merge_shards
-        SRCS
-        "utils/merge_shards.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)
-
-turbo_cc_binary(
-        NAME
-        partition_data
-        SRCS
-        "utils/partition_data.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
-        ${TURBO_RANDOM_RANDEN_COPTS}
-        ${TURBO_SIMD_FLAGS}
-        DEPS
-        tann::tann
-        ${TURBO_DYLINK}
-        ${MKL_LIBRARIES}
-        boost_program_options
-)

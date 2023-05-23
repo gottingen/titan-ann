@@ -1,19 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-// Copyright 2023 The Tann Authors
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 
 #pragma once
 
@@ -31,13 +17,11 @@ namespace tann {
 
         Neighbor() = default;
 
-        Neighbor(unsigned id, float distance)
-                : id{id}, distance{distance}, expanded(false) {
+        Neighbor(unsigned id, float distance) : id{id}, distance{distance}, expanded(false) {
         }
 
         inline bool operator<(const Neighbor &other) const {
-            return distance < other.distance ||
-                   (distance == other.distance && id < other.id);
+            return distance < other.distance || (distance == other.distance && id < other.id);
         }
 
         inline bool operator==(const Neighbor &other) const {
@@ -49,12 +33,10 @@ namespace tann {
     //            the first Neighbor which is unexpanded.
     class NeighborPriorityQueue {
     public:
-
         NeighborPriorityQueue() : _size(0), _capacity(0), _cur(0) {
         }
 
-        explicit NeighborPriorityQueue(size_t capacity)
-                : _size(0), _capacity(capacity), _cur(0), _data(capacity + 1) {
+        explicit NeighborPriorityQueue(size_t capacity) : _size(0), _capacity(capacity), _cur(0), _data(capacity + 1) {
         }
 
         // Inserts the item ordered into the set up to the sets capacity.
@@ -81,8 +63,7 @@ namespace tann {
             }
 
             if (lo < _capacity) {
-                std::memmove(&_data[lo + 1], &_data[lo],
-                             (_size - lo) * sizeof(Neighbor));
+                std::memmove(&_data[lo + 1], &_data[lo], (_size - lo) * sizeof(Neighbor));
             }
             _data[lo] = {nbr.id, nbr.distance};
             if (_size < _capacity) {
@@ -139,4 +120,4 @@ namespace tann {
         std::vector<Neighbor> _data;
     };
 
-}  // namespace tann
+} // namespace tann

@@ -1,0 +1,55 @@
+
+{% set version = environ.get('GIT_DESCRIBE_TAG').lstrip('v') %}
+{% set number = GIT_DESCRIBE_NUMBER %}
+
+package:
+  name: tann-pkg
+  version: {{ version }}
+
+build:
+  number: {{ number }}
+
+about:
+  home: https://github.com/gottingen/tann
+  license: Apache License 2
+  license_family: APACHE
+  license_file: LICENSE
+  summary: Hercules is an ahead of time compiler for a subset of the Python language framework.
+
+source:
+  git_url: ../
+
+outputs:
+  - name: tann
+    script: bld.sh   # [not win]
+    script: bld.bat  # [win]
+    build:
+      string: "h{{ GIT_DESCRIBE_HASH }}_{{ number }}"
+      run_exports:
+        - {{ pin_compatible('tann', exact=True) }}
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - sysroot_linux-64=2.17 # [linux]
+        - boost
+        - libaio
+        - turbo =0.8.10
+        - mkl-devel  # [x86_64]
+      host:
+        - sysroot_linux-64=2.17 # [linux]
+        - boost
+        - libaio
+        - turbo =0.8.10
+        - mkl-devel  # [x86_64]
+      run:
+        - sysroot_linux-64=2.17 # [linux]
+        - boost
+        - libaio
+        - turbo =0.8.10
+        - mkl-devel  # [x86_64]
+    test:
+      commands:
+        - test -f $PREFIX/lib/libtann.so              # [linux]
+        - test -f $PREFIX/lib/libtann.dylib           # [osx]
+      #  - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
+      #  - conda inspect objects -p $PREFIX $PKG_NAME   # [osx]

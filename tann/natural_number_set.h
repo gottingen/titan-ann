@@ -1,26 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-// Copyright 2023 The Tann Authors
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 
 #pragma once
 
 #include <memory>
 #include <type_traits>
 
-#include "turbo/container/dynamic_bitset.h"
+#include "boost_dynamic_bitset_fwd.h"
 
 namespace tann {
     // A set of natural numbers (from 0 onwards). Made for scenario where the
@@ -36,8 +22,7 @@ namespace tann {
     template<typename T>
     class natural_number_set {
     public:
-        static_assert(std::is_trivial<T>::value,
-                      "Identifier must be a trivial type");
+        static_assert(std::is_trivial<T>::value, "Identifier must be a trivial type");
 
         natural_number_set();
 
@@ -64,7 +49,7 @@ namespace tann {
         //
         // Use a pointer here to allow for forward declaration of dynamic_bitset
         // in public headers to avoid making boost a dependency for clients
-        // of TANN.
-        std::unique_ptr<turbo::dynamic_bitset<>> _values_bitset;
+        // of Tann.
+        std::unique_ptr<boost::dynamic_bitset<>> _values_bitset;
     };
-}  // namespace tann
+} // namespace tann
