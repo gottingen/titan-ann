@@ -59,33 +59,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/conda/bld-py.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/setup.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/_builder.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/_builder.pyi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/_common.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/_disk_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/_dynamic_memory_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/_static_memory_index.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/py.typed" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/tannpy/tann_bindings.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bakCMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake/carbin_option.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/carbin_option.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conda/bld.sh" beforeDir="false" afterPath="$PROJECT_DIR$/conda/bld.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conda/meta.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/meta.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/python/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/_builder.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/_builder.pyi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/_common.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/_disk_index.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/_dynamic_memory_index.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/_static_memory_index.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/py.typed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/src/tann_bindings.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -370,7 +345,7 @@
       <workItem from="1684794315294" duration="1256000" />
       <workItem from="1684796857584" duration="76000" />
       <workItem from="1684796936228" duration="33000" />
-      <workItem from="1684900963999" duration="3390000" />
+      <workItem from="1684900963999" duration="3451000" />
     </task>
     <servers />
   </component>

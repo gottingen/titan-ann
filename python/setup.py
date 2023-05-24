@@ -9,7 +9,7 @@ import os
 import shutil
 import platform
 
-# make the faiss python package dir
+# make the tann python package dir
 shutil.rmtree("tannpy", ignore_errors=True)
 os.mkdir("tannpy")
 shutil.copytree("tannpy", "tannpy")
@@ -22,7 +22,7 @@ code for evaluation and parameter tuning.
 """
 setup(
     name='tannpy',
-    version='0.2.0',
+    version='0.3.0',
     description='A library for efficient similarity search and clustering of dense vectors',
     long_description=long_description,
     url='https://github.com/gottingen/titan-ann',
