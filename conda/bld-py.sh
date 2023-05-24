@@ -3,7 +3,7 @@ set -e
 
 cmake -B buildpy_${PY_VER} -DCMAKE_BUILD_TYPE=Release \
                            -DPYTHON_EXECUTABLE=$PYTHON \
-                           -Dtann_ROOT=_libtann_stage/
+                           -Dtann_ROOT=_libtann_stage/ \
                            -DENABLE_PYTHON=OFF python
 
 cmake --build buildpy_${PY_VER}

@@ -24,9 +24,10 @@ execute_process(COMMAND ${Python3_EXECUTABLE} -c "import numpy; print(numpy.get_
         OUTPUT_VARIABLE _numpy_include
         OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ECHO STDOUT)
 
+
 find_package(MKL REQUIRED)
 find_package(OpenMP REQUIRED)
-find_package(AIO REQUIRED)
+#find_package(AIO REQUIRED)
 set(CARBIN_SYSTEM_DYLINK)
 if (APPLE)
     find_library(CoreFoundation CoreFoundation)
@@ -46,7 +47,7 @@ set(CARBIN_DEPS_LINK
         ${TURBO_LIB}
         ${CARBIN_SYSTEM_DYLINK}
         ${MKL_LIBRARIES}
-        ${AIO_LIBRARIES}
+        aio
         OpenMP::OpenMP_CXX
         )
 # pybind11_add_module(tannpy MODULE src/tann_bindings.cpp)
