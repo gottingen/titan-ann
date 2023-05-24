@@ -7,7 +7,7 @@ cmake -B buildpy_${PY_VER} -DCMAKE_BUILD_TYPE=Release \
                            -DENABLE_PYTHON=OFF python
 
 cmake --build buildpy_${PY_VER}
-nkdir -p buildpy_${PY_VER}/output/tannpy
+mkdir -p buildpy_${PY_VER}/output/tannpy
 cp -r python/tannpy/* buildpy_${PY_VER}/output/tannpy/
 cp -r python/setup.py buildpy_${PY_VER}/output/setup.py
 cp buildpy_${PY_VER}/*.so buildpy_${PY_VER}/output/tannpy/
