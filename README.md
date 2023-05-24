@@ -1,6 +1,17 @@
 # titan-ann
 ann engine
 
+# install
+
+```shell
+conda install tannpy
+```
+
+run test
+```shell
+cd test/python
+python -m unittest
+```
 # test data source
 * [sift](http://corpus-texmex.irisa.fr/)
 
