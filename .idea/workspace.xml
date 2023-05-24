@@ -38,9 +38,7 @@
       <config projectName="tann" targetName="range_search_disk_index" />
       <config projectName="tann" targetName="rand_data_gen" />
       <config projectName="tann" targetName="search_memory_index" />
-      <config projectName="tann" targetName="bin_to_fvecs" />
       <config projectName="tann" targetName="create_disk_layout" />
-      <config projectName="tann" targetName="_tannpy" />
       <config projectName="tann" targetName="fvecs_to_bin" />
       <config projectName="tann" targetName="fvecs_to_bvecs" />
       <config projectName="tann" targetName="partition_data" />
@@ -61,7 +59,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/conda/bld-py.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/setup.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/_builder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/_builder.pyi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/_common.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/_disk_index.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/_dynamic_memory_index.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/_static_memory_index.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/py.typed" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/tannpy/tann_bindings.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bakCMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/carbin_option.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/carbin_option.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/bld.sh" beforeDir="false" afterPath="$PROJECT_DIR$/conda/bld.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/meta.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/meta.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/python/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/_builder.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/_builder.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/_common.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/_disk_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/_dynamic_memory_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/_static_memory_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/py.typed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/src/tann_bindings.cc" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,8 +99,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="CMakeLists.txt" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -99,24 +123,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann/conda",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/ubuntu/github/gottingen/titan-ann/conda&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/conda" />
@@ -131,21 +155,6 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.tann">
-    <configuration name="_tannpy" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="_tannpy" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="bin_to_fvecs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_fvecs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_fvecs">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="bin_to_tsv" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_tsv" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_tsv">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -312,7 +321,6 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application._tannpy" />
       <item itemvalue="CMake Application.tann" />
       <item itemvalue="CMake Application.bin_to_tsv" />
       <item itemvalue="CMake Application.build_disk_index" />
@@ -342,7 +350,6 @@
       <item itemvalue="CMake Application.stats_label_data" />
       <item itemvalue="CMake Application.test_insert_deletes_consolidate" />
       <item itemvalue="CMake Application.test_streaming_scenario" />
-      <item itemvalue="CMake Application.bin_to_fvecs" />
       <item itemvalue="CMake Application.tsv_to_bin" />
       <item itemvalue="CMake Application.uint32_to_uint8" />
       <item itemvalue="CMake Application.uint8_to_float" />
@@ -360,6 +367,10 @@
       <workItem from="1683739296651" duration="994000" />
       <workItem from="1683745055368" duration="1539000" />
       <workItem from="1683826420747" duration="7500000" />
+      <workItem from="1684794315294" duration="1256000" />
+      <workItem from="1684796857584" duration="76000" />
+      <workItem from="1684796936228" duration="33000" />
+      <workItem from="1684900963999" duration="3390000" />
     </task>
     <servers />
   </component>

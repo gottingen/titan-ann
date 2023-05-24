@@ -1,5 +1,13 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT license.
+cmake_minimum_required(VERSION 3.20)
+
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/modules)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/package)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/recipes)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/simd)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../copts)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -24,12 +32,13 @@ execute_process(COMMAND ${Python3_EXECUTABLE} -c "import numpy; print(numpy.get_
 # pybind11_add_module(tannpy MODULE src/tann_bindings.cpp)
 # the following is fairly synonymous with pybind11_add_module, but we need more target_link_libraries
 # see https://pybind11.readthedocs.io/en/latest/compiling.html#advanced-interface-library-targets for more details
-add_library(_tannpy MODULE src/tann_bindings.cc)
+add_library(_tannpy MODULE tannpy/tann_bindings.cc)
 
 if (MSVC)
     target_compile_options(_tannpy PRIVATE /U_WINDLL)
 endif()
 
+find_package(tann REQUIRED)
 target_link_libraries(
         _tannpy
         PRIVATE
