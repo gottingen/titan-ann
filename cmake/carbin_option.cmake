@@ -60,4 +60,4 @@ endif()
 ######################################
 
 option(ENABLE_CUDA "" OFF)
-option(ENABLE_PYTHON "" ON)
+option(ENABLE_PYTHON "" OFF)

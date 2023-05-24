@@ -2,14 +2,8 @@
 set -e
 
 cmake -B buildpy_${PY_VER} -DCMAKE_BUILD_TYPE=Release \
-                           -DCARBIN_BUILD_TEST=OFF \
-                           -DCARBIN_BUILD_BENCHMARK=OFF \
-                           -DCARBIN_BUILD_EXAMPLES=OFF \
-                           -DCARBIN_USE_CXX11_ABI=ON \
-                           -DBUILD_SHARED_LIBRARY=ON \
-                           -DCMAKE_INSTALL_LIBDIR=lib \
-                           -DBUILD_STATIC_LIBRARY=OFF \
                            -DPYTHON_EXECUTABLE=$PYTHON \
+                           -Dtann_ROOT=_libtann_stage/
                            -DENABLE_PYTHON=OFF .
 
 cmake --build buildpy_${PY_VER}
