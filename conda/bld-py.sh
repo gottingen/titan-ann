@@ -11,5 +11,5 @@ cp -r python/tannpy buildpy_${PY_VER}/output
 cp -r python/setup.py buildpy_${PY_VER}/output
 
 cd buildpy_${PY_VER}/output
-cp buildpy_${PY_VER}/python/*.so tannpy
+cp buildpy_${PY_VER}/*.so tannpy
 $PYTHON setup.py install --single-version-externally-managed --record=record.txt --prefix=$PREFIX
