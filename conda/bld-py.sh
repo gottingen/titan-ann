@@ -9,7 +9,7 @@ cmake -B buildpy_${PY_VER} -DCMAKE_BUILD_TYPE=Release \
 cmake --build buildpy_${PY_VER}
 cp -r python/tannpy buildpy_${PY_VER}/output
 cp -r python/setup.py buildpy_${PY_VER}/output
-
+cp buildpy_${PY_VER}/*.so buildpy_${PY_VER}/output/tannpy
 cd buildpy_${PY_VER}/output
-cp buildpy_${PY_VER}/*.so tannpy
+
 $PYTHON setup.py install --single-version-externally-managed --record=record.txt --prefix=$PREFIX
