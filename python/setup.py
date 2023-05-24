@@ -5,14 +5,7 @@
 
 from __future__ import print_function
 from setuptools import setup, find_packages
-import os
-import shutil
-import platform
 
-# make the tann python package dir
-shutil.rmtree("tannpy", ignore_errors=True)
-os.mkdir("tannpy")
-shutil.copytree("tannpy", "tannpy")
 
 long_description="""
 tann is a library for efficient similarity search and clustering of dense
