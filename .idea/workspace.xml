@@ -60,7 +60,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conda/conda_build_config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/conda_build_config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/bld-py.sh" beforeDir="false" afterPath="$PROJECT_DIR$/conda/bld-py.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/conda/meta.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/meta.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -346,7 +346,7 @@
       <workItem from="1684794315294" duration="1256000" />
       <workItem from="1684796857584" duration="76000" />
       <workItem from="1684796936228" duration="33000" />
-      <workItem from="1684900963999" duration="4456000" />
+      <workItem from="1684900963999" duration="5164000" />
     </task>
     <servers />
   </component>

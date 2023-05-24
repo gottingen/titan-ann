@@ -64,6 +64,7 @@ outputs:
         - python {{ python }}
         - sysroot_linux-64=2.17 # [linux]
         - libaio
+        - numpy
         - pybind11
         - turbo =0.8.10
         - mkl-devel  # [x86_64]
@@ -72,6 +73,7 @@ outputs:
         - python {{ python }}
         - pybind11
         - libaio
+        - numpy
         - turbo =0.8.10
         - mkl-devel  # [x86_64]
         - {{ pin_subpackage('tann', exact=True) }}
@@ -80,6 +82,7 @@ outputs:
         - python {{ python }}
         - pybind11
         - libaio
+        - numpy
         - turbo =0.8.10
         - mkl-devel  # [x86_64]
         - {{ pin_subpackage('tann', exact=True) }}

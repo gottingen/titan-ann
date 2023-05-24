@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cmake -B buildpy_${PY_VER}  python
+cmake -B buildpy_${PY_VER} -DPython_EXECUTABLE=$PYTHON python
 
 cmake --build buildpy_${PY_VER}
 cp -r python/tannpy buildpy_${PY_VER}/python
