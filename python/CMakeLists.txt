@@ -1,14 +1,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT license.
 cmake_minimum_required(VERSION 3.20)
-project(tannpy CXX)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/modules)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/package)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/recipes)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/simd)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../copts)
-include(carbin_module)
+
 set(CMAKE_CXX_STANDARD 17)
 
 if (PYTHON_EXECUTABLE)
@@ -38,7 +31,6 @@ if (MSVC)
     target_compile_options(_tannpy PRIVATE /U_WINDLL)
 endif()
 
-find_package(tann REQUIRED)
 target_link_libraries(
         _tannpy
         PRIVATE
