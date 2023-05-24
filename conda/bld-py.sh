@@ -11,5 +11,6 @@ cp -r python/tannpy/* buildpy_${PY_VER}/output/tannpy/
 cp -r python/setup.py buildpy_${PY_VER}/output/setup.py
 cp buildpy_${PY_VER}/*.so buildpy_${PY_VER}/output/tannpy/
 cd buildpy_${PY_VER}/output
-
+find . -name "__pycache__" -type d -print
+find . -name "__pycache__" -type d -print | xargs rm -rf
 $PYTHON setup.py install --single-version-externally-managed --record=record.txt --prefix=$PREFIX
