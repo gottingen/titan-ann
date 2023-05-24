@@ -38,9 +38,7 @@
       <config projectName="tann" targetName="range_search_disk_index" />
       <config projectName="tann" targetName="rand_data_gen" />
       <config projectName="tann" targetName="search_memory_index" />
-      <config projectName="tann" targetName="bin_to_fvecs" />
       <config projectName="tann" targetName="create_disk_layout" />
-      <config projectName="tann" targetName="_tannpy" />
       <config projectName="tann" targetName="fvecs_to_bin" />
       <config projectName="tann" targetName="fvecs_to_bvecs" />
       <config projectName="tann" targetName="partition_data" />
@@ -62,6 +60,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,8 +74,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="CMakeLists.txt" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -107,7 +106,7 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann/conda",
+    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann/python",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -119,11 +118,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/python" />
       <recent name="$PROJECT_DIR$/conda" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/tests/utils" />
       <recent name="$PROJECT_DIR$/tests" />
-      <recent name="$PROJECT_DIR$/tann" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tools" />
@@ -131,21 +130,6 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.tann">
-    <configuration name="_tannpy" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="_tannpy" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="bin_to_fvecs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_fvecs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_fvecs">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="bin_to_tsv" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_tsv" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_tsv">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -312,7 +296,6 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application._tannpy" />
       <item itemvalue="CMake Application.tann" />
       <item itemvalue="CMake Application.bin_to_tsv" />
       <item itemvalue="CMake Application.build_disk_index" />
@@ -342,7 +325,6 @@
       <item itemvalue="CMake Application.stats_label_data" />
       <item itemvalue="CMake Application.test_insert_deletes_consolidate" />
       <item itemvalue="CMake Application.test_streaming_scenario" />
-      <item itemvalue="CMake Application.bin_to_fvecs" />
       <item itemvalue="CMake Application.tsv_to_bin" />
       <item itemvalue="CMake Application.uint32_to_uint8" />
       <item itemvalue="CMake Application.uint8_to_float" />
@@ -360,6 +342,10 @@
       <workItem from="1683739296651" duration="994000" />
       <workItem from="1683745055368" duration="1539000" />
       <workItem from="1683826420747" duration="7500000" />
+      <workItem from="1684794315294" duration="1256000" />
+      <workItem from="1684796857584" duration="76000" />
+      <workItem from="1684796936228" duration="33000" />
+      <workItem from="1684900963999" duration="16732000" />
     </task>
     <servers />
   </component>

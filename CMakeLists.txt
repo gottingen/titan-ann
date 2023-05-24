@@ -77,7 +77,10 @@ include(carbin_module)
 add_subdirectory(tann)
 add_subdirectory(tools)
 
-#add_subdirectory(python)
+if(ENABLE_PYTHON)
+    add_subdirectory(python)
+endif ()
+
 if (CARBIN_BUILD_TEST)
     add_subdirectory(tests)
 endif ()
