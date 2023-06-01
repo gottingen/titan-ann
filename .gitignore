@@ -37,3 +37,5 @@ build
 cmake-build-debug
 dist
 __pycache__
+.idea
+
