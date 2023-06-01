@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/index.h"
-#include "tann/math_utils.h"
-#include "tann/cached_io.h"
-#include "tann/partition.h"
+#include "tann/graph/index.h"
+#include "tann/graph/math_utils.h"
+#include "tann/graph/cached_io.h"
+#include "tann/graph/partition.h"
 
 // DEPRECATED: NEED TO REPROGRAM
 

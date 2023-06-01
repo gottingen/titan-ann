@@ -8,7 +8,7 @@
 #include <random>
 #include <string>
 #include <tuple>
-#include "tann/filter_utils.h"
+#include "tann/graph/filter_utils.h"
 #include <omp.h>
 
 #ifndef _WINDOWS
@@ -17,10 +17,10 @@
 
 #endif
 
-#include "tann/index.h"
-#include "tann/memory_mapper.h"
-#include "tann/parameters.h"
-#include "tann/utils.h"
+#include "tann/graph/index.h"
+#include "tann/graph/memory_mapper.h"
+#include "tann/graph/parameters.h"
+#include "tann/graph/utils.h"
 
 namespace po = boost::program_options;
 typedef std::tuple<std::vector<std::vector<uint32_t>>, uint64_t> stitch_indices_return_values;

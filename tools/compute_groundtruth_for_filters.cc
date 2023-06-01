@@ -29,8 +29,8 @@
 
 #endif
 
-#include "tann/filter_utils.h"
-#include "tann/utils.h"
+#include "tann/graph/filter_utils.h"
+#include "tann/graph/utils.h"
 
 // WORKS FOR UPTO 2 BILLION POINTS (as we use INT INSTEAD OF UNSIGNED)
 

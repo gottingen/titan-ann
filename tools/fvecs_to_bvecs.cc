@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #include <iostream>
-#include "tann/utils.h"
+#include "tann/graph/utils.h"
 
 void block_convert(std::ifstream &reader, std::ofstream &writer, float *read_buf, uint8_t *write_buf, size_t npts,
                    size_t ndims) {

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #include <iostream>
-#include "tann/utils.h"
+#include "tann/graph/utils.h"
 
 // Convert float types
 void block_convert_float(std::ifstream &reader, std::ofstream &writer, float *read_buf, float *write_buf, size_t npts,

@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-#include "tann/disk_utils.h"
-#include "tann/cached_io.h"
-#include "tann/utils.h"
+#include "tann/graph/disk_utils.h"
+#include "tann/graph/cached_io.h"
+#include "tann/graph/utils.h"
 
 int main(int argc, char **argv) {
     if (argc != 9) {

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #include <iostream>
-#include "tann/utils.h"
+#include "tann/graph/utils.h"
 
 void block_convert_float(std::ifstream &reader, std::ofstream &writer, size_t npts, size_t ndims) {
     auto read_buf = new float[npts * (ndims + 1)];

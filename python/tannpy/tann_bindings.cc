@@ -15,13 +15,13 @@
 #ifdef _WINDOWS
 #include "tann/windows_aligned_file_reader.h"
 #else
-#include "tann/linux_aligned_file_reader.h"
+#include "tann/graph/linux_aligned_file_reader.h"
 #endif
 
-#include "tann/disk_utils.h"
-#include "tann/index.h"
-#include "tann/pq_flash_index.h"
-#include "tann/utils.h"
+#include "tann/graph/disk_utils.h"
+#include "tann/graph/index.h"
+#include "tann/graph/pq_flash_index.h"
+#include "tann/graph/utils.h"
 
 PYBIND11_MAKE_OPAQUE(std::vector<uint32_t>);
 PYBIND11_MAKE_OPAQUE(std::vector<float>);

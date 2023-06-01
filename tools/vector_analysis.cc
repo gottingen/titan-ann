@@ -17,8 +17,8 @@
 #include <time.h>
 #include <typeinfo>
 
-#include "tann/partition.h"
-#include "tann/utils.h"
+#include "tann/graph/partition.h"
+#include "tann/graph/utils.h"
 
 template<typename T>
 int analyze_norm(std::string base_file) {

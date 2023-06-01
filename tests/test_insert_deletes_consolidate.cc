@@ -1,16 +1,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/index.h"
+#include "tann/graph/index.h"
 #include <numeric>
 #include <omp.h>
 #include <string.h>
 #include <time.h>
-#include "tann/timer.h"
+#include "tann/graph/timer.h"
 #include <boost/program_options.hpp>
 #include <future>
 
-#include "tann/utils.h"
+#include "tann/graph/utils.h"
 
 #ifndef _WINDOWS
 #include <sys/mman.h>
@@ -18,7 +18,7 @@
 #include <unistd.h>
 #endif
 
-#include "tann/memory_mapper.h"
+#include "tann/graph/memory_mapper.h"
 
 namespace po = boost::program_options;
 

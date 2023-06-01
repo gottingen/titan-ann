@@ -1,24 +1,24 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/common_includes.h"
+#include "tann/graph/common_includes.h"
 #include <boost/program_options.hpp>
 
-#include "tann/index.h"
-#include "tann/disk_utils.h"
-#include "tann/math_utils.h"
-#include "tann/memory_mapper.h"
-#include "tann/partition.h"
-#include "tann/pq_flash_index.h"
-#include "tann/timer.h"
-#include "tann/percentile_stats.h"
+#include "tann/graph/index.h"
+#include "tann/graph/disk_utils.h"
+#include "tann/graph/math_utils.h"
+#include "tann/graph/memory_mapper.h"
+#include "tann/graph/partition.h"
+#include "tann/graph/pq_flash_index.h"
+#include "tann/graph/timer.h"
+#include "tann/graph/percentile_stats.h"
 
 #ifndef _WINDOWS
 
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "tann/linux_aligned_file_reader.h"
+#include "tann/graph/linux_aligned_file_reader.h"
 
 #else
 #ifdef USE_BING_INFRA

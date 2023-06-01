@@ -5,8 +5,8 @@
 #include <cstring>
 #include <boost/program_options.hpp>
 
-#include "tann/index.h"
-#include "tann/utils.h"
+#include "tann/graph/index.h"
+#include "tann/graph/utils.h"
 
 #ifndef _WINDOWS
 
@@ -17,8 +17,8 @@
 #include <Windows.h>
 #endif
 
-#include "tann/memory_mapper.h"
-#include "tann/ann_exception.h"
+#include "tann/graph/memory_mapper.h"
+#include "tann/graph/ann_exception.h"
 
 namespace po = boost::program_options;
 

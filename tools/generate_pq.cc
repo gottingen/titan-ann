@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/math_utils.h"
-#include "tann/pq.h"
-#include "tann/partition.h"
+#include "tann/graph/math_utils.h"
+#include "tann/graph/pq.h"
+#include "tann/graph/partition.h"
 
 #define KMEANS_ITERS_FOR_PQ 15
 

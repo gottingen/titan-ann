@@ -6,7 +6,7 @@
 #include <boost/program_options.hpp>
 #include <math.h>
 #include <cmath>
-#include "tann/utils.h"
+#include "tann/graph/utils.h"
 
 namespace po = boost::program_options;
 

@@ -19,9 +19,9 @@
 
 #endif
 
-#include "tann/utils.h"
-#include "tann/index.h"
-#include "tann/memory_mapper.h"
+#include "tann/graph/utils.h"
+#include "tann/graph/index.h"
+#include "tann/graph/memory_mapper.h"
 
 namespace po = boost::program_options;
 

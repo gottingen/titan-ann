@@ -4,11 +4,11 @@
 #include <omp.h>
 #include <boost/program_options.hpp>
 
-#include "tann/utils.h"
-#include "tann/disk_utils.h"
-#include "tann/math_utils.h"
-#include "tann/index.h"
-#include "tann/partition.h"
+#include "tann/graph/utils.h"
+#include "tann/graph/disk_utils.h"
+#include "tann/graph/math_utils.h"
+#include "tann/graph/index.h"
+#include "tann/graph/partition.h"
 
 namespace po = boost::program_options;
 

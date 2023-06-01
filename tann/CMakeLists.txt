@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-file(GLOB TANN_SRC "*.cc")
+file(GLOB_RECURSE TANN_SRC "*.cc")
 
 
 carbin_cc_library(

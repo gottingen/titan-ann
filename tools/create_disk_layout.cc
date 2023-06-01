@@ -8,9 +8,9 @@
 #include <limits>
 #include <vector>
 
-#include "tann/utils.h"
-#include "tann/disk_utils.h"
-#include "tann/cached_io.h"
+#include "tann/graph/utils.h"
+#include "tann/graph/disk_utils.h"
+#include "tann/graph/cached_io.h"
 
 template<typename T>
 int create_disk_layout(char **argv) {

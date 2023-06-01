@@ -16,7 +16,7 @@
 #include <set>
 #include <boost/program_options.hpp>
 
-#include "tann/utils.h"
+#include "tann/graph/utils.h"
 
 #ifndef _WINDOWS
 

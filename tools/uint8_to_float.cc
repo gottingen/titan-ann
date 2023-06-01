@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #include <iostream>
-#include "tann/utils.h"
+#include "tann/graph/utils.h"
 
 int main(int argc, char **argv) {
     if (argc != 3) {

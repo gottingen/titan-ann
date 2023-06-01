@@ -12,8 +12,8 @@
 #include <map>
 #include <sstream>
 #include <string>
-#include "tann/partition.h"
-#include "tann/utils.h"
+#include "tann/graph/partition.h"
+#include "tann/graph/utils.h"
 
 #include <fcntl.h>
 #include <sys/stat.h>
