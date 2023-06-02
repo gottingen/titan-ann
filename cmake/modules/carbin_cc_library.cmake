@@ -173,9 +173,9 @@ function(carbin_cc_library)
         add_library(${CARBIN_CC_LIB_NAME} INTERFACE)
         add_library(${CARBIN_CC_LIB_NAMESPACE}::${CARBIN_CC_LIB_NAME} ALIAS ${CARBIN_CC_LIB_NAME})
 
-        target_compile_options(${CARBIN_CC_LIB_NAME}_OBJ PRIVATE ${CARBIN_CC_LIB_COPTS})
+        target_compile_options(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_COPTS})
 
-        target_link_libraries(${CARBIN_CC_LIB_NAME}_OBJ PRIVATE ${CARBIN_CC_LIB_DEPS})
+        target_link_libraries(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_DEPS})
 
         target_include_directories(${CARBIN_CC_LIB_NAME} ${CARBIN_INTERNAL_INCLUDE_WARNING_GUARD}
                 PUBLIC

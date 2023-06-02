@@ -85,6 +85,10 @@ if (CARBIN_BUILD_TEST)
     add_subdirectory(tests)
 endif ()
 
+if (CARBIN_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif ()
+
 install(DIRECTORY ${PROJECT_NAME}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING

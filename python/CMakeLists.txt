@@ -65,7 +65,7 @@ target_link_libraries(
         pybind11::module
         pybind11::lto
         pybind11::windows_extras
-        tann::tann
+        tann::graph
         ${CARBIN_DEPS_LINK}
 )
 

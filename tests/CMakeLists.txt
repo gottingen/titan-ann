@@ -27,7 +27,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options
@@ -44,7 +44,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options
@@ -61,7 +61,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options
@@ -78,7 +78,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options
@@ -95,7 +95,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options
@@ -112,7 +112,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options
@@ -129,7 +129,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options
@@ -146,7 +146,7 @@ carbin_cc_binary(
         ${TURBO_RANDOM_RANDEN_COPTS}
         ${TURBO_SIMD_FLAGS}
         DEPS
-        tann::tann
+        tann::graph
         ${TURBO_DYLINK}
         ${MKL_LIBRARIES}
         boost_program_options

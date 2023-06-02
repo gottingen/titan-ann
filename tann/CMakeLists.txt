@@ -14,14 +14,14 @@
 # limitations under the License.
 #
 
-file(GLOB_RECURSE TANN_SRC "*.cc")
+file(GLOB GRAPH_SRC "graph/*.cc")
 
 
 carbin_cc_library(
         NAMESPACE tann
-        NAME tann
+        NAME graph
         SOURCES
-        ${TANN_SRC}
+        ${GRAPH_SRC}
         COPTS
         ${CARBIN_DEFAULT_COPTS}
         ${OpenMP_CXX_FLAGS}
@@ -31,3 +31,20 @@ carbin_cc_library(
         PUBLIC
 )
 
+file(GLOB_RECURSE NGT_SRC "ngt/*.cc")
+
+configure_file(${PROJECT_SOURCE_DIR}/tann/ngt/defines.h.in ${PROJECT_BINARY_DIR}/tann/ngt/defines.h)
+
+carbin_cc_library(
+        NAMESPACE tann
+        NAME ngt
+        SOURCES
+        ${NGT_SRC}
+        COPTS
+        ${CARBIN_DEFAULT_COPTS}
+        ${OpenMP_CXX_FLAGS}
+        ${CARBIN_SIMD_FLAGS} -march=haswell
+        DEPS
+        ${CARBIN_DEPS_LINK}
+        PUBLIC
+)

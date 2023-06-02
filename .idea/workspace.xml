@@ -12,12 +12,14 @@
   <component name="CMakeRunConfigurationManager">
     <generated>
       <config projectName="tann" targetName="gen_random_slice" />
+      <config projectName="tann" targetName="qbg-capi" />
       <config projectName="tann" targetName="test_insert_deletes_consolidate" />
       <config projectName="tann" targetName="test_streaming_scenario" />
       <config projectName="tann" targetName="build_memory_index" />
       <config projectName="tann" targetName="float_bin_to_int8" />
       <config projectName="tann" targetName="partition_with_ram_budget" />
       <config projectName="tann" targetName="count_bfs_levels" />
+      <config projectName="tann" targetName="hamming-uint8" />
       <config projectName="tann" targetName="uint32_to_uint8" />
       <config projectName="tann" targetName="generate_synthetic_labels" />
       <config projectName="tann" targetName="uint8_to_float" />
@@ -26,23 +28,30 @@
       <config projectName="tann" targetName="calculate_recall" />
       <config projectName="tann" targetName="tsv_to_bin" />
       <config projectName="tann" targetName="stats_label_data" />
+      <config projectName="tann" targetName="cosine-float" />
       <config projectName="tann" targetName="ivecs_to_bin" />
       <config projectName="tann" targetName="search_disk_index" />
       <config projectName="tann" targetName="simulate_aggregate_recall" />
       <config projectName="tann" targetName="compute_groundtruth" />
       <config projectName="tann" targetName="int8_to_float_scale" />
       <config projectName="tann" targetName="vector_analysis" />
+      <config projectName="tann" targetName="ngt" />
       <config projectName="tann" targetName="build_stitched_index" />
       <config projectName="tann" targetName="int8_to_float" />
-      <config projectName="tann" targetName="tann" />
+      <config projectName="tann" targetName="jaccard-sparse" />
+      <config projectName="tann" targetName="l2-uint8-range-search" />
       <config projectName="tann" targetName="range_search_disk_index" />
+      <config projectName="tann" targetName="graph" />
       <config projectName="tann" targetName="rand_data_gen" />
       <config projectName="tann" targetName="search_memory_index" />
       <config projectName="tann" targetName="create_disk_layout" />
       <config projectName="tann" targetName="fvecs_to_bin" />
+      <config projectName="tann" targetName="qg-l2-float" />
       <config projectName="tann" targetName="fvecs_to_bvecs" />
       <config projectName="tann" targetName="partition_data" />
       <config projectName="tann" targetName="merge_shards" />
+      <config projectName="tann" targetName="l2-uint8" />
+      <config projectName="tann" targetName="qg-capi" />
       <config projectName="tann" targetName="build_disk_index" />
     </generated>
   </component>
@@ -59,8 +68,91 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/lorentz-input-5k.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/lorentz-query.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/lorentz_input_generator.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/poincare-input-20.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/poincare-input-5k.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/poincare-query.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/poincare_input_generator.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/sift-dataset-5k.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/data/sift-query-3.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/cosine-float.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/hamming-uint8.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/jaccard-sparse.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/l2-uint8-range-search.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/l2-uint8.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/qbg-capi.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/qg-capi.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/ngt/qg-l2-float.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/hnsw/bruteforce.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/hnsw/hnswalg.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/hnsw/hnswlib.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/hnsw/space_ip.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/hnsw/space_l2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/hnsw/visited_list_pool.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/array_file.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/array_file.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/capi.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/capi.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/clustering.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/command.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/command.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/common.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/defines.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/defines.h.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/graph.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/graph.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/graph_optimizer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/graph_reconstructor.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/half.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/hash_based_boolean_set.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/index.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/index.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/mmap_manager.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/mmap_manager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/mmap_manager_defs.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/mmap_manager_exception.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/mmap_manager_impl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/capi.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/capi.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/hierarchical_kmeans.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/matrix.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/object_file.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/optimizer.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/optimizer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/qbg_cli.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/qbg_cli.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/quantized_blob_graph.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/quantized_graph.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/quantized_graph.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/ngtq/quantizer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/node.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/node.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/object_repository.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/object_space.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/object_space_repository.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/optimizer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/primitive_comparator.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/shared_memory_allocator.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/shared_memory_allocator.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/thread.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/thread.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/tree.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/ngt/tree.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/carbin_cxx_config.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/carbin_cxx_config.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_cc_library.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/modules/carbin_cc_library.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/python/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tann/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/graph/distance.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/graph/distance.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tools/CMakeLists.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,8 +166,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="CMakeLists.txt" />
         <option value="Python Script" />
+        <option value="CMakeLists.txt" />
       </list>
     </option>
   </component>
@@ -107,7 +199,7 @@
     "cf.advertisement.text.has.clang-format": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann/python",
+    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann/examples/ngt",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -119,11 +211,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/examples/ngt" />
+      <recent name="$PROJECT_DIR$/examples" />
+      <recent name="$PROJECT_DIR$/tann/ngt" />
+      <recent name="$PROJECT_DIR$/tann/hnsw" />
       <recent name="$PROJECT_DIR$/python" />
-      <recent name="$PROJECT_DIR$/conda" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/tests/utils" />
-      <recent name="$PROJECT_DIR$/tests" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tann" />
@@ -132,10 +224,10 @@
       <recent name="$PROJECT_DIR$/tests" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.tann">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+  <component name="RunManager" selected="CMake Application.graph">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
     <configuration name="bin_to_tsv" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_tsv" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_tsv">
@@ -164,6 +256,11 @@
       </method>
     </configuration>
     <configuration name="compute_groundtruth" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="compute_groundtruth" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="compute_groundtruth">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="cosine-float" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="cosine-float" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="cosine-float">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -208,6 +305,16 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="graph" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="graph" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="hamming-uint8" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="hamming-uint8" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="hamming-uint8">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="int8_to_float" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="int8_to_float" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="int8_to_float">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -223,7 +330,27 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="jaccard-sparse" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="jaccard-sparse" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="jaccard-sparse">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="l2-uint8-range-search" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="l2-uint8-range-search" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="l2-uint8-range-search">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="l2-uint8" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="l2-uint8" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="l2-uint8">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="merge_shards" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="merge_shards" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="merge_shards">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ngt" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="ngt" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -234,6 +361,21 @@
       </method>
     </configuration>
     <configuration name="partition_with_ram_budget" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="partition_with_ram_budget" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="partition_with_ram_budget">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="qbg-capi" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="qbg-capi" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="qbg-capi">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="qg-capi" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="qg-capi" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="qg-capi">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="qg-l2-float" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="qg-l2-float" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="qg-l2-float">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -264,11 +406,6 @@
       </method>
     </configuration>
     <configuration name="stats_label_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="stats_label_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="stats_label_data">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="tann" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="tann" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -304,8 +441,17 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.tann" />
       <item itemvalue="CMake Application.bin_to_tsv" />
+      <item itemvalue="CMake Application.cosine-float" />
+      <item itemvalue="CMake Application.hamming-uint8" />
+      <item itemvalue="CMake Application.jaccard-sparse" />
+      <item itemvalue="CMake Application.l2-uint8" />
+      <item itemvalue="CMake Application.l2-uint8-range-search" />
+      <item itemvalue="CMake Application.qbg-capi" />
+      <item itemvalue="CMake Application.qg-capi" />
+      <item itemvalue="CMake Application.qg-l2-float" />
+      <item itemvalue="CMake Application.graph" />
+      <item itemvalue="CMake Application.ngt" />
       <item itemvalue="CMake Application.build_disk_index" />
       <item itemvalue="CMake Application.build_memory_index" />
       <item itemvalue="CMake Application.build_stitched_index" />
@@ -355,7 +501,10 @@
       <workItem from="1684796936228" duration="33000" />
       <workItem from="1684900963999" duration="18244000" />
       <workItem from="1684946412500" duration="7000" />
-      <workItem from="1685557741007" duration="1043000" />
+      <workItem from="1685557741007" duration="1251000" />
+      <workItem from="1685647491712" duration="3972000" />
+      <workItem from="1685719652593" duration="2573000" />
+      <workItem from="1685731248947" duration="9006000" />
     </task>
     <servers />
   </component>

@@ -33,4 +33,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${USER_CXX_FLAGS}")
 ###################
 include(carbin_simd)
 set(USER_FLAGS ${CARBIN_SIMD_FLAGS})
-add_definitions(-DUSE_AVX2)
+add_definitions(-DCARBIN_USE_AVX2)
