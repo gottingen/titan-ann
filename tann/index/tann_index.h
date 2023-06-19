@@ -70,6 +70,8 @@ namespace tann {
 
         virtual int train(const std::string &file) = 0;
 
+        virtual int64_t  snapshot_id() = 0;
+
     protected:
         std::shared_ptr<TannIndexConfig> _config;
     };
