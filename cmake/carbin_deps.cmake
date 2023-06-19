@@ -18,9 +18,6 @@ if (CARBIN_BUILD_TEST)
     enable_testing()
     include(require_gtest)
     include(require_gmock)
-    find_package(boost REQUIRED)
-    include_directories(${Boost_INCLUDE_DIR})
-    link_directories(${CONDA_PREFIX}/lib)
 endif (CARBIN_BUILD_TEST)
 
 set(CARBIN_SYSTEM_DYLINK)
@@ -32,15 +29,15 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 endif ()
 
 include(require_turbo)
-find_package(MKL REQUIRED)
+include(require_bluebird)
 find_package(OpenMP REQUIRED)
-find_package(AIO REQUIRED)
 set(CARBIN_DEPS_LINK
         ${TURBO_LIB}
+        ${BLUEBIRD_LIB}
         ${CARBIN_SYSTEM_DYLINK}
-        ${MKL_LIBRARIES}
-        ${AIO_LIBRARIES}
-        OpenMP::OpenMP_CXX
+        gomp
+        lapack
+        blas
         )
 if (ENABLE_CUDA)
     find_package(CUDAToolkit REQUIRED)

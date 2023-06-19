@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+#[[
 file(GLOB GRAPH_SRC "graph/*.cc")
 
 
@@ -30,9 +30,9 @@ carbin_cc_library(
         ${CARBIN_DEPS_LINK}
         PUBLIC
 )
-
+]]
 file(GLOB_RECURSE NGT_SRC "ngt/*.cc")
-
+file(GLOB_RECURSE INDEX_SRC "index/*.cc")
 configure_file(${PROJECT_SOURCE_DIR}/tann/ngt/defines.h.in ${PROJECT_BINARY_DIR}/tann/ngt/defines.h)
 
 carbin_cc_library(
@@ -40,6 +40,7 @@ carbin_cc_library(
         NAME ngt
         SOURCES
         ${NGT_SRC}
+        ${INDEX_SRC}
         COPTS
         ${CARBIN_DEFAULT_COPTS}
         ${OpenMP_CXX_FLAGS}

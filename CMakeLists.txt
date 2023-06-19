@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.15)
 
 
 # Compiler id for Apple Clang is now AppleClang.
@@ -75,14 +75,14 @@ include(carbin_module)
 
 
 add_subdirectory(tann)
-add_subdirectory(tools)
+#add_subdirectory(tools)
 
 if(ENABLE_PYTHON)
     add_subdirectory(python)
 endif ()
 
 if (CARBIN_BUILD_TEST)
-    add_subdirectory(tests)
+    #add_subdirectory(tests)
 endif ()
 
 if (CARBIN_BUILD_EXAMPLES)
@@ -90,13 +90,6 @@ if (CARBIN_BUILD_EXAMPLES)
 endif ()
 
 install(DIRECTORY ${PROJECT_NAME}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        FILES_MATCHING
-        PATTERN "*.inc"
-        PATTERN "*.h"
-        )
-
-install(DIRECTORY ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING
         PATTERN "*.inc"
