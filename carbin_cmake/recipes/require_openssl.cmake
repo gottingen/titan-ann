@@ -1,5 +1,5 @@
 #
-# Copyright 2023 The titan-search Authors.
+# Copyright 2023 The Carbin Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,20 +14,6 @@
 # limitations under the License.
 #
 
-file(GLOB_RECURSE NGT_SRC "ngt/*.cc")
-file(GLOB_RECURSE INDEX_SRC "index/*.cc")
-carbin_cc_library(
-        NAMESPACE tann
-        NAME ngt
-        SOURCES
-        ${NGT_SRC}
-        ${INDEX_SRC}
-        COPTS
-        ${USER_CXX_FLAGS}
-        ${TURBO_SIMD_FLAGS} "-march=haswell"
-        ${CARBIN_RANDOM_RANDEN_COPTS}
-        "-fopenmp"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        PUBLIC
-)
+
+find_package(OpenSSL)
+include_directories(${OPENSSL_INCLUDE_DIR})

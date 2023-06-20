@@ -1,0 +1,16 @@
+#numpy
+#requests
+###########
+# turbo
+# --ignore-requirements do not install gtest
+gottingen/turbo@v0.9.8 --ignore-requirements -DCARBIN_BUILD_TEST=OFF -DCARBIN_BUILD_BENCHMARK=OFF -DCARBIN_BUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBRARY=OFF -DBUILD_STATIC_LIBRARY=ON -DCMAKE_BUILD_TYPE=release
+############
+# bluebird
+gottingen/bluebird@v0.3.2 --ignore-requirements -DCARBIN_BUILD_TEST=OFF -DCARBIN_BUILD_BENCHMARK=OFF -DCARBIN_BUILD_EXAMPLES=OFF -DBUILD_SHARED_LIB=OFF -DBUILD_STATIC_LIB=ON -DCMAKE_BUILD_TYPE=release
+##############
+# faiss
+# -DFAISS_OPT_LEVEL="avx2" enable avx2
+facebookresearch/faiss@v1.7.3 -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DBUILD_TESTING=OFF -DFAISS_OPT_LEVEL="avx2"
+###############
+# doctest
+doctest/doctest@v2.4.11 -DDOCTEST_WITH_TESTS=OFF -DDOCTEST_WITH_MAIN_IN_STATIC_LIB=OFF

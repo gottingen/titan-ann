@@ -12,69 +12,85 @@
 // limitations under the License.
 //
 
-#ifndef TANN_INDEX_TANN_INDEX_H_
-#define TANN_INDEX_TANN_INDEX_H_
+#pragma once
 
-#include <type_traits>
+#include <stdint.h>
 #include <memory>
+#include <set>
+#include <string>
+#include <vector>
+#include <shared_mutex>
 #include "turbo/base/status.h"
-#include "tann/index/tann_index_config.h"
+#include "tann/index/option.h"
+#include "bluebird/bits/bitmap.h"
+#include "tann/index/constants.h"
 
 namespace tann {
 
-    struct TannSearchOption {
 
+    struct SearchOptions {
+        int64_t n = 0;
+        int64_t k = 0;
+        std::vector<float> vecs;
+        bluebird::Bitmap *bitmap{nullptr};
+        uint32_t nprobe = 0;
+        float radius = 0;
     };
 
-    struct IDIterator {
-        virtual ~IDIterator() = default;
+    class TannIndex;
 
-        /// if Next returns std::numeric<int64_t>::max()
-        /// iterator will stop
-        virtual int64_t Next() = 0;
-    };
+    using TannIndexPtr = std::shared_ptr<TannIndex>;
 
-    ///
-    /// TannIndex is the interface
     class TannIndex {
     public:
+        explicit TannIndex(const IndexOption &index_conf);
 
-        explicit TannIndex(std::shared_ptr<TannIndexConfig> &config);
+        virtual ~TannIndex();
 
-        virtual ~TannIndex() = default;
+        TannIndexPtr create_ann_index(const IndexOption &index_conf);
 
-        /// \brief initialize index;
-        /// \return
-        [[nodiscard]] virtual turbo::Status init_index() = 0;
+        virtual turbo::Status init() = 0;
 
-        [[nodiscard]] virtual size_t size() const noexcept = 0;
+        virtual size_t size() = 0;
 
-        [[nodiscard]] virtual bool is_realtime() const noexcept = 0;
+        virtual bool support_update() = 0;
 
-        [[nodiscard]] virtual bool is_trained() const noexcept = 0;
+        virtual bool support_delete() = 0;
 
+        virtual void insert(const std::vector<int64_t> &ids, std::vector<float> &vecs) = 0;
 
-        virtual void add_vector(const std::vector<uint64_t> &ids, std::vector<float> &vecs) = 0;
+        virtual void search(SearchOptions &option, std::vector<float> &distances, std::vector<int64_t> &labels) = 0;
 
-        virtual void update_vector(const std::vector<uint64_t> &ids, std::vector<float> &vecs) = 0;
+        virtual void remove(const std::set<uint64_t> &delete_ids) = 0;
 
-        virtual void remove(const IDIterator &ids) = 0;
+        virtual void update(const std::vector<int64_t> &ids, std::vector<float> &vecs) = 0;
 
         virtual void clear() = 0;
 
-        virtual void search(TannSearchOption &option, std::vector<float> &distances, std::vector<int64_t> &labels) = 0;
+        virtual turbo::Status load(const std::string &file, std::shared_mutex &mutex) = 0;
 
-        virtual int load(const std::string &file) = 0;
+        virtual turbo::Status save(const std::string &file) = 0;
 
-        virtual int save(const std::string &file) = 0;
+        void set_max_elements(size_t max_elements) {
+            if (max_elements > max_elements_) {
+                max_elements_ = max_elements;
+            }
+        }
 
-        virtual int train(const std::string &file) = 0;
+        virtual void shrink_to_fit() {
+        }
 
-        virtual int64_t  snapshot_id() = 0;
+        virtual bool build_with_id() {
+            return true;
+        }
+
+        virtual void print_stats() {
+        }
 
     protected:
-        std::shared_ptr<TannIndexConfig> _config;
+        IndexOption index_conf_;
+        size_t max_elements_{kDefaultMaxItem};
     };
-}  // namespace tann
 
-#endif  // TANN_INDEX_TANN_INDEX_H_
+
+};  // namespace tann

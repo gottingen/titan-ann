@@ -5,7 +5,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    https://www.apache.org/licenses/LICENSE-2.0
+#      https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,20 +14,4 @@
 # limitations under the License.
 #
 
-file(GLOB_RECURSE NGT_SRC "ngt/*.cc")
-file(GLOB_RECURSE INDEX_SRC "index/*.cc")
-carbin_cc_library(
-        NAMESPACE tann
-        NAME ngt
-        SOURCES
-        ${NGT_SRC}
-        ${INDEX_SRC}
-        COPTS
-        ${USER_CXX_FLAGS}
-        ${TURBO_SIMD_FLAGS} "-march=haswell"
-        ${CARBIN_RANDOM_RANDEN_COPTS}
-        "-fopenmp"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        PUBLIC
-)
+add_subdirectory(fuzz)
