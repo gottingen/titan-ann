@@ -23,10 +23,7 @@ carbin_cc_library(
         ${NGT_SRC}
         ${INDEX_SRC}
         COPTS
-        ${USER_CXX_FLAGS}
-        ${TURBO_SIMD_FLAGS} "-march=haswell"
-        ${CARBIN_RANDOM_RANDEN_COPTS}
-        "-fopenmp"
+        ${CARBIN_CXX_OPTIONS}
         DEPS
         ${CARBIN_DEPS_LINK}
         PUBLIC
