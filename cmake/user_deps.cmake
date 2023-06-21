@@ -25,11 +25,12 @@ if (CARBIN_BUILD_BENCHMARK)
 endif ()
 
 find_package(Threads REQUIRED)
-include(require_turbo)
-include(require_doctest)
+find_package(OpenMP REQUIRED)
 set(CARBIN_DEPS_LINK
-        ${TURBO_LIB}
         ${CARBIN_SYSTEM_DYLINK}
+        gomp
+        lapack
+        blas
         )
 
 

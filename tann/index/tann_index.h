@@ -21,6 +21,7 @@
 #include <vector>
 #include <shared_mutex>
 #include "turbo/base/status.h"
+#include "tann/config/check.h"
 #include "tann/index/option.h"
 #include "bluebird/bits/bitmap.h"
 #include "tann/index/constants.h"

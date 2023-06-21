@@ -28,4 +28,5 @@ carbin_cc_test(
         "-Wno-unused-variable"
         DEPS
         ${CARBIN_DEPS_LINK}
+        turbo
 )

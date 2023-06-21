@@ -23,10 +23,10 @@ foreach (JEX ${SRC})
 			SOURCES
 			${JEX}
 			COPTS
-			${CARBIN_DEFAULT_COPTS}
+			${CARBIN_CXX_OPTIONS}
 			${OpenMP_CXX_FLAGS}
-			${CARBIN_SIMD_FLAGS} -march=haswell
 			DEPS
+			${CARBIN_DEPS_LINK}
 			tann::ngt
 	)
 endforeach ()

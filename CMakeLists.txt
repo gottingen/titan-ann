@@ -13,7 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+####################################################################################
+# generate by carbin package manager tools for titan-search
+# https://github.com/gottingen/carbin
+####################################################################################
 cmake_minimum_required(VERSION 3.15)
 
 project(tann CXX)
@@ -23,42 +26,49 @@ set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)
 set(PROJECT_VERSION_PATCH 5)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-
+set(CARBIN_VERSION 0.2.0)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake/modules)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake/package)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake/recipes)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake/simd)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/copts)
-
+#################################################################
+#
+# modify the CARBIN_DEPS_PREFIX to you prefix if needed.
+# for example when you install you deps to "/opt/handsome/guy
+# modify as set(CARBIN_DEPS_PREFIX /opt/handsome/guy)
+#################################################################
+set(CARBIN_DEPS_PREFIX ${PROJECT_SOURCE_DIR}/carbin)
+#######################################################################
+# warning
+# in carbin_cmake directory, caution to modify files in that dir
+######################################################################
 include(carbin_module)
 
+##################################################################
+#
+# your cmake directory ${PROJECT_SOURCE_DIR}/cmake, do things here
+#################################################################
 include(user_deps)
 include(user_cxx_config)
 
 add_subdirectory(tann)
-
+####################################################################
+# belows are auto, edit it be cation
+####################################################################
 if (CARBIN_BUILD_TEST)
     add_subdirectory(tests)
 endif ()
 
 if (CARBIN_BUILD_BENCHMARK)
-    #add_subdirectory(benchmark)
+    add_subdirectory(benchmark)
 endif ()
 
 if (CARBIN_BUILD_EXAMPLES)
-    #add_subdirectory(examples)
+    add_subdirectory(examples)
 endif ()
 
+##############################################
+# header installing
+#############################################
 install(DIRECTORY ${PROJECT_NAME}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        FILES_MATCHING
-        PATTERN "*.inc"
-        PATTERN "*.h"
-        )
-
-install(DIRECTORY ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING
         PATTERN "*.inc"

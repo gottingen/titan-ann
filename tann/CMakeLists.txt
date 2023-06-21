@@ -26,5 +26,6 @@ carbin_cc_library(
         ${CARBIN_CXX_OPTIONS}
         DEPS
         ${CARBIN_DEPS_LINK}
+        turbo
         PUBLIC
 )

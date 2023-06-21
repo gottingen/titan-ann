@@ -5,7 +5,7 @@
 //#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <iostream>
 //#include <doctest/doctest.h>
-#include "turbo/simd/simd.h"
+#include "flare/simd/xsimd.h"
 #include "turbo/times/stop_watcher.h"
 #include "turbo/log/logging.h"
 #include <cstdlib>
@@ -27,8 +27,8 @@ void simd_test(int t) {
     std::vector<float> src(128, 2.3);
     constexpr float sd = 2.3 * 2.3;
     for (int k = 0; k < t; k++) {
-        turbo::simd::batch<float> a = turbo::simd::load_unaligned(static_cast<float *>(src.data()));
-        auto c = turbo::simd::mul(a, a);
+        flare::simd::batch<float> a = flare::simd::load_unaligned(static_cast<float *>(src.data()));
+        auto c = flare::simd::mul(a, a);
         //std::cout << c.get(0) - sd << std::endl;
 
     }
