@@ -36,222 +36,17 @@
 #include    <sys/time.h>
 #include    <fcntl.h>
 
-#include "tann/ngt/defines.h"
-#include "tann/ngt/shared_memory_allocator.h"
+#include "tann/common/config.h"
+#include "tann/common/exception.h"
+#include "tann/common/shared_memory_allocator.h"
 
-#ifdef NGT_HALF_FLOAT
-#include "tann/ngt/half.hpp"
-#endif
+
 
 #define ADVANCED_USE_REMOVED_LIST
 #define    SHARED_REMOVED_LIST
 
 namespace tann {
-    typedef unsigned int ObjectID;
-    typedef float Distance;
-#ifdef NGT_HALF_FLOAT
-    typedef	half_float::half	float16;
-#endif
 
-#define    NGTThrowException(MESSAGE)            throw tann::Exception(__FILE__, __FUNCTION__, (size_t)__LINE__, MESSAGE)
-#define    NGTThrowSpecificException(MESSAGE, TYPE)    throw tann::TYPE(__FILE__, __FUNCTION__, (size_t)__LINE__, MESSAGE)
-
-    class Exception : public std::exception {
-    public:
-        Exception() : message("No message") {}
-
-        Exception(const std::string &file, const std::string &function, size_t line, std::stringstream &m) {
-            set(file, function, line, m.str());
-        }
-
-        Exception(const std::string &file, const std::string &function, size_t line, const std::string &m) {
-            set(file, function, line, m);
-        }
-
-        void set(const std::string &file, const std::string &function, size_t line, const std::string &m) {
-            std::stringstream ss;
-            ss << file << ":" << function << ":" << line << ": " << m;
-            message = ss.str();
-        }
-
-        ~Exception() throw() {}
-
-        Exception &operator=(const Exception &e) {
-            message = e.message;
-            return *this;
-        }
-
-        virtual const char *what() const throw() {
-            return message.c_str();
-        }
-
-        std::string &getMessage() { return message; }
-
-    protected:
-        std::string message;
-    };
-
-    class Args : public std::map<std::string, std::string> {
-    public:
-        Args() {}
-
-        Args(int argc, char **argv, std::string noVal = "") {
-            argC = argc;
-            argV = argv;
-            parse(noVal);
-        }
-
-        void parse(std::string noVal = "") {
-            auto argc = argC;
-            auto argv = argV;
-            clear();
-            std::vector<std::string> opts;
-            int optcount = 0;
-            insert(std::make_pair(std::string("#-"), std::string(argv[0])));
-            noVal += "h";
-            for (int i = 1; i < argc; ++i) {
-                opts.push_back(std::string(argv[i]));
-                if ((argv[i][0] == '-') && (noVal.find(argv[i][1]) != std::string::npos)) {
-                    opts.push_back("t");
-                }
-            }
-            for (auto i = opts.begin(); i != opts.end(); ++i) {
-                std::string &opt = *i;
-                std::string key, value;
-                if (opt.size() > 2 && opt.substr(0, 2) == "--") {
-                    auto pos = opt.find('=');
-                    if (pos == std::string::npos) {
-                        key = opt.substr(2);
-                        value = "";
-                    } else {
-                        key = opt.substr(2, pos - 2);
-                        value = opt.substr(++pos);
-                    }
-                } else if (opt.size() > 1 && opt[0] == '-') {
-                    if (opt.size() == 2) {
-                        key = opt[1];
-                        ++i;
-                        if (i != opts.end()) {
-                            value = *i;
-                        } else {
-                            value = "";
-                            --i;
-                        }
-                    } else {
-                        key = opt[1];
-                        value = opt.substr(2);
-                    }
-                } else {
-                    key = "#" + std::to_string(optcount++);
-                    value = opt;
-                }
-                auto status = insert(std::make_pair(key, value));
-                if (!status.second) {
-                    std::cerr << "Args: Duplicated options. [" << opt << "]" << std::endl;
-                }
-            }
-        }
-
-        std::set<std::string> getUnusedOptions() {
-            std::set<std::string> o;
-            for (auto i = begin(); i != end(); ++i) {
-                o.insert((*i).first);
-            }
-            for (auto i = usedOptions.begin(); i != usedOptions.end(); ++i) {
-                o.erase(*i);
-            }
-            return o;
-        }
-
-        std::string checkUnusedOptions() {
-            auto uopt = getUnusedOptions();
-            std::stringstream msg;
-            if (!uopt.empty()) {
-                msg << "Unused options: ";
-                for (auto i = uopt.begin(); i != uopt.end(); ++i) {
-                    msg << *i << " ";
-                }
-            }
-            return msg.str();
-        }
-
-        std::string &find(const char *s) { return get(s); }
-
-        char getChar(const char *s, char v) {
-            try {
-                return get(s)[0];
-            } catch (...) {
-                return v;
-            }
-        }
-
-        std::string getString(const char *s, const char *v) {
-            try {
-                return get(s);
-            } catch (...) {
-                return v;
-            }
-        }
-
-        std::string &get(const char *s) {
-            Args::iterator ai;
-            ai = map<std::string, std::string>::find(std::string(s));
-            if (ai == this->end()) {
-                std::stringstream msg;
-                msg << s << ": Not specified" << std::endl;
-                NGTThrowException(msg.str());
-            }
-            usedOptions.insert(ai->first);
-            return ai->second;
-        }
-
-        bool getBool(const char *s) {
-            try {
-                get(s);
-            } catch (...) {
-                return false;
-            }
-            return true;
-        }
-
-        long getl(const char *s, long v) {
-            char *e;
-            long val;
-            try {
-                val = strtol(get(s).c_str(), &e, 10);
-            } catch (...) {
-                return v;
-            }
-            if (*e != 0) {
-                std::stringstream msg;
-                msg << "ARGS::getl: Illegal string. Option=-" << s << " Specified value=" << get(s)
-                    << " Illegal string=" << e << std::endl;
-                NGTThrowException(msg.str());
-            }
-            return val;
-        }
-
-        float getf(const char *s, float v) {
-            char *e;
-            float val;
-            try {
-                val = strtof(get(s).c_str(), &e);
-            } catch (...) {
-                return v;
-            }
-            if (*e != 0) {
-                std::stringstream msg;
-                msg << "ARGS::getf: Illegal string. Option=-" << s << " Specified value=" << get(s)
-                    << " Illegal string=" << e << std::endl;
-                NGTThrowException(msg.str());
-            }
-            return val;
-        }
-
-        std::set<std::string> usedOptions;
-        int argC;
-        char **argV;
-    };
 
     class Common {
     public:
@@ -272,7 +67,7 @@ namespace tann {
             if (*e != 0) {
                 std::stringstream msg;
                 msg << "Invalid string. " << e;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             return val;
         }
@@ -283,7 +78,7 @@ namespace tann {
             if (*e != 0) {
                 std::stringstream msg;
                 msg << "Invalid string. " << e;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             return val;
         }
@@ -294,7 +89,7 @@ namespace tann {
             if (*e != 0) {
                 std::stringstream msg;
                 msg << "Invalid string. " << e;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             return val;
         }
@@ -309,7 +104,7 @@ namespace tann {
                 if (tokens[idx].size() == 0) {
                     std::stringstream msg;
                     msg << "Common::extractVecotFromText: No data. " << textLine;
-                    NGTThrowException(msg);
+                    TANN_THROW(msg);
                 }
                 char *e;
                 double v = ::strtod(tokens[idx].c_str(), &e);
@@ -600,7 +395,7 @@ namespace tann {
             if (idx >= vectorSize) {
                 std::stringstream msg;
                 msg << "CompactVector: beyond the range. " << idx << ":" << vectorSize;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             return vector[idx];
         }
@@ -750,7 +545,7 @@ namespace tann {
 
         char &at(size_t idx) const {
             if (idx >= size()) {
-                NGTThrowException("CompactString: beyond the range");
+                TANN_THROW("CompactString: beyond the range");
             }
             return vector[idx];
         }
@@ -871,7 +666,7 @@ namespace tann {
             if (!st) {
                 std::stringstream msg;
                 msg << "PropertySet::load: Cannot load the property file " << f << ".";
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             load(st);
         }
@@ -881,7 +676,7 @@ namespace tann {
             if (!st) {
                 std::stringstream msg;
                 msg << "PropertySet::save: Cannot save. " << f << std::endl;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             save(st);
         }
@@ -1117,7 +912,7 @@ namespace tann {
         if (idx >= vectorSize) {
       std::stringstream msg;
       msg << "Vector: beyond the range. " << idx << ":" << vectorSize;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
         }
         return *(begin(allocator) + idx);
       }
@@ -1288,7 +1083,7 @@ namespace tann {
         if (idx >= vectorSize) {
       std::stringstream msg;
       msg << "Vector: beyond the range. " << idx << ":" << vectorSize;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
         }
         return *reinterpret_cast<TYPE*>(reinterpret_cast<uint8_t*>(begin(allocator)) + idx * elementSize);
       }
@@ -1467,7 +1262,7 @@ namespace tann {
             if (idx >= vectorSize) {
                 std::stringstream msg;
                 msg << "Vector: beyond the range. " << idx << ":" << vectorSize;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             return *reinterpret_cast<TYPE *>(reinterpret_cast<uint8_t *>(begin()) + idx * elementSize);
         }
@@ -1595,7 +1390,7 @@ namespace tann {
                 msg
                         << "DynamicLengthVector::deserialize: It might be caused by inconsistency of the valuable type of the vector. "
                         << err.what();
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             resize(sz);
             is.read(reinterpret_cast<char *>(vector), sz * elementSize);
@@ -1748,14 +1543,14 @@ namespace tann {
       resize(idx + 1);
         }
         if ((*this)[idx] != 0) {
-      NGTThrowException("put: Not empty");
+      TANN_THROW("put: Not empty");
         }
         set(idx, n);
       }
 
       void erase(size_t idx) {
         if (isEmpty(idx)) {
-      NGTThrowException("erase: Not in-memory or invalid id");
+      TANN_THROW("erase: Not in-memory or invalid id");
         }
         (*this)[idx]->~TYPE();
         allocator.free((*this)[idx]);
@@ -1773,7 +1568,7 @@ namespace tann {
         if (isEmpty(idx)) {
       std::stringstream msg;
       msg << "get: Not in-memory or invalid offset of node. " << idx << ":" << array->size();
-      NGTThrowException(msg.str());
+      TANN_THROW(msg.str());
         }
         return (*this)[idx];
       }
@@ -1798,7 +1593,7 @@ namespace tann {
 
       void deserialize(std::ifstream &is, ObjectSpace *objectspace = 0) {
         if (!is.is_open()) {
-      NGTThrowException("tann::Common: Not open the specified stream yet.");
+      TANN_THROW("tann::Common: Not open the specified stream yet.");
         }
         deleteAll();
         (*this).push_back((TYPE*)0);
@@ -1866,7 +1661,7 @@ namespace tann {
 
       void deserializeAsText(std::ifstream &is, ObjectSpace *objectspace = 0) {
         if (!is.is_open()) {
-      NGTThrowException("tann::Common: Not open the specified stream yet.");
+      TANN_THROW("tann::Common: Not open the specified stream yet.");
         }
         deleteAll();
         size_t s;
@@ -2002,14 +1797,14 @@ namespace tann {
                 std::vector<TYPE *>::resize(idx + 1, 0);
             }
             if ((*this)[idx] != 0) {
-                NGTThrowException("put: Not empty");
+                TANN_THROW("put: Not empty");
             }
             (*this)[idx] = n;
         }
 
         void erase(size_t idx) {
             if (isEmpty(idx)) {
-                NGTThrowException("erase: Not in-memory or invalid id");
+                TANN_THROW("erase: Not in-memory or invalid id");
             }
             delete (*this)[idx];
             (*this)[idx] = 0;
@@ -2028,7 +1823,7 @@ namespace tann {
             if (isEmpty(idx)) {
                 std::stringstream msg;
                 msg << "get: Not in-memory or invalid offset of node. idx=" << idx << " size=" << this->size();
-                NGTThrowException(msg.str());
+                TANN_THROW(msg.str());
             }
             return (*this)[idx];
         }
@@ -2037,7 +1832,7 @@ namespace tann {
 
         void serialize(std::ofstream &os, ObjectSpace *objectspace = 0) {
             if (!os.is_open()) {
-                NGTThrowException("tann::Common: Not open the specified stream yet.");
+                TANN_THROW("tann::Common: Not open the specified stream yet.");
             }
             tann::Serializer::write(os, std::vector<TYPE *>::size());
             for (size_t idx = 0; idx < std::vector<TYPE *>::size(); idx++) {
@@ -2056,7 +1851,7 @@ namespace tann {
 
         void deserialize(std::ifstream &is, ObjectSpace *objectspace = 0) {
             if (!is.is_open()) {
-                NGTThrowException("tann::Common: Not open the specified stream yet.");
+                TANN_THROW("tann::Common: Not open the specified stream yet.");
             }
             deleteAll();
             size_t s;
@@ -2097,7 +1892,7 @@ namespace tann {
 
         void serializeAsText(std::ofstream &os, ObjectSpace *objectspace = 0) {
             if (!os.is_open()) {
-                NGTThrowException("tann::Common: Not open the specified stream yet.");
+                TANN_THROW("tann::Common: Not open the specified stream yet.");
             }
             // The format is almost the same as the default and the best in terms of the string length.
             os.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
@@ -2122,7 +1917,7 @@ namespace tann {
 
         void deserializeAsText(std::ifstream &is, ObjectSpace *objectspace = 0) {
             if (!is.is_open()) {
-                NGTThrowException("tann::Common: Not open the specified stream yet.");
+                TANN_THROW("tann::Common: Not open the specified stream yet.");
             }
             deleteAll();
             size_t s;
@@ -2336,7 +2131,7 @@ namespace tann {
 
         ObjectDistances &getResult() {
             if (result == 0) {
-                NGTThrowException("Inner error: results is not set");
+                TANN_THROW("Inner error: results is not set");
             }
             return *result;
         }
@@ -2377,7 +2172,7 @@ namespace tann {
                 queryType = 0;
                 std::stringstream msg;
                 msg << "tann::SearchQuery: Invalid query type!";
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             query = new std::vector<QTYPE>(q);
         }
@@ -2397,7 +2192,7 @@ namespace tann {
                 delete static_cast<std::vector<double> *>(query);
             } else if (*queryType == typeid(uint8_t)) {
                 delete static_cast<std::vector<uint8_t> *>(query);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
                 } else if (*queryType == typeid(float16)) {
               delete static_cast<std::vector<float16>*>(query);
 #endif

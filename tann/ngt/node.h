@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "tann/ngt/defines.h"
+#include "tann/common/defines.h"
 #include "tann/ngt/common.h"
 #include "tann/ngt/object_space_repository.h"
 #include	<algorithm>
@@ -225,7 +225,7 @@ namespace tann {
 #endif
       Node::serialize(os);
       if (pivot == 0) {
-        NGTThrowException("Node::write: pivot is null!");
+        TANN_THROW("Node::write: pivot is null!");
       }
       assert(objectspace != 0);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -291,7 +291,7 @@ namespace tann {
 #endif
       Node::serializeAsText(os);
       if (pivot == 0) {
-        NGTThrowException("Node::write: pivot is null!");
+        TANN_THROW("Node::write: pivot is null!");
       }
       os << " ";
       assert(objectspace != 0);
@@ -466,7 +466,7 @@ namespace tann {
       if (pivot == 0) {
 	// Before insertion, parent ID == 0 and object size == 0, that indicates an empty index
 	if (parent.getID() != 0 || objectSize != 0) {
-	  NGTThrowException("Node::write: pivot is null!");
+	  TANN_THROW("Node::write: pivot is null!");
 	}
       } else {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
@@ -525,7 +525,7 @@ namespace tann {
       Node::serializeAsText(os);
       os << " ";
       if (pivot == 0) {
-        NGTThrowException("Node::write: pivot is null!");
+        TANN_THROW("Node::write: pivot is null!");
       }
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
       getPivot(*objectspace).serializeAsText(os, objectspace);

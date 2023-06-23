@@ -176,7 +176,7 @@ namespace NGTQG {
             } catch (tann::Exception &err) {
                 std::stringstream msg;
                 msg << "QuantizedGraph::deserialize: Fatal error. " << err.what();
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
         }
 
@@ -397,10 +397,10 @@ namespace NGTQG {
 
         void search(tann::GraphIndex &index, NGTQG::SearchContainer &sc, tann::ObjectDistances &seeds) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-            NGTThrowException("NGTQG is not available for SHARED.");
+            TANN_THROW("NGTQG is not available for SHARED.");
 #endif
             if (index.getReadOnly()) {
-                NGTThrowException("NGTQG is not available for readonly mode.");
+                TANN_THROW("NGTQG is not available for readonly mode.");
             }
             if (sc.size == 0) {
                 while (!sc.workingResult.empty()) sc.workingResult.pop();
@@ -458,7 +458,7 @@ namespace NGTQG {
                 stringstream msg;
                 msg << "Quantizer::getNumOfSubvectors: dimensionOfSubvector is invalid. " << dimension << " : "
                     << dimensionOfSubvector << std::endl;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             return dimension / dimensionOfSubvector;
         }
@@ -585,7 +585,7 @@ namespace NGTQG {
             if (stat(quantizedIndexPath.c_str(), &st) == 0) {
                 std::stringstream msg;
                 msg << "QuantizedGraph::create: Quantized graph is already existed. " << indexPath;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             tann::Property ngtProperty;
             index.getProperty(ngtProperty);
@@ -599,13 +599,13 @@ namespace NGTQG {
                 msg
                         << "QuantizedGraph::quantize: the specified pseudo dimension is smaller than the genuine dimension. "
                         << ngtProperty.dimension << ":" << pseudoDimension << std::endl;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             if (pseudoDimension % 4 != 0) {
                 std::stringstream msg;
                 msg << "QuantizedGraph::quantize: the specified pseudo dimension should be a multiple of 4. "
                     << pseudoDimension << std::endl;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             createQuantizedGraphFrame(quantizedIndexPath, ngtProperty.dimension, pseudoDimension, dimensionOfSubvector);
 #else
@@ -630,10 +630,10 @@ namespace NGTQG {
                 if (stat(quantizedIndexPath.c_str(), &st) != 0) {
                     std::stringstream msg;
                     msg << "QuantizedGraph::quantize: Quantized graph is already existed. " << quantizedIndexPath;
-                    NGTThrowException(msg);
+                    TANN_THROW(msg);
                 }
                 if (maxNumOfEdges == 0) {
-                    NGTThrowException("QuantizedGraph::quantize: The maximum number of edges is zero.");
+                    TANN_THROW("QuantizedGraph::quantize: The maximum number of edges is zero.");
                 }
                 buildQuantizedGraph(indexPath, maxNumOfEdges);
             }

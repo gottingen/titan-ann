@@ -222,7 +222,7 @@ class GraphReconstructor {
     if (outGraph.repository.size() != tmpGraph.size() + 1) {
       std::stringstream msg;
       msg << "GraphReconstructor: Fatal inner error. " << outGraph.repository.size() << ":" << tmpGraph.size();
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     timer.stop();
     std::cerr << "GraphReconstructor::adjustPaths: graph preparing time=" << timer << std::endl;
@@ -754,7 +754,7 @@ class GraphReconstructor {
 	for (size_t i = 0; i < node.size(); ++i) {
 	  tann::Distance distance = node[i].distance;
 	  if (prevDistance > distance) {
-	    NGTThrowException("Edge distance order is invalid");
+	    TANN_THROW("Edge distance order is invalid");
 	  }
 	  prevDistance = distance;
 	  size_t nodeID = node[i].id;
@@ -813,7 +813,7 @@ class GraphReconstructor {
 
   static void refineANNG(tann::Index &index, float epsilon = 0.1, float accuracy = 0.0, int noOfEdges = 0, int exploreEdgeSize = INT_MIN, size_t batchSize = 10000) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-    NGTThrowException("GraphReconstructor::refineANNG: Not implemented for the shared memory option.");
+    TANN_THROW("GraphReconstructor::refineANNG: Not implemented for the shared memory option.");
 #else
     auto prop = static_cast<GraphIndex&>(index.getIndex()).getGraphProperty();
     tann::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
@@ -863,7 +863,7 @@ class GraphReconstructor {
       if (error) {
         std::stringstream msg;
 	msg << "GraphReconstructor::refineANNG: " << errorMessage;
-        NGTThrowException(msg);
+        TANN_THROW(msg);
       }
       // outgoing edges
 #pragma omp parallel for

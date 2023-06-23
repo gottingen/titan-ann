@@ -183,7 +183,7 @@ namespace tann {
       ObjectTypeNone	= 0,
       Uint8		= 1,
       Float		= 2
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       ,
       Float16		= 3
 #endif
@@ -262,7 +262,7 @@ namespace tann {
       if (sum == 0.0) {
 	std::stringstream msg;
 	msg << "ObjectSpace::normalize: Error! the object is an invalid zero vector for the cosine similarity or normalized distances.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       sum = sqrt(sum);
       for (size_t i = 0; i < dim; i++) {
@@ -314,7 +314,7 @@ namespace tann {
       if (is.eof()) {
 	std::stringstream msg;
 	msg << "ObjectSpace::BaseObject: Fatal Error! Read beyond the end of the object file. The object file is corrupted?" << byteSize;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
     }
     void serializeAsText(std::ostream &os, ObjectSpace *objectspace = 0) { 
@@ -326,7 +326,7 @@ namespace tann {
 	tann::Serializer::writeAsText(os, (uint8_t*)ref, dimension);
       } else if (t == typeid(float)) {
 	tann::Serializer::writeAsText(os, (float*)ref, dimension);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (t == typeid(float16)) {
 	tann::Serializer::writeAsText(os, (float16*)ref, dimension);
 #endif
@@ -351,7 +351,7 @@ namespace tann {
 	tann::Serializer::readAsText(is, (uint8_t*)ref, dimension);
       } else if (t == typeid(float)) {
 	tann::Serializer::readAsText(is, (float*)ref, dimension);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (t == typeid(float16)) {
 	tann::Serializer::readAsText(is, (float16*)ref, dimension);
 #endif

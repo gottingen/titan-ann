@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "tann/ngt/defines.h"
+#include "tann/common/defines.h"
 #include "tann/ngt/common.h"
 #include "tann/ngt/node.h"
 
@@ -115,7 +115,7 @@ namespace tann {
       internalNodes.open(f + "i", sharedMemorySize);
       if (leafNodes.size() == 0) {
 	if (internalNodes.size() != 0) {
-          NGTThrowException("Tree::Open: Internal error. Internal and leaf are inconsistent.");
+          TANN_THROW("Tree::Open: Internal error. Internal and leaf are inconsistent.");
 	}
 	LeafNode *ln = leafNodes.allocate();
 	insertNode(ln);
@@ -189,7 +189,7 @@ namespace tann {
       } catch(Exception &err) {
 	std::stringstream msg;
 	msg << "VpTree::remove: Inner error. Cannot remove object. leafNode=" << ln.id.getID() << ":" << err.what();
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       if (ln.getObjectSize() == 0) {
 	if (ln.parent.getID() != 0) {
@@ -227,7 +227,7 @@ namespace tann {
         } catch(Exception &e) {
           std::stringstream msg;
           msg << "VpTree::getRootNode: Inner error. Cannot get a leaf root node. " << nid << ":" << e.what();
-          NGTThrowException(msg);
+          TANN_THROW(msg);
         }
       }
 

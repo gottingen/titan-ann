@@ -314,7 +314,7 @@ namespace QBG {
 	if (readOnly) {
 	  stringstream msg;
 	  msg << "QBG::Index: No quantized blob graph. " << err.what();
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	} else {
 	}
       }
@@ -439,7 +439,7 @@ namespace QBG {
       if (tokens.size() < 2) {
 	std::stringstream msg;
 	msg << "Invalid file name format";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       StaticObjectFileLoader loader(data, tokens[tokens.size() - 1]);
       size_t idx = 0;
@@ -732,7 +732,7 @@ namespace QBG {
     if (!searchable) {
       std::stringstream msg;
       msg << "The specified index is not now searchable. ";
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     auto &quantizer = getQuantizer();
@@ -757,7 +757,7 @@ namespace QBG {
 
     if (objectSpace.getObjectType() == typeid(float)) {
       globalGraph.setupDistances(searchContainer, seeds, tann::PrimitiveComparator::L2Float::compare);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
       globalGraph.setupDistances(searchContainer, seeds, tann::PrimitiveComparator::L2Float16::compare);
     }
@@ -779,7 +779,7 @@ namespace QBG {
     std::vector<float> &rotatedQuery = searchContainer.objectVector;
     if (objectSpace.getObjectType() == typeid(float)) {
       memcpy(rotatedQuery.data(), searchContainer.object.getPointer(), rotatedQuery.size() * sizeof(float));
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
       auto *ptr = static_cast<tann::float16*>(searchContainer.object.getPointer());
       for (size_t i = 0; i < rotatedQuery.size(); i++) {
@@ -796,7 +796,7 @@ namespace QBG {
     }
     const size_t dimension = objectSpace.getPaddedDimension();
     if (globalGraph.searchRepository.empty()) {
-      NGTThrowException("QBG:Index: searchRepository is empty.");
+      TANN_THROW("QBG:Index: searchRepository is empty.");
     }
     tann::ReadOnlyGraphNode *nodes = globalGraph.searchRepository.data();
     tann::ReadOnlyGraphNode *neighbors = 0;
@@ -887,7 +887,7 @@ namespace QBG {
 	if (objectSpace.getObjectType() == typeid(float)) {
 	  distance = tann::PrimitiveComparator::L2Float::compare(searchContainer.object.getPointer(),
 							        neighborptr->second->getPointer(), dimension);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
 	} else if (objectSpace.getObjectType() == typeid(tann::float16)) {
 	  distance = tann::PrimitiveComparator::L2Float16::compare(searchContainer.object.getPointer(),
 							           neighborptr->second->getPointer(), dimension);
@@ -928,7 +928,7 @@ namespace QBG {
 	  if (objectSpace.getObjectType() == typeid(float)) {
 	    r.distance = tann::PrimitiveComparator::compareL2(static_cast<float*>(searchContainer.object.getPointer()),
 	    						     static_cast<float*>(object.data()), paddedDimension);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
 	  } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
 	    r.distance = tann::PrimitiveComparator::compareL2(reinterpret_cast<tann::float16*>(searchContainer.object.getPointer()),
 	    						     reinterpret_cast<tann::float16*>(object.data()), paddedDimension);
@@ -959,7 +959,7 @@ namespace QBG {
 	  if (objectSpace.getObjectType() == typeid(float)) {
 	    r.distance = tann::PrimitiveComparator::compareL2(static_cast<float*>(searchContainer.object.getPointer()),
 	    						     static_cast<float*>(object.data()), paddedDimension);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
 	  } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
 	    r.distance = tann::PrimitiveComparator::compareL2(reinterpret_cast<tann::float16*>(searchContainer.object.getPointer()),
 	    						     reinterpret_cast<tann::float16*>(object.data()), paddedDimension);
@@ -983,7 +983,7 @@ namespace QBG {
       if (quantizedBlobGraph.stat(path)) {
 	quantizedBlobGraph.load(path);
       } else {
-	NGTThrowException("Not found the rearranged inverted index. [" + path + "]");
+	TANN_THROW("Not found the rearranged inverted index. [" + path + "]");
       }
     }
 
@@ -1045,7 +1045,7 @@ namespace QBG {
 	if (!stream) {
 	  std::stringstream msg;
 	  msg << "Cannot open the codebook. " << codebookPath;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	std::string line;
 	while (getline(stream, line)) {
@@ -1059,7 +1059,7 @@ namespace QBG {
 	    std::stringstream msg;
 	    msg << "The specified quantizer codebook is invalid. " << quantizerCodebook[0].size()
 		<< ":" << object.size() << ":" << quantizerCodebook.size() << ":" << line;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  if (!object.empty()) {
 	    quantizerCodebook.push_back(object);
@@ -1077,7 +1077,7 @@ namespace QBG {
 	  if (!stream) {
 	    std::stringstream msg;
 	    msg << "Cannot open the codebook index. " << codebookIndexPath;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  std::string line;
 	  while (getline(stream, line)) {
@@ -1087,7 +1087,7 @@ namespace QBG {
 	    if (tokens.size() != 1) {
 	      std::stringstream msg;
 	      msg << "The specified codebook index is invalid. " << line;
-	      NGTThrowException(msg);
+	      TANN_THROW(msg);
 	    }
 	    codebookIndex.push_back(tann::Common::strtol(tokens[0]));
 	  }
@@ -1103,7 +1103,7 @@ namespace QBG {
 	  if (!stream) {
 	    std::stringstream msg;
 	    msg << "Cannot open the codebook index. " << objectIndexPath;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  std::string line;
 	  while (getline(stream, line)) {
@@ -1113,7 +1113,7 @@ namespace QBG {
 	    if (tokens.size() != 1) {
 	      std::stringstream msg;
 	      msg << "The specified codebook index is invalid. " << line;
-	      NGTThrowException(msg);
+	      TANN_THROW(msg);
 	    }
 	    objectIndex.push_back(tann::Common::strtol(tokens[0]));
 	  }
@@ -1146,7 +1146,7 @@ namespace QBG {
 	if ((quantizerCodebook.size() == 0) || (codebookIndex.size() == 0)) {
 	  stringstream msg;
 	  msg << "The specified codebooks or indexes are invalild " << quantizerCodebook.size() << ":" << codebookIndex.size();
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	index.createIndex(quantizerCodebook, codebookIndex, objectIndex, beginID, endID);
       }
@@ -1177,7 +1177,7 @@ namespace QBG {
 	index.load();
 	stringstream msg;
 	msg << "QBG::Index::buildQBG: The index is already built. ";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       } catch (...) {}
       index.quantizedBlobGraph.construct(index);
 
@@ -1192,7 +1192,7 @@ namespace QBG {
 
     void extract(std::ostream &os, size_t n, bool random = true) {
       if (n == 0) {
-	NGTThrowException("QuantizedBlobGraph::extract # of objects is zero.");
+	TANN_THROW("QuantizedBlobGraph::extract # of objects is zero.");
       }
       auto &quantizer = getQuantizer();
       size_t dim = quantizer.property.dimension;
@@ -1319,7 +1319,7 @@ namespace QBG {
       std::vector<std::string> tokens;
       tann::Common::tokenize(localCodebooks, tokens, "@");
       if (tokens.size() != 2) {
-	NGTThrowException("No @ in the specified local codebook string.");
+	TANN_THROW("No @ in the specified local codebook string.");
       }
       for (size_t no = 0; no < property.localDivisionNo; no++) {
 	std::stringstream data;
@@ -1338,7 +1338,7 @@ namespace QBG {
       if (!stream) {
 	std::stringstream msg;
 	msg << "Cannot open the rotation. " << rotationPath;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       std::string line;
       while (getline(stream, line)) {

@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#include	"defines.h"
+#include "tann/common/defines.h"
 #include    "graph.h"
 #include    "thread.h"
 #include    "index.h"
@@ -150,7 +150,7 @@ NeighborhoodGraph::Search::jaccardUint8(NeighborhoodGraph &graph, tann::SearchCo
   graph.searchReadOnlyGraph<PrimitiveComparator::JaccardUint8, DistanceCheckedSet>(sc, seeds);
 }
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
 void 
 NeighborhoodGraph::Search::normalizedCosineSimilarityFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds)
 {
@@ -300,7 +300,7 @@ NeighborhoodGraph::Search::jaccardUint8ForLargeDataset(NeighborhoodGraph &graph,
   graph.searchReadOnlyGraph<PrimitiveComparator::JaccardUint8, DistanceCheckedSetForLargeDataset>(sc, seeds);
 }
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
 void 
 NeighborhoodGraph::Search::normalizedCosineSimilarityFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds)
 {
@@ -767,12 +767,12 @@ NeighborhoodGraph::setupSeeds(tann::SearchContainer &sc, ObjectDistances &seeds,
       stringstream msg;
       msg << "removeEdgesReliably : cannot find a node. ID=" << id;
       msg << ":" << err.what();
-      NGTThrowException(msg.str());
+      TANN_THROW(msg.str());
     }
     if (nodetmp == 0) {
       stringstream msg;
       msg << "removeEdgesReliably : cannot find a node. ID=" << id;
-      NGTThrowException(msg.str());
+      TANN_THROW(msg.str());
     }
     GraphNode &node = *nodetmp;
     if (node.size() == 0) {
@@ -783,7 +783,7 @@ NeighborhoodGraph::setupSeeds(tann::SearchContainer &sc, ObjectDistances &seeds,
 	stringstream msg;
 	msg << "removeEdgesReliably : Internal error! : cannot remove a node without edges. ID=" << id;
 	msg << ":" << err.what();
-	NGTThrowException(msg.str());
+	TANN_THROW(msg.str());
       }
       return;
     }
@@ -850,7 +850,7 @@ NeighborhoodGraph::setupSeeds(tann::SearchContainer &sc, ObjectDistances &seeds,
 	    msg << " anyway continue...";
 	    cerr << msg.str() << endl;
 #else
-	    NGTThrowException(msg.str());
+	    TANN_THROW(msg.str());
 #endif
 	  }
 	}
@@ -935,7 +935,7 @@ NeighborhoodGraph::setupSeeds(tann::SearchContainer &sc, ObjectDistances &seeds,
 	  msg << " Anyway continue...";
 	  cerr << msg.str() << endl;
 #else
-	  NGTThrowException(msg.str());
+	  TANN_THROW(msg.str());
 #endif
 	}
 	if ((i + 1 < node.size()) && (i + 1 != (unsigned int)minj)) {
@@ -975,7 +975,7 @@ NeighborhoodGraph::setupSeeds(tann::SearchContainer &sc, ObjectDistances &seeds,
 #ifdef NGT_FORCED_REMOVE
       cerr << msg.str() << " continue..." << endl;
 #else
-      NGTThrowException(msg.str());
+      TANN_THROW(msg.str());
 #endif
     }
 
@@ -984,7 +984,7 @@ NeighborhoodGraph::setupSeeds(tann::SearchContainer &sc, ObjectDistances &seeds,
     } catch (Exception &err) {
       stringstream msg;
       msg << "removeEdgesReliably : removeEdges error. ID=" << id << ":" << err.what();
-      NGTThrowException(msg.str());
+      TANN_THROW(msg.str());
     }
   }
 

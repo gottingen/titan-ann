@@ -288,14 +288,14 @@ namespace tann {
        objectSize = sizeof(uint8_t);
      } else if (ot == typeid(float)) {
        objectSize = sizeof(float);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
      } else if (ot == typeid(float16)) {
        objectSize = sizeof(float16);
 #endif
      } else {
        std::stringstream msg;
        msg << "ObjectSpace::constructor: Not supported type. " << ot.name();
-       NGTThrowException(msg);
+       TANN_THROW(msg);
      }
      setLength(objectSize * d);
      setPaddedLength(objectSize * ObjectSpace::getPaddedDimension());
@@ -313,7 +313,7 @@ namespace tann {
 	for (size_t i = 0; i < getDimension(); i++) {
 	  os << (int)optr[i] << " ";
 	}
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (t == typeid(float16)) {
 	auto *optr = reinterpret_cast<float16*>(&object.at(0,allocator));
 	for (size_t i = 0; i < getDimension(); i++) {
@@ -476,7 +476,7 @@ namespace tann {
 
     void linearSearch(Object &query, double radius, size_t size, ObjectSpace::ResultSet &results) {
       if (!results.empty()) {
-	NGTThrowException("lenearSearch: results is not empty");
+	TANN_THROW("lenearSearch: results is not empty");
       }
 #ifndef NGT_PREFETCH_DISABLED
       size_t byteSizeOfObject = getByteSizeOfObject();
@@ -516,7 +516,7 @@ namespace tann {
       if (isEmpty(idx)) {
 	std::stringstream msg;
 	msg << "tann::ObjectSpaceRepository: The specified ID is out of the range. The object ID should be greater than zero. " << idx << ":" << ObjectRepository::size() << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       PersistentObject &obj = *(*this)[idx];
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
@@ -647,7 +647,7 @@ namespace tann {
 	for (size_t i = 0; i < getDimension(); i++) {
 	  os << optr[i] << " ";
 	}
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (t == typeid(float16)) {
 	float16 *optr = reinterpret_cast<float16*>(&object[0]);
 	for (size_t i = 0; i < getDimension(); i++) {
@@ -685,7 +685,7 @@ namespace tann {
       tann::Serializer::writeAsText(os, (uint8_t*)ref, dimension);
     } else if (t == typeid(float)) {
       tann::Serializer::writeAsText(os, (float*)ref, dimension);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     } else if (t == typeid(float16)) {
       tann::Serializer::writeAsText(os, (float16*)ref, dimension);
 #endif
@@ -712,7 +712,7 @@ namespace tann {
       tann::Serializer::readAsText(is, (uint8_t*)ref, dimension);
     } else if (t == typeid(float)) {
       tann::Serializer::readAsText(is, (float*)ref, dimension);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     } else if (t == typeid(float16)) {
       tann::Serializer::readAsText(is, (float16*)ref, dimension);
 #endif

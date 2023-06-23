@@ -14,7 +14,8 @@
 // limitations under the License.
 //
 
-#include "mmap_manager_impl.h"
+#include "tann/common/mmap_manager_impl.h"
+#include "tann/common/mmap_manager.h"
 
 namespace MemoryManager{
   // static method --- 

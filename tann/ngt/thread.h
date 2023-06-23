@@ -122,7 +122,7 @@ class ThreadPool {
           while (JobQueue::isEmpty()) {
             if (isTerminate) {
               JobQueue::unlock();
-	      NGTThrowSpecificException("Thread::termination", ThreadTerminationException);
+	      TANN_THROW_SPEC("Thread::termination", ThreadTerminationException);
             }
             JobQueue::wait();
           }
@@ -137,7 +137,7 @@ class ThreadPool {
           while (JobQueue::isEmpty()) {
             if (isTerminate) {
               JobQueue::unlock();
-	      NGTThrowSpecificException("Thread::termination", ThreadTerminationException);
+	      TANN_THROW_SPEC("Thread::termination", ThreadTerminationException);
             }
             JobQueue::wait();
           }
@@ -172,7 +172,7 @@ class ThreadPool {
           JobQueue::lock();
           if (underPushing || !JobQueue::isEmpty()) {
             JobQueue::unlock();
-	    NGTThrowException("Thread::teminate:Under pushing!");
+	    TANN_THROW("Thread::teminate:Under pushing!");
           }
           isTerminate = true;
           JobQueue::unlock();
@@ -223,7 +223,7 @@ class ThreadPool {
 	  if (threadPool->sharedData.isAvailable) {
 	    return threadPool->sharedData.sharedData;
 	  } else {
-	    NGTThrowException("Thread::getSharedData: Shared data is unavailable. No set yet.");
+	    TANN_THROW("Thread::getSharedData: Shared data is unavailable. No set yet.");
 	  }
         }
         InputJobQueue &getInputJobQueue() {

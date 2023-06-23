@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "tann/ngt/defines.h"
+#include "tann/common/defines.h"
 
 #if defined(NGT_NO_AVX)
 #warning "*** SIMD is *NOT* available! ***"
@@ -95,7 +95,7 @@ namespace tann {
       p--;
       while (*p == 0xCD) p--;
       if (*p != 0xAB) {
-	NGTThrowException("MemoryCache::alignedFree: Fatal Error! Cannot find allocated address.");
+	TANN_THROW("MemoryCache::alignedFree: Fatal Error! Cannot find allocated address.");
       }
       delete[] p;
 #endif
@@ -201,7 +201,7 @@ namespace tann {
       return sqrt(s);
     }
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     inline static double compareL2(const float16 *a, const float16 *b, size_t size) {
       const float16 *last = a + size;
 #if defined(NGT_AVX512)
@@ -323,7 +323,7 @@ namespace tann {
     inline static double compareL1(const float *a, const float *b, size_t size) {
       return compareL1<float, double>(a, b, size);
     }
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     inline static double compareL1(const float16 *a, const float16 *b, size_t size) {
       return compareL1<float16, double>(a, b, size);
     }
@@ -350,7 +350,7 @@ namespace tann {
       }
       return s;
     }
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     inline static double compareL1(const float16 *a, const float16 *b, size_t size) {
       __m256 sum = _mm256_setzero_ps();
       const float16 *last = a + size;
@@ -484,7 +484,7 @@ namespace tann {
       abort();
     }
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     inline static double compareSparseJaccardDistance(const float16 *a, const float16 *b, size_t size) {
       std::cerr << "compareSparseJaccardDistance: Not implemented." << std::endl;
       abort();
@@ -572,7 +572,7 @@ namespace tann {
       return s;
     }
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     inline static double compareDotProduct(const float16 *a, const float16 *b, size_t size) {
       const float16 *last = a + size;
 #if defined(NGT_AVX512)
@@ -691,7 +691,7 @@ namespace tann {
       return cosine;
     }
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     inline static double compareCosine(const float16 *a, const float16 *b, size_t size) {
 
       const float16 *last = a + size;
@@ -947,7 +947,7 @@ namespace tann {
       }
     };
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     class SparseJaccardFloat16 {
     public:
       inline static double compare(const void *a, const void *b, size_t size) {

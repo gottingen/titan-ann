@@ -29,7 +29,7 @@ using namespace std;
     } catch (...) {
       std::stringstream msg;
       msg << "Command::CreateParameter: Error: An index is not specified.";
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     try {
@@ -50,7 +50,7 @@ using namespace std;
     if (property.dimension <= 0) {
       std::stringstream msg;
       msg << "Command::CreateParameter: Error: Specify greater than 0 for # of your data dimension by a parameter -d.";
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     property.objectAlignment = args.getChar("A", 'f') == 't' ? tann::Property::ObjectAlignmentTrue : tann::Property::ObjectAlignmentFalse;
@@ -66,7 +66,7 @@ using namespace std;
     default:
       std::stringstream msg;
       msg << "Command::CreateParameter: Error: Invalid graph type. " << graphType;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }    
 
     if (property.graphType == tann::Property::GraphType::GraphTypeONNG) {
@@ -79,7 +79,7 @@ using namespace std;
 	if (str != "-" && tokens.size() != 2) {
 	  std::stringstream msg;
 	  msg << "Command::CreateParameter: Error: outgoing/incoming edge size specification is invalid. (out)x(in) " << str;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	property.outgoingEdge = tann::Common::strtod(tokens[0]);
 	property.incomingEdge = tann::Common::strtod(tokens[1]);
@@ -109,7 +109,7 @@ using namespace std;
     case 'c':
       property.objectType = tann::Index::Property::ObjectType::Uint8;
       break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     case 'h':
       property.objectType = tann::Index::Property::ObjectType::Float16;
       break;
@@ -117,7 +117,7 @@ using namespace std;
     default:
       std::stringstream msg;
       msg << "Command::CreateParameter: Error: Invalid object type. " << objectType;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     switch (distanceType) {
@@ -161,7 +161,7 @@ using namespace std;
     default:
       std::stringstream msg;
       msg << "Command::CreateParameter: Error: Invalid distance type. " << distanceType << endl;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
@@ -181,7 +181,7 @@ using namespace std;
       "-d dimension [-p #-of-thread] [-i index-type(t|g)] [-g graph-type(a|k|b|o|i)] "
       "[-t truncation-edge-limit] [-E edge-size] [-S edge-size-for-search] [-L edge-size-limit] "
       "[-e epsilon] "
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       "[-o object-type(f|h|c)] "
 #else
       "[-o object-type(f|c)] "

@@ -67,7 +67,7 @@ public:
                 objectSpace = new tann::ObjectSpaceRepository<unsigned char, int>(genuineDimension, typeid(uint8_t),
                                                                                  distanceType);
                 break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
             case DataTypeFloat16:
                 genuineDimension = ArrayFile<tann::Object>::_fileHead.recordSize / sizeof(tann::float16);
                 objectSpace = new tann::ObjectSpaceRepository<tann::float16, float>(genuineDimension,
@@ -77,7 +77,7 @@ public:
             default:
                 stringstream msg;
                 msg << "ObjectFile::Invalid Object Type in the property. " << dataType;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
                 break;
         }
         return true;
@@ -136,7 +136,7 @@ public:
         if (objectSpace == 0) {
             stringstream msg;
             msg << "ObjectFile::Fatal Error. objectSpace is not set." << std::endl;
-            NGTThrowException(msg);
+            TANN_THROW(msg);
         }
         tann::Object *object = objectSpace->allocateObject();
         if (!ArrayFile<tann::Object>::get(id, *object, objectSpace)) {
@@ -168,12 +168,12 @@ public:
         if (objectSpace == 0) {
             stringstream msg;
             msg << "ObjectFile::Fatal Error. objectSpace is not set." << std::endl;
-            NGTThrowException(msg);
+            TANN_THROW(msg);
         }
         if (objectSpace->getDimension() != data.size()) {
             stringstream msg;
             msg << "ObjectFile::Dimensions are inconsistency. " << objectSpace->getDimension() << ":" << data.size();
-            NGTThrowException(msg);
+            TANN_THROW(msg);
         }
         tann::Object *object = objectSpace->allocateObject();
         const std::type_info &otype = objectSpace->getObjectType();
@@ -474,12 +474,12 @@ bool StaticObjectFile<TYPE>::open(const std::string &file, size_t pseudoDimensio
     if (_fileHead.noOfObjects != noOfObjects) {
         stringstream msg;
         msg << "Invalid # of objects=" << _fileHead.noOfObjects << ":" << noOfObjects;
-        NGTThrowException(msg);
+        TANN_THROW(msg);
     }
     if (_fileHead.noOfDimensions != noOfDimensions) {
         stringstream msg;
         msg << "Invalid # of dimensions=" << _fileHead.noOfDimensions << ":" << noOfDimensions;
-        NGTThrowException(msg);
+        TANN_THROW(msg);
     }
     _recordSize = _sizeOfElement * _fileHead.noOfDimensions;
     return ret;

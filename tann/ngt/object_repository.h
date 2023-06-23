@@ -44,7 +44,7 @@ namespace tann {
       if (!objs.is_open()) {
 	std::stringstream msg;
 	msg << "tann::ObjectSpace: Cannot open the specified file " << ofile << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       Parent::serialize(objs, ospace); 
     }
@@ -55,7 +55,7 @@ namespace tann {
       if (!objs.is_open()) {
 	std::stringstream msg;
 	msg << "tann::ObjectSpace: Cannot open the specified file " << ifile << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       Parent::deserialize(objs, ospace);
     }
@@ -65,7 +65,7 @@ namespace tann {
       if (!objs.is_open()) {
 	std::stringstream msg;
 	msg << "tann::ObjectSpace: Cannot open the specified file " << ofile << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       Parent::serializeAsText(objs, ospace); 
     }
@@ -75,7 +75,7 @@ namespace tann {
       if (!objs.is_open()) {
 	std::stringstream msg;
 	msg << "tann::ObjectSpace: Cannot open the specified file " << ifile << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       Parent::deserializeAsText(objs, ospace); 
     }
@@ -107,7 +107,7 @@ namespace tann {
 
     void appendText(std::istream &is, size_t dataSize = 0) {
       if (dimension == 0) {
-	NGTThrowException("ObjectSpace::readText: Dimension is not specified.");
+	TANN_THROW("ObjectSpace::readText: Dimension is not specified.");
       }
       if (size() == 0) {
 	// First entry should be always a dummy entry.
@@ -147,7 +147,7 @@ namespace tann {
     template <typename T>
     void append(T *data, size_t objectCount) {
       if (dimension == 0) {
-	NGTThrowException("ObjectSpace::readText: Dimension is not specified.");
+	TANN_THROW("ObjectSpace::readText: Dimension is not specified.");
       }
       if (size() == 0) {
 	// First entry should be always a dummy entry.
@@ -201,7 +201,7 @@ namespace tann {
 	std::stringstream msg;
 	msg << "ObjectSpace::allocate: too few dimension. " << tokens.size() << ":" << dimension << ". " 
 	    << textLine;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       size_t idx;
       for (idx = 0; idx < dimension; idx++) {
@@ -209,7 +209,7 @@ namespace tann {
 	  std::stringstream msg;
 	  msg << "ObjectSpace::allocate: an empty value string. " << idx << ":" << tokens.size() << ":" 
 	      << dimension << ". "  << textLine;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
         }
 	char *e;
 	object[idx] = static_cast<T>(strtod(tokens[idx].c_str(), &e));
@@ -231,7 +231,7 @@ namespace tann {
 	  std::stringstream msg;
 	  msg << "ObjectSpace::allocateObject: Fatal error! The specified dimension is invalid. The indexed objects=" 
 	      << dimension << " The specified object=" << size;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
       }
       Object *po = new Object(osize);
@@ -246,7 +246,7 @@ namespace tann {
 	for (size_t i = 0; i < size; i++) {
 	  obj[i] = static_cast<float>(o[i]);
 	}
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (type == typeid(float16)) {
 	float16 *obj = static_cast<float16*>(object);
 	for (size_t i = 0; i < size; i++) {
@@ -273,7 +273,7 @@ namespace tann {
 	cpsize *= sizeof(uint8_t);
       } else if (type == typeid(float)) {
 	cpsize *= sizeof(float);
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (type == typeid(float16)) {
 	cpsize *= sizeof(float16);
 #endif
@@ -296,7 +296,7 @@ namespace tann {
 	std::stringstream msg;
 	msg << "ObjectSpace::allocatePersistentObject: Fatal error! The dimensionality is invalid. The specified dimensionality=" 
 	    << (sparse ? dimension - 1 : dimension) << ". The specified object=" << (sparse ? size - 1 : size) << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       void *object = static_cast<void*>(&(*po).at(0, allocator));
       if (type == typeid(uint8_t)) {
@@ -309,7 +309,7 @@ namespace tann {
 	for (size_t i = 0; i < dimension; i++) {
 	  obj[i] = static_cast<float>(o[i]);
 	}
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (type == typeid(float16)) {
 	float16 *obj = static_cast<float16*>(object);
 	for (size_t i = 0; i < size; i++) {
@@ -335,7 +335,7 @@ namespace tann {
 	std::stringstream msg;
 	msg << "ObjectSpace::allocatePersistentObject: Fatal error! The dimensionality is invalid. The specified dimensionality=" 
 	    << (sparse ? dimension - 1 : dimension) << ". The specified object=" << (sparse ? size - 1 : size) << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       return allocateObject(o, size);
     }
@@ -362,7 +362,7 @@ namespace tann {
 	for (size_t i = 0; i < dimension; i++) {
 	  d.push_back(obj[i]);
 	}
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       } else if (type == typeid(float16)) {
 	float16 *obj = (float16*)object;
 	for (size_t i = 0; i < dimension; i++) {

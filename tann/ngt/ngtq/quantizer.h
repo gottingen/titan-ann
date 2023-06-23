@@ -190,10 +190,10 @@ class QuantizationCodebook : public std::vector<T> {
   QuantizationCodebook(): dimension(0), paddedDimension(0), index(0) {}
   QuantizationCodebook& operator=(const std::vector<std::vector<float>> &qc) {
     if (qc.empty()) {
-      NGTThrowException("NGTQ::QuantizationCodebook::operator=: codebook is empty.");
+      TANN_THROW("NGTQ::QuantizationCodebook::operator=: codebook is empty.");
     }
     if (paddedDimension == 0) {
-      NGTThrowException("NGTQ::QuantizationCodebook::operator=: paddedDimension is unset.");
+      TANN_THROW("NGTQ::QuantizationCodebook::operator=: paddedDimension is unset.");
     }
     dimension = qc[0].size();
     std::cerr << "dim=" << dimension << ":" << qc.size() << ":" << paddedDimension << std::endl;
@@ -202,7 +202,7 @@ class QuantizationCodebook : public std::vector<T> {
       if (qc[i].size() != dimension) {
 	std::stringstream msg;
 	msg << "NGTQ::QuantizationCodebook::operator=: paddedDimension is invalid. " << i << ":" << qc[i].size() << ":" << dimension;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       memcpy(PARENT::data() + i * paddedDimension, qc[i].data(), dimension * sizeof(T));
     }
@@ -373,18 +373,18 @@ public:
   {
     PARENT::elementSize = getSizeOfElement();
   }
-  InvertedIndexEntry(size_t n, SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
+  InvertedIndexEntry(size_t n, tann::SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
   {
     PARENT::elementSize = getSizeOfElement();
   }
-  void pushBack(SharedMemoryAllocator &allocator) { 
+  void pushBack(tann::SharedMemoryAllocator &allocator) {
     PARENT::push_back(InvertedIndexObject<T>(), allocator);
     PARENT::back(allocator).clear(numOfLocalIDs);    
   }
-  void pushBack(size_t id, SharedMemoryAllocator &allocator) { 
+  void pushBack(size_t id, tann::SharedMemoryAllocator &allocator) {
     pushBack(allocator);
     PARENT::back(allocator).setID(id);
   }
@@ -441,7 +441,7 @@ public:
     } catch(tann::Exception &err) {
       std::stringstream msg;
       msg << "InvertedIndexEntry::deserialize: It might be caused by inconsistency of the valuable type of the inverted index size. " << err.what();
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     numOfLocalIDs = nids;
 #ifdef NGTQ_QBG
@@ -491,7 +491,7 @@ public:
  enum DataType {
    DataTypeUint8 = 0,
    DataTypeFloat = 1
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
    ,
    DataTypeFloat16 = 2
 #endif
@@ -585,7 +585,7 @@ public:
   void setupLocalIDByteSize() {
     if (localCentroidLimit > 0xffff - 1) { 
       if (localIDByteSize == 2) {
-	NGTThrowException("NGTQ::Property: The localIDByteSize is illegal for the localCentroidLimit.");
+	TANN_THROW("NGTQ::Property: The localIDByteSize is illegal for the localCentroidLimit.");
       }
       localIDByteSize = 4;
     } else {
@@ -601,7 +601,7 @@ public:
 #else
     if (localIDByteSize != 2 && localIDByteSize != 4) {
 #endif
-      NGTThrowException("NGTQ::Property: Fatal internal error! localIDByteSize should be 2 or 4.");
+      TANN_THROW("NGTQ::Property: Fatal internal error! localIDByteSize should be 2 or 4.");
     }
   }
 
@@ -666,7 +666,7 @@ public:
 #endif
       break;
     default:
-      NGTThrowException("Quantizer constructor: Inner error. Invalid data type.");
+      TANN_THROW("Quantizer constructor: Inner error. Invalid data type.");
       break;
     } 
     setupLocalIDByteSize();
@@ -2092,7 +2092,7 @@ public:
 
   virtual void verify() = 0;
 
-  virtual size_t getInstanceSharedMemorySize(ostream &os, SharedMemoryAllocator::GetMemorySizeType t = SharedMemoryAllocator::GetTotalMemorySize) = 0;
+  virtual size_t getInstanceSharedMemorySize(ostream &os, tann::SharedMemoryAllocator::GetMemorySizeType t = tann::SharedMemoryAllocator::GetTotalMemorySize) = 0;
 
   tann::Object *allocateObject(string &line, const string &sep) {
     return globalCodebookIndex.allocateObject(line, " \t");
@@ -2118,7 +2118,7 @@ public:
 
   string getRootDirectory() { return rootDirectory; }
 
-  size_t getSharedMemorySize(ostream &os, SharedMemoryAllocator::GetMemorySizeType t = SharedMemoryAllocator::GetTotalMemorySize) {
+  size_t getSharedMemorySize(ostream &os, tann::SharedMemoryAllocator::GetMemorySizeType t = tann::SharedMemoryAllocator::GetTotalMemorySize) {
     os << "Global centroid:" << endl;
     return globalCodebookIndex.getSharedMemorySize(os, t) + getInstanceSharedMemorySize(os, t);
   }
@@ -2201,7 +2201,7 @@ class QuantizedObjectProcessingStream {
 	  if (idx / 2 > uint4StreamSize) {
 	    std::stringstream msg;
 	    msg << "Quantizer::compressIntoUint4: Fatal inner error! " << (idx / 2) << ":" << uint4StreamSize;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  if (idx % 2 == 0) {
 	    uint4Objects[idx / 2] = stream[idx];
@@ -2480,13 +2480,13 @@ public:
       msg << "Quantizer: data size of the object is zero. " << property.dataSize << ":" << property.dimension 
 	  << ":" << property.dataType;
 #endif
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 #ifdef NGTQ_STATIC_OBJECT_FILE
     if (!objectList.create(fname, objectFile)) {
       std::stringstream msg;
       msg << "Quantizer::createEmptyIndex: cannot construct the object list. " << fname << ":" << objectFile;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     objectList.open(fname, property.dimension);
 #ifdef MULTIPLE_OBJECT_LISTS
@@ -2565,7 +2565,7 @@ public:
     tann::Property globalProperty;
     globalCodebookIndex.getProperty(globalProperty);
     size_t sizeoftype = 0;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     if (globalProperty.objectType == tann::Property::ObjectType::Float ||
 	globalProperty.objectType == tann::Property::ObjectType::Float16) {
 #else
@@ -3549,7 +3549,7 @@ public:
     if (!invertedIndex.empty()) {
       stringstream msg;
       msg << "Fatal Error! inverted index is not empty. " << invertedIndex.size();
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     invertedIndex.reserve(codebookIndex.size() + 1);
     std::cerr << "codebook Index size=" << codebookIndex.size()<< std::endl;
@@ -3609,7 +3609,7 @@ public:
     if (property.localCentroidLimit > ((1UL << (sizeof(LOCAL_ID_TYPE) * 8)) - 1)) {
       stringstream msg;
       msg << "Quantizer::Error. Local centroid limit " << property.localCentroidLimit << " is too large. It must be less than " << (1UL << (sizeof(LOCAL_ID_TYPE) * 8));
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     tann::Property gp;
@@ -3650,16 +3650,16 @@ public:
     if (gp.dimension == 0) {
       stringstream msg;
       msg << "NGTQ::Quantizer::create: specified dimension is zero!";
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     if (property.localDivisionNo == 0) {
-      NGTThrowException("NGTQ::Quantizer::create: # of subvectors is zero");
+      TANN_THROW("NGTQ::Quantizer::create: # of subvectors is zero");
     }
     if (property.localDivisionNo != 1 && property.dimension % property.localDivisionNo != 0) {
       stringstream msg;
       msg << "NGTQ::Quantizer::create: dimension and localDivisionNo are not proper. "
 	  << property.dimension << ":" << property.localDivisionNo;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     lp.dimension = property.dimension / property.localDivisionNo;
 
@@ -3677,7 +3677,7 @@ public:
       {
 	stringstream msg;
 	msg << "NGTQ::Quantizer::create: Inner error! Invalid data type.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
     }
 
@@ -3691,7 +3691,7 @@ public:
       {
 	stringstream msg;
 	msg << "NGTQ::Quantizer::create: L2 is unavailable!!! you have to rebuild.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 #endif
       gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
@@ -3706,7 +3706,7 @@ public:
       {
 	stringstream msg;
 	msg << "NGTQ::Quantizer::create: Angle is unavailable!!! you have to rebuild.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 #endif
       gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeAngle;
@@ -3728,7 +3728,7 @@ public:
       {
 	stringstream msg;
 	msg << "NGTQ::Quantizer::create Inner error! Invalid distance type.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
     }
 
@@ -3911,7 +3911,7 @@ public:
      if (gid >= invertedIndex.size()) {
        std::stringstream msg;
        msg << "Quantizer::extractInvertedIndexObject: Fatal error! Invalid gid. " << invertedIndex.size() << ":" << gid;
-       NGTThrowException(msg);
+       TANN_THROW(msg);
      }
      if (invertedIndex[gid] == 0) {
 #ifdef NGTQ_SHARED_INVERTED_INDEX
@@ -4143,7 +4143,7 @@ public:
 	      double epsilon = FLT_MAX) {
     if (aggregationMode == AggregationModeApproximateDistanceWithLookupTable) {
       if (property.dataType != DataTypeFloat) {
-	NGTThrowException("NGTQ: Fatal inner error. the lookup table is only for dataType float!");
+	TANN_THROW("NGTQ: Fatal inner error. the lookup table is only for dataType float!");
       }
     }
     tann::ObjectDistances objects;
@@ -4311,7 +4311,7 @@ public:
   }
 
 
-  size_t getInstanceSharedMemorySize(ostream &os, SharedMemoryAllocator::GetMemorySizeType t = SharedMemoryAllocator::GetTotalMemorySize) {
+  size_t getInstanceSharedMemorySize(ostream &os, tann::SharedMemoryAllocator::GetMemorySizeType t = tann::SharedMemoryAllocator::GetTotalMemorySize) {
 #ifdef NGTQ_SHARED_INVERTED_INDEX
     size_t size = invertedIndex.getAllocator().getMemorySize(t);
 #else
@@ -4350,7 +4350,7 @@ public:
     size_t localIDByteSize  = property.localIDByteSize;
     Quantizer *quantizer    = 0;
     if (property.centroidCreationMode == CentroidCreationModeNone) {
-      NGTThrowException("Centroid creation mode is not specified");
+      TANN_THROW("Centroid creation mode is not specified");
     } else {
       if (localIDByteSize == 4) {
 	quantizer = new QuantizerInstance<uint32_t>;
@@ -4363,7 +4363,7 @@ public:
       } else {
 	std::stringstream msg;
 	msg << "Not support the specified size of local ID. " << localIDByteSize;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 
     }
@@ -4392,7 +4392,7 @@ public:
 		      tann::Property &localProperty) {
 #endif
      if (property.dimension == 0) {
-       NGTThrowException("NGTQ::create: Error. The dimension is zero.");
+       TANN_THROW("NGTQ::create: Error. The dimension is zero.");
      }
      property.setup(property);
      NGTQ::Quantizer *quantizer = NGTQ::Quantization::generate(property);
@@ -4411,7 +4411,7 @@ public:
        quantizer->create(index, globalProperty, localProperty);
 #endif
        if (property.dimension == 0) {
-	 NGTThrowException("Quantizer: Dimension is zero.");
+	 TANN_THROW("Quantizer: Dimension is zero.");
        }
      } catch(tann::Exception &err) {
        delete quantizer;
@@ -4447,7 +4447,7 @@ public:
     if (std::rename(srcObjectList.c_str(), dstObjectList.c_str()) != 0) {
       stringstream msg;
       msg << "Quantizer::rebuild: Cannot rename an object file. " << srcObjectList << "=>" << dstObjectList ;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     try {
@@ -4561,7 +4561,7 @@ public:
 
    NGTQ::Quantizer &getQuantizer() { 
      if (quantizer == 0) {
-       NGTThrowException("NGTQ::Index: Not open.");
+       TANN_THROW("NGTQ::Index: Not open.");
      }
      return *quantizer; 
    }
@@ -4571,7 +4571,7 @@ public:
 
    size_t getInvertedIndexSize() { return quantizer->getInvertedIndexSize(); }
 
-   size_t getSharedMemorySize(ostream &os, SharedMemoryAllocator::GetMemorySizeType t = SharedMemoryAllocator::GetTotalMemorySize) {
+   size_t getSharedMemorySize(ostream &os, tann::SharedMemoryAllocator::GetMemorySizeType t = tann::SharedMemoryAllocator::GetTotalMemorySize) {
      return quantizer->getSharedMemorySize(os, t);
    }
 
@@ -4581,7 +4581,7 @@ public:
      if (!quantizer.objectList.get(id, object, &quantizer.globalCodebookIndex.getObjectSpace())) {
        std::stringstream msg;
        msg << "cannot get the specified object. " << id;
-       NGTThrowException(msg);
+       TANN_THROW(msg);
      }
      return object;
    }
@@ -4594,11 +4594,11 @@ public:
      } catch (tann::Exception &err) {
        stringstream msg;
        msg << "Quantizer::getQuantizer: Cannot load the property. " << index << " : " << err.what();
-       NGTThrowException(msg);
+       TANN_THROW(msg);
      }
      NGTQ::Quantizer *quantizer = NGTQ::Quantization::generate(property);
      if (quantizer == 0) {
-       NGTThrowException("NGTQ::Index: Cannot get quantizer.");
+       TANN_THROW("NGTQ::Index: Cannot get quantizer.");
      }
      try {
        quantizer->open(index, globalProperty, property.quantizerType == NGTQ::QuantizerTypeQBG ? readOnly : false);

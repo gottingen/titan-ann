@@ -16,12 +16,14 @@
 
 file(GLOB_RECURSE NGT_SRC "ngt/*.cc")
 file(GLOB_RECURSE INDEX_SRC "index/*.cc")
+file(GLOB_RECURSE COMMON_SRC "common/*.cc")
 carbin_cc_library(
         NAMESPACE tann
         NAME ngt
         SOURCES
         ${NGT_SRC}
         ${INDEX_SRC}
+        ${COMMON_SRC}
         COPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS

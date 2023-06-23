@@ -28,7 +28,7 @@
 #include    <sys/stat.h>
 #include    <stdint.h>
 
-#include "tann/ngt/defines.h"
+#include "tann/common/defines.h"
 #include "tann/ngt/common.h"
 #include "tann/ngt/tree.h"
 #include "tann/ngt/thread.h"
@@ -118,7 +118,7 @@ namespace tann {
                     case ObjectSpace::ObjectType::Float:
                         p.set("ObjectType", "Float-4");
                         break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
                     case ObjectSpace::ObjectType::Float16:
                         p.set("ObjectType", "Float-2");
                         break;
@@ -228,7 +228,7 @@ namespace tann {
                         objectType = ObjectSpace::ObjectType::Float;
                     } else if (it->second == "Integer-1") {
                         objectType = ObjectSpace::ObjectType::Uint8;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
                     } else if (it->second == "Float-2") {
                         objectType = ObjectSpace::ObjectType::Float16;
 #endif
@@ -390,7 +390,7 @@ namespace tann {
                     if (ts.size() != 2) {
                         std::stringstream msg;
                         msg << "AccuracyTable: Invalid accuracy table string " << *i << ":" << str;
-                        NGTThrowException(msg);
+                        TANN_THROW(msg);
                     }
                     table.push_back(std::make_pair(Common::strtod(ts[0]), Common::strtod(ts[1])));
                 }
@@ -400,7 +400,7 @@ namespace tann {
                 if (table.size() <= 2) {
                     std::stringstream msg;
                     msg << "AccuracyTable: The accuracy table is not set yet. The table size=" << table.size();
-                    NGTThrowException(msg);
+                    TANN_THROW(msg);
                 }
                 if (accuracy > 1.0) {
                     accuracy = 1.0;
@@ -450,13 +450,13 @@ namespace tann {
                 msg
                         << "tann::Index: Fatal Error!. Despite that This NGT library is built with AVX2, this CPU doesn't support AVX2. This CPU supoorts "
                         << CpuInfo::getSupportedSimdTypes();
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
 #elif defined(NGT_AVX512)
             if (!CpuInfo::isAVX512()) {
           std::stringstream msg;
           msg << "tann::Index: Fatal Error!. Despite that This NGT library is built with AVX512, this CPU doesn't support AVX512. This CPU supoorts " << CpuInfo::getSupportedSimdTypes();
-          NGTThrowException(msg);
+          TANN_THROW(msg);
             }
 #endif
         }
@@ -498,7 +498,7 @@ namespace tann {
 
         void save() {
             if (path.empty()) {
-                NGTThrowException("tann::Index::saveIndex: path is empty");
+                TANN_THROW("tann::Index::saveIndex: path is empty");
             }
             saveIndex(path);
         }
@@ -515,7 +515,7 @@ namespace tann {
             if (::mkdir(dir.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) != 0) {
                 std::stringstream msg;
                 msg << "tann::Index::mkdir: Cannot make the specified directory. " << dir;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
         }
 
@@ -612,7 +612,7 @@ namespace tann {
 
         virtual Object *allocateObject(const std::vector<uint8_t> &obj) { return getIndex().allocateObject(obj); }
 
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
 
         virtual Object *allocateObject(const std::vector<float16> &obj) { return getIndex().allocateObject(obj); }
 
@@ -680,7 +680,7 @@ namespace tann {
         Index &getIndex() {
             if (index == 0) {
                 assert(index != 0);
-                NGTThrowException("tann::Index::getIndex: Index is unavailable.");
+                TANN_THROW("tann::Index::getIndex: Index is unavailable.");
             }
             return *index;
         }
@@ -723,7 +723,7 @@ namespace tann {
             if (vec == 0) {
                 std::stringstream msg;
                 msg << "tann::Index::allocateObject: Object is not set. ";
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             Object *object = 0;
             if (objectType == typeid(float)) {
@@ -732,14 +732,14 @@ namespace tann {
                 object = allocateObject(*static_cast<std::vector<double> *>(vec));
             } else if (objectType == typeid(uint8_t)) {
                 object = allocateObject(*static_cast<std::vector<uint8_t> *>(vec));
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
             } else if (objectType == typeid(float16)) {
                 object = allocateObject(*static_cast<std::vector<float16> *>(vec));
 #endif
             } else {
                 std::stringstream msg;
                 msg << "tann::Index::allocateObject: Unavailable object type.";
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             return object;
         }
@@ -799,7 +799,7 @@ namespace tann {
                 os->deleteAll();
 #endif
                 delete os;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
             } else if (property.objectType == tann::ObjectSpace::ObjectType::Float16) {
                 ObjectSpaceRepository<float16, float> *os = (ObjectSpaceRepository<float16, float> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
@@ -828,7 +828,7 @@ namespace tann {
                 if (!(*ifs)) {
                     std::stringstream msg;
                     msg << "Index::load: Cannot open the specified file. " << ifile;
-                    NGTThrowException(msg);
+                    TANN_THROW(msg);
                 }
                 is = ifs;
             }
@@ -859,7 +859,7 @@ namespace tann {
                 if (!(*ifs)) {
                     std::stringstream msg;
                     msg << "Index::load: Cannot open the specified file. " << ifile;
-                    NGTThrowException(msg);
+                    TANN_THROW(msg);
                 }
                 is = ifs;
             }
@@ -900,7 +900,7 @@ namespace tann {
             if (!osg.is_open()) {
                 std::stringstream msg;
                 msg << "saveIndex:: Cannot open. " << fname;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             repository.serialize(osg);
 #endif
@@ -926,7 +926,7 @@ namespace tann {
             } catch (...) {
                 std::stringstream msg;
                 msg << "exportIndex:: Cannot make the directory. " << ofile;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             objectSpace->serializeAsText(ofile + "/obj");
             std::ofstream osg(ofile + "/grp");
@@ -941,7 +941,7 @@ namespace tann {
             if (!isg.is_open()) {
                 std::stringstream msg;
                 msg << "importIndex:: Cannot open. " << fname;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             repository.deserializeAsText(isg);
         }
@@ -1524,7 +1524,7 @@ namespace tann {
                         } catch (Exception &err) {
                             std::stringstream msg;
                             msg << "GraphAndTreeIndex::getSeeds: Cannot search for tree.:" << err.what();
-                            NGTThrowException(msg);
+                            TANN_THROW(msg);
                         }
                         notexist.insert(std::pair<uint32_t, uint32_t>(tso.nodeID.getID(), id));
                         objectCount++;
@@ -1622,7 +1622,7 @@ namespace tann {
             if (!ost.is_open()) {
                 std::stringstream msg;
                 msg << "saveIndex:: Cannot open. " << fname;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             DVPTree::serialize(ost);
 #endif
@@ -1654,7 +1654,7 @@ namespace tann {
             if (!ist.is_open()) {
                 std::stringstream msg;
                 msg << "importIndex:: Cannot open. " << fname;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             DVPTree::deserializeAsText(ist);
             GraphIndex::importIndex(ifile);
@@ -1682,7 +1682,7 @@ namespace tann {
                     std::stringstream msg;
                     msg << err.what()
                         << " Even though the object could not be found, the object could be removed from the tree and graph if it existed in them.";
-                    NGTThrowException(msg);
+                    TANN_THROW(msg);
                 }
                 throw err;
             }
@@ -1712,7 +1712,7 @@ namespace tann {
             GraphIndex::objectSpace->deleteObject(obj);
 #endif
             if (results.size() == 0) {
-                NGTThrowException("Not found the specified id");
+                TANN_THROW("Not found the specified id");
             }
             if (results.size() == 1) {
                 try {
@@ -1720,7 +1720,7 @@ namespace tann {
                 } catch (Exception &err) {
                     std::stringstream msg;
                     msg << "remove:: cannot remove from tree. id=" << id << " " << err.what();
-                    NGTThrowException(msg);
+                    TANN_THROW(msg);
                 }
             } else {
                 ObjectID replaceID = id == results[0].id ? results[1].id : results[0].id;
@@ -1811,14 +1811,14 @@ namespace tann {
             } catch (Exception &err) {
                 std::stringstream msg;
                 msg << "GraphAndTreeIndex::getSeeds: Cannot search for tree.:" << err.what();
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             try {
                 DVPTree::getObjectIDsFromLeaf(tso.nodeID, seeds);
             } catch (Exception &err) {
                 std::stringstream msg;
                 msg << "GraphAndTreeIndex::getSeeds: Cannot get a leaf.:" << err.what();
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             sc.distanceComputationCount += tso.distanceComputationCount;
             sc.visitCount += tso.visitCount;
@@ -1845,7 +1845,7 @@ namespace tann {
             } catch (Exception &err) {
                 std::stringstream msg;
                 msg << "GraphAndTreeIndex::getSeeds: Cannot search for tree.:" << err.what();
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
 
             try {
@@ -1853,7 +1853,7 @@ namespace tann {
             } catch (Exception &err) {
                 std::stringstream msg;
                 msg << "GraphAndTreeIndex::getSeeds: Cannot get a leaf.:" << err.what();
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             sc.distanceComputationCount += tso.distanceComputationCount;
             sc.visitCount += tso.visitCount;

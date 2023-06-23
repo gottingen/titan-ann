@@ -16,7 +16,7 @@
 #pragma once
 
 #include "tann/ngt/index.h"
-
+#include "tann/common/args.h"
 namespace tann {
 
 
@@ -56,7 +56,7 @@ public:
       try {
 	query = args.get("#2");
       } catch (...) {
-	NGTThrowException("ngt: Error: Query is not specified");
+	TANN_THROW("ngt: Error: Query is not specified");
       }
       querySize = args.getl("Q", 0);
       indexType	= args.getChar("i", 't');

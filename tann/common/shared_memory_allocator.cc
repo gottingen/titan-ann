@@ -14,27 +14,24 @@
 // limitations under the License.
 //
 
-#include "tann/ngt/shared_memory_allocator.h"
+#include "tann/common/shared_memory_allocator.h"
 
 
-
-void* operator 
-new(size_t size, SharedMemoryAllocator &allocator) 
-{
-  void *addr = allocator.allocate(size);
+void *operator
+new(size_t size, tann::SharedMemoryAllocator &allocator) {
+    void *addr = allocator.allocate(size);
 #ifdef MEMORY_ALLOCATOR_INFO
-  std::cerr << "new:" << size << " " << addr << " " << allocator.getTotalSize() << std::endl;
+    std::cerr << "new:" << size << " " << addr << " " << allocator.getTotalSize() << std::endl;
 #endif
-  return addr;
+    return addr;
 }
 
-void* operator 
-new[](size_t size, SharedMemoryAllocator &allocator) 
-{
+void *operator
+new[](size_t size, tann::SharedMemoryAllocator &allocator) {
 
-  void *addr = allocator.allocate(size);
+    void *addr = allocator.allocate(size);
 #ifdef MEMORY_ALLOCATOR_INFO
-  std::cerr << "new[]:" << size << " " << addr << " " << allocator.getTotalSize() << std::endl;
+    std::cerr << "new[]:" << size << " " << addr << " " << allocator.getTotalSize() << std::endl;
 #endif
-  return addr;
+    return addr;
 }

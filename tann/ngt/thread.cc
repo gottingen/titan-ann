@@ -106,7 +106,7 @@ Thread::wait(ThreadMutex &m)
 {
   if (pthread_cond_wait(&m.condition, &m.mutex) != 0) {
     cerr << "waitForSignalFromThread: internal error" << endl;
-    NGTThrowException("waitForSignalFromThread: internal error");
+    TANN_THROW("waitForSignalFromThread: internal error");
   }
 }
 
@@ -120,9 +120,9 @@ void
 Thread::mutexInit(ThreadMutex &m)
 {
   if (pthread_mutex_init(&m.mutex, NULL) != 0) {
-    NGTThrowException("Thread::mutexInit: Cannot initialize mutex");
+    TANN_THROW("Thread::mutexInit: Cannot initialize mutex");
   }
   if (pthread_cond_init(&m.condition, NULL) != 0) {
-    NGTThrowException("Thread::mutexInit: Cannot initialize condition");
+    TANN_THROW("Thread::mutexInit: Cannot initialize condition");
   }
 }

@@ -64,7 +64,7 @@ public:
       default:
 	std::stringstream msg;
 	msg << "Command::CreateParameters: Error: Invalid centroid creation mode. " << centroidCreationMode;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
     }
     {
@@ -76,7 +76,7 @@ public:
       default:
 	std::stringstream msg;
 	msg << "Command::CreateParameters: Error: Invalid centroid creation mode. " << localCentroidCreationMode;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
     }
 #ifdef NGTQ_QBG
@@ -96,14 +96,14 @@ public:
 
     switch (objectType) {
     case 'f': creation.dataType = NGTQ::DataTypeFloat; break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
     case 'h': creation.dataType = NGTQ::DataTypeFloat16; break;
 #endif
     case 'c': creation.dataType = NGTQ::DataTypeUint8; break;
     default:
       std::stringstream msg;
       msg << "Command::CreateParameters: Error: Invalid object type. " << objectType;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     switch (distanceType) {
@@ -115,7 +115,7 @@ public:
     default:
       std::stringstream msg;
       msg << "Command::CreateParameters: Error: Invalid distance type. " << distanceType;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 #ifdef NGTQ_QBG
     creation.genuineDimension = creation.dimension;
@@ -125,14 +125,14 @@ public:
       char objectType = args.getChar("O", 'f');
       switch (objectType) {
       case 'f': creation.genuineDataType = ObjectFile::DataTypeFloat; break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       case 'h': creation.genuineDataType = ObjectFile::DataTypeFloat16; break;
 #endif
       case 'c': creation.genuineDataType = ObjectFile::DataTypeUint8; break;
       default:
 	std::stringstream msg;
 	msg << "Command::CreateParameters: Error: Invalid genuine object type. " << objectType;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
     }
 #endif
@@ -251,7 +251,7 @@ public:
     } else {
       std::stringstream msg;
       msg << "invalid clustering type. " << cType;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 #else
     char clusteringType;
@@ -435,7 +435,7 @@ searchQG(NGTQG::Index &index, SearchParameters &searchParameters, ostream &strea
       float value;
       linestream >> value;
       if (linestream.fail()) {
-	NGTThrowException("NGTQG: invalid stream.");
+	TANN_THROW("NGTQG: invalid stream.");
       }
       query.push_back(value);
     }

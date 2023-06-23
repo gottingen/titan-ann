@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#include "tann/ngt/defines.h"
+#include "tann/common/defines.h"
 #include "tann/ngt/common.h"
 #include "tann/ngt/object_space_repository.h"
 #include "tann/ngt/index.h"
@@ -27,7 +27,7 @@ using namespace tann;
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
 tann::Index::Index(tann::Property &prop, const string &database):redirect(false) {
   if (prop.dimension == 0) {
-    NGTThrowException("Index::Index. Dimension is not specified.");
+    TANN_THROW("Index::Index. Dimension is not specified.");
   }
   Index* idx = 0;
   mkdir(database);
@@ -36,12 +36,12 @@ tann::Index::Index(tann::Property &prop, const string &database):redirect(false)
   } else if (prop.indexType == tann::Index::Property::Graph) {
     idx = new tann::GraphIndex(database, prop);
   } else {
-    NGTThrowException("Index::Index: Not found IndexType in property file.");
+    TANN_THROW("Index::Index: Not found IndexType in property file.");
   }
   if (idx == 0) {
     stringstream msg;
     msg << "Index::Index: Cannot construct. ";
-    NGTThrowException(msg);
+    TANN_THROW(msg);
   }
   index = idx;
   path = "";
@@ -50,7 +50,7 @@ tann::Index::Index(tann::Property &prop, const string &database):redirect(false)
 
 tann::Index::Index(tann::Property &prop) : redirect(false) {
     if (prop.dimension == 0) {
-        NGTThrowException("Index::Index. Dimension is not specified.");
+        TANN_THROW("Index::Index. Dimension is not specified.");
     }
     Index *idx = 0;
     if (prop.indexType == tann::Index::Property::GraphAndTree) {
@@ -58,12 +58,12 @@ tann::Index::Index(tann::Property &prop) : redirect(false) {
     } else if (prop.indexType == tann::Index::Property::Graph) {
         idx = new tann::GraphIndex(prop);
     } else {
-        NGTThrowException("Index::Index: Not found IndexType in property file.");
+        TANN_THROW("Index::Index: Not found IndexType in property file.");
     }
     if (idx == 0) {
         stringstream msg;
         msg << "Index::Index: Cannot construct. ";
-        NGTThrowException(msg);
+        TANN_THROW(msg);
     }
     index = idx;
     path = "";
@@ -90,12 +90,12 @@ tann::Index::open(const string &database, bool rdOnly, bool graphDisabled) {
         idx = new tann::GraphIndex(database, rdOnly, graphDisabled);
 #endif
     } else {
-        NGTThrowException("Index::Open: Not found IndexType in property file.");
+        TANN_THROW("Index::Open: Not found IndexType in property file.");
     }
     if (idx == 0) {
         stringstream msg;
         msg << "Index::open: Cannot open. " << database;
-        NGTThrowException(msg);
+        TANN_THROW(msg);
     }
     index = idx;
     path = database;
@@ -105,7 +105,7 @@ void
 tann::Index::createGraphAndTree(const string &database, tann::Property &prop, const string &dataFile,
                                size_t dataSize, bool redirect) {
     if (prop.dimension == 0) {
-        NGTThrowException("Index::createGraphAndTree. Dimension is not specified.");
+        TANN_THROW("Index::createGraphAndTree. Dimension is not specified.");
     }
     prop.indexType = tann::Index::Property::IndexType::GraphAndTree;
     Index *idx = 0;
@@ -133,7 +133,7 @@ void
 tann::Index::createGraph(const string &database, tann::Property &prop, const string &dataFile, size_t dataSize,
                         bool redirect) {
     if (prop.dimension == 0) {
-        NGTThrowException("Index::createGraphAndTree. Dimension is not specified.");
+        TANN_THROW("Index::createGraphAndTree. Dimension is not specified.");
     }
     prop.indexType = tann::Index::Property::IndexType::Graph;
     Index *idx = 0;
@@ -171,7 +171,7 @@ tann::Index::loadAndCreateIndex(Index &index, const string &database, const stri
     timer.stop();
     cerr << "Data loading time=" << timer.time << " (sec) " << timer.time * 1000.0 << " (msec)" << endl;
     if (index.getObjectRepositorySize() == 0) {
-        NGTThrowException("Index::create: Data file is empty.");
+        TANN_THROW("Index::create: Data file is empty.");
     }
     cerr << "# of objects=" << index.getObjectRepositorySize() - 1 << endl;
     timer.reset();
@@ -210,7 +210,7 @@ tann::Index::append(const string &database, const float *data, size_t dataSize, 
     if (data != 0 && dataSize != 0) {
         index.append(data, dataSize);
     } else {
-        NGTThrowException("Index::append: No data.");
+        TANN_THROW("Index::append: No data.");
     }
     timer.stop();
     cerr << "Data loading time=" << timer.time << " (sec) " << timer.time * 1000.0 << " (msec)" << endl;
@@ -272,7 +272,7 @@ tann::Index::importIndex(const string &database, const string &file) {
 #endif
         assert(idx != 0);
     } else {
-        NGTThrowException("Index::Open: Not found IndexType in property file.");
+        TANN_THROW("Index::Open: Not found IndexType in property file.");
     }
     idx->importIndex(file);
     timer.stop();
@@ -297,7 +297,7 @@ std::vector<float>
 tann::Index::makeSparseObject(std::vector<uint32_t> &object) {
     if (static_cast<tann::GraphIndex &>(getIndex()).getProperty().distanceType !=
         tann::ObjectSpace::DistanceType::DistanceTypeSparseJaccard) {
-        NGTThrowException("tann::Index::makeSparseObject: Not sparse jaccard.");
+        TANN_THROW("tann::Index::makeSparseObject: Not sparse jaccard.");
     }
     size_t dimension = getObjectSpace().getDimension();
     if (object.size() + 1 > dimension) {
@@ -420,7 +420,7 @@ CreateIndexThread::run() {
         } catch (tann::Exception &err) {
             stringstream msg;
             msg << "CreateIndex::search:Fatal error! ID=" << job.id << " " << err.what();
-            NGTThrowException(msg);
+            TANN_THROW(msg);
         }
         job.results = rs;
         poolThread.getOutputJobQueue().pushBack(job);
@@ -498,7 +498,7 @@ tann::GraphIndex::constructObjectSpace(tann::Property &prop) {
         case tann::ObjectSpace::ObjectType::Uint8 :
             objectSpace = new ObjectSpaceRepository<unsigned char, int>(dimension, typeid(uint8_t), prop.distanceType);
             break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
         case tann::ObjectSpace::ObjectType::Float16 :
             objectSpace = new ObjectSpaceRepository<float16, float>(dimension, typeid(float16), prop.distanceType);
             break;
@@ -506,7 +506,7 @@ tann::GraphIndex::constructObjectSpace(tann::Property &prop) {
         default:
             stringstream msg;
             msg << "Invalid Object Type in the property. " << prop.objectType;
-            NGTThrowException(msg);
+            TANN_THROW(msg);
     }
 }
 
@@ -548,7 +548,7 @@ tann::GraphIndex::GraphIndex(const string &allocator, bool rdonly):readOnly(rdon
   tann::Property prop;
   prop.load(allocator);
   if (prop.databaseType != tann::Index::Property::DatabaseType::MemoryMappedFile) {
-    NGTThrowException("GraphIndex: Cannot open. Not memory mapped file type.");
+    TANN_THROW("GraphIndex: Cannot open. Not memory mapped file type.");
   }
   initialize(allocator, prop);
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
@@ -603,7 +603,7 @@ tann::GraphIndex::GraphIndex(const string &database, bool rdOnly, bool graphDisa
     tann::Property prop;
     prop.load(database);
     if (prop.databaseType != tann::Index::Property::DatabaseType::Memory) {
-        NGTThrowException("GraphIndex: Cannot open. Not memory type.");
+        TANN_THROW("GraphIndex: Cannot open. Not memory type.");
     }
     assert(prop.dimension != 0);
     initialize(prop);
@@ -735,7 +735,7 @@ insertMultipleSearchResults(GraphIndex &neighborhoodGraph,
         } catch (tann::Exception &err) {
             std::stringstream msg;
             msg << " Cannot insert the node. " << gr.id << ". " << err.what();
-            NGTThrowException(msg);
+            TANN_THROW(msg);
         }
     }
 }
@@ -880,7 +880,7 @@ tann::GraphIndex::showStatisticsOfGraph(tann::GraphIndex &outGraph, char mode, s
                 stringstream msg;
                 msg << "Index::showStatisticsOfGraph: Fatal inner error! The graph has a node with nan distance. " << id
                     << ":" << n.id << ":" << n.distance;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             if (n.id == 0) {
                 std::cerr << "ngt info: Warning. id is zero." << std::endl;
@@ -1010,7 +1010,7 @@ tann::GraphIndex::showStatisticsOfGraph(tann::GraphIndex &outGraph, char mode, s
                 stringstream msg;
                 msg << "Index::showStatisticsOfGraph: Fatal inner error! Wrong distance order " << node[i - 1] << ":"
                     << node[i];
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
             if (i >= dcsize) {
                 break;
@@ -1420,7 +1420,7 @@ GraphAndTreeIndex::createIndex(const vector<pair<tann::Object *, size_t> > &obje
                         } catch (tann::Exception &err) {
                             std::stringstream msg;
                             msg << " Cannot insert the node. " << job.id << ". " << err.what();
-                            NGTThrowException(msg);
+                            TANN_THROW(msg);
                         }
                     }
                     if (job.results != 0) {

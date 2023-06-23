@@ -21,9 +21,7 @@ carbin_cc_test(
         SOURCES
         product_test.cc
         COPTS
-        ${CARBIN_DEFAULT_COPTS}
-        ${CARBIN_RANDOM_RANDEN_COPTS}
-        ${CARBIN_SIMD_FLAGS}
+        ${CARBIN_CXX_OPTIONS}
         "-Wno-unused-but-set-variable"
         "-Wno-unused-variable"
         DEPS

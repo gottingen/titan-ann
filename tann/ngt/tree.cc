@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#include "tann/ngt/defines.h"
+#include "tann/common/defines.h"
 
 #include "tann/ngt/tree.h"
 #include "tann/ngt/node.h"
@@ -72,13 +72,13 @@ DVPTree::insert(InsertContainer &iobj,  LeafNode *leafNode)
           stringstream msg;
           msg << "LeafNode::insert: Cannot find object which belongs to a leaf node. id="
               << objects[i].id << ":" << e.what() << endl;
-          NGTThrowException(msg.str());
+          TANN_THROW(msg.str());
         }
         if (idd == 0.0) {
 	  if (loid == iobj.id) {
 	    stringstream msg;
 	    msg << "DVPTree::insert:already existed. " << iobj.id;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  return;
         }
@@ -181,7 +181,7 @@ DVPTree::recombineNodes(InsertContainer &ic, Node::Objects &fs, LeafNode &leaf)
       ln[cid]->setPivot(*getObjectRepository().get(fs[0].id), *objectSpace);
 #endif
     } else {
-      NGTThrowException("recombineNodes: internal error : illegal pivot.");
+      TANN_THROW("recombineNodes: internal error : illegal pivot.");
     }
     ln[cid]->parent = inid;
     int maxClusterID = cid;
@@ -369,7 +369,7 @@ DVPTree::removeEmptyNodes(InternalNode &inode) {
 #endif
       insertNode(root);
       if (root->id.getID() != 1) {
-	NGTThrowException("Root id Error");
+	TANN_THROW("Root id Error");
       }
       return;
     }
@@ -512,7 +512,7 @@ DVPTree::search(SearchContainer &so, LeafNode &node, UncheckedNode &uncheckedNod
 	so.distanceComputationCount++;
 #endif
       } catch(...) {
-        NGTThrowException("VpTree::LeafNode::search: Internal fatal error : Cannot get object");
+        TANN_THROW("VpTree::LeafNode::search: Internal fatal error : Cannot get object");
       }
       if (d <= q.radius) {
         r.id = objects[i].id;

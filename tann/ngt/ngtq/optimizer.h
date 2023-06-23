@@ -147,7 +147,7 @@ namespace QBG {
             abort();
 #else
             if (global.empty()) {
-                NGTThrowException("A global codebook is not specified!");
+                TANN_THROW("A global codebook is not specified!");
             }
             vector<vector<float>> residualVectors;
             vector<vector<float>> globalCentroid;
@@ -156,7 +156,7 @@ namespace QBG {
             } catch (...) {
                 std::stringstream msg;
                 msg << "Optimizer::generateResidualObjects: Cannot load global vectors. " << global;
-                NGTThrowException(msg);
+                TANN_THROW(msg);
             }
 
             tann::Property property;
@@ -329,7 +329,7 @@ namespace QBG {
         vector<double> &errors
         ) {
             if (vectors.size() == 0) {
-                NGTThrowException("the vector is empty");
+                TANN_THROW("the vector is empty");
             }
             generateResidualObjects(global, vectors);
             if (!reposition.isEmpty()) {

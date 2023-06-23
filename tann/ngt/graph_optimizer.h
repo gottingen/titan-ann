@@ -95,7 +95,7 @@ namespace tann {
       } catch(tann::Exception &err) {
 	std::stringstream msg;
 	msg << "Optimizer::adjustSearchCoefficients: Cannot adjust the search coefficients. " << err.what();
-	NGTThrowException(msg);      
+	TANN_THROW(msg);
       }
       graph.saveIndex(indexPath);
     }
@@ -234,7 +234,7 @@ namespace tann {
       if (access(outIndexPath.c_str(), 0) == 0) {
 	std::stringstream msg;
 	msg << "Optimizer::execute: The specified index exists. " << outIndexPath;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 
       const std::string com = "cp -r " + inIndexPath + " " + outIndexPath;
@@ -242,7 +242,7 @@ namespace tann {
       if (stat != 0) {
 	std::stringstream msg;
 	msg << "Optimizer::execute: Cannot create the specified index. " << outIndexPath;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 
       {
@@ -324,7 +324,7 @@ namespace tann {
 	} catch(tann::Exception &err) {
 	  std::stringstream msg;
 	  msg << "Optimizer::execute: Cannot adjust the search coefficients. " << err.what();
-	  NGTThrowException(msg);      
+	  TANN_THROW(msg);
 	}
       }
 
@@ -349,7 +349,7 @@ namespace tann {
 	    redirector.end();
 	    std::stringstream msg;
 	    msg << "Optimizer::execute: Cannot adjust prefetch parameters. " << err.what();
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	}
 	if (accuracyTableGeneration) {
@@ -367,7 +367,7 @@ namespace tann {
 	    redirector.end();
 	    std::stringstream msg;
 	    msg << "Optimizer::execute: Cannot generate the accuracy table. " << err.what();
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	}
 	try {
@@ -377,7 +377,7 @@ namespace tann {
 	  redirector.end();
 	  std::stringstream msg;
 	  msg << "Optimizer::execute: Cannot save the index. " << outIndexPath << err.what();
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 
       }
@@ -415,7 +415,7 @@ namespace tann {
 	  std::vector<tann::Optimizer::MeasuredValue> acc;
 	  tann::Optimizer::search(index, queryStream, gtStream, searchParameters, acc);
 	  if (acc.size() == 0) {
-	    NGTThrowException("Fatal error! Cannot get any accuracy value.");
+	    TANN_THROW("Fatal error! Cannot get any accuracy value.");
 	  }
 	  accuracy = acc[0].meanAccuracy;
 	  nOfEdges = edgeSize;
@@ -479,7 +479,7 @@ namespace tann {
       if (transition.size() < 2) {
       	std::stringstream msg;
 	msg << "Optimizer::optimizeNumberOfEdgesForANNG: Cannot optimize the number of edges. Too small object set. # of objects=" << objectRepository.size() << " target No.=" << targetNo;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       double edgeRate = 0.0;
       double accuracyRate = 0.0;
@@ -502,7 +502,7 @@ namespace tann {
       	std::stringstream msg;
 	msg << "Optimizer::optimizeNumberOfEdgesForANNG: Cannot optimize the number of edges. " 
 	    << estimatedEdge << ":" << estimatedAccuracy << " # of objects=" << objectRepository.size();
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 
       return std::make_pair(estimatedEdge, estimatedAccuracy);
@@ -512,7 +512,7 @@ namespace tann {
       optimizeNumberOfEdgesForANNG(const std::string indexPath, GraphOptimizer::ANNGEdgeOptimizationParameter &parameter) {
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-      NGTThrowException("Not implemented for NGT with the shared memory option.");
+      TANN_THROW("Not implemented for NGT with the shared memory option.");
 #endif
 
       tann::StdOstreamRedirector redirector(logDisabled);

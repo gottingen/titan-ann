@@ -998,7 +998,7 @@ namespace QBG {
 	std::cerr << "Three layer clustering..." << std::endl;
 	std::cerr << "HiearchicalKmeans::clustering: # of clusters=" << numOfThirdClusters << ":" << index.getQuantizer().property.globalCentroidLimit << std::endl;
 	if (index.getQuantizer().objectList.size() <= 1) {
-	  NGTThrowException("optimize: No objects");
+	  TANN_THROW("optimize: No objects");
 	}
 	if (numOfThirdClusters == 0) {
 	  if (index.getQuantizer().property.globalCentroidLimit == 0) {
@@ -1020,7 +1020,7 @@ namespace QBG {
 
 	std::cerr << "The first layer. " << numOfFirstClusters << ":" << numOfFirstObjects << std::endl;
 	if (numOfThirdClusters == 0 || numOfObjects == 0) {
-	  NGTThrowException("numOfThirdClusters or numOfObjects are zero");
+	  TANN_THROW("numOfThirdClusters or numOfObjects are zero");
 	}
 	numOfSecondClusters = numOfSecondClusters == 0 ? numOfThirdClusters : numOfSecondClusters;
 	numOfFirstClusters = numOfFirstClusters == 0 ? static_cast<size_t>(sqrt(numOfSecondClusters)) : numOfFirstClusters;
@@ -1031,22 +1031,22 @@ namespace QBG {
 	if (numOfFirstObjects < numOfFirstClusters) {
 	  std::stringstream msg;
 	  msg << "# of objects for the first should be larger than # of the first clusters. " << numOfFirstObjects << ":" << numOfFirstClusters;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	if (numOfFirstClusters > numOfSecondClusters) {
 	  std::stringstream msg;
 	  msg << "# of the first clusters should be larger than or equal to # of the second clusters. " << numOfFirstClusters << ":" << numOfSecondClusters;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	if (numOfSecondClusters > numOfThirdClusters) {
 	  std::stringstream msg;
 	  msg << "# of the third clusters should be larger than or equal to # of the second clusters. " << numOfSecondClusters << ":" << numOfThirdClusters;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	if (numOfFirstClusters > numOfSecondClusters) {
 	  std::stringstream msg;
 	  msg << "# of the second clusters should be larger than # of the first clusters. " << numOfFirstClusters << ":" << numOfSecondClusters;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 
 	std::cerr << "Three layer clustering:" << numOfFirstClusters << ":" << numOfFirstObjects << "," << numOfSecondClusters << ":" << numOfSecondObjects << "," << numOfThirdClusters << ":" << numOfObjects << std::endl;
@@ -1065,7 +1065,7 @@ namespace QBG {
 	  if (!objectList.get(id, obj, &objectSpace)) {
 	    std::stringstream msg;
 	    msg << "qbg: Cannot get object. ID=" << id;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  vectors.push_back(obj);
 	}
@@ -1199,13 +1199,13 @@ namespace QBG {
 	  if (clusterID < 0) {
 	    std::stringstream msg;
 	    msg << "Any target cluster ID is not specified.";
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  std::ifstream objectIDs(objectIDsFile);
 	  if (!objectIDs) {
 	    std::stringstream msg;
 	    msg << "Cannot open the object id file. " << objectIDsFile;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  auto &objectSpace = quantizer.globalCodebookIndex.getObjectSpace();
 	  uint32_t id = 1;

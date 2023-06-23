@@ -229,7 +229,7 @@ void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
   try {
     QBG::Index index(indexPath);
     if (index.getQuantizer().objectList.size() <= 1) {
-      NGTThrowException("optimize: No objects");
+      TANN_THROW("optimize: No objects");
     }
     std::cerr << "optimize: # of objects=" << numberOfObjects << std::endl;
     if (numberOfObjects == 0) {
@@ -241,7 +241,7 @@ void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
     if (index.getQuantizer().property.localCentroidLimit == 0 && numberOfClusters == 0) {
       std::stringstream msg;
       msg << "optimize: # of clusters is illegal. " << index.getQuantizer().property.localCentroidLimit << ":" << numberOfClusters;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     if (index.getQuantizer().property.localCentroidLimit != 0 && numberOfClusters != 0 && 
 	index.getQuantizer().property.localCentroidLimit != numberOfClusters) {
@@ -254,7 +254,7 @@ void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
     if (numberOfSubvectors == 0 && index.getQuantizer().property.localDivisionNo == 0) {
       std::stringstream msg;
       msg << "optimize: # of subvectors is illegal. " << numberOfSubvectors << ":" << index.getQuantizer().property.localDivisionNo;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     if (numberOfSubvectors != 0 && index.getQuantizer().property.localDivisionNo != 0 &&
 	numberOfSubvectors != index.getQuantizer().property.localDivisionNo) {
@@ -286,7 +286,7 @@ void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
       loadVectors(objects, vectors);
 #endif
       if (vectors.size() == 0 || vectors[0].size() == 0) {
-	NGTThrowException("Optimizer::optimize: invalid input vectors");
+	TANN_THROW("Optimizer::optimize: invalid input vectors");
       }
       std::vector<std::vector<float>> global(1);
       global[0].resize(index.getQuantizer().property.dimension, 0);
@@ -351,7 +351,7 @@ void QBG::Optimizer::optimize(std::string invector, std::string ofile, std::stri
   if (vectors.size() == 0) {
     std::stringstream msg;
     msg << "Optimizer: error! the specified vetor file is empty. " << invector << ". the size=" << vectors.size();
-    NGTThrowException(msg);
+    TANN_THROW(msg);
   }
 
   dim = vectors[0].size();
@@ -359,7 +359,7 @@ void QBG::Optimizer::optimize(std::string invector, std::string ofile, std::stri
   if (dim % numberOfSubvectors != 0) {
     std::stringstream msg;
     msg << "# of subspaces (m) is illegal. " << dim << ":" << numberOfSubvectors;
-    NGTThrowException(msg);
+    TANN_THROW(msg);
   }
 
 
@@ -458,7 +458,7 @@ void QBG::Optimizer::optimize(std::string invector, std::string ofile, std::stri
       std::stringstream msg;
       msg << "Fatal error. minLocalClusters.size() != numberOfSubvectors " <<
 	minLocalClusters.size() << ":" << numberOfSubvectors;
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
     float totalRate = 0.0;
     for (size_t m = 0; m < minLocalClusters.size(); m++) {

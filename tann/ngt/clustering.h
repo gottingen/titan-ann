@@ -138,12 +138,12 @@ namespace tann {
 	if (v.size() == 0) {
 	  std::stringstream msg;
 	  msg << "Clustering:loadVectors: Error! The dimensionality is zero." << std::endl;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	if (prevdim != 0 && prevdim != v.size()) {
 	  std::stringstream msg;
 	  msg << "Clustering:loadVectors: Error! The dimensionality is inconsist. " << prevdim << ":" <<v.size() << std::endl;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	vectors.push_back(v);
 	prevdim = v.size();
@@ -273,7 +273,7 @@ namespace tann {
       if (a.size() != b.size()) {
 	std::stringstream msg;
 	std::cerr << "Clustering::subtract: Mismatched dimensions. " << a.size() << "x" << b.size();
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       auto bit = b.begin();
       for (auto ait = a.begin(); ait != a.end(); ++ait, ++bit) {
@@ -480,7 +480,7 @@ namespace tann {
 	    for (auto scit = clusters.begin(); scit != clusters.end(); ++scit) {
 	      msg << distance(clusters.begin(), scit) << ":" << (*scit).members.size() << " ";
 	    }
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  (*cit).members.push_back((*maxit).members.back());
 	  (*cit).members.back().centroidID = distance(clusters.begin(), cit);
@@ -956,7 +956,7 @@ namespace tann {
 	default:
 	  std::stringstream msg;
 	  msg << " kmeans: invalid initialization mode. " << initializationMode;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
       }
     }
@@ -972,12 +972,12 @@ namespace tann {
       if (vectors.size() == 0) {
 	std::stringstream msg;
 	msg << "Clustering::kmeans: No vector.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       if (vectors[0].size() == 0) {
 	std::stringstream msg;
 	msg << "Clustering::kmeans: No dimension.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 
       setupInitialClusters(vectors, numberOfClusters, clusters);
@@ -993,7 +993,7 @@ namespace tann {
       default:
 	std::stringstream msg;
 	msg << " kmeans: invalid clustering type. " << clusteringType;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
     }
 

@@ -99,7 +99,7 @@ namespace tann {
       if (!is) {
 	std::stringstream msg;
 	msg << "Cannot open the specified file. " << sp.query;
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 
       search(index, is, gtStream, sp, acc);
@@ -138,7 +138,7 @@ namespace tann {
 	if (specifiedResultSize == 0) {
 	  std::stringstream msg;
 	  msg << "For calculating recalls, the result size should be specified.";
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	resultDataSize = specifiedResultSize;
       } else {
@@ -182,7 +182,7 @@ namespace tann {
 	if (specifiedResultSize == 0) {
 	  std::stringstream msg;
 	  msg << "For calculating recalls, the result size should be specified.";
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	resultDataSize = specifiedResultSize;
       } else {
@@ -242,12 +242,12 @@ namespace tann {
 	      if (searchCount != 1) {
 		std::stringstream msg;
 		msg << "Error: gt has not just one search result.";
-		NGTThrowException(msg);
+		TANN_THROW(msg);
 	      }
 	      if (dataCount < resultDataSize) {
 		std::stringstream msg;
 		msg << "Error: gt data is less than result size! " << dataCount << ":" << resultDataSize;
-		NGTThrowException(msg);
+		TANN_THROW(msg);
 	      }
 	      return;
 	    }
@@ -263,7 +263,7 @@ namespace tann {
 	if (result.size() < 3) {
 	  std::stringstream msg;
 	  msg << "result format is wrong. ";
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	size_t id = tann::Common::strtol(result[1]);
 	distance = tann::Common::strtod(result[2]);
@@ -272,7 +272,7 @@ namespace tann {
 	} catch(...) {
 	  std::stringstream msg;
 	  msg << "Cannot insert id into the gt. " << id;
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
       } 
     }
@@ -321,14 +321,14 @@ namespace tann {
 	      if (result.size() < 3) {
 		std::stringstream msg;
 		msg << "result format is wrong. ";
-		NGTThrowException(msg);
+		TANN_THROW(msg);
 	      }
 	      size_t rank = tann::Common::strtol(result[0]);
 	      dataCount++;
 	      if (rank != dataCount) {
 		std::stringstream msg;
 		msg << "check: inner error! " << rank << ":" << dataCount;
-		NGTThrowException(msg);
+		TANN_THROW(msg);
 	      }
 	    }
 	  }
@@ -409,7 +409,7 @@ namespace tann {
 		      std::stringstream msg;
 		      msg << "check: inner error! " << epsilon;
 		      std::cerr << "Cannot find epsilon.";
-		      NGTThrowException(msg);
+		      TANN_THROW(msg);
 		    }
 		    {
 		      auto di = sumupValues.totalAccuracy.find(key);
@@ -549,7 +549,7 @@ namespace tann {
 	    std::stringstream msg;
 	    msg << "exploreEpsilonForAccuracy:" << std::endl;
 	    msg << "Error!! Epsilon (lower bound) is too large. " << epsilon << "," << startEpsilon << "," << epsilonStep << "," << count;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  acc.clear();
 	  sp.beginOfEpsilon = sp.endOfEpsilon = fromOverEpsilon = epsilon;
@@ -564,7 +564,7 @@ namespace tann {
 	  std::stringstream msg;
 	  msg << "exploreEpsilonForAccuracy:" << std::endl;
 	  msg << "Error! startEpsilon should be reduced for the specified range.";
-	  NGTThrowException(msg);
+	  TANN_THROW(msg);
 	}
 	fromOver = acc[0].meanAccuracy;
 
@@ -577,7 +577,7 @@ namespace tann {
 	      std::stringstream msg;
 	      msg << "exploreEpsilonForAccuracy:" << std::endl;
 	      msg << "Error!! Epsilon (upper bound) is too large. " << epsilon << "," << startEpsilon << "," << epsilonStep << "," << count;
-	      NGTThrowException(msg);
+	      TANN_THROW(msg);
 	    }
 	    acc.clear();
 	    queries.clear();
@@ -624,7 +624,7 @@ namespace tann {
 	    msg << "exploreEpsilonForAccuracy:" << std::endl;
 	    msg << "Error!! Not found proper under epsilon for margin=" << margin << " and the number of queries." << std::endl;
 	    msg << "        Should increase margin or the number of queries to get the proper epsilon. ";
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  } else {
 	    sp.beginOfEpsilon = sp.endOfEpsilon = (fromUnderEpsilon + fromOverEpsilon) / 2.0;
 	  }
@@ -634,7 +634,7 @@ namespace tann {
 	    msg << "exploreEpsilonForAccuracy:" << std::endl;
 	    msg << "Error!! Not found proper over epsilon for margin=" << margin << " and the number of queries." << std::endl;
 	    msg << "        Should increase margin or the number of queries to get the proper epsilon. ";
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  } else {
 	    sp.beginOfEpsilon = sp.endOfEpsilon = (toUnderEpsilon + toOverEpsilon) / 2.0;
 	  }
@@ -643,7 +643,7 @@ namespace tann {
 	    std::stringstream msg;
 	    msg << "exploreEpsilonForAccuracy:" << std::endl;
 	    msg << "Error!! From and to epsilons are the same. Cannot continue.";
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  sp.beginOfEpsilon = fromUnderEpsilon;
 	  sp.endOfEpsilon = toOverEpsilon;
@@ -652,7 +652,7 @@ namespace tann {
       }
       std::stringstream msg;
       msg << "Something wrong!";
-      NGTThrowException(msg);
+      TANN_THROW(msg);
     }
 
     MeasuredValue measure(std::istream &queries, std::istream &gtStream, Command::SearchParameters &searchParameters, std::pair<float, float> accuracyRange, double margin) {
@@ -676,7 +676,7 @@ namespace tann {
       if (distanceCount == 0) {
 	std::stringstream msg;
 	msg << "measureDistance: Error! Distance count is zero.";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
       MeasuredValue v;
       v.meanVisitCount = visitCount;
@@ -710,7 +710,7 @@ namespace tann {
 	      if (base > 1000) {
 		std::stringstream msg;
 		msg << "base is too large! " << base;
-		NGTThrowException(msg);
+		TANN_THROW(msg);
 	      }
 	      searchParameters.step = 10;
 	      tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
@@ -728,11 +728,11 @@ namespace tann {
 			err.getMessage().find("is too large") != std::string::npos) {
 		      std::cerr << "Warning: Cannot adjust the base edge size." << err.what() << std::endl;
 		      std::cerr << "Try again with the next base" << std::endl;
-		      NGTThrowException("**Retry**"); 
+		      TANN_THROW("**Retry**");
 		    }
 		    if (margin > 0.4) {
 		      std::cerr << "Warning: Cannot adjust the base even for the widest margin " << margin << ". " << err.what();
-		      NGTThrowException("**Retry**"); 
+		      TANN_THROW("**Retry**");
 		    } else {
 		      std::cerr << "Warning: Cannot adjust the base edge size for margin " << margin << ". " << err.what() << std::endl;
 		      std::cerr << "Try again for the next margin." << std::endl;
@@ -810,7 +810,7 @@ namespace tann {
 	      if (rate > 1000) {
 		std::stringstream msg;
 		msg << "rate is too large! " << rate;
-		NGTThrowException(msg);
+		TANN_THROW(msg);
 	      }
 	      searchParameters.step = 10;
 	      tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
@@ -828,11 +828,11 @@ namespace tann {
 			err.getMessage().find("is too large") != std::string::npos) {
 		      std::cerr << "Warning: Cannot adjust the rate of edge size." << err.what() << std::endl;
 		      std::cerr << "Try again with the next rate" << std::endl;
-		      NGTThrowException("**Retry**");
+		      TANN_THROW("**Retry**");
 		    }
 		    if (margin > 0.4) {
 		      std::cerr << "Error: Cannot adjust the rate even for the widest margin " << margin << ". " << err.what();
-		      NGTThrowException("**Retry**"); 
+		      TANN_THROW("**Retry**");
 		    } else {
 		      std::cerr << "Warning: Cannot adjust the rate of edge size for margin " << margin << ". " << err.what() << std::endl;
 		      std::cerr << "Try again for the next margin." << std::endl;
@@ -1016,7 +1016,7 @@ namespace tann {
 	}
 	break;
       default:
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       case tann::ObjectSpace::ObjectType::Float16:
 #endif
       case tann::ObjectSpace::ObjectType::Float:
@@ -1054,7 +1054,7 @@ namespace tann {
 	  }
 	}
 	break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       case tann::ObjectSpace::ObjectType::Float16:
 	{
 	  auto *obj = static_cast<tann::float16*>(index.getObjectSpace().getObject(id));
@@ -1092,7 +1092,7 @@ namespace tann {
 	  }
 	}
 	break;
-#ifdef NGT_HALF_FLOAT
+#ifdef TANN_ENABLE_HALF_FLOAT
       case tann::ObjectSpace::ObjectType::Float16:
 	{
 	  auto *obj1 = static_cast<tann::float16*>(index.getObjectSpace().getObject(id1));
@@ -1153,7 +1153,7 @@ namespace tann {
 	  if (emptyCount >= 1000) {
 	    std::stringstream msg;
 	    msg << "Too small amount of objects. " << repositorySize << ":" << nqueries;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  continue;
 	}
@@ -1177,7 +1177,7 @@ namespace tann {
 	  if (id1 + oft >= osize) {
 	    std::stringstream msg;
 	    msg << "Too many empty entries to extract. Object repository size=" << osize << " " << id1 << ":" << oft;
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	}
 	if (similarObject) {
@@ -1197,7 +1197,7 @@ namespace tann {
 	  if (results.size() < 2) {
 	    std::stringstream msg;
 	    msg << "Cannot get even two results for queries.";
-	    NGTThrowException(msg);
+	    TANN_THROW(msg);
 	  }
 	  size_t id2 = 1;
 	  for (size_t i = 1; i < results.size(); i++) {
@@ -1214,7 +1214,7 @@ namespace tann {
 	    if (id2 >= osize) {
 	      std::stringstream msg;
 	      msg << "Too many empty entries to extract.";
-	      NGTThrowException(msg);
+	      TANN_THROW(msg);
 	    }
 	  }
 	  queries.push_back(meanObject(id1 + oft, id2, prop));
@@ -1477,7 +1477,7 @@ namespace tann {
 	    if (results.size() == 0) {
 	      std::stringstream msg;
 	      msg << "generatePseudoGroundTruth: Cannot get any search result.";
-	      NGTThrowException(msg);
+	      TANN_THROW(msg);
 	    }
 	    tann::Distance d = results.back().distance;
 	    if (d != lastDistances[idx]) {
@@ -1530,7 +1530,7 @@ namespace tann {
       if (prop.edgeSizeForSearch != 0 && prop.edgeSizeForSearch != -2) {
 	std::stringstream msg;
 	msg << "Optimizer::generateAccuracyTable: edgeSizeForSearch is invalid to call generateAccuracyTable, because accuracy 1.0 cannot be achieved with the setting. edgeSizeForSearch=" << prop.edgeSizeForSearch << ".";
-	NGTThrowException(msg);
+	TANN_THROW(msg);
       }
 
       tann::Optimizer optimizer(index, nOfResults);
@@ -1558,7 +1558,7 @@ namespace tann {
 	    queryStream.seekg(0, std::ios_base::beg);
 	    tann::Optimizer::search(index, queryStream, gtStream, searchParameters, acc);
 	    if (acc.size() == 0) {
-	      NGTThrowException("Fatal error! Cannot get any accuracy value.");
+	      TANN_THROW("Fatal error! Cannot get any accuracy value.");
 	    }
 	    accuracy = acc[0].meanAccuracy;
 	    map.insert(std::make_pair(epsilon, accuracy));

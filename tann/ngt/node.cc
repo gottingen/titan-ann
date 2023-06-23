@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#include "tann/ngt/defines.h"
+#include "tann/common/defines.h"
 
 #include "tann/ngt/node.h"
 #include "tann/ngt/tree.h"
@@ -195,7 +195,7 @@ LeafNode::splitObjects(Container &c, Objects &fs, int pv)
     }
     if (fs[fsize - 1].clusterID == cid) {
       msg << "LeafNode::splitObjects: All of the object distances are the same!" << endl;;
-      NGTThrowException(msg.str());
+      TANN_THROW(msg.str());
     } else {
       cerr << msg.str() << endl;
       cerr << "LeafNode::splitObjects: Anyway, continue..." << endl;
@@ -266,11 +266,11 @@ LeafNode::removeObject(size_t id, size_t replaceId) {
   }
   if (idx == fsize) {
     if (pivot == 0) {
-      NGTThrowException("LeafNode::removeObject: Internal error!. the pivot is illegal.");
+      TANN_THROW("LeafNode::removeObject: Internal error!. the pivot is illegal.");
     }
     stringstream msg;
     msg << "VpTree::Leaf::remove: Warning. Cannot find the specified object. ID=" << id << "," << replaceId << " idx=" << idx << " If the same objects were inserted into the index, ignore this message.";
-    NGTThrowException(msg.str());
+    TANN_THROW(msg.str());
   }
 
 #ifdef NGT_NODE_USE_VECTOR
