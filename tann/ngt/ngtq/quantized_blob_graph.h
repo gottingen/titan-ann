@@ -53,12 +53,12 @@ namespace QBG {
       creation.localClusteringSampleCoefficient	= 10;
       creation.globalEdgeSizeForCreation	= 10;
       creation.globalEdgeSizeForSearch	= 40;
-      creation.globalIndexType	= tann::ngt::Property::GraphAndTree;
+      creation.globalIndexType	= tann::Property::GraphAndTree;
       creation.globalInsertionRadiusCoefficient	= 1.1;
-      creation.globalGraphType	= tann::ngt::NeighborhoodGraph::GraphTypeANNG;
-      creation.localIndexType	= tann::ngt::Property::GraphAndTree;
+      creation.globalGraphType	= tann::NeighborhoodGraph::GraphTypeANNG;
+      creation.localIndexType	= tann::Property::GraphAndTree;
       creation.localInsertionRadiusCoefficient = 1.1;
-      creation.localGraphType	= tann::ngt::NeighborhoodGraph::GraphTypeANNG;
+      creation.localGraphType	= tann::NeighborhoodGraph::GraphTypeANNG;
 
       hierarchicalClustering.maxSize	= 1000;
       hierarchicalClustering.numOfObjects	= 0;
@@ -66,7 +66,7 @@ namespace QBG {
       hierarchicalClustering.numOfTotalClusters	= 0;
       hierarchicalClustering.numOfTotalBlobs	= 0;
       hierarchicalClustering.clusterID	= -1;
-      hierarchicalClustering.initMode	= tann::ngt::Clustering::InitializationModeKmeansPlusPlus;
+      hierarchicalClustering.initMode	= tann::Clustering::InitializationModeKmeansPlusPlus;
       hierarchicalClustering.numOfRandomObjects	= 0;
       hierarchicalClustering.numOfFirstObjects	= 0;
       hierarchicalClustering.numOfFirstClusters	= 0;
@@ -76,8 +76,8 @@ namespace QBG {
       hierarchicalClustering.extractCentroid	= false;
       hierarchicalClustering.threeLayerClustering	= true;
 
-      optimization.clusteringType	= tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT;
-      optimization.initMode		= tann::ngt::Clustering::InitializationModeHead;
+      optimization.clusteringType	= tann::Clustering::ClusteringTypeKmeansWithoutNGT;
+      optimization.initMode		= tann::Clustering::InitializationModeHead;
       optimization.timelimit		= 24 * 1 * 60.0 * 60.0;
       optimization.iteration		= 100;
       optimization.clusterIteration	= 100;
@@ -98,8 +98,8 @@ namespace QBG {
       optimization.showClusterInfo	= false;
     }
 
-    void setProperties(NGTQ::Property &property, tann::ngt::Property &globalProperty,
-		      tann::ngt::Property &localProperty) {
+    void setProperties(NGTQ::Property &property, tann::Property &globalProperty,
+		      tann::Property &localProperty) {
       property.threadSize		= creation.threadSize;
       property.globalCentroidLimit	= 0;
       property.localCentroidLimit	= creation.localCentroidLimit;
@@ -152,13 +152,13 @@ namespace QBG {
 
       size_t			globalEdgeSizeForCreation;
       size_t			globalEdgeSizeForSearch;
-      tann::ngt::Property::IndexType	globalIndexType;
+      tann::Property::IndexType	globalIndexType;
       float			globalInsertionRadiusCoefficient;
-      tann::ngt::Property::GraphType	globalGraphType;
+      tann::Property::GraphType	globalGraphType;
 
-      tann::ngt::Property::IndexType	localIndexType;
+      tann::Property::IndexType	localIndexType;
       float			localInsertionRadiusCoefficient;
-      tann::ngt::Property::GraphType	localGraphType;
+      tann::Property::GraphType	localGraphType;
     } creation;
 
     struct {
@@ -169,7 +169,7 @@ namespace QBG {
       size_t		numOfTotalBlobs;
       int32_t		clusterID;
 
-      tann::ngt::Clustering::InitializationMode initMode;
+      tann::Clustering::InitializationMode initMode;
 
       size_t		numOfRandomObjects;
 
@@ -184,8 +184,8 @@ namespace QBG {
     } hierarchicalClustering;
 
     struct {
-      tann::ngt::Clustering::ClusteringType		clusteringType;
-      tann::ngt::Clustering::InitializationMode	initMode;
+      tann::Clustering::ClusteringType		clusteringType;
+      tann::Clustering::InitializationMode	initMode;
 
       float		timelimit;
       size_t		iteration;
@@ -212,19 +212,19 @@ namespace QBG {
   };
 
 
-  class SearchContainer : public tann::ngt::SearchContainer {
+  class SearchContainer : public tann::SearchContainer {
   public:
-    SearchContainer(tann::ngt::Object &q): tann::ngt::SearchContainer(q),
+    SearchContainer(tann::Object &q): tann::SearchContainer(q),
       cutback(0.0), graphExplorationSize(50), exactResultSize(0),
       blobExplorationCoefficient(0.0), numOfProbes(0) {}
-    SearchContainer(): tann::ngt::SearchContainer(*reinterpret_cast<tann::ngt::Object*>(0)),
+    SearchContainer(): tann::SearchContainer(*reinterpret_cast<tann::Object*>(0)),
       cutback(0.0), graphExplorationSize(50), exactResultSize(0),
       blobExplorationCoefficient(0.0), numOfProbes(0) {}
-    SearchContainer(SearchContainer &sc, tann::ngt::Object &q): tann::ngt::SearchContainer(q) {
+    SearchContainer(SearchContainer &sc, tann::Object &q): tann::SearchContainer(q) {
       QBG::SearchContainer::operator=(sc);
     }
     SearchContainer &operator=(SearchContainer &sc) {
-      tann::ngt::SearchContainer::operator=(sc);
+      tann::SearchContainer::operator=(sc);
       cutback = sc.cutback;
       graphExplorationSize = sc.graphExplorationSize;
       exactResultSize = sc.exactResultSize;
@@ -259,12 +259,12 @@ namespace QBG {
 #else
       
       (*this).resize(quantizedIndex.getInvertedIndexSize());
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       timer.start();
       for (size_t gid = 1; gid < quantizedIndex.getInvertedIndexSize(); gid++) {
 	if (gid % 100000 == 0) {
 	  timer.stop();
-	  std::cerr << "The number of processed blobs=" << gid << " VmSize=" <<  tann::ngt::Common::getProcessVmSizeStr() << " Elapsed time=" << timer << std::endl;
+	  std::cerr << "The number of processed blobs=" << gid << " VmSize=" <<  tann::Common::getProcessVmSizeStr() << " Elapsed time=" << timer << std::endl;
 	  timer.restart();
 	}
 	NGTQ::InvertedIndexEntry<uint16_t> invertedIndexObjects(numOfSubspaces);
@@ -305,12 +305,12 @@ namespace QBG {
   Index(const std::string &indexPath, bool readOnly = false, bool silence = true) :
     NGTQ::Index(indexPath, readOnly), path(indexPath), quantizedBlobGraph(*this) {
       searchable = false;
-      tann::ngt::StdOstreamRedirector redirector(silence);
+      tann::StdOstreamRedirector redirector(silence);
       redirector.begin();
       try {
 	load();
 	searchable = true;
-      } catch (tann::ngt::Exception &err) {
+      } catch (tann::Exception &err) {
 	if (readOnly) {
 	  stringstream msg;
 	  msg << "QBG::Index: No quantized blob graph. " << err.what();
@@ -325,7 +325,7 @@ namespace QBG {
 
     bool &getSilence() { return silence; }
 
-    tann::ngt::Object *allocateObject(std::vector<float> &objectVector) {
+    tann::Object *allocateObject(std::vector<float> &objectVector) {
       auto &globalIndex = getQuantizer().globalCodebookIndex;
       auto dim = getQuantizer().property.dimension;
       objectVector.resize(dim, 0);
@@ -337,8 +337,8 @@ namespace QBG {
 		       BuildParameters &buildParameters,
 		       std::vector<float> *rotation,const std::string &objectFile) {
       NGTQ::Property property;
-      tann::ngt::Property globalProperty;
-      tann::ngt::Property localProperty;
+      tann::Property globalProperty;
+      tann::Property localProperty;
       buildParameters.setProperties(property, globalProperty, localProperty);
       property.quantizerType = NGTQ::QuantizerTypeQBG;
       NGTQ::Index::create(index, property, globalProperty, localProperty, rotation, objectFile);
@@ -346,13 +346,13 @@ namespace QBG {
 #endif
     
     static void create(const std::string &index, NGTQ::Property &property, 
-		       tann::ngt::Property &globalProperty,
+		       tann::Property &globalProperty,
 #ifdef NGTQ_QBG		       
-		       tann::ngt::Property &localProperty,
+		       tann::Property &localProperty,
 		       std::vector<float> *rotation,
 		       const std::string &objectFile) {
 #else
-		       tann::ngt::Property &localProperty) {
+		       tann::Property &localProperty) {
 #endif
       property.quantizerType = NGTQ::QuantizerTypeQBG;
 #ifdef NGTQ_QBG
@@ -371,8 +371,8 @@ namespace QBG {
       getQuantizer().objectList.put(id, object, &getQuantizer().globalCodebookIndex.getObjectSpace());
     }
 
-    tann::ngt::ObjectID append(std::vector<float> &object) {
-      tann::ngt::ObjectID id = getQuantizer().objectList.size();
+    tann::ObjectID append(std::vector<float> &object) {
+      tann::ObjectID id = getQuantizer().objectList.size();
       id = id == 0 ? 1 : id;
       getQuantizer().objectList.put(id, object, &getQuantizer().globalCodebookIndex.getObjectSpace());
       return id;
@@ -383,7 +383,7 @@ namespace QBG {
 		       size_t dataSize = 0,	// data size
 		       bool silence = true
 		       ) {
-      tann::ngt::StdOstreamRedirector redirector(silence);
+      tann::StdOstreamRedirector redirector(silence);
       redirector.begin();
       QBG::Index index(indexName);
       istream *is;
@@ -399,13 +399,13 @@ namespace QBG {
 	is = ifs;
       }
       string line;
-      vector<pair<tann::ngt::Object*, size_t> > objects;
+      vector<pair<tann::Object*, size_t> > objects;
       size_t count = 0;
       // extract objects from the file and insert them to the object list.
       while(getline(*is, line)) {
 	count++;
 	std::vector<float>	object;
-	tann::ngt::Common::extractVector(line, " ,\t", object);
+	tann::Common::extractVector(line, " ,\t", object);
 	if (object.empty()) {
 	  cerr << "An empty line or invalid value: " << line << endl;
 	  continue;
@@ -431,11 +431,11 @@ namespace QBG {
 			     size_t dataSize = 0,	// data size
 			     bool silence = true
 		       ) {
-      tann::ngt::StdOstreamRedirector redirector(silence);
+      tann::StdOstreamRedirector redirector(silence);
       redirector.begin();
       QBG::Index index(indexName);
       std::vector<std::string> tokens;
-      tann::ngt::Common::tokenize(data, tokens, ".");
+      tann::Common::tokenize(data, tokens, ".");
       if (tokens.size() < 2) {
 	std::stringstream msg;
 	msg << "Invalid file name format";
@@ -462,10 +462,10 @@ namespace QBG {
     static void appendFromObjectRepository(const std::string &ngtIndex,	// QG
 					   const std::string &qgIndex,	// NGT
 					   bool silence = true) {
-      tann::ngt::StdOstreamRedirector redirector(silence);
+      tann::StdOstreamRedirector redirector(silence);
       redirector.begin();
 
-      tann::ngt::Index ngt(ngtIndex);
+      tann::Index ngt(ngtIndex);
       QBG::Index qg(qgIndex);
       auto &objectSpace = ngt.getObjectSpace();
       size_t size = objectSpace.getRepository().size();
@@ -484,9 +484,9 @@ namespace QBG {
       redirector.end();
     }
 
-    void getSeeds(tann::ngt::Index &index, tann::ngt::Object *object, tann::ngt::ObjectDistances &seeds, size_t noOfSeeds) {
-      auto &graph = static_cast<tann::ngt::GraphAndTreeIndex&>(index.getIndex());
-      tann::ngt::SearchContainer sc(*object);
+    void getSeeds(tann::Index &index, tann::Object *object, tann::ObjectDistances &seeds, size_t noOfSeeds) {
+      auto &graph = static_cast<tann::GraphAndTreeIndex&>(index.getIndex());
+      tann::SearchContainer sc(*object);
       sc.setResults(&seeds);
       sc.setSize(noOfSeeds);
       sc.setEpsilon(0.0);
@@ -494,7 +494,7 @@ namespace QBG {
       graph.search(sc);
     }
 
-    tann::ngt::Distance getDistance(void *objects, std::vector<float> &distances, size_t noOfObjects, NGTQ::QuantizedObjectDistance::DistanceLookupTableUint8 &lut
+    tann::Distance getDistance(void *objects, std::vector<float> &distances, size_t noOfObjects, NGTQ::QuantizedObjectDistance::DistanceLookupTableUint8 &lut
 			      ) {
       auto &quantizedObjectDistance = getQuantizer().getQuantizedObjectDistance();
 #ifdef NGTQBG_MIN
@@ -507,10 +507,10 @@ namespace QBG {
 #endif
     }
 
-    std::tuple<tann::ngt::Distance, tann::ngt::Distance>
-      judge(NGTQG::QuantizedNode &ivi, size_t k, tann::ngt::Distance radius,
+    std::tuple<tann::Distance, tann::Distance>
+      judge(NGTQG::QuantizedNode &ivi, size_t k, tann::Distance radius,
 	    NGTQ::QuantizedObjectDistance::DistanceLookupTableUint8 &lut,
-	    tann::ngt::NeighborhoodGraph::ResultSet &result, size_t &foundCount
+	    tann::NeighborhoodGraph::ResultSet &result, size_t &foundCount
 	    ) {
       auto noOfObjects = ivi.ids.size();
       float distances[NGTQ::QuantizedObjectProcessingStream::getNumOfAlignedObjects(noOfObjects)];
@@ -529,7 +529,7 @@ namespace QBG {
       bool found = false;
       for (size_t i = 0; i < noOfObjects; i++) {
 	if (distances[i] <= radius) {
-	  result.push(tann::ngt::ObjectDistance(ivi.ids[i], distances[i]));
+	  result.push(tann::ObjectDistance(ivi.ids[i], distances[i]));
 	  found = true;
 	  if (result.size() > k) {
 	    result.pop();
@@ -549,12 +549,12 @@ namespace QBG {
 
     /////////////////// ///-/
     void searchBlobGraphNaively(QBG::SearchContainer &searchContainer) {
-      tann::ngt::Object *query = &searchContainer.object;
+      tann::Object *query = &searchContainer.object;
 
       auto &quantizer = getQuantizer();
       auto &globalIndex = quantizer.globalCodebookIndex;
-      auto &globalGraph = static_cast<tann::ngt::GraphAndTreeIndex&>(globalIndex.getIndex());
-      tann::ngt::ObjectDistances seeds;
+      auto &globalGraph = static_cast<tann::GraphAndTreeIndex&>(globalIndex.getIndex());
+      tann::ObjectDistances seeds;
       getSeeds(globalIndex, query, seeds, 5);
 
       if (seeds.empty()) {
@@ -584,23 +584,23 @@ namespace QBG {
       size_t foundCount = 0;
 
       size_t k = searchContainer.size;
-      tann::ngt::Distance radius = FLT_MAX;
-      tann::ngt::Distance distance;
-      tann::ngt::NeighborhoodGraph::ResultSet result;
+      tann::Distance radius = FLT_MAX;
+      tann::Distance distance;
+      tann::NeighborhoodGraph::ResultSet result;
 #ifdef NGTQG_ZERO_GLOBAL
       std::tie(distance, radius) = judge(quantizedBlobGraph[seedBlobID], k, radius, lut, result, foundCount);
 #else
       std::tie(distance, radius) = judge(quantizedBlobGraph[seedBlobID], k, radius, (*lutfi).second, result, foundCount);
 #endif
-      tann::ngt::NeighborhoodGraph::UncheckedSet uncheckedBlobs;
-      tann::ngt::NeighborhoodGraph::DistanceCheckedSet distanceCheckedBlobs(globalGraph.repository.size());
+      tann::NeighborhoodGraph::UncheckedSet uncheckedBlobs;
+      tann::NeighborhoodGraph::DistanceCheckedSet distanceCheckedBlobs(globalGraph.repository.size());
       distanceCheckedBlobs.insert(seedBlobID);
       if (globalGraph.searchRepository.size() == 0) {
 	std::cerr << "graph is empty! Is it read only?" << std::endl;
 	abort();
       }
       auto *nodes = globalGraph.searchRepository.data();
-      uncheckedBlobs.push(tann::ngt::ObjectDistance(seedBlobID, distance));
+      uncheckedBlobs.push(tann::ObjectDistance(seedBlobID, distance));
       float explorationRadius = radius * searchContainer.explorationCoefficient;
       while (!uncheckedBlobs.empty()) {
 	auto targetBlob = uncheckedBlobs.top();
@@ -614,7 +614,7 @@ namespace QBG {
 	auto neighborend = neighbors + noOfEdges;
 ;
 	for (auto neighbor = neighbors; neighbor < neighborend; neighbor++) {
-	  tann::ngt::ObjectID neighborID = neighbor->first;
+	  tann::ObjectID neighborID = neighbor->first;
 	  if (distanceCheckedBlobs[neighborID]) {
 	    continue;
 	  }
@@ -633,11 +633,11 @@ namespace QBG {
 	  std::tie(distance, radius) = judge(quantizedBlobGraph[neighborID], k, radius, (*luti).second, result, foundCount);
 #endif 
 	  if (static_cast<float>(foundCount) / visitCount < searchContainer.cutback) {
-	    uncheckedBlobs = tann::ngt::NeighborhoodGraph::UncheckedSet();
+	    uncheckedBlobs = tann::NeighborhoodGraph::UncheckedSet();
 	    break;
 	  }
 	  if (distance <= explorationRadius) {
-	    uncheckedBlobs.push(tann::ngt::ObjectDistance(neighborID, distance));
+	    uncheckedBlobs.push(tann::ObjectDistance(neighborID, distance));
 	  }
 	}
       }
@@ -654,8 +654,8 @@ namespace QBG {
 
 
     void searchBlobNaively(QBG::SearchContainer &searchContainer) {
-      tann::ngt::ObjectDistances blobs;
-      tann::ngt::SearchContainer sc(searchContainer);
+      tann::ObjectDistances blobs;
+      tann::SearchContainer sc(searchContainer);
       sc.setResults(&blobs);
       sc.setSize(searchContainer.numOfProbes);
 
@@ -671,7 +671,7 @@ namespace QBG {
       }
 
       auto &quantizedObjectDistance = quantizer.getQuantizedObjectDistance();
-      tann::ngt::Object rotatedQuery(&objectSpace);
+      tann::Object rotatedQuery(&objectSpace);
       objectSpace.copy(rotatedQuery, searchContainer.object);
 
 #if defined(NGTQG_ROTATION)
@@ -681,9 +681,9 @@ namespace QBG {
       size_t foundCount = 0;
 
       size_t k = searchContainer.size;
-      tann::ngt::Distance radius = FLT_MAX;
-      tann::ngt::Distance distance;
-      tann::ngt::NeighborhoodGraph::ResultSet result;
+      tann::Distance radius = FLT_MAX;
+      tann::Distance distance;
+      tann::NeighborhoodGraph::ResultSet result;
 
       for (size_t idx = 0; idx < blobs.size(); idx++) {
 	auto blobID = blobs[idx].id;
@@ -711,9 +711,9 @@ namespace QBG {
 
    void searchBlobGraph(QBG::SearchContainer &searchContainer) {
      auto &globalIndex = getQuantizer().globalCodebookIndex;
-     auto &globalGraph = static_cast<tann::ngt::GraphAndTreeIndex&>(globalIndex.getIndex());
-     tann::ngt::ObjectDistances	seeds;
-     tann::ngt::Object *query = allocateObject(searchContainer.objectVector);
+     auto &globalGraph = static_cast<tann::GraphAndTreeIndex&>(globalIndex.getIndex());
+     tann::ObjectDistances	seeds;
+     tann::Object *query = allocateObject(searchContainer.objectVector);
      SearchContainer sc(searchContainer, *query);
      globalGraph.getSeedsFromTree(sc, seeds);
      if (seeds.empty()) {
@@ -724,7 +724,7 @@ namespace QBG {
      searchContainer.workingResult = std::move(sc.workingResult);
    }
 
-   void searchBlobGraph(QBG::SearchContainer &searchContainer, tann::ngt::ObjectDistances &seeds) {
+   void searchBlobGraph(QBG::SearchContainer &searchContainer, tann::ObjectDistances &seeds) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
      std::cerr << "searchBlobGraph: Not implemented. " << std::endl;
      abort();
@@ -737,7 +737,7 @@ namespace QBG {
 
     auto &quantizer = getQuantizer();
     auto &globalIndex = quantizer.globalCodebookIndex;
-    auto &globalGraph = static_cast<tann::ngt::GraphAndTreeIndex&>(globalIndex.getIndex());
+    auto &globalGraph = static_cast<tann::GraphAndTreeIndex&>(globalIndex.getIndex());
     auto &objectSpace = globalIndex.getObjectSpace();
 
     if (searchContainer.explorationCoefficient == 0.0) {
@@ -750,22 +750,22 @@ namespace QBG {
     // setup edgeSize
     size_t edgeSize = globalGraph.getEdgeSize(searchContainer);
 
-    tann::ngt::NeighborhoodGraph::UncheckedSet untracedNodes;
+    tann::NeighborhoodGraph::UncheckedSet untracedNodes;
 
-    tann::ngt::NeighborhoodGraph::DistanceCheckedSet distanceChecked(globalGraph.searchRepository.size());
-    tann::ngt::NeighborhoodGraph::ResultSet results;
+    tann::NeighborhoodGraph::DistanceCheckedSet distanceChecked(globalGraph.searchRepository.size());
+    tann::NeighborhoodGraph::ResultSet results;
 
     if (objectSpace.getObjectType() == typeid(float)) {
-      globalGraph.setupDistances(searchContainer, seeds, tann::ngt::PrimitiveComparator::L2Float::compare);
+      globalGraph.setupDistances(searchContainer, seeds, tann::PrimitiveComparator::L2Float::compare);
 #ifdef NGT_HALF_FLOAT
-    } else if (objectSpace.getObjectType() == typeid(tann::ngt::float16)) {
-      globalGraph.setupDistances(searchContainer, seeds, tann::ngt::PrimitiveComparator::L2Float16::compare);
+    } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
+      globalGraph.setupDistances(searchContainer, seeds, tann::PrimitiveComparator::L2Float16::compare);
     }
 #endif
     std::sort(seeds.begin(), seeds.end());
-    tann::ngt::ObjectDistance currentNearestBlob = seeds.front();
-    tann::ngt::Distance explorationRadius = searchContainer.blobExplorationCoefficient * currentNearestBlob.distance;
-    std::priority_queue<tann::ngt::ObjectDistance, std::vector<tann::ngt::ObjectDistance>, std::greater<tann::ngt::ObjectDistance>> discardedObjects;
+    tann::ObjectDistance currentNearestBlob = seeds.front();
+    tann::Distance explorationRadius = searchContainer.blobExplorationCoefficient * currentNearestBlob.distance;
+    std::priority_queue<tann::ObjectDistance, std::vector<tann::ObjectDistance>, std::greater<tann::ObjectDistance>> discardedObjects;
     untracedNodes.push(seeds.front());
     distanceChecked.insert(seeds.front().id);
     for (size_t i = 1; i < seeds.size(); i++) {
@@ -780,8 +780,8 @@ namespace QBG {
     if (objectSpace.getObjectType() == typeid(float)) {
       memcpy(rotatedQuery.data(), searchContainer.object.getPointer(), rotatedQuery.size() * sizeof(float));
 #ifdef NGT_HALF_FLOAT
-    } else if (objectSpace.getObjectType() == typeid(tann::ngt::float16)) {
-      auto *ptr = static_cast<tann::ngt::float16*>(searchContainer.object.getPointer());
+    } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
+      auto *ptr = static_cast<tann::float16*>(searchContainer.object.getPointer());
       for (size_t i = 0; i < rotatedQuery.size(); i++) {
 	rotatedQuery[i] = ptr[i];
       }
@@ -790,7 +790,7 @@ namespace QBG {
       std::cerr << "Fatal inner error! Invalid object type." << std::endl;
     }
     quantizedObjectDistance.rotation->mul(rotatedQuery.data());
-    tann::ngt::Distance radius = searchContainer.radius;
+    tann::Distance radius = searchContainer.radius;
     if (requestedSize >= std::numeric_limits<int32_t>::max()) {
       radius *= searchContainer.explorationCoefficient;
     }
@@ -798,13 +798,13 @@ namespace QBG {
     if (globalGraph.searchRepository.empty()) {
       NGTThrowException("QBG:Index: searchRepository is empty.");
     }
-    tann::ngt::ReadOnlyGraphNode *nodes = globalGraph.searchRepository.data();
-    tann::ngt::ReadOnlyGraphNode *neighbors = 0;
-    tann::ngt::ObjectDistance target;
+    tann::ReadOnlyGraphNode *nodes = globalGraph.searchRepository.data();
+    tann::ReadOnlyGraphNode *neighbors = 0;
+    tann::ObjectDistance target;
     const size_t prefetchSize = objectSpace.getPrefetchSize();
     const size_t prefetchOffset = objectSpace.getPrefetchOffset();
-    pair<uint64_t, tann::ngt::PersistentObject*> *neighborptr;
-    pair<uint64_t, tann::ngt::PersistentObject*> *neighborendptr;
+    pair<uint64_t, tann::PersistentObject*> *neighborptr;
+    pair<uint64_t, tann::PersistentObject*> *neighborendptr;
     for (;;) {
       if (untracedNodes.empty() || untracedNodes.top().distance > explorationRadius) {
 	explorationSize++;
@@ -817,7 +817,7 @@ namespace QBG {
 	  quantizedObjectDistance.initialize((*luti).second);
 	  quantizedObjectDistance.createDistanceLookup(rotatedQuery.data(), subspaceID, (*luti).second);
 	}
-	tann::ngt::Distance blobDistance;
+	tann::Distance blobDistance;
 	size_t foundCount;
 	std::tie(blobDistance, radius) = judge(quantizedBlobGraph[blobID], requestedSize, 
 					       radius, (*luti).second, results, foundCount);
@@ -845,7 +845,7 @@ namespace QBG {
       size_t neighborSize = neighbors->size() < edgeSize ? neighbors->size() : edgeSize;
       neighborendptr = neighborptr + neighborSize;
 
-      pair<uint64_t, tann::ngt::PersistentObject*>* nsPtrs[neighborSize];
+      pair<uint64_t, tann::PersistentObject*>* nsPtrs[neighborSize];
       size_t nsPtrsSize = 0;
 #ifndef PREFETCH_DISABLE
       for (; neighborptr < neighborendptr; ++neighborptr) {
@@ -857,7 +857,7 @@ namespace QBG {
           nsPtrs[nsPtrsSize] = neighborptr;
           if (nsPtrsSize < prefetchOffset) {
             unsigned char *ptr = reinterpret_cast<unsigned char*>((*(neighborptr)).second);
-	    tann::ngt::MemoryCache::prefetch(ptr, prefetchSize);
+	    tann::MemoryCache::prefetch(ptr, prefetchSize);
           }
           nsPtrsSize++;
         }
@@ -877,25 +877,25 @@ namespace QBG {
 	neighborptr = nsPtrs[idx]; 
 	if (idx + prefetchOffset < nsPtrsSize) {
 	  unsigned char *ptr = reinterpret_cast<unsigned char*>((*(nsPtrs[idx + prefetchOffset])).second);
-	  tann::ngt::MemoryCache::prefetch(ptr, prefetchSize);
+	  tann::MemoryCache::prefetch(ptr, prefetchSize);
 	}
 #endif
 #ifdef NGT_DISTANCE_COMPUTATION_COUNT
 	searchContainer.distanceComputationCount++;
 #endif
-	tann::ngt::Distance distance = 0.0;
+	tann::Distance distance = 0.0;
 	if (objectSpace.getObjectType() == typeid(float)) {
-	  distance = tann::ngt::PrimitiveComparator::L2Float::compare(searchContainer.object.getPointer(),
+	  distance = tann::PrimitiveComparator::L2Float::compare(searchContainer.object.getPointer(),
 							        neighborptr->second->getPointer(), dimension);
 #ifdef NGT_HALF_FLOAT
-	} else if (objectSpace.getObjectType() == typeid(tann::ngt::float16)) {
-	  distance = tann::ngt::PrimitiveComparator::L2Float16::compare(searchContainer.object.getPointer(),
+	} else if (objectSpace.getObjectType() == typeid(tann::float16)) {
+	  distance = tann::PrimitiveComparator::L2Float16::compare(searchContainer.object.getPointer(),
 							           neighborptr->second->getPointer(), dimension);
 #endif
 	} else {
 	  assert(false);
 	}
-	tann::ngt::ObjectDistance r;
+	tann::ObjectDistance r;
 	r.set(neighborptr->first, distance);
 	untracedNodes.push(r);
 	if (distance < currentNearestBlob.distance) {
@@ -910,10 +910,10 @@ namespace QBG {
 
     if (searchContainer.resultIsAvailable()) { 
       if (searchContainer.exactResultSize > 0) {
-	tann::ngt::ObjectDistances &qresults = searchContainer.getResult();
+	tann::ObjectDistances &qresults = searchContainer.getResult();
 	auto threadid = omp_get_thread_num();
 	auto paddedDimension = getQuantizer().globalCodebookIndex.getObjectSpace().getPaddedDimension();
-	tann::ngt::ResultPriorityQueue	rs;
+	tann::ResultPriorityQueue	rs;
 	std::vector<float> object;
 	qresults.resize(results.size());
 	size_t idx = results.size();
@@ -926,12 +926,12 @@ namespace QBG {
 	  quantizer.objectList.get(r.id, object, &quantizer.globalCodebookIndex.getObjectSpace());
 #endif
 	  if (objectSpace.getObjectType() == typeid(float)) {
-	    r.distance = tann::ngt::PrimitiveComparator::compareL2(static_cast<float*>(searchContainer.object.getPointer()),
+	    r.distance = tann::PrimitiveComparator::compareL2(static_cast<float*>(searchContainer.object.getPointer()),
 	    						     static_cast<float*>(object.data()), paddedDimension);
 #ifdef NGT_HALF_FLOAT
-	  } else if (objectSpace.getObjectType() == typeid(tann::ngt::float16)) {
-	    r.distance = tann::ngt::PrimitiveComparator::compareL2(reinterpret_cast<tann::ngt::float16*>(searchContainer.object.getPointer()),
-	    						     reinterpret_cast<tann::ngt::float16*>(object.data()), paddedDimension);
+	  } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
+	    r.distance = tann::PrimitiveComparator::compareL2(reinterpret_cast<tann::float16*>(searchContainer.object.getPointer()),
+	    						     reinterpret_cast<tann::float16*>(object.data()), paddedDimension);
 #endif
 	  }
 	  qresults[--idx] = r;
@@ -939,14 +939,14 @@ namespace QBG {
 	std::sort(qresults.begin(), qresults.end());
 	qresults.resize(searchContainer.exactResultSize);
       } else {
-	tann::ngt::ObjectDistances &qresults = searchContainer.getResult();
+	tann::ObjectDistances &qresults = searchContainer.getResult();
 	qresults.moveFrom(results);
       }
     } else {
       if (searchContainer.exactResultSize > 0) {
 	auto threadid = omp_get_thread_num();
 	auto paddedDimension = getQuantizer().globalCodebookIndex.getObjectSpace().getPaddedDimension();
-	tann::ngt::ResultPriorityQueue	rs;
+	tann::ResultPriorityQueue	rs;
 	std::vector<float> object;
 	while (!results.empty()) {
 	  auto r = results.top();
@@ -957,12 +957,12 @@ namespace QBG {
 	  quantizer.objectList.get(r.id, object, &quantizer.globalCodebookIndex.getObjectSpace());
 #endif
 	  if (objectSpace.getObjectType() == typeid(float)) {
-	    r.distance = tann::ngt::PrimitiveComparator::compareL2(static_cast<float*>(searchContainer.object.getPointer()),
+	    r.distance = tann::PrimitiveComparator::compareL2(static_cast<float*>(searchContainer.object.getPointer()),
 	    						     static_cast<float*>(object.data()), paddedDimension);
 #ifdef NGT_HALF_FLOAT
-	  } else if (objectSpace.getObjectType() == typeid(tann::ngt::float16)) {
-	    r.distance = tann::ngt::PrimitiveComparator::compareL2(reinterpret_cast<tann::ngt::float16*>(searchContainer.object.getPointer()),
-	    						     reinterpret_cast<tann::ngt::float16*>(object.data()), paddedDimension);
+	  } else if (objectSpace.getObjectType() == typeid(tann::float16)) {
+	    r.distance = tann::PrimitiveComparator::compareL2(reinterpret_cast<tann::float16*>(searchContainer.object.getPointer()),
+	    						     reinterpret_cast<tann::float16*>(object.data()), paddedDimension);
 #endif
 	  }
 	  rs.push(r);
@@ -991,8 +991,8 @@ namespace QBG {
       load(indexPath, QBG::Index::getQuantizerCodebookFile(indexPath), "", "");
       buildNGTQ(indexPath, "", "-", "-", 1, 0, silence);
       std::cerr << "NGTQ and NGTQBG indices are completed." << std::endl;
-      std::cerr << "  vmsize=" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-      std::cerr << "  peak vmsize=" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+      std::cerr << "  vmsize=" << tann::Common::getProcessVmSizeStr() << std::endl;
+      std::cerr << "  peak vmsize=" << tann::Common::getProcessVmPeakStr() << std::endl;
     }
 
     static void build(const std::string &indexPath, bool silence = true) {
@@ -1000,8 +1000,8 @@ namespace QBG {
       buildNGTQ(indexPath, "", "", "", 1, 0, silence);
       buildQBG(indexPath, silence);
       std::cerr << "NGTQ and NGTQBG indices are completed." << std::endl;
-      std::cerr << "  vmsize=" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-      std::cerr << "  peak vmsize=" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+      std::cerr << "  vmsize=" << tann::Common::getProcessVmSizeStr() << std::endl;
+      std::cerr << "  peak vmsize=" << tann::Common::getProcessVmPeakStr() << std::endl;
     }
 
     static void build(const std::string &indexPath,
@@ -1012,8 +1012,8 @@ namespace QBG {
       buildNGTQ(indexPath, quantizerCodebookFile, codebookIndexFile, objectIndexFile, beginID, endID, silence);
       buildQBG(indexPath, silence);
       std::cerr << "NGTQ and NGTQBG indices are completed." << std::endl;
-      std::cerr << "  vmsize=" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-      std::cerr << "  peak vmsize=" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+      std::cerr << "  vmsize=" << tann::Common::getProcessVmSizeStr() << std::endl;
+      std::cerr << "  peak vmsize=" << tann::Common::getProcessVmPeakStr() << std::endl;
     }
 
     static void build(const std::string &indexPath,
@@ -1024,8 +1024,8 @@ namespace QBG {
       buildNGTQ(indexPath, quantizerCodebook, codebookIndex, objectIndex, beginID, endID);
       buildQBG(indexPath);
       std::cerr << "NGTQ and NGTQBG indices are completed." << std::endl;
-      std::cerr << "  vmsize=" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-      std::cerr << "  peak vmsize=" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+      std::cerr << "  vmsize=" << tann::Common::getProcessVmSizeStr() << std::endl;
+      std::cerr << "  peak vmsize=" << tann::Common::getProcessVmPeakStr() << std::endl;
     }
 
     static void buildNGTQ(const std::string &indexPath,
@@ -1050,10 +1050,10 @@ namespace QBG {
 	std::string line;
 	while (getline(stream, line)) {
 	  std::vector<std::string> tokens;
-	  tann::ngt::Common::tokenize(line, tokens, " \t");
+	  tann::Common::tokenize(line, tokens, " \t");
 	  std::vector<float> object;
 	  for (auto &token : tokens) {
-	    object.push_back(tann::ngt::Common::strtof(token));
+	    object.push_back(tann::Common::strtof(token));
 	  }
 	  if (!quantizerCodebook.empty() && quantizerCodebook[0].size() != object.size()) {
 	    std::stringstream msg;
@@ -1082,14 +1082,14 @@ namespace QBG {
 	  std::string line;
 	  while (getline(stream, line)) {
 	    std::vector<std::string> tokens;
-	    tann::ngt::Common::tokenize(line, tokens, " \t");
+	    tann::Common::tokenize(line, tokens, " \t");
 	    std::vector<float> object;
 	    if (tokens.size() != 1) {
 	      std::stringstream msg;
 	      msg << "The specified codebook index is invalid. " << line;
 	      NGTThrowException(msg);
 	    }
-	    codebookIndex.push_back(tann::ngt::Common::strtol(tokens[0]));
+	    codebookIndex.push_back(tann::Common::strtol(tokens[0]));
 	  }
 	}
       }
@@ -1108,14 +1108,14 @@ namespace QBG {
 	  std::string line;
 	  while (getline(stream, line)) {
 	    std::vector<std::string> tokens;
-	    tann::ngt::Common::tokenize(line, tokens, " \t");
+	    tann::Common::tokenize(line, tokens, " \t");
 	    std::vector<float> object;
 	    if (tokens.size() != 1) {
 	      std::stringstream msg;
 	      msg << "The specified codebook index is invalid. " << line;
 	      NGTThrowException(msg);
 	    }
-	    objectIndex.push_back(tann::ngt::Common::strtol(tokens[0]));
+	    objectIndex.push_back(tann::Common::strtol(tokens[0]));
 	  }
         }
       }
@@ -1127,9 +1127,9 @@ namespace QBG {
 			  std::vector<uint32_t> &codebookIndex,
 			  std::vector<uint32_t> &objectIndex,
 			  size_t beginID = 1, size_t endID = 0, bool silence = true) {
-      tann::ngt::StdOstreamRedirector redirector(silence);
+      tann::StdOstreamRedirector redirector(silence);
       redirector.begin();
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       timer.start();
       NGTQ::Index index(indexPath);
       if (quantizerCodebook.size() == 0) {
@@ -1160,8 +1160,8 @@ namespace QBG {
       timer.stop();
       std::cerr << "NGTQ index is completed." << std::endl;
       std::cerr << "  time=" << timer << std::endl;
-      std::cerr << "  vmsize=" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-      std::cerr << "  peak vmsize=" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+      std::cerr << "  vmsize=" << tann::Common::getProcessVmSizeStr() << std::endl;
+      std::cerr << "  peak vmsize=" << tann::Common::getProcessVmPeakStr() << std::endl;
       std::cerr << "saving..." << std::endl;
       index.save();
       redirector.end();
@@ -1169,7 +1169,7 @@ namespace QBG {
 
     static void buildQBG(const std::string &indexPath, bool silence = true) {
       std::cerr << "build QBG" << std::endl;
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       timer.start();
       auto readOnly = false;
       QBG::Index index(indexPath, readOnly, silence);
@@ -1184,8 +1184,8 @@ namespace QBG {
       timer.stop();
       std::cerr << "QBG index is completed." << std::endl;
       std::cerr << "  time=" << timer << std::endl;
-      std::cerr << "  vmsize=" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-      std::cerr << "  peak vmsize=" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+      std::cerr << "  vmsize=" << tann::Common::getProcessVmSizeStr() << std::endl;
+      std::cerr << "  peak vmsize=" << tann::Common::getProcessVmPeakStr() << std::endl;
       std::cerr << "saving..." << std::endl;
       index.save();
     }
@@ -1311,13 +1311,13 @@ namespace QBG {
       assert(threadSize != 0);
 
       size_t dataSize = 0;
-      tann::ngt::Index::append(indexPath + "/global", blobs, threadSize, dataSize);
+      tann::Index::append(indexPath + "/global", blobs, threadSize, dataSize);
 
       NGTQ::Property property;
       property.load(indexPath);
 
       std::vector<std::string> tokens;
-      tann::ngt::Common::tokenize(localCodebooks, tokens, "@");
+      tann::Common::tokenize(localCodebooks, tokens, "@");
       if (tokens.size() != 2) {
 	NGTThrowException("No @ in the specified local codebook string.");
       }
@@ -1327,7 +1327,7 @@ namespace QBG {
 	std::stringstream localCodebook;
 	localCodebook << indexPath << "/local-" << no;
 	std::cerr << data.str() << "->" << localCodebook.str() << std::endl;
-	tann::ngt::Index::append(localCodebook.str(), data.str(), threadSize, dataSize);
+	tann::Index::append(localCodebook.str(), data.str(), threadSize, dataSize);
       }
 
       cerr << "qbg: loading the rotation..." << endl;
@@ -1343,9 +1343,9 @@ namespace QBG {
       std::string line;
       while (getline(stream, line)) {
 	std::vector<std::string> tokens;
-	tann::ngt::Common::tokenize(line, tokens, " \t");
+	tann::Common::tokenize(line, tokens, " \t");
 	for (auto &token : tokens) {
-	  rotation.push_back(tann::ngt::Common::strtof(token));
+	  rotation.push_back(tann::Common::strtof(token));
 	}
       }
       std::cerr << "rotation matrix size=" << rotation.size() << std::endl;

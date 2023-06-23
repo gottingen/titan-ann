@@ -25,7 +25,7 @@
 #include <cerrno>
 #include <cstring>
 
-namespace tann::ngt {
+namespace tann {
   class ObjectSpace;
 };
 
@@ -55,9 +55,9 @@ class ArrayFile {
   bool create(const std::string &file, size_t recordSize);
   bool open(const std::string &file);
   void close();
-  size_t insert(TYPE &data, tann::ngt::ObjectSpace *objectSpace = 0);
-  void put(const size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace = 0);
-  bool get(const size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace = 0);
+  size_t insert(TYPE &data, tann::ObjectSpace *objectSpace = 0);
+  void put(const size_t id, TYPE &data, tann::ObjectSpace *objectSpace = 0);
+  bool get(const size_t id, TYPE &data, tann::ObjectSpace *objectSpace = 0);
   void remove(const size_t id);
   bool isOpen() const;
   size_t size();
@@ -116,7 +116,7 @@ void ArrayFile<TYPE>::close(){
 }
 
 template <class TYPE>
-size_t ArrayFile<TYPE>::insert(TYPE &data, tann::ngt::ObjectSpace *objectSpace) {
+size_t ArrayFile<TYPE>::insert(TYPE &data, tann::ObjectSpace *objectSpace) {
   _stream.seekp(sizeof(RecordStruct), std::ios::end);
   int64_t write_pos = _stream.tellg();
   for(size_t i = 0; i < _fileHead.recordSize; i++) { _stream.write("", 1); }
@@ -134,7 +134,7 @@ size_t ArrayFile<TYPE>::insert(TYPE &data, tann::ngt::ObjectSpace *objectSpace) 
 }
 
 template <class TYPE>
-void ArrayFile<TYPE>::put(const size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace) {
+void ArrayFile<TYPE>::put(const size_t id, TYPE &data, tann::ObjectSpace *objectSpace) {
   uint64_t offset_pos = (id * (sizeof(RecordStruct) + _fileHead.recordSize)) + sizeof(FileHeadStruct);
   offset_pos += sizeof(RecordStruct);
   _stream.seekp(offset_pos, std::ios::beg);
@@ -145,7 +145,7 @@ void ArrayFile<TYPE>::put(const size_t id, TYPE &data, tann::ngt::ObjectSpace *o
 }
 
 template <class TYPE>
-bool ArrayFile<TYPE>::get(const size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace) {
+bool ArrayFile<TYPE>::get(const size_t id, TYPE &data, tann::ObjectSpace *objectSpace) {
   pthread_mutex_lock(&_mutex);
 
   if( size() <= id ){

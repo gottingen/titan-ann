@@ -32,9 +32,9 @@ namespace QBG {
 };
 
 namespace NGTQG {
-    class SearchContainer : public tann::ngt::SearchContainer {
+    class SearchContainer : public tann::SearchContainer {
     public:
-        SearchContainer(SearchContainer &sc, tann::ngt::Object &f) : tann::ngt::SearchContainer(sc, f),
+        SearchContainer(SearchContainer &sc, tann::Object &f) : tann::SearchContainer(sc, f),
                                                                resultExpansion(sc.resultExpansion) {}
 
         SearchContainer() {}
@@ -44,10 +44,10 @@ namespace NGTQG {
         float resultExpansion;
     };
 
-    class SearchQuery : public tann::ngt::QueryContainer, public NGTQG::SearchContainer {
+    class SearchQuery : public tann::QueryContainer, public NGTQG::SearchContainer {
     public:
         template<typename QTYPE>
-        SearchQuery(const std::vector<QTYPE> &q): tann::ngt::QueryContainer(q) {}
+        SearchQuery(const std::vector<QTYPE> &q): tann::QueryContainer(q) {}
     };
 
     class QuantizedNode {
@@ -77,14 +77,14 @@ namespace NGTQG {
             return PARENT::at(id).ids;
         }
 
-        void construct(tann::ngt::Index &ngtindex, NGTQ::Index &quantizedIndex, size_t maxNoOfEdges) {
-            tann::ngt::GraphAndTreeIndex &index = static_cast<tann::ngt::GraphAndTreeIndex &>(ngtindex.getIndex());
-            tann::ngt::NeighborhoodGraph &graph = static_cast<tann::ngt::NeighborhoodGraph &>(index);
-            tann::ngt::GraphRepository &graphRepository = graph.repository;
+        void construct(tann::Index &ngtindex, NGTQ::Index &quantizedIndex, size_t maxNoOfEdges) {
+            tann::GraphAndTreeIndex &index = static_cast<tann::GraphAndTreeIndex &>(ngtindex.getIndex());
+            tann::NeighborhoodGraph &graph = static_cast<tann::NeighborhoodGraph &>(index);
+            tann::GraphRepository &graphRepository = graph.repository;
             construct(graphRepository, quantizedIndex, maxNoOfEdges);
         }
 
-        void construct(tann::ngt::GraphRepository &graphRepository, NGTQ::Index &quantizedIndex, size_t maxNoOfEdges) {
+        void construct(tann::GraphRepository &graphRepository, NGTQ::Index &quantizedIndex, size_t maxNoOfEdges) {
             NGTQ::InvertedIndexEntry<uint16_t> invertedIndexObjects(numOfSubspaces);
             quantizedIndex.getQuantizer().extractInvertedIndexObject(invertedIndexObjects);
             quantizedIndex.getQuantizer().eraseInvertedIndexObject();
@@ -96,7 +96,7 @@ namespace NGTQG {
                 if (id % 100000 == 0) {
                     std::cerr << "# of processed objects=" << id << "/" << graphRepository.size() << std::endl;
                 }
-                tann::ngt::GraphNode &node = *graphRepository.VECTOR::get(id);
+                tann::GraphNode &node = *graphRepository.VECTOR::get(id);
                 size_t numOfEdges = node.size() < maxNoOfEdges ? node.size() : maxNoOfEdges;
                 (*this)[id].ids.reserve(numOfEdges);
                 NGTQ::QuantizedObjectProcessingStream quantizedStream(quantizedIndex.getQuantizer(), numOfEdges);
@@ -140,40 +140,40 @@ namespace NGTQG {
             }
         }
 
-        void serialize(std::ofstream &os, tann::ngt::ObjectSpace *objspace = 0) {
+        void serialize(std::ofstream &os, tann::ObjectSpace *objspace = 0) {
             NGTQ::QuantizedObjectProcessingStream quantizedObjectProcessingStream(numOfSubspaces);
             uint64_t n = numOfSubspaces;
-            tann::ngt::Serializer::write(os, n);
+            tann::Serializer::write(os, n);
             n = PARENT::size();
-            tann::ngt::Serializer::write(os, n);
+            tann::Serializer::write(os, n);
             for (auto i = PARENT::begin(); i != PARENT::end(); ++i) {
                 uint32_t sid = (*i).subspaceID;
-                tann::ngt::Serializer::write(os, sid);
-                tann::ngt::Serializer::write(os, (*i).ids);
+                tann::Serializer::write(os, sid);
+                tann::Serializer::write(os, (*i).ids);
                 size_t streamSize = quantizedObjectProcessingStream.getUint4StreamSize((*i).ids.size());
-                tann::ngt::Serializer::write(os, static_cast<uint8_t *>((*i).objects), streamSize);
+                tann::Serializer::write(os, static_cast<uint8_t *>((*i).objects), streamSize);
             }
         }
 
-        void deserialize(std::ifstream &is, tann::ngt::ObjectSpace *objectspace = 0) {
+        void deserialize(std::ifstream &is, tann::ObjectSpace *objectspace = 0) {
             try {
                 NGTQ::QuantizedObjectProcessingStream quantizedObjectProcessingStream(numOfSubspaces);
                 uint64_t n;
-                tann::ngt::Serializer::read(is, n);
+                tann::Serializer::read(is, n);
                 numOfSubspaces = n;
-                tann::ngt::Serializer::read(is, n);
+                tann::Serializer::read(is, n);
                 PARENT::resize(n);
                 for (auto i = PARENT::begin(); i != PARENT::end(); ++i) {
                     uint32_t sid;
-                    tann::ngt::Serializer::read(is, sid);
+                    tann::Serializer::read(is, sid);
                     (*i).subspaceID = sid;
-                    tann::ngt::Serializer::read(is, (*i).ids);
+                    tann::Serializer::read(is, (*i).ids);
                     size_t streamSize = quantizedObjectProcessingStream.getUint4StreamSize((*i).ids.size());
                     uint8_t *objectStream = new uint8_t[streamSize];
-                    tann::ngt::Serializer::read(is, objectStream, streamSize);
+                    tann::Serializer::read(is, objectStream, streamSize);
                     (*i).objects = objectStream;
                 }
-            } catch (tann::ngt::Exception &err) {
+            } catch (tann::Exception &err) {
                 std::stringstream msg;
                 msg << "QuantizedGraph::deserialize: Fatal error. " << err.what();
                 NGTThrowException(msg);
@@ -205,10 +205,10 @@ namespace NGTQG {
     };
 
 
-    class Index : public tann::ngt::Index {
+    class Index : public tann::Index {
     public:
         Index(const std::string &indexPath, size_t maxNoOfEdges = 128, bool rdOnly = false) :
-                tann::ngt::Index(indexPath, false, rdOnly),
+                tann::Index(indexPath, false, rdOnly),
                 readOnly(rdOnly),
                 path(indexPath),
                 quantizedIndex(indexPath + "/qg", rdOnly),
@@ -233,7 +233,7 @@ namespace NGTQG {
 
 
         void
-        searchQuantizedGraph(tann::ngt::NeighborhoodGraph &graph, NGTQG::SearchContainer &sc, tann::ngt::ObjectDistances &seeds) {
+        searchQuantizedGraph(tann::NeighborhoodGraph &graph, NGTQG::SearchContainer &sc, tann::ObjectDistances &seeds) {
             size_t sizeBackup = sc.size;
             if (sc.resultExpansion > 1.0) {
                 sc.size *= sc.resultExpansion;
@@ -266,17 +266,17 @@ namespace NGTQG {
             if (sc.explorationCoefficient == 0.0) {
                 sc.explorationCoefficient = NGT_EXPLORATION_COEFFICIENT;
             }
-            tann::ngt::NeighborhoodGraph::UncheckedSet unchecked;
-            tann::ngt::NeighborhoodGraph::DistanceCheckedSet distanceChecked(
-                    tann::ngt::Index::getObjectSpace().getRepository().size());
-            tann::ngt::NeighborhoodGraph::ResultSet results;
+            tann::NeighborhoodGraph::UncheckedSet unchecked;
+            tann::NeighborhoodGraph::DistanceCheckedSet distanceChecked(
+                    tann::Index::getObjectSpace().getRepository().size());
+            tann::NeighborhoodGraph::ResultSet results;
 
-            graph.setupDistances(sc, seeds, tann::ngt::PrimitiveComparator::L2Float::compare);
+            graph.setupDistances(sc, seeds, tann::PrimitiveComparator::L2Float::compare);
             graph.setupSeeds(sc, seeds, results, unchecked, distanceChecked);
             auto specifiedRadius = sc.radius;
-            tann::ngt::Distance explorationRadius = sc.explorationCoefficient * sc.radius;
-            tann::ngt::ObjectDistance result;
-            tann::ngt::ObjectDistance target;
+            tann::Distance explorationRadius = sc.explorationCoefficient * sc.radius;
+            tann::ObjectDistance result;
+            tann::ObjectDistance target;
 
             while (!unchecked.empty()) {
                 target = unchecked.top();
@@ -296,7 +296,7 @@ namespace NGTQG {
                     size /= 2;
                     size *= quantizedIndex.getQuantizer().divisionNo;
 
-                    tann::ngt::MemoryCache::prefetch(lid, size);
+                    tann::MemoryCache::prefetch(lid, size);
                 }
 #endif
 #ifdef NGTQ_QBG
@@ -305,7 +305,7 @@ namespace NGTQG {
                 quantizedObjectDistance(quantizedGraph.get(target.id), ds, neighborSize, cache[1]);
 #endif
                 for (size_t idx = 0; idx < neighborSize; idx++) {
-                    tann::ngt::Distance distance = ds[idx];
+                    tann::Distance distance = ds[idx];
                     auto objid = neighborIDs[idx];
                     if (distance <= explorationRadius) {
                         bool checked = distanceChecked[objid];
@@ -333,34 +333,34 @@ namespace NGTQG {
             }
 
             if (sc.resultIsAvailable()) {
-                tann::ngt::ObjectDistances &qresults = sc.getResult();
+                tann::ObjectDistances &qresults = sc.getResult();
                 qresults.moveFrom(results);
                 if (sc.resultExpansion >= 1.0) {
                     {
-                        tann::ngt::ObjectRepository &objectRepository = tann::ngt::Index::getObjectSpace().getRepository();
-                        tann::ngt::ObjectSpace::Comparator &comparator = tann::ngt::Index::getObjectSpace().getComparator();
+                        tann::ObjectRepository &objectRepository = tann::Index::getObjectSpace().getRepository();
+                        tann::ObjectSpace::Comparator &comparator = tann::Index::getObjectSpace().getComparator();
                         for (auto i = qresults.begin(); i != qresults.end(); ++i) {
 #ifdef NGTQG_PREFETCH
                             if (static_cast<size_t>(distance(qresults.begin(), i + 10)) < qresults.size()) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-                                tann::ngt::PersistentObject &o = *objectRepository.get((*(i + 10)).id);
+                                tann::PersistentObject &o = *objectRepository.get((*(i + 10)).id);
 #else
-                                tann::ngt::Object &o = *objectRepository[(*(i + 10)).id];
+                                tann::Object &o = *objectRepository[(*(i + 10)).id];
 #endif
                                 _mm_prefetch(&o[0], _MM_HINT_T0);
                             }
 #endif
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-                            tann::ngt::PersistentObject &obj = *objectRepository.get((*i).id);
+                            tann::PersistentObject &obj = *objectRepository.get((*i).id);
 #else
-                            tann::ngt::Object &obj = *objectRepository[(*i).id];
+                            tann::Object &obj = *objectRepository[(*i).id];
 #endif
                             (*i).distance = comparator(sc.object, obj);
                         }
                         std::sort(qresults.begin(), qresults.end());
                         if (specifiedRadius < std::numeric_limits<float>::max()) {
                             auto pos = std::upper_bound(qresults.begin(), qresults.end(),
-                                                        tann::ngt::ObjectDistance(0, specifiedRadius));
+                                                        tann::ObjectDistance(0, specifiedRadius));
                             qresults.resize(distance(qresults.begin(), pos));
                         }
                     }
@@ -372,11 +372,11 @@ namespace NGTQG {
             } else {
                 if (sc.resultExpansion >= 1.0) {
                     {
-                        tann::ngt::ObjectRepository &objectRepository = tann::ngt::Index::getObjectSpace().getRepository();
-                        tann::ngt::ObjectSpace::Comparator &comparator = tann::ngt::Index::getObjectSpace().getComparator();
+                        tann::ObjectRepository &objectRepository = tann::Index::getObjectSpace().getRepository();
+                        tann::ObjectSpace::Comparator &comparator = tann::Index::getObjectSpace().getComparator();
                         while (!sc.workingResult.empty()) { sc.workingResult.pop(); }
                         while (!results.empty()) {
-                            tann::ngt::ObjectDistance obj = results.top();
+                            tann::ObjectDistance obj = results.top();
                             obj.distance = comparator(sc.object, *objectRepository.get(obj.id));
                             results.pop();
                             sc.workingResult.push(obj);
@@ -395,7 +395,7 @@ namespace NGTQG {
         }
 
 
-        void search(tann::ngt::GraphIndex &index, NGTQG::SearchContainer &sc, tann::ngt::ObjectDistances &seeds) {
+        void search(tann::GraphIndex &index, NGTQG::SearchContainer &sc, tann::ObjectDistances &seeds) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
             NGTThrowException("NGTQG is not available for SHARED.");
 #endif
@@ -416,33 +416,33 @@ namespace NGTQG {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR) || !defined(NGT_GRAPH_READ_ONLY_GRAPH)
                 index.NeighborhoodGraph::search(sc, seeds);
 #else
-                searchQuantizedGraph(static_cast<tann::ngt::NeighborhoodGraph &>(index), sc, seeds);
+                searchQuantizedGraph(static_cast<tann::NeighborhoodGraph &>(index), sc, seeds);
 #endif
-            } catch (tann::ngt::Exception &err) {
+            } catch (tann::Exception &err) {
                 std::cerr << err.what() << std::endl;
-                tann::ngt::Exception e(err);
+                tann::Exception e(err);
                 throw e;
             }
         }
 
         void search(NGTQG::SearchQuery &sq) {
-            tann::ngt::GraphAndTreeIndex &index = static_cast<tann::ngt::GraphAndTreeIndex &>(getIndex());
-            tann::ngt::Object *query = Index::allocateObject(sq.getQuery(), sq.getQueryType());
+            tann::GraphAndTreeIndex &index = static_cast<tann::GraphAndTreeIndex &>(getIndex());
+            tann::Object *query = Index::allocateObject(sq.getQuery(), sq.getQueryType());
             try {
                 NGTQG::SearchContainer sc(sq, *query);
                 sc.distanceComputationCount = 0;
                 sc.visitCount = 0;
-                tann::ngt::ObjectDistances seeds;
+                tann::ObjectDistances seeds;
                 if (!readOnly) {
                     try {
                         index.getSeedsFromTree(sc, seeds);
                     } catch (...) {}
                 }
-                NGTQG::Index::search(static_cast<tann::ngt::GraphIndex &>(index), sc, seeds);
+                NGTQG::Index::search(static_cast<tann::GraphIndex &>(index), sc, seeds);
                 sq.workingResult = std::move(sc.workingResult);
                 sq.distanceComputationCount = sc.distanceComputationCount;
                 sq.visitCount = sc.visitCount;
-            } catch (tann::ngt::Exception &err) {
+            } catch (tann::Exception &err) {
                 deleteObject(query);
                 throw err;
             }
@@ -474,20 +474,20 @@ namespace NGTQG {
                     std::cerr << "already exists" << std::endl;
                     abort();
                 } else {
-                    tann::ngt::GraphRepository graph;
-                    tann::ngt::GraphIndex::loadGraph(indexPath, graph);
+                    tann::GraphRepository graph;
+                    tann::GraphIndex::loadGraph(indexPath, graph);
                     quantizedGraph.construct(graph, quantizedIndex, maxNumOfEdges);
                     quantizedGraph.save(qgPath);
                 }
             }
 
             std::cerr << "Quantized graph is completed." << std::endl;
-            std::cerr << "  vmsize=" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-            std::cerr << "  peak vmsize=" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+            std::cerr << "  vmsize=" << tann::Common::getProcessVmSizeStr() << std::endl;
+            std::cerr << "  peak vmsize=" << tann::Common::getProcessVmPeakStr() << std::endl;
         }
 
 #ifndef NGTQ_QBG
-        static void buildQuantizedObjects(const std::string quantizedIndexPath, tann::ngt::ObjectSpace &objectSpace, bool insertion = false) {
+        static void buildQuantizedObjects(const std::string quantizedIndexPath, tann::ObjectSpace &objectSpace, bool insertion = false) {
           NGTQ::Index	quantizedIndex(quantizedIndexPath);
           NGTQ::Quantizer	&quantizer = quantizedIndex.getQuantizer();
 
@@ -497,7 +497,7 @@ namespace NGTQG {
         quantizedIndex.getQuantizer().globalCodebookIndex.createIndex(8);
           }
 
-          vector<pair<tann::ngt::Object*, size_t> > objects;
+          vector<pair<tann::Object*, size_t> > objects;
           for (size_t id = 1; id < objectSpace.getRepository().size(); id++) {
         if (id % 100000 == 0) {
           std::cerr << "Processed " << id << " objects." << std::endl;
@@ -529,8 +529,8 @@ namespace NGTQG {
             static void createQuantizedGraphFrame(const std::string quantizedIndexPath, size_t dimension, size_t dimensionOfSubvector) {
 #endif
             NGTQ::Property property;
-            tann::ngt::Property globalProperty;
-            tann::ngt::Property localProperty;
+            tann::Property globalProperty;
+            tann::Property localProperty;
 
             property.threadSize = 24;
             property.globalRange = 0;
@@ -562,10 +562,10 @@ namespace NGTQG {
             property.localDivisionNo = NGTQG::Index::getNumberOfSubvectors(property.dimension, dimensionOfSubvector);
             globalProperty.edgeSizeForCreation = 10;
             globalProperty.edgeSizeForSearch = 40;
-            globalProperty.indexType = tann::ngt::Property::GraphAndTree;
+            globalProperty.indexType = tann::Property::GraphAndTree;
             globalProperty.insertionRadiusCoefficient = 1.1;
 
-            localProperty.indexType = tann::ngt::Property::GraphAndTree;
+            localProperty.indexType = tann::Property::GraphAndTree;
             localProperty.insertionRadiusCoefficient = 1.1;
 
             NGTQ::Index::create(quantizedIndexPath, property, globalProperty, localProperty);
@@ -579,7 +579,7 @@ namespace NGTQG {
 #endif
 
         static void create(const std::string indexPath, size_t dimensionOfSubvector, size_t pseudoDimension) {
-            tann::ngt::Index index(indexPath);
+            tann::Index index(indexPath);
             std::string quantizedIndexPath = indexPath + "/qg";
             struct stat st;
             if (stat(quantizedIndexPath.c_str(), &st) == 0) {
@@ -587,7 +587,7 @@ namespace NGTQG {
                 msg << "QuantizedGraph::create: Quantized graph is already existed. " << indexPath;
                 NGTThrowException(msg);
             }
-            tann::ngt::Property ngtProperty;
+            tann::Property ngtProperty;
             index.getProperty(ngtProperty);
             //NGTQG::Command::CreateParameters createParameters(args, property.dimension);
 #ifdef NGTQ_QBG
@@ -622,7 +622,7 @@ namespace NGTQG {
         quantize(const std::string indexPath, size_t dimensionOfSubvector, size_t maxNumOfEdges, bool silence = true);
 
         static void realign(const std::string indexPath, size_t maxNumOfEdges, bool silence = true) {
-            tann::ngt::StdOstreamRedirector redirector(silence);
+            tann::StdOstreamRedirector redirector(silence);
             redirector.begin();
             {
                 std::string quantizedIndexPath = indexPath + "/qg";
@@ -642,15 +642,15 @@ namespace NGTQG {
 
 #else
         static void quantize(const std::string indexPath, float dimensionOfSubvector, size_t maxNumOfEdges, bool silence = true) {
-          tann::ngt::StdOstreamRedirector redirector(silence);
+          tann::StdOstreamRedirector redirector(silence);
           redirector.begin();
           {
-        tann::ngt::Index	index(indexPath);
-        tann::ngt::ObjectSpace &objectSpace = index.getObjectSpace();
+        tann::Index	index(indexPath);
+        tann::ObjectSpace &objectSpace = index.getObjectSpace();
         std::string quantizedIndexPath = indexPath + "/qg";
         struct stat st;
         if (stat(quantizedIndexPath.c_str(), &st) != 0) {
-          tann::ngt::Property ngtProperty;
+          tann::Property ngtProperty;
           index.getProperty(ngtProperty);
           createQuantizedGraphFrame(quantizedIndexPath, ngtProperty.dimension, dimensionOfSubvector);
           buildQuantizedObjects(quantizedIndexPath, objectSpace);

@@ -46,15 +46,15 @@
 #define ADVANCED_USE_REMOVED_LIST
 #define    SHARED_REMOVED_LIST
 
-namespace tann::ngt {
+namespace tann {
     typedef unsigned int ObjectID;
     typedef float Distance;
 #ifdef NGT_HALF_FLOAT
     typedef	half_float::half	float16;
 #endif
 
-#define    NGTThrowException(MESSAGE)            throw tann::ngt::Exception(__FILE__, __FUNCTION__, (size_t)__LINE__, MESSAGE)
-#define    NGTThrowSpecificException(MESSAGE, TYPE)    throw tann::ngt::TYPE(__FILE__, __FUNCTION__, (size_t)__LINE__, MESSAGE)
+#define    NGTThrowException(MESSAGE)            throw tann::Exception(__FILE__, __FUNCTION__, (size_t)__LINE__, MESSAGE)
+#define    NGTThrowSpecificException(MESSAGE, TYPE)    throw tann::TYPE(__FILE__, __FUNCTION__, (size_t)__LINE__, MESSAGE)
 
     class Exception : public std::exception {
     public:
@@ -303,7 +303,7 @@ namespace tann::ngt {
         template<typename T>
         static void extractVector(const std::string &textLine, const std::string &sep, T &object) {
             std::vector<std::string> tokens;
-            tann::ngt::Common::tokenize(textLine, tokens, sep);
+            tann::Common::tokenize(textLine, tokens, sep);
             size_t idx;
             for (idx = 0; idx < tokens.size(); idx++) {
                 if (tokens[idx].size() == 0) {
@@ -331,7 +331,7 @@ namespace tann::ngt {
                 std::string line;
                 while (getline(procStatus, line)) {
                     std::vector<std::string> tokens;
-                    tann::ngt::Common::tokenize(line, tokens, ": \t");
+                    tann::Common::tokenize(line, tokens, ": \t");
                     if (tokens[0] == stat) {
                         for (size_t i = 1; i < tokens.size(); i++) {
                             if (tokens[i].empty()) {
@@ -896,7 +896,7 @@ namespace tann::ngt {
             std::string line;
             while (getline(is, line)) {
                 std::vector<std::string> tokens;
-                tann::ngt::Common::tokenize(line, tokens, "\t");
+                tann::Common::tokenize(line, tokens, "\t");
                 if (tokens.size() != 2) {
                     std::cerr << "Property file is illegal. " << line << std::endl;
                     continue;
@@ -1580,17 +1580,17 @@ namespace tann::ngt {
         }
 
 
-        void serialize(std::ofstream &os, tann::ngt::ObjectSpace *objspace = 0) {
+        void serialize(std::ofstream &os, tann::ObjectSpace *objspace = 0) {
             uint32_t sz = size();
-            tann::ngt::Serializer::write(os, sz);
+            tann::Serializer::write(os, sz);
             os.write(reinterpret_cast<char *>(vector), size() * elementSize);
         }
 
-        void deserialize(std::ifstream &is, tann::ngt::ObjectSpace *objectspace = 0) {
+        void deserialize(std::ifstream &is, tann::ObjectSpace *objectspace = 0) {
             uint32_t sz;
             try {
-                tann::ngt::Serializer::read(is, sz);
-            } catch (tann::ngt::Exception &err) {
+                tann::Serializer::read(is, sz);
+            } catch (tann::Exception &err) {
                 std::stringstream msg;
                 msg
                         << "DynamicLengthVector::deserialize: It might be caused by inconsistency of the valuable type of the vector. "
@@ -1779,12 +1779,12 @@ namespace tann::ngt {
       }
 
       void serialize(std::ofstream &os, ObjectSpace *objectspace = 0) {
-        tann::ngt::Serializer::write(os, array->size());
+        tann::Serializer::write(os, array->size());
         for (size_t idx = 0; idx < array->size(); idx++) {
       if ((*this)[idx] == 0) {
-        tann::ngt::Serializer::write(os, '-');
+        tann::Serializer::write(os, '-');
       } else {
-        tann::ngt::Serializer::write(os, '+');
+        tann::Serializer::write(os, '+');
         if (objectspace == 0) {
           assert(0);
           //(*this)[idx]->serialize(os, allocator);
@@ -1798,15 +1798,15 @@ namespace tann::ngt {
 
       void deserialize(std::ifstream &is, ObjectSpace *objectspace = 0) {
         if (!is.is_open()) {
-      NGTThrowException("tann::ngt::Common: Not open the specified stream yet.");
+      NGTThrowException("tann::Common: Not open the specified stream yet.");
         }
         deleteAll();
         (*this).push_back((TYPE*)0);
         size_t s;
-        tann::ngt::Serializer::read(is, s);
+        tann::Serializer::read(is, s);
         for (size_t i = 0; i < s; i++) {
       char type;
-      tann::ngt::Serializer::read(is, type);
+      tann::Serializer::read(is, type);
       switch(type) {
       case '-':
         {
@@ -1866,20 +1866,20 @@ namespace tann::ngt {
 
       void deserializeAsText(std::ifstream &is, ObjectSpace *objectspace = 0) {
         if (!is.is_open()) {
-      NGTThrowException("tann::ngt::Common: Not open the specified stream yet.");
+      NGTThrowException("tann::Common: Not open the specified stream yet.");
         }
         deleteAll();
         size_t s;
-        tann::ngt::Serializer::readAsText(is, s);
+        tann::Serializer::readAsText(is, s);
         (*this).reserve(s);
         for (size_t i = 0; i < s; i++) {
       size_t idx;
-      tann::ngt::Serializer::readAsText(is, idx);
+      tann::Serializer::readAsText(is, idx);
       if (i != idx) {
         std::cerr << "PersistentRepository: Error. index of a specified import file is invalid. " << idx << ":" << i << std::endl;
       }
       char type;
-      tann::ngt::Serializer::readAsText(is, type);
+      tann::Serializer::readAsText(is, type);
       switch(type) {
       case '-':
         {
@@ -2037,14 +2037,14 @@ namespace tann::ngt {
 
         void serialize(std::ofstream &os, ObjectSpace *objectspace = 0) {
             if (!os.is_open()) {
-                NGTThrowException("tann::ngt::Common: Not open the specified stream yet.");
+                NGTThrowException("tann::Common: Not open the specified stream yet.");
             }
-            tann::ngt::Serializer::write(os, std::vector<TYPE *>::size());
+            tann::Serializer::write(os, std::vector<TYPE *>::size());
             for (size_t idx = 0; idx < std::vector<TYPE *>::size(); idx++) {
                 if ((*this)[idx] == 0) {
-                    tann::ngt::Serializer::write(os, '-');
+                    tann::Serializer::write(os, '-');
                 } else {
-                    tann::ngt::Serializer::write(os, '+');
+                    tann::Serializer::write(os, '+');
                     if (objectspace == 0) {
                         (*this)[idx]->serialize(os);
                     } else {
@@ -2056,15 +2056,15 @@ namespace tann::ngt {
 
         void deserialize(std::ifstream &is, ObjectSpace *objectspace = 0) {
             if (!is.is_open()) {
-                NGTThrowException("tann::ngt::Common: Not open the specified stream yet.");
+                NGTThrowException("tann::Common: Not open the specified stream yet.");
             }
             deleteAll();
             size_t s;
-            tann::ngt::Serializer::read(is, s);
+            tann::Serializer::read(is, s);
             std::vector<TYPE *>::reserve(s);
             for (size_t i = 0; i < s; i++) {
                 char type;
-                tann::ngt::Serializer::read(is, type);
+                tann::Serializer::read(is, type);
                 switch (type) {
                     case '-': {
                         std::vector<TYPE *>::push_back(0);
@@ -2097,7 +2097,7 @@ namespace tann::ngt {
 
         void serializeAsText(std::ofstream &os, ObjectSpace *objectspace = 0) {
             if (!os.is_open()) {
-                NGTThrowException("tann::ngt::Common: Not open the specified stream yet.");
+                NGTThrowException("tann::Common: Not open the specified stream yet.");
             }
             // The format is almost the same as the default and the best in terms of the string length.
             os.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
@@ -2122,21 +2122,21 @@ namespace tann::ngt {
 
         void deserializeAsText(std::ifstream &is, ObjectSpace *objectspace = 0) {
             if (!is.is_open()) {
-                NGTThrowException("tann::ngt::Common: Not open the specified stream yet.");
+                NGTThrowException("tann::Common: Not open the specified stream yet.");
             }
             deleteAll();
             size_t s;
-            tann::ngt::Serializer::readAsText(is, s);
+            tann::Serializer::readAsText(is, s);
             std::vector<TYPE *>::reserve(s);
             for (size_t i = 0; i < s; i++) {
                 size_t idx;
-                tann::ngt::Serializer::readAsText(is, idx);
+                tann::Serializer::readAsText(is, idx);
                 if (i != idx) {
                     std::cerr << "Repository: Error. index of a specified import file is invalid. " << idx << ":" << i
                               << std::endl;
                 }
                 char type;
-                tann::ngt::Serializer::readAsText(is, type);
+                tann::Serializer::readAsText(is, type);
                 switch (type) {
                     case '-': {
                         std::vector<TYPE *>::push_back(0);
@@ -2230,13 +2230,13 @@ namespace tann::ngt {
         }
 
         void serialize(std::ofstream &os) {
-            tann::ngt::Serializer::write(os, id);
-            tann::ngt::Serializer::write(os, distance);
+            tann::Serializer::write(os, id);
+            tann::Serializer::write(os, distance);
         }
 
         void deserialize(std::ifstream &is) {
-            tann::ngt::Serializer::read(is, id);
-            tann::ngt::Serializer::read(is, distance);
+            tann::Serializer::read(is, id);
+            tann::Serializer::read(is, distance);
         }
 
         void serializeAsText(std::ofstream &os) {
@@ -2282,7 +2282,7 @@ namespace tann::ngt {
 
     typedef std::priority_queue<ObjectDistance, std::vector<ObjectDistance>, std::less<ObjectDistance> > ResultPriorityQueue;
 
-    class SearchContainer : public tann::ngt::Container {
+    class SearchContainer : public tann::Container {
     public:
         SearchContainer(Object &f, ObjectID i) : Container(f, i) { initialize(); }
 
@@ -2376,7 +2376,7 @@ namespace tann::ngt {
                 query = 0;
                 queryType = 0;
                 std::stringstream msg;
-                msg << "tann::ngt::SearchQuery: Invalid query type!";
+                msg << "tann::SearchQuery: Invalid query type!";
                 NGTThrowException(msg);
             }
             query = new std::vector<QTYPE>(q);
@@ -2410,10 +2410,10 @@ namespace tann::ngt {
         const std::type_info *queryType;
     };
 
-    class SearchQuery : public tann::ngt::QueryContainer, public tann::ngt::SearchContainer {
+    class SearchQuery : public tann::QueryContainer, public tann::SearchContainer {
     public:
         template<typename QTYPE>
-        SearchQuery(const std::vector<QTYPE> &q):tann::ngt::QueryContainer(q) {}
+        SearchQuery(const std::vector<QTYPE> &q):tann::QueryContainer(q) {}
     };
 
     class InsertContainer : public Container {
@@ -2483,5 +2483,5 @@ namespace tann::ngt {
         double time;    // second
     };
 
-} // namespace tann::ngt
+} // namespace tann
 

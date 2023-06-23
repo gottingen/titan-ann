@@ -24,7 +24,7 @@
 
 class ObjectSpace;
 
-namespace tann::ngt {
+namespace tann {
 
   template <typename OBJECT_TYPE, typename COMPARE_TYPE> 
     class ObjectSpaceRepository : public ObjectSpace, public ObjectRepository {
@@ -502,7 +502,7 @@ namespace tann::ngt {
 	Distance d = (*comparator)((Object&)query, (Object&)*rep[idx]);
 #endif
 	if (radius < 0.0 || d <= radius) {
-	  tann::ngt::ObjectDistance obj(idx, d);
+	  tann::ObjectDistance obj(idx, d);
 	  results.push(obj);
 	  if (results.size() > size) {
 	    results.pop();
@@ -515,7 +515,7 @@ namespace tann::ngt {
     void *getObject(size_t idx) {
       if (isEmpty(idx)) {
 	std::stringstream msg;
-	msg << "tann::ngt::ObjectSpaceRepository: The specified ID is out of the range. The object ID should be greater than zero. " << idx << ":" << ObjectRepository::size() << ".";
+	msg << "tann::ObjectSpaceRepository: The specified ID is out of the range. The object ID should be greater than zero. " << idx << ":" << ObjectRepository::size() << ".";
 	NGTThrowException(msg);
       }
       PersistentObject &obj = *(*this)[idx];
@@ -682,19 +682,19 @@ namespace tann::ngt {
     void *ref = &(*this).at(0, allocator);
     size_t dimension = objectspace->getDimension();
     if (t == typeid(uint8_t)) {
-      tann::ngt::Serializer::writeAsText(os, (uint8_t*)ref, dimension);
+      tann::Serializer::writeAsText(os, (uint8_t*)ref, dimension);
     } else if (t == typeid(float)) {
-      tann::ngt::Serializer::writeAsText(os, (float*)ref, dimension);
+      tann::Serializer::writeAsText(os, (float*)ref, dimension);
 #ifdef NGT_HALF_FLOAT
     } else if (t == typeid(float16)) {
-      tann::ngt::Serializer::writeAsText(os, (float16*)ref, dimension);
+      tann::Serializer::writeAsText(os, (float16*)ref, dimension);
 #endif
     } else if (t == typeid(double)) {
-      tann::ngt::Serializer::writeAsText(os, (double*)ref, dimension);
+      tann::Serializer::writeAsText(os, (double*)ref, dimension);
     } else if (t == typeid(uint16_t)) {
-      tann::ngt::Serializer::writeAsText(os, (uint16_t*)ref, dimension);
+      tann::Serializer::writeAsText(os, (uint16_t*)ref, dimension);
     } else if (t == typeid(uint32_t)) {
-      tann::ngt::Serializer::writeAsText(os, (uint32_t*)ref, dimension);
+      tann::Serializer::writeAsText(os, (uint32_t*)ref, dimension);
     } else {
       std::cerr << "ObjectT::serializeAsText: not supported data type. [" << t.name() << "]" << std::endl;
       assert(0);
@@ -709,19 +709,19 @@ namespace tann::ngt {
     void *ref = &(*this).at(0, allocator);
     assert(ref != 0);
     if (t == typeid(uint8_t)) {
-      tann::ngt::Serializer::readAsText(is, (uint8_t*)ref, dimension);
+      tann::Serializer::readAsText(is, (uint8_t*)ref, dimension);
     } else if (t == typeid(float)) {
-      tann::ngt::Serializer::readAsText(is, (float*)ref, dimension);
+      tann::Serializer::readAsText(is, (float*)ref, dimension);
 #ifdef NGT_HALF_FLOAT
     } else if (t == typeid(float16)) {
-      tann::ngt::Serializer::readAsText(is, (float16*)ref, dimension);
+      tann::Serializer::readAsText(is, (float16*)ref, dimension);
 #endif
     } else if (t == typeid(double)) {
-      tann::ngt::Serializer::readAsText(is, (double*)ref, dimension);
+      tann::Serializer::readAsText(is, (double*)ref, dimension);
     } else if (t == typeid(uint16_t)) {
-      tann::ngt::Serializer::readAsText(is, (uint16_t*)ref, dimension);
+      tann::Serializer::readAsText(is, (uint16_t*)ref, dimension);
     } else if (t == typeid(uint32_t)) {
-      tann::ngt::Serializer::readAsText(is, (uint32_t*)ref, dimension);
+      tann::Serializer::readAsText(is, (uint32_t*)ref, dimension);
     } else {
       std::cerr << "Object::deserializeAsText: not supported data type. [" << t.name() << "]" << std::endl;
       assert(0);
@@ -729,5 +729,5 @@ namespace tann::ngt {
   }
 
 #endif
-} // namespace tann::ngt
+} // namespace tann
 

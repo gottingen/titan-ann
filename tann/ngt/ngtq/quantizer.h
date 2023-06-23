@@ -100,7 +100,7 @@ class Rotation : public std::vector<float> {
     memcpy(a, y, sizeof(float) * dim);
     delete[] y;
   }
-  void mulBlas(tann::ngt::float16 *a) {
+  void mulBlas(tann::float16 *a) {
     float *floatv = new float[dim];
     for (size_t d = 0; d < dim; d++) {
       floatv[d] = a[d];
@@ -151,13 +151,13 @@ class Rotation : public std::vector<float> {
   }
   void serialize(std::ofstream &os) {
     uint32_t v = PARENT::size();
-    tann::ngt::Serializer::write(os, v);
+    tann::Serializer::write(os, v);
     os.write(reinterpret_cast<const char*>(PARENT::data()), static_cast<uint64_t>(PARENT::size()) * sizeof(float));
   }
 
   void deserialize(std::ifstream &is) {
     uint32_t v;
-    tann::ngt::Serializer::read(is, v);
+    tann::Serializer::read(is, v);
     PARENT::resize(v);
     dim = sqrt(v);
     if (dim * dim != v) {
@@ -227,15 +227,15 @@ class QuantizationCodebook : public std::vector<T> {
       std::cerr << "Quantization codebook: something wrong?" << std::endl;
       delete index;
     }
-    tann::ngt::Property property;
+    tann::Property property;
     property.dimension = dimension;
-    property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+    property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
 #ifdef NGTQ_SHARED_INVERTED_INDEX
-    index = new tann::ngt::Index("dummy", property);
+    index = new tann::Index("dummy", property);
     std::cerr << "Not implemented" << std::endl;
     abort();
 #else
-    index = new tann::ngt::Index(property);
+    index = new tann::Index(property);
 #endif
     size_t noOfCentroids = PARENT::size() / paddedDimension;
     std::cerr << "QuantizationCodebook::buildIndex # of the centroids=" << noOfCentroids << std::endl;
@@ -247,13 +247,13 @@ class QuantizationCodebook : public std::vector<T> {
     }
     index->createIndex(50);
   }
-  size_t search(tann::ngt::Object &object) {
+  size_t search(tann::Object &object) {
     if (index == 0) {
       std::cerr << "QuantizeationCodebook: Fatal Error! The index is not available." << std::endl;
       abort();
     }
-    tann::ngt::ObjectDistances result;
-    tann::ngt::SearchContainer sc(object);
+    tann::ObjectDistances result;
+    tann::SearchContainer sc(object);
     sc.setResults(&result);
     sc.setSize(10);
     sc.radius = FLT_MAX;
@@ -266,12 +266,12 @@ class QuantizationCodebook : public std::vector<T> {
       return result[0].id - 1;
     }
   }
-  size_t find(tann::ngt::Object &object, tann::ngt::ObjectSpace::Comparator &comparator) {
+  size_t find(tann::Object &object, tann::ObjectSpace::Comparator &comparator) {
     size_t noOfCentroids = PARENT::size() / paddedDimension;
     auto mind = std::numeric_limits<float>::max();
     size_t minidx = 0;
     for (size_t idx = 0; idx < noOfCentroids; idx++) {
-      auto d = tann::ngt::PrimitiveComparator::compareL2(static_cast<float*>(object.getPointer()), data(idx), paddedDimension);
+      auto d = tann::PrimitiveComparator::compareL2(static_cast<float*>(object.getPointer()), data(idx), paddedDimension);
       if (mind > d) {
 	mind = d;
 	minidx = idx;
@@ -289,21 +289,21 @@ class QuantizationCodebook : public std::vector<T> {
   
   void serialize(std::ofstream &os) {
     uint32_t v = PARENT::size();
-    tann::ngt::Serializer::write(os, v);
+    tann::Serializer::write(os, v);
     v = dimension;
-    tann::ngt::Serializer::write(os, v);
+    tann::Serializer::write(os, v);
     v = paddedDimension;
-    tann::ngt::Serializer::write(os, v);
+    tann::Serializer::write(os, v);
     os.write(reinterpret_cast<const char*>(PARENT::data()), static_cast<uint64_t>(PARENT::size()) * sizeof(T));
   }
   
   void deserialize(std::ifstream &is, bool readOnly) {
     uint32_t v;
-    tann::ngt::Serializer::read(is, v);
+    tann::Serializer::read(is, v);
     PARENT::resize(v);
-    tann::ngt::Serializer::read(is, v);
+    tann::Serializer::read(is, v);
     dimension = v;
-    tann::ngt::Serializer::read(is, v);
+    tann::Serializer::read(is, v);
     paddedDimension = v;
     is.read(reinterpret_cast<char*>(PARENT::data()), PARENT::size() * sizeof(T));
     if (!readOnly) {
@@ -312,7 +312,7 @@ class QuantizationCodebook : public std::vector<T> {
   }
   uint32_t dimension;
   uint32_t paddedDimension;
-  tann::ngt::Index *index;
+  tann::Index *index;
 };
 
 class GraphNodeToInvertedIndexEntries : public std::vector<uint32_t> {
@@ -322,12 +322,12 @@ class GraphNodeToInvertedIndexEntries : public std::vector<uint32_t> {
   ~GraphNodeToInvertedIndexEntries() {}
   void serialize(std::ofstream &os) {
     uint32_t v = PARENT::size();
-    tann::ngt::Serializer::write(os, v);
+    tann::Serializer::write(os, v);
     os.write(reinterpret_cast<const char*>(PARENT::data()), static_cast<uint64_t>(v) * sizeof(uint32_t));
   }
   void deserialize(std::ifstream &is) {
     uint32_t v;
-    tann::ngt::Serializer::read(is, v);
+    tann::Serializer::read(is, v);
     PARENT::resize(v);
     is.read(reinterpret_cast<char*>(PARENT::data()), static_cast<uint64_t>(v) * sizeof(uint32_t));
   }
@@ -362,18 +362,18 @@ public:
 };
  
 template <typename T>
-class InvertedIndexEntry : public tann::ngt::DynamicLengthVector<InvertedIndexObject<T>> {
+class InvertedIndexEntry : public tann::DynamicLengthVector<InvertedIndexObject<T>> {
 public:
-  typedef tann::ngt::DynamicLengthVector<InvertedIndexObject<T>> PARENT;
+  typedef tann::DynamicLengthVector<InvertedIndexObject<T>> PARENT;
 #ifdef NGTQ_SHARED_INVERTED_INDEX
-  InvertedIndexEntry(size_t n, tann::ngt::ObjectSpace *os = 0):numOfLocalIDs(n)
+  InvertedIndexEntry(size_t n, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
   {
     PARENT::elementSize = getSizeOfElement();
   }
-  InvertedIndexEntry(size_t n, SharedMemoryAllocator &allocator, tann::ngt::ObjectSpace *os = 0):numOfLocalIDs(n)
+  InvertedIndexEntry(size_t n, SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
@@ -389,12 +389,12 @@ public:
     PARENT::back(allocator).setID(id);
   }
 #else // NGTQ_SHARED_INVERTED_INDEX
-  InvertedIndexEntry(tann::ngt::ObjectSpace *os = 0):numOfLocalIDs(0)
+  InvertedIndexEntry(tann::ObjectSpace *os = 0):numOfLocalIDs(0)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
   {}
-  InvertedIndexEntry(size_t n, tann::ngt::ObjectSpace *os = 0):numOfLocalIDs(n)
+  InvertedIndexEntry(size_t n, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
@@ -410,35 +410,35 @@ public:
     PARENT::back().setID(id);
   }
 
-  void serialize(std::ofstream &os, tann::ngt::ObjectSpace *objspace = 0) {
+  void serialize(std::ofstream &os, tann::ObjectSpace *objspace = 0) {
     uint32_t sz = PARENT::size();
-    tann::ngt::Serializer::write(os, sz);
+    tann::Serializer::write(os, sz);
     if (numOfLocalIDs > 0xFFFF) {
       std::cerr << "num of local IDs is too large. " << numOfLocalIDs << std::endl;
       abort();
     }
     uint16_t nids = numOfLocalIDs;
-    tann::ngt::Serializer::write(os, nids);
+    tann::Serializer::write(os, nids);
 #ifdef NGTQ_QBG
     int32_t ssid = subspaceID;
-    tann::ngt::Serializer::write(os, ssid);
+    tann::Serializer::write(os, ssid);
 #endif
     os.write(reinterpret_cast<char*>(PARENT::vector), PARENT::size() * PARENT::elementSize);
   }
 
-  void deserialize(std::ifstream &is, tann::ngt::ObjectSpace *objectspace = 0) {
+  void deserialize(std::ifstream &is, tann::ObjectSpace *objectspace = 0) {
     uint32_t sz;
     uint16_t nids;
 #ifdef NGTQ_QBG
     int32_t ssid;
 #endif
     try {
-      tann::ngt::Serializer::read(is, sz);
-      tann::ngt::Serializer::read(is, nids);
+      tann::Serializer::read(is, sz);
+      tann::Serializer::read(is, nids);
 #ifdef NGTQ_QBG
-      tann::ngt::Serializer::read(is, ssid);
+      tann::Serializer::read(is, ssid);
 #endif
-    } catch(tann::ngt::Exception &err) {
+    } catch(tann::Exception &err) {
       std::stringstream msg;
       msg << "InvertedIndexEntry::deserialize: It might be caused by inconsistency of the valuable type of the inverted index size. " << err.what();
       NGTThrowException(msg);
@@ -483,7 +483,7 @@ public:
 };
 
 template <typename TYPE, int SIZE>
-class SerializableObject : public tann::ngt::Object {
+class SerializableObject : public tann::Object {
 public:
   static size_t getSerializedDataSize() { return SIZE; }
 };
@@ -497,7 +497,7 @@ public:
 #endif
  };
 
- typedef tann::ngt::ObjectSpace::DistanceType		DistanceType;
+ typedef tann::ObjectSpace::DistanceType		DistanceType;
 
  enum CentroidCreationMode {
    CentroidCreationModeDynamic		= 0,
@@ -553,7 +553,7 @@ public:
   }
 
   void save(const string &path) {
-    tann::ngt::PropertySet prop;
+    tann::PropertySet prop;
     prop.set("ThreadSize", 	(long)threadSize);
     prop.set("GlobalRange", 	globalRange);
     prop.set("LocalRange", 	localRange);
@@ -606,7 +606,7 @@ public:
   }
 
   void load(const string &path) {
-    tann::ngt::PropertySet prop;
+    tann::PropertySet prop;
     prop.load(path + "/prf");
     threadSize 		= prop.getl("ThreadSize", threadSize);
     globalRange 	= prop.getf("GlobalRange", globalRange);
@@ -803,7 +803,7 @@ public:
     delete[] localCentroidsForSIMD;
   }
 
-  virtual double operator()(tann::ngt::Object &object, size_t objectID, void *localID) = 0;
+  virtual double operator()(tann::Object &object, size_t objectID, void *localID) = 0;
 
   virtual double operator()(void *localID, DistanceLookupTable &distanceLUT) = 0;
 
@@ -812,12 +812,12 @@ public:
 #else
   virtual void operator()(void *inv, float *distances, size_t size, DistanceLookupTableUint8 &distanceLUT) = 0;
 #endif
-  virtual double operator()(tann::ngt::Object &object, size_t objectID, void *localID, DistanceLookupTable &distanceLUT) = 0;
+  virtual double operator()(tann::Object &object, size_t objectID, void *localID, DistanceLookupTable &distanceLUT) = 0;
 
   template <typename T>
-  inline double getAngleDistanceUint8(tann::ngt::Object &object, size_t objectID, T localID[]) {
+  inline double getAngleDistanceUint8(tann::Object &object, size_t objectID, T localID[]) {
     assert(globalCodebookIndex != 0);
-    tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localDataSize = sizeOfObject / localDivisionNo / sizeof(uint8_t);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -825,13 +825,13 @@ public:
 #else
     unsigned char *gcptr = &gcentroid[0];
 #endif
-    unsigned char *optr = &((tann::ngt::Object&)object)[0];
+    unsigned char *optr = &((tann::Object&)object)[0];
     double normA = 0.0F;
     double normB = 0.0F;
     double sum = 0.0F;
     for (size_t li = 0; li < localDivisionNo; li++) {
       size_t idx = localCodebookNo == 1 ? 0 : li;
-      tann::ngt::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
+      tann::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
       float *lcptr = (float*)&lcentroid.at(0, localCodebookIndexes[idx].getObjectSpace().getRepository().allocator);
 #else
@@ -857,9 +857,9 @@ public:
 
 #if defined(NGT_NO_AVX)
   template <typename T>
-  inline double getL2DistanceUint8(tann::ngt::Object &object, size_t objectID, T localID[]) {
+  inline double getL2DistanceUint8(tann::Object &object, size_t objectID, T localID[]) {
     assert(globalCodebookIndex != 0);
-    tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localDataSize = sizeOfObject / localDivisionNo / sizeof(uint8_t);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -867,11 +867,11 @@ public:
 #else
     unsigned char *gcptr = &gcentroid[0];
 #endif
-    unsigned char *optr = &((tann::ngt::Object&)object)[0];
+    unsigned char *optr = &((tann::Object&)object)[0];
     double distance = 0.0;
     for (size_t li = 0; li < localDivisionNo; li++) {
       size_t idx = localCodebookNo == 1 ? 0 : li;
-      tann::ngt::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
+      tann::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
       float *lcptr = (float*)&lcentroid.at(0, localCodebookIndexes[idx].getObjectSpace().getRepository().allocator);
 #else
@@ -889,9 +889,9 @@ public:
   }
 #else 
   template <typename T>
-  inline double getL2DistanceUint8(tann::ngt::Object &object, size_t objectID, T localID[]) {
+  inline double getL2DistanceUint8(tann::Object &object, size_t objectID, T localID[]) {
     assert(globalCodebookIndex != 0);
-    tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localDataSize = sizeOfObject / localDivisionNo / sizeof(uint8_t);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -899,11 +899,11 @@ public:
 #else
     unsigned char *gcptr = &gcentroid[0];
 #endif
-    unsigned char *optr = &((tann::ngt::Object&)object)[0];
+    unsigned char *optr = &((tann::Object&)object)[0];
     double distance = 0.0;
     for (size_t li = 0; li < localDivisionNo; li++) {
       size_t idx = localCodebookNo == 1 ? 0 : li;
-      tann::ngt::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
+      tann::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
       float *lcptr = (float*)&lcentroid.at(0, localCodebookIndexes[idx].getObjectSpace().getRepository().allocator);
 #else
@@ -937,9 +937,9 @@ public:
 #endif 
 
   template <typename T>
-  inline double getAngleDistanceFloat(tann::ngt::Object &object, size_t objectID, T localID[]) {
+  inline double getAngleDistanceFloat(tann::Object &object, size_t objectID, T localID[]) {
     assert(globalCodebookIndex != 0);
-    tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localDataSize = sizeOfObject / localDivisionNo  / sizeof(float);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -947,13 +947,13 @@ public:
 #else
     float *gcptr = (float*)&gcentroid[0];
 #endif
-    float *optr = (float*)&((tann::ngt::Object&)object)[0];
+    float *optr = (float*)&((tann::Object&)object)[0];
     double normA = 0.0F;
     double normB = 0.0F;
     double sum = 0.0F;
     for (size_t li = 0; li < localDivisionNo; li++) {
       size_t idx = localCodebookNo == 1 ? 0 : li;
-      tann::ngt::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
+      tann::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
       float *lcptr = (float*)&lcentroid.at(0, localCodebookIndexes[idx].getObjectSpace().getRepository().allocator);
 #else
@@ -978,9 +978,9 @@ public:
   }
 
   template <typename T>
-    inline double getL2DistanceFloat(tann::ngt::Object &object, size_t objectID, T localID[]) {
+    inline double getL2DistanceFloat(tann::Object &object, size_t objectID, T localID[]) {
     assert(globalCodebookIndex != 0);
-    tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localDataSize = sizeOfObject / localDivisionNo  / sizeof(float);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -988,11 +988,11 @@ public:
 #else
     float *gcptr = (float*)&gcentroid[0];
 #endif
-    float *optr = (float*)&((tann::ngt::Object&)object)[0];
+    float *optr = (float*)&((tann::Object&)object)[0];
     double distance = 0.0;
     for (size_t li = 0; li < localDivisionNo; li++) {
       size_t idx = localCodebookNo == 1 ? 0 : li;
-      tann::ngt::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
+      tann::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
       float *lcptr = (float*)&lcentroid.at(0, localCodebookIndexes[idx].getObjectSpace().getRepository().allocator);
 #else
@@ -1011,19 +1011,19 @@ public:
   }
 
 #ifdef NGTQ_DISTANCE_ANGLE
-  inline void createDistanceLookup(tann::ngt::Object &object, size_t objectID, DistanceLookupTable &distanceLUT) {
+  inline void createDistanceLookup(tann::Object &object, size_t objectID, DistanceLookupTable &distanceLUT) {
     assert(globalCodebookIndex != 0);
-    tann::ngt::Object &gcentroid = (tann::ngt::Object &)*globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::Object &gcentroid = (tann::Object &)*globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localDataSize = sizeOfObject  / localDivisionNo / sizeof(float);
-    float *optr = (float*)&((tann::ngt::Object&)object)[0];
+    float *optr = (float*)&((tann::Object&)object)[0];
     float *gcptr = (float*)&gcentroid[0];
     LocalDistanceLookup *dlu = distanceLUT.localDistanceLookup;
     size_t oft = 0;
     for (size_t li = 0; li < localCodebookNo; li++, oft += localDataSize) {
       dlu++;  
       for (size_t k = 1; k < localCodebookCentroidNo; k++) {
-	tann::ngt::Object &lcentroid = (tann::ngt::Object&)*localCodebookIndexes[li].getObjectSpace().getRepository().get(k);
+	tann::Object &lcentroid = (tann::Object&)*localCodebookIndexes[li].getObjectSpace().getRepository().get(k);
 	float *lcptr = (float*)&lcentroid[0];		
 	float *lcendptr = lcptr + localDataSize;	
 	float *toptr = optr + oft;
@@ -1044,12 +1044,12 @@ public:
     }
   }
 #else 
-  inline void createDistanceLookup(tann::ngt::Object &object, size_t objectID, DistanceLookupTable &distanceLUT) {
+  inline void createDistanceLookup(tann::Object &object, size_t objectID, DistanceLookupTable &distanceLUT) {
     assert(globalCodebookIndex != 0);
-    tann::ngt::Object &gcentroid = (tann::ngt::Object &)*globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::Object &gcentroid = (tann::Object &)*globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
 
-    createFloatL2DistanceLookup(&((tann::ngt::Object&)object)[0], sizeOfObject, &gcentroid[0], distanceLUT.localDistanceLookup);
+    createFloatL2DistanceLookup(&((tann::Object&)object)[0], sizeOfObject, &gcentroid[0], distanceLUT.localDistanceLookup);
 
   }
 #endif 
@@ -1352,8 +1352,8 @@ public:
 
   }
 
-  inline void createDistanceLookup(tann::ngt::Object &object, size_t objectID, DistanceLookupTableUint8 &distanceLUT) {
-    void *objectPtr = &((tann::ngt::Object&)object)[0];
+  inline void createDistanceLookup(tann::Object &object, size_t objectID, DistanceLookupTableUint8 &distanceLUT) {
+    void *objectPtr = &((tann::Object&)object)[0];
     createDistanceLookup(objectPtr, objectID, distanceLUT);
   }
   inline void createDistanceLookup(void *objectPtr, size_t objectID, DistanceLookupTableUint8 &distanceLUT) {
@@ -1368,7 +1368,7 @@ public:
 #endif
   }
 
-  void set(tann::ngt::Index *gcb, tann::ngt::Index lcb[], QuantizationCodebook<float> *qcodebook, size_t dn, size_t lcn,
+  void set(tann::Index *gcb, tann::Index lcb[], QuantizationCodebook<float> *qcodebook, size_t dn, size_t lcn,
 	   size_t sizeoftype, size_t dim, Rotation *r) {
     globalCodebookIndex = gcb;
     localCodebookIndexes = lcb;
@@ -1379,10 +1379,10 @@ public:
     sizeOfType = sizeoftype;
     set(lcb, lcn);
     if (globalCodebookIndex->getObjectSpace().getRepository().size() == 2) {
-      tann::ngt::ObjectID id = 1;
+      tann::ObjectID id = 1;
       try {
 	globalCodebookIndex->getObjectSpace().getObject(id, globalCentroid);
-      } catch (tann::ngt::Exception &err) {
+      } catch (tann::Exception &err) {
 	std::cerr << "Cannot load the global centroid. id=" << id << std::endl;
       }
     }
@@ -1393,11 +1393,11 @@ public:
     for (size_t li = 0; li < localCodebookNo; li++) {
       for (size_t k = 1; k < localCodebookCentroidNo; k++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tann::ngt::PersistentObject &lcentroid = *static_cast<tann::ngt::PersistentObject*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
+	tann::PersistentObject &lcentroid = *static_cast<tann::PersistentObject*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
 	memcpy(&lc[li * localCodebookCentroidNo * localDataSize + k * localDataSize],
 	       &lcentroid.at(0, localCodebookIndexes[li].getObjectSpace().getRepository().allocator), localDataSize * sizeof(float));
 #else
-	tann::ngt::Object &lcentroid = *static_cast<tann::ngt::Object*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
+	tann::Object &lcentroid = *static_cast<tann::Object*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
 	memcpy(&lc[li * localCodebookCentroidNo * localDataSize + k * localDataSize], &lcentroid[0], localDataSize * sizeof(float));
 #endif
       }
@@ -1412,10 +1412,10 @@ public:
     for (size_t li = 0; li < localCodebookNo; li++) {
       for (size_t k = 1; k < localCodebookCentroidNo; k++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tann::ngt::PersistentObject &lcentroid = *static_cast<tann::ngt::PersistentObject*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
+	tann::PersistentObject &lcentroid = *static_cast<tann::PersistentObject*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
 	float *subVector = reinterpret_cast<float*>(&lcentroid.at(0, localCodebookIndexes[li].getObjectSpace().getRepository().allocator));
 #else
-	tann::ngt::Object &lcentroid = *static_cast<tann::ngt::Object*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
+	tann::Object &lcentroid = *static_cast<tann::Object*>(localCodebookIndexes[li].getObjectSpace().getRepository().get(k));
 	float *subVector = reinterpret_cast<float*>(&lcentroid[0]);
 #endif
 	for (size_t d = 0; d < localDataSize; d++) {
@@ -1429,7 +1429,7 @@ public:
 
   }
 
-  void set(tann::ngt::Index lcb[], size_t lcn) {
+  void set(tann::Index lcb[], size_t lcn) {
     localCodebookNo = lcn;
     localCodebookCentroidNo = lcb[0].getObjectRepositorySize();
   }
@@ -1442,8 +1442,8 @@ public:
     c.initialize(localCodebookNo, localCodebookCentroidNo);
   }
 
-  tann::ngt::Index	*globalCodebookIndex;
-  tann::ngt::Index	*localCodebookIndexes;
+  tann::Index	*globalCodebookIndex;
+  tann::Index	*localCodebookIndexes;
   size_t	localDivisionNo;
   size_t	localCodebookNo;
   size_t	localCodebookCentroidNo;
@@ -1486,10 +1486,10 @@ public:
     }
     return acos(cosine);
   }
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l) {
     return getAngleDistanceUint8(object, objectID, static_cast<T*>(l));
   }
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
     cerr << "operator() is not implemented" << endl;
     abort();
     return 0.0;
@@ -1504,12 +1504,12 @@ public:
     return sqrt(distance);	
   }
 
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l) {
     return getL2DistanceUint8(object, objectID, static_cast<T*>(l));
   }
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
     T *localID = static_cast<T*>(l);
-    tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localDataSize = sizeOfObject / localDivisionNo  / sizeof(uint8_t);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -1517,7 +1517,7 @@ public:
 #else
     unsigned char *gcptr = &gcentroid[0];
 #endif
-    unsigned char *optr = &((tann::ngt::Object&)object)[0];
+    unsigned char *optr = &((tann::Object&)object)[0];
     double distance = 0.0;
     for (size_t li = 0; li < localDivisionNo; li++) {
       if (distanceLUT.isValid(li * localCodebookCentroidNo + localID[li])) {
@@ -1526,7 +1526,7 @@ public:
 	gcptr += localDataSize;
       } else {
 	size_t idx = localCodebookNo == 1 ? 0 : li;
-	tann::ngt::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
+	tann::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	float *lcptr = (float*)&lcentroid.at(0, localCodebookIndexes[idx].getObjectSpace().getRepository().allocator);
 #else
@@ -1580,10 +1580,10 @@ public:
     }
     return acos(cosine);
   }
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l) {
     return getAngleDistanceFloat(object, objectID, static_cast<T*>(l));
   }
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
     cerr << "operator() is not implemented." << endl;
     abort();
     return 0.0;
@@ -1954,18 +1954,18 @@ public:
 #endif 
 
 
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l) {
     return getL2DistanceFloat(object, objectID, static_cast<T*>(l));
   }
-  inline double operator()(tann::ngt::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
+  inline double operator()(tann::Object &object, size_t objectID, void *l, DistanceLookupTable &distanceLUT) {
     T *localID = static_cast<T*>(l);
-    tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
+    tann::PersistentObject &gcentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(objectID);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     float *gcptr = (float*)&gcentroid.at(0, globalCodebookIndex->getObjectSpace().getRepository().allocator);
 #else
     float *gcptr = (float*)&gcentroid[0];
 #endif
-    float *optr = (float*)&((tann::ngt::Object&)object)[0];
+    float *optr = (float*)&((tann::Object&)object)[0];
     double distance = 0.0;
     for (size_t li = 0; li < localDivisionNo; li++) {
       size_t distanceLUTidx = li * localCodebookCentroidNo + localID[li];
@@ -1975,7 +1975,7 @@ public:
 	gcptr += localDataSize;
       } else {
         size_t idx = li;
-	tann::ngt::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
+	tann::PersistentObject &lcentroid = *localCodebookIndexes[idx].getObjectSpace().getRepository().get(localID[li]);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	float *lcptr = (float*)&lcentroid.at(0, localCodebookIndexes[idx].getObjectSpace().getRepository().allocator);
 #else
@@ -2017,7 +2017,7 @@ public:
 class Quantizer {
 public:
 #ifdef NGTQ_STATIC_OBJECT_FILE
-  typedef StaticObjectFile<tann::ngt::Object>	ObjectList;
+  typedef StaticObjectFile<tann::Object>	ObjectList;
 #else
   typedef ObjectFile	ObjectList;	
 #endif
@@ -2026,17 +2026,17 @@ public:
   virtual ~Quantizer() { }
 
   virtual void create(const string &index,
-		      tann::ngt::Property &globalPropertySet,
+		      tann::Property &globalPropertySet,
 #ifdef NGTQ_QBG
-		      tann::ngt::Property &localPropertySet,
+		      tann::Property &localPropertySet,
 		      std::vector<float> *rotation = 0,
 		      const string &objectFile = "") = 0;
 #else
-		      tann::ngt::Property &localPropertySet) = 0;
+		      tann::Property &localPropertySet) = 0;
 #endif
 #ifndef NGTQ_QBG
-  virtual void insert(vector<pair<tann::ngt::Object*, size_t> > &objects) = 0;
-  virtual void insert(vector<float> &object, vector<pair<tann::ngt::Object*, size_t> > &objects, size_t id) = 0;
+  virtual void insert(vector<pair<tann::Object*, size_t> > &objects) = 0;
+  virtual void insert(vector<float> &object, vector<pair<tann::Object*, size_t> > &objects, size_t id) = 0;
 #endif
   virtual void insertIntoObjectRepository(vector<float> &object, size_t id) = 0;
 #ifdef NGTQ_QBG
@@ -2050,7 +2050,7 @@ public:
 #endif
   virtual void save() = 0;
   virtual void saveRotation(const std::vector<float> &rotation) = 0;
-  virtual void open(const string &index, tann::ngt::Property &globalProperty, bool readOnly) = 0;
+  virtual void open(const string &index, tann::Property &globalProperty, bool readOnly) = 0;
   virtual void open(const string &index, bool readOnly) = 0;
   virtual void close() = 0;
   virtual void closeCodebooks() = 0;
@@ -2068,22 +2068,22 @@ public:
   virtual void eraseInvertedIndexObject(size_t id) = 0;
   virtual void eraseInvertedIndexObject() = 0;
 
-  virtual tann::ngt::Distance getApproximateDistance(tann::ngt::Object &query, uint32_t globalID, uint16_t *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
+  virtual tann::Distance getApproximateDistance(tann::Object &query, uint32_t globalID, uint16_t *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
     std::cerr << "getApproximateDistance() is not implemented." << std::endl;
     abort();
   }
 
-  virtual void search(tann::ngt::Object *object, tann::ngt::ObjectDistances &objs, size_t size,
+  virtual void search(tann::Object *object, tann::ObjectDistances &objs, size_t size,
 		      size_t approximateSearchSize,
 		      size_t codebookSearchSize, bool resultRefinement, bool lookUpTable,
 		      double epsilon) = 0;
 
-  virtual void search(tann::ngt::Object *object, tann::ngt::ObjectDistances &objs, size_t size,
+  virtual void search(tann::Object *object, tann::ObjectDistances &objs, size_t size,
 		      size_t approximateSearchSize,
 		      size_t codebookSearchSize, AggregationMode aggregationMode,
 		      double epsilon) = 0;
 
-  virtual void search(tann::ngt::Object *object, tann::ngt::ObjectDistances &objs, size_t size,
+  virtual void search(tann::Object *object, tann::ObjectDistances &objs, size_t size,
 		      float expansion,
 		      AggregationMode aggregationMode,
 		      double epsilon) = 0;
@@ -2094,16 +2094,16 @@ public:
 
   virtual size_t getInstanceSharedMemorySize(ostream &os, SharedMemoryAllocator::GetMemorySizeType t = SharedMemoryAllocator::GetTotalMemorySize) = 0;
 
-  tann::ngt::Object *allocateObject(string &line, const string &sep) {
+  tann::Object *allocateObject(string &line, const string &sep) {
     return globalCodebookIndex.allocateObject(line, " \t");
   }
-  tann::ngt::Object *allocateObject(vector<double> &obj) {
+  tann::Object *allocateObject(vector<double> &obj) {
     return globalCodebookIndex.allocateObject(obj);
   }
-  tann::ngt::Object *allocateObject(vector<float> &obj) {
+  tann::Object *allocateObject(vector<float> &obj) {
     return globalCodebookIndex.allocateObject(obj);
   }
-  void deleteObject(tann::ngt::Object *object) { globalCodebookIndex.deleteObject(object); }
+  void deleteObject(tann::Object *object) { globalCodebookIndex.deleteObject(object); }
   
   void setThreadSize(size_t size) { property.threadSize = size; }
   void setGlobalRange(float r) { property.globalRange = r; }
@@ -2113,7 +2113,7 @@ public:
   void setDimension(size_t s) { property.dimension = s; }
   void setDistanceType(DistanceType t) { property.distanceType = t; }
 
-  tann::ngt::Index &getLocalCodebook(size_t idx) { return localCodebookIndexes[idx]; }
+  tann::Index &getLocalCodebook(size_t idx) { return localCodebookIndexes[idx]; }
   size_t getLocalCodebookSize(size_t size) { return localCodebookIndexes[size].getObjectRepositorySize(); }
 
   string getRootDirectory() { return rootDirectory; }
@@ -2132,15 +2132,15 @@ public:
 
   Property	property;
 
-  tann::ngt::Index	globalCodebookIndex;
+  tann::Index	globalCodebookIndex;
 
   size_t	distanceComputationCount;
 
   size_t	localIDByteSize;
-  tann::ngt::ObjectSpace::ObjectType objectType;
+  tann::ObjectSpace::ObjectType objectType;
   size_t	divisionNo;
 
-  std::vector<tann::ngt::Index>	localCodebookIndexes;
+  std::vector<tann::Index>	localCodebookIndexes;
 
   QuantizationCodebook<float>	quantizationCodebook;
   std::vector<uint32_t>		objectToBlobIndex;
@@ -2247,32 +2247,32 @@ public:
 #ifdef NGTQ_VECTOR_OBJECT
   virtual void operator()(std::vector<float> &object, size_t centroidID, float *subspaceObject) = 0;
 #else
-  virtual void operator()(tann::ngt::Object &object, size_t centroidID, float *subspaceObject) = 0;
+  virtual void operator()(tann::Object &object, size_t centroidID, float *subspaceObject) = 0;
 #endif
-  virtual void operator()(tann::ngt::Object &object, size_t centroidID,
-			  vector<vector<pair<tann::ngt::Object*, size_t> > > &localObjs) = 0;
+  virtual void operator()(tann::Object &object, size_t centroidID,
+			  vector<vector<pair<tann::Object*, size_t> > > &localObjs) = 0;
 #else
   virtual void operator()(size_t objectID, size_t centroidID, 
-			  vector<vector<pair<tann::ngt::Object*, size_t> > > &localObjs) = 0;
+			  vector<vector<pair<tann::Object*, size_t> > > &localObjs) = 0;
 #endif
-  void set(tann::ngt::Index &gc, tann::ngt::Index lc[], size_t dn, size_t lcn,
+  void set(tann::Index &gc, tann::Index lc[], size_t dn, size_t lcn,
 	   Quantizer::ObjectList *ol, QuantizationCodebook<float> *qc) {
-    globalCodebookIndex = &(tann::ngt::GraphAndTreeIndex&)gc.getIndex();
+    globalCodebookIndex = &(tann::GraphAndTreeIndex&)gc.getIndex();
     divisionNo = dn;
     objectList = ol;
     set(lc, lcn);
     quantizationCodebook = qc;
   }
-  void set(tann::ngt::Index lc[], size_t lcn) {
+  void set(tann::Index lc[], size_t lcn) {
     localCodebookIndexes.clear();
     localCodebookNo = lcn;
     for (size_t i = 0; i < localCodebookNo; ++i) {
-      localCodebookIndexes.push_back(&(tann::ngt::GraphAndTreeIndex&)lc[i].getIndex());
+      localCodebookIndexes.push_back(&(tann::GraphAndTreeIndex&)lc[i].getIndex());
     }
   }
 
-  tann::ngt::GraphAndTreeIndex		*globalCodebookIndex;
-  vector<tann::ngt::GraphAndTreeIndex*>	localCodebookIndexes;
+  tann::GraphAndTreeIndex		*globalCodebookIndex;
+  vector<tann::GraphAndTreeIndex*>	localCodebookIndexes;
   size_t				divisionNo;
   size_t				localCodebookNo;
   Quantizer::ObjectList			*objectList;
@@ -2285,15 +2285,15 @@ public:
 #ifdef NGTQ_VECTOR_OBJECT
   void operator()(std::vector<float> &object, size_t centroidID, float *subspaceObject) { abort(); }
 #else
-  void operator()(tann::ngt::Object &object, size_t centroidID, float *subspaceObject) { abort(); }
+  void operator()(tann::Object &object, size_t centroidID, float *subspaceObject) { abort(); }
 #endif
-  void operator()(tann::ngt::Object &xobject, size_t centroidID,
-		  vector<vector<pair<tann::ngt::Object*, size_t> > > &localObjs) { abort(); }
+  void operator()(tann::Object &xobject, size_t centroidID,
+		  vector<vector<pair<tann::Object*, size_t> > > &localObjs) { abort(); }
 #else
   void operator()(size_t objectID, size_t centroidID, 
-		  vector<vector<pair<tann::ngt::Object*, size_t> > > &localObjs) {
-    tann::ngt::PersistentObject &globalCentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(centroidID);
-    tann::ngt::Object object(&globalCodebookIndex->getObjectSpace());
+		  vector<vector<pair<tann::Object*, size_t> > > &localObjs) {
+    tann::PersistentObject &globalCentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(centroidID);
+    tann::Object object(&globalCodebookIndex->getObjectSpace());
     objectList->get(objectID, object, &globalCodebookIndex->getObjectSpace());
     size_t sizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t lsize = sizeOfObject / divisionNo;
@@ -2309,8 +2309,8 @@ public:
 #endif
       }
       size_t idx = localCodebookNo == 1 ? 0 : di;
-      tann::ngt::Object *localObj = localCodebookIndexes[idx]->allocateObject(subObject);
-      localObjs[idx].push_back(pair<tann::ngt::Object*, size_t>(localObj, 0));
+      tann::Object *localObj = localCodebookIndexes[idx]->allocateObject(subObject);
+      localObjs[idx].push_back(pair<tann::Object*, size_t>(localObj, 0));
     }
   }
 #endif
@@ -2323,7 +2323,7 @@ public:
 #ifdef NGTQ_VECTOR_OBJECT
   void operator()(std::vector<float> &object, size_t centroidID, float *subspaceObject) {
 #else
-  void operator()(tann::ngt::Object &object, size_t centroidID, float *subspaceObject) {
+  void operator()(tann::Object &object, size_t centroidID, float *subspaceObject) {
 #endif
     size_t dimension = globalCodebookIndex->getObjectSpace().getPaddedDimension();
 #ifdef NGTQ_VECTOR_OBJECT
@@ -2343,8 +2343,8 @@ public:
 #endif
     }
   }
-  void operator()(tann::ngt::Object &object, size_t centroidID,
-		  vector<vector<pair<tann::ngt::Object*, size_t>>> &localObjs) {
+  void operator()(tann::Object &object, size_t centroidID,
+		  vector<vector<pair<tann::Object*, size_t>>> &localObjs) {
     size_t byteSizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localByteSize = byteSizeOfObject / divisionNo;
     size_t localDimension = localByteSize / sizeof(float);
@@ -2365,8 +2365,8 @@ public:
       }
 #endif /// /////////////////////
       size_t idx = localCodebookNo == 1 ? 0 : di;
-      tann::ngt::Object *localObj = localCodebookIndexes[idx]->allocateObject(subVector, localDimension);
-      localObjs[idx].push_back(pair<tann::ngt::Object*, size_t>(localObj, 0));
+      tann::Object *localObj = localCodebookIndexes[idx]->allocateObject(subVector, localDimension);
+      localObjs[idx].push_back(pair<tann::Object*, size_t>(localObj, 0));
     }
   }
 };
@@ -2375,9 +2375,9 @@ public:
 class GenerateResidualObjectFloat : public GenerateResidualObject {
 public:
   void operator()(size_t objectID, size_t centroidID, 
-		  vector<vector<pair<tann::ngt::Object*, size_t> > > &localObjs) {
-    tann::ngt::PersistentObject &globalCentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(centroidID);
-    tann::ngt::Object object(&globalCodebookIndex->getObjectSpace());
+		  vector<vector<pair<tann::Object*, size_t> > > &localObjs) {
+    tann::PersistentObject &globalCentroid = *globalCodebookIndex->getObjectSpace().getRepository().get(centroidID);
+    tann::Object object(&globalCodebookIndex->getObjectSpace());
     objectList->get(objectID, object, &globalCodebookIndex->getObjectSpace());
     size_t byteSizeOfObject = globalCodebookIndex->getObjectSpace().getByteSizeOfObject();
     size_t localByteSize = byteSizeOfObject / divisionNo;
@@ -2396,8 +2396,8 @@ public:
 	subObject[d] = (double)subVector[d] - (double)globalCentroidSubVector[d];
       }
       size_t idx = localCodebookNo == 1 ? 0 : di;
-      tann::ngt::Object *localObj = localCodebookIndexes[idx]->allocateObject(subObject);
-      localObjs[idx].push_back(pair<tann::ngt::Object*, size_t>(localObj, 0));
+      tann::Object *localObj = localCodebookIndexes[idx]->allocateObject(subObject);
+      localObjs[idx].push_back(pair<tann::Object*, size_t>(localObj, 0));
     }
   }
 };
@@ -2407,7 +2407,7 @@ template <typename LOCAL_ID_TYPE>
 class QuantizerInstance : public Quantizer {
 public:
 
-  typedef void (QuantizerInstance::*AggregateObjectsFunction)(tann::ngt::ObjectDistance &, tann::ngt::Object *, size_t size, tann::ngt::ObjectSpace::ResultSet &, size_t);
+  typedef void (QuantizerInstance::*AggregateObjectsFunction)(tann::ObjectDistance &, tann::Object *, size_t size, tann::ObjectSpace::ResultSet &, size_t);
   typedef InvertedIndexEntry<LOCAL_ID_TYPE>	IIEntry;
 
   QuantizerInstance() {
@@ -2420,26 +2420,26 @@ public:
   virtual ~QuantizerInstance() { close(); }
 
   void createEmptyIndex(const string &index,
-			tann::ngt::Property &globalProperty,
+			tann::Property &globalProperty,
 #ifdef NGTQ_QBG
-			tann::ngt::Property &localProperty,
+			tann::Property &localProperty,
 			std::vector<float> *rotation,
 			const string &objectFile)
 #else
-			tann::ngt::Property &localProperty)
+			tann::Property &localProperty)
 #endif
   {
     rootDirectory = index;
-    tann::ngt::Index::mkdir(rootDirectory);
+    tann::Index::mkdir(rootDirectory);
     string global = rootDirectory + "/global";
-    tann::ngt::Index::mkdir(global);
+    tann::Index::mkdir(global);
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-    tann::ngt::GraphAndTreeIndex globalCodebook(global, globalProperty);
+    tann::GraphAndTreeIndex globalCodebook(global, globalProperty);
     globalCodebook.saveIndex(global);
     globalCodebook.close();
 #else
-    tann::ngt::GraphAndTreeIndex globalCodebook(globalProperty);
+    tann::GraphAndTreeIndex globalCodebook(globalProperty);
     globalCodebook.saveIndex(global);
     globalCodebook.close();
 #endif
@@ -2449,17 +2449,17 @@ public:
     for (size_t i = 0; i < localCodebookNo; ++i) {
       stringstream local;
       local << rootDirectory << "/local-" << i;
-      tann::ngt::Index::mkdir(local.str());
-      tann::ngt::GraphAndTreeIndex localCodebook(local.str(), localProperty);
+      tann::Index::mkdir(local.str());
+      tann::GraphAndTreeIndex localCodebook(local.str(), localProperty);
       localCodebook.saveIndex(local.str());
     }
 #else
-    tann::ngt::GraphAndTreeIndex localCodebook(localProperty);
+    tann::GraphAndTreeIndex localCodebook(localProperty);
     size_t localCodebookNo = property.getLocalCodebookNo();
     for (size_t i = 0; i < localCodebookNo; ++i) {
       stringstream local;
       local << rootDirectory << "/local-" << i;
-      tann::ngt::Index::mkdir(local.str());
+      tann::Index::mkdir(local.str());
       localCodebook.saveIndex(local.str());
     }
     localCodebook.close();
@@ -2510,13 +2510,13 @@ public:
     r.serialize(ofs);
   }
 
-  void open(const string &index, tann::ngt::Property &globalProperty, bool readOnly) {
+  void open(const string &index, tann::Property &globalProperty, bool readOnly) {
     open(index, readOnly);
     globalCodebookIndex.setProperty(globalProperty);
   }
 
   void open(const string &index, bool readOnly) {
-    tann::ngt::StdOstreamRedirector redirector(silence);
+    tann::StdOstreamRedirector redirector(silence);
     redirector.begin();
     rootDirectory = index;
     property.load(rootDirectory);
@@ -2562,14 +2562,14 @@ public:
 #ifdef MULTIPLE_OBJECT_LISTS
     objectList.openMultipleStreams(omp_get_max_threads());
 #endif
-    tann::ngt::Property globalProperty;
+    tann::Property globalProperty;
     globalCodebookIndex.getProperty(globalProperty);
     size_t sizeoftype = 0;
 #ifdef NGT_HALF_FLOAT
-    if (globalProperty.objectType == tann::ngt::Property::ObjectType::Float ||
-	globalProperty.objectType == tann::ngt::Property::ObjectType::Float16) {
+    if (globalProperty.objectType == tann::Property::ObjectType::Float ||
+	globalProperty.objectType == tann::Property::ObjectType::Float16) {
 #else
-    if (globalProperty.objectType == tann::ngt::Property::ObjectType::Float) {
+    if (globalProperty.objectType == tann::Property::ObjectType::Float) {
 #endif
       if (property.localIDByteSize == 4) {
 	quantizedObjectDistance = new QuantizedObjectDistanceFloat<uint32_t>;
@@ -2585,7 +2585,7 @@ public:
       }
       generateResidualObject = new GenerateResidualObjectFloat;
       sizeoftype = sizeof(float);
-    } else if (globalProperty.objectType == tann::ngt::Property::ObjectType::Uint8) {
+    } else if (globalProperty.objectType == tann::Property::ObjectType::Uint8) {
       if (property.localIDByteSize == 4) {
 	quantizedObjectDistance = new QuantizedObjectDistanceUint8<uint32_t>;
       } else if (property.localIDByteSize == 2) {
@@ -2654,7 +2654,7 @@ public:
       stringstream local;
       local << rootDirectory << "/local-" << i;
       try {
-	tann::ngt::Index::mkdir(local.str());
+	tann::Index::mkdir(local.str());
       } catch (...) {}
       localCodebookIndexes[i].saveIndex(local.str());
     }
@@ -2710,7 +2710,7 @@ public:
     return;
 #endif
     cerr << "reconstructing to reduce shared memory..." << endl;
-    tann::ngt::PersistentRepository<IIEntry>	tmpInvertedIndex;
+    tann::PersistentRepository<IIEntry>	tmpInvertedIndex;
     tmpInvertedIndex.open(invertedFile, 0);
     tmpInvertedIndex.reserve(size);
     for (size_t id = 0; id < size; ++id) {
@@ -2763,10 +2763,10 @@ public:
   }
 #endif
 
-  void createIndex(tann::ngt::GraphAndTreeIndex &codebook,
+  void createIndex(tann::GraphAndTreeIndex &codebook,
 		   size_t centroidLimit,
-		   const vector<pair<tann::ngt::Object*, size_t> > &objects,
-		   vector<tann::ngt::Index::InsertionResult> &ids,
+		   const vector<pair<tann::Object*, size_t> > &objects,
+		   vector<tann::Index::InsertionResult> &ids,
 		   float &range)
   {
     if (centroidLimit > 0) {
@@ -2783,8 +2783,8 @@ public:
 	  } else {
 	    end += s;
 	  }
-	  vector<tann::ngt::Index::InsertionResult> idstmp;
-	  vector<pair<tann::ngt::Object*, size_t> > objtmp;
+	  vector<tann::Index::InsertionResult> idstmp;
+	  vector<pair<tann::Object*, size_t> > objtmp;
 	  std::copy(start, end, std::back_inserter(objtmp));
 	  codebook.createIndex(objtmp, idstmp, range, property.threadSize);
 	  assert(idstmp.size() == objtmp.size());
@@ -2792,8 +2792,8 @@ public:
 	  start = end;
 	} while (start != objects.end() && centroidLimit - getNumberOfObjects(codebook) > 0);
 	range = FLT_MAX;
-	vector<tann::ngt::Index::InsertionResult> idstmp;
-	vector<pair<tann::ngt::Object*, size_t> > objtmp;
+	vector<tann::Index::InsertionResult> idstmp;
+	vector<pair<tann::Object*, size_t> > objtmp;
 	std::copy(start, objects.end(), std::back_inserter(objtmp));
 	codebook.createIndex(objtmp, idstmp, range, property.threadSize);
 	std::copy(idstmp.begin(), idstmp.end(), std::back_inserter(ids));
@@ -2807,9 +2807,9 @@ public:
   }
 
 #ifdef NGTQ_VECTOR_OBJECT
-  void setGlobalCodeToInvertedEntry(tann::ngt::Index::InsertionResult &id, pair<std::vector<float>, size_t> &object, vector<LocalDatam> &localData) {
+  void setGlobalCodeToInvertedEntry(tann::Index::InsertionResult &id, pair<std::vector<float>, size_t> &object, vector<LocalDatam> &localData) {
 #else
-  void setGlobalCodeToInvertedEntry(tann::ngt::Index::InsertionResult &id, pair<tann::ngt::Object*, size_t> &object, vector<LocalDatam> &localData) {
+  void setGlobalCodeToInvertedEntry(tann::Index::InsertionResult &id, pair<tann::Object*, size_t> &object, vector<LocalDatam> &localData) {
 #endif
     size_t globalCentroidID = id.id;
     if (invertedIndex.isEmpty(globalCentroidID)) {
@@ -2870,14 +2870,14 @@ public:
     }
   }
 
-  void setSingleLocalCodeToInvertedIndexEntry(vector<tann::ngt::GraphAndTreeIndex*> &lcodebook, vector<LocalDatam> &localData, vector<vector<pair<tann::ngt::Object*, size_t> > > &localObjs) {
+  void setSingleLocalCodeToInvertedIndexEntry(vector<tann::GraphAndTreeIndex*> &lcodebook, vector<LocalDatam> &localData, vector<vector<pair<tann::Object*, size_t> > > &localObjs) {
     float lr = property.localRange;
     size_t localCentroidLimit = property.localCentroidLimit;
     if (property.localCodebookState) {
       lr = FLT_MAX;	
       localCentroidLimit = 0;
     }
-    vector<tann::ngt::Index::InsertionResult> lids;
+    vector<tann::Index::InsertionResult> lids;
     createIndex(*lcodebook[0], localCentroidLimit, localObjs[0], lids, lr);
     size_t divisionNo = property.localDivisionNo;
     for (size_t i = 0; i < localData.size(); i++) {
@@ -2901,7 +2901,7 @@ public:
   }
 
 #ifndef NGTQ_QBG
-  bool setMultipleLocalCodeToInvertedIndexEntry(vector<tann::ngt::GraphAndTreeIndex*> &lcodebook, vector<LocalDatam> &localData, vector<vector<pair<tann::ngt::Object*, size_t> > > &localObjs) {
+  bool setMultipleLocalCodeToInvertedIndexEntry(vector<tann::GraphAndTreeIndex*> &lcodebook, vector<LocalDatam> &localData, vector<vector<pair<tann::Object*, size_t> > > &localObjs) {
     size_t localCodebookNo = property.getLocalCodebookNo();
     bool localCodebookFull = true;  
 #pragma omp parallel for
@@ -2919,7 +2919,7 @@ public:
 	  lr = -1.0;
 	}
       }
-      vector<tann::ngt::Index::InsertionResult> lids;
+      vector<tann::Index::InsertionResult> lids;
       createIndex(*lcodebook[li], localCentroidLimit, localObjs[li], lids, lr);
       if (lr != FLT_MAX) { 
 	localCodebookFull = false;
@@ -2947,7 +2947,7 @@ public:
 #endif 
 
 #ifdef NGTQ_QBG
-  bool setMultipleLocalCodeToInvertedIndexEntry(vector<tann::ngt::GraphAndTreeIndex*> &lcodebook,
+  bool setMultipleLocalCodeToInvertedIndexEntry(vector<tann::GraphAndTreeIndex*> &lcodebook,
 						   vector<LocalDatam> &localData,
 						   float *subspaceObjects) {
     size_t paddedDimension = globalCodebookIndex.getObjectSpace().getPaddedDimension();
@@ -2967,9 +2967,9 @@ public:
 	  lr = -1.0;
 	}
       }
-      vector<tann::ngt::Index::InsertionResult> lids;
+      vector<tann::Index::InsertionResult> lids;
       size_t localDimension = lcodebook[li]->getObjectSpace().getDimension();
-      vector<pair<tann::ngt::Object*, size_t>> localObjects(localData.size());
+      vector<pair<tann::Object*, size_t>> localObjects(localData.size());
       for (size_t i = 0; i < localData.size(); i++) {
 	localObjects[i].first = lcodebook[li]->allocateObject(&subspaceObjects[i * paddedDimension + (li * localDimension)], localDimension);
 	localObjects[i].second = 0;
@@ -3089,8 +3089,8 @@ public:
   }
 #endif 
 
-  void buildMultipleLocalCodebooks(tann::ngt::Index *localCodebook, size_t localCodebookNo, size_t numberOfCentroids) {
-    tann::ngt::Clustering clustering;
+  void buildMultipleLocalCodebooks(tann::Index *localCodebook, size_t localCodebookNo, size_t numberOfCentroids) {
+    tann::Clustering clustering;
     clustering.epsilonFrom = 0.10;
     clustering.epsilonTo = 0.50;
     clustering.epsilonStep = 0.05;
@@ -3134,7 +3134,7 @@ public:
       std::cerr << "not implemented" << std::endl;
       abort();
 #else
-      tann::ngt::Object object(&globalCodebookIndex.getObjectSpace());
+      tann::Object object(&globalCodebookIndex.getObjectSpace());
       objectList.get(invertedIndexEntry[localData[i].iiLocalIdx].id, object, &globalCodebookIndex.getObjectSpace());
       (*generateResidualObject)(object, // object
 				invertedIndexEntry.subspaceID,
@@ -3145,7 +3145,7 @@ public:
       std::vector<float> object;
       objectList.get(invertedIndexEntry[localData[i].iiLocalIdx].id, object, &globalCodebookIndex.getObjectSpace());
 #else
-      tann::ngt::Object object(&globalCodebookIndex.getObjectSpace());
+      tann::Object object(&globalCodebookIndex.getObjectSpace());
 #endif
       (*generateResidualObject)(object, // object
 				invertedIndexEntry.subspaceID,
@@ -3157,21 +3157,21 @@ public:
 #endif 
 
 #ifndef NGTQ_QBG
-  void insert(vector<pair<tann::ngt::Object*, size_t> > &objects) {
+  void insert(vector<pair<tann::Object*, size_t> > &objects) {
     std::cerr << "insert() is not implemented." << std::endl;
     abort();
   }
 #endif 
 
-  void searchIndex(tann::ngt::GraphAndTreeIndex &codebook,
+  void searchIndex(tann::GraphAndTreeIndex &codebook,
 		   size_t centroidLimit,
 #ifdef NGTQ_VECTOR_OBJECT
 		   const vector<pair<std::vector<float>, size_t>> &objects, 
 #else
-		   const vector<pair<tann::ngt::Object*, size_t>> &objects,
+		   const vector<pair<tann::Object*, size_t>> &objects,
 #endif
-		   vector<tann::ngt::Index::InsertionResult> &ids,
-		   float &range, tann::ngt::Index *gqindex)
+		   vector<tann::Index::InsertionResult> &ids,
+		   float &range, tann::Index *gqindex)
   {
     if (quantizationCodebook.size() == 0) {
       std::cerr << "Fatal error. quantizationCodebook is empty" << std::endl;
@@ -3190,7 +3190,7 @@ public:
 #else
       auto qid = quantizationCodebook.search(*objects[idx].first);
 #endif
-      tann::ngt::ObjectDistances result;
+      tann::ObjectDistances result;
       if (gqindex != 0) {
 	std::vector<float> object(globalCodebookIndex.getObjectSpace().getDimension());
 #ifdef NGTQ_VECTOR_OBJECT
@@ -3200,7 +3200,7 @@ public:
 #endif
 #define QID_WEIGHT	100	
 	object.push_back(qid * QID_WEIGHT);
-	tann::ngt::SearchQuery sc(object);;
+	tann::SearchQuery sc(object);;
 	sc.setResults(&result);
 	sc.setSize(50);
 	sc.radius = FLT_MAX;
@@ -3209,9 +3209,9 @@ public:
       } else {
 #ifdef NGTQ_VECTOR_OBJECT
 	auto *object = globalCodebookIndex.allocateObject(objects[idx].first);
-	tann::ngt::SearchContainer sc(*object);
+	tann::SearchContainer sc(*object);
 #else
-	tann::ngt::SearchContainer sc(*objects[idx].first);
+	tann::SearchContainer sc(*objects[idx].first);
 #endif
 	sc.setResults(&result);
 	sc.setSize(50);
@@ -3248,10 +3248,10 @@ public:
 
 #ifdef NGTQ_VECTOR_OBJECT
   void getBlobIDFromObjectToBlobIndex(const vector<pair<std::vector<float>, size_t>> &objects, 
-				      vector<tann::ngt::Index::InsertionResult> &ids)
+				      vector<tann::Index::InsertionResult> &ids)
 #else
-  void getBlobIDFromObjectToBlobIndex(const vector<pair<tann::ngt::Object*, size_t>> &objects,
-				      vector<tann::ngt::Index::InsertionResult> &ids)
+  void getBlobIDFromObjectToBlobIndex(const vector<pair<tann::Object*, size_t>> &objects,
+				      vector<tann::Index::InsertionResult> &ids)
 #endif
   {
     ids.clear();
@@ -3271,8 +3271,8 @@ public:
       ids[idx].identical = true;
 #ifdef GET_BLOG_EVAL
       {
-	tann::ngt::ObjectDistances result;
-	tann::ngt::SearchContainer sc(*objects[idx].first);
+	tann::ObjectDistances result;
+	tann::SearchContainer sc(*objects[idx].first);
 	sc.setResults(&result);
 	sc.setSize(50);
 	sc.radius = FLT_MAX;
@@ -3293,21 +3293,21 @@ public:
   }
 
 #ifdef NGTQ_QBG
-  tann::ngt::Index *buildGlobalCodebookWithQIDIndex() {
+  tann::Index *buildGlobalCodebookWithQIDIndex() {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     std::cerr << "buildGlobalCodebookWithQIDIndex: Not implemented." << std::endl;
     abort();
 #else
-    tann::ngt::Property property;
+    tann::Property property;
     
     property.dimension = globalCodebookIndex.getObjectSpace().getDimension() + 1;
-    property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+    property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
 #ifdef NGTQ_SHARED_INVERTED_INDEX
-    tann::ngt::Index *index = new tann::ngt::Index("dummy", property);
+    tann::Index *index = new tann::Index("dummy", property);
     std::cerr << "Not implemented" << std::endl;
     abort();
 #else
-    tann::ngt::Index *index = new tann::ngt::Index(property);
+    tann::Index *index = new tann::Index(property);
 #endif
     for (size_t id = 1; id < globalCodebookIndex.getObjectRepositorySize(); id++) {
       std::vector<float> object;
@@ -3326,23 +3326,23 @@ public:
 
 #ifdef NGTQ_QBG
 #ifdef NGTQ_VECTOR_OBJECT
-  void insert(vector<pair<std::vector<float>, size_t> > &objects, tann::ngt::Index *gqindex) {
+  void insert(vector<pair<std::vector<float>, size_t> > &objects, tann::Index *gqindex) {
 #else
-  void insert(vector<pair<tann::ngt::Object*, size_t> > &objects, tann::ngt::Index *gqindex) {
+  void insert(vector<pair<tann::Object*, size_t> > &objects, tann::Index *gqindex) {
 #endif
 #ifdef NGTQ_SHARED_INVERTED_INDEX
     std::cerr << "insert: Not implemented." << std::endl;
     abort();
 #else
-    tann::ngt::GraphAndTreeIndex &gcodebook = (tann::ngt::GraphAndTreeIndex &)globalCodebookIndex.getIndex();
+    tann::GraphAndTreeIndex &gcodebook = (tann::GraphAndTreeIndex &)globalCodebookIndex.getIndex();
     size_t localCodebookNo = property.getLocalCodebookNo();
-    vector<tann::ngt::GraphAndTreeIndex*> lcodebook;
+    vector<tann::GraphAndTreeIndex*> lcodebook;
     lcodebook.reserve(localCodebookNo);
     for (size_t i = 0; i < localCodebookNo; i++) {
-      lcodebook.push_back(&static_cast<tann::ngt::GraphAndTreeIndex &>(localCodebookIndexes[i].getIndex()));
+      lcodebook.push_back(&static_cast<tann::GraphAndTreeIndex &>(localCodebookIndexes[i].getIndex()));
     }
     float gr = property.globalRange;
-    vector<tann::ngt::Index::InsertionResult> ids;
+    vector<tann::Index::InsertionResult> ids;
     if (property.centroidCreationMode == CentroidCreationModeStaticLayer ||
 	property.centroidCreationMode == CentroidCreationModeStatic) {
       if (objectToBlobIndex.empty()) {
@@ -3456,17 +3456,17 @@ public:
 
 
 #ifndef NGTQ_QBG
-  void insert(vector<float> &objvector, vector<pair<tann::ngt::Object*, size_t> > &objects, size_t count) {
+  void insert(vector<float> &objvector, vector<pair<tann::Object*, size_t> > &objects, size_t count) {
     size_t id = count;
     if (count == 0) {
       id = objectList.size();
       id = id == 0 ? 1 : id;
     }
 
-    tann::ngt::Object *object = globalCodebookIndex.allocateObject(objvector);
+    tann::Object *object = globalCodebookIndex.allocateObject(objvector);
     objectList.put(id, *object, &globalCodebookIndex.getObjectSpace());
 
-    objects.push_back(pair<tann::ngt::Object*, size_t>(object, id));
+    objects.push_back(pair<tann::Object*, size_t>(object, id));
 
     if (objects.size() >= property.batchSize) {
       insert(objects);   // batch insert
@@ -3480,7 +3480,7 @@ public:
       id = objectList.size();
       id = id == 0 ? 1 : id;
     }
-    tann::ngt::Object *object = globalCodebookIndex.allocateObject(objvector);
+    tann::Object *object = globalCodebookIndex.allocateObject(objvector);
     std::vector<float> vs = globalCodebookIndex.getObjectSpace().getObject(*object);
     objectList.put(id, *object, &globalCodebookIndex.getObjectSpace());
     globalCodebookIndex.deleteObject(object);
@@ -3488,26 +3488,26 @@ public:
 
 #ifdef NGTQ_QBG
   void createIndex(size_t beginID = 1, size_t endID = 0) {
-    tann::ngt::Index *gqindex = 0;
+    tann::Index *gqindex = 0;
     if (property.centroidCreationMode == CentroidCreationModeStaticLayer) {
       gqindex = buildGlobalCodebookWithQIDIndex();
     }
 #ifdef NGTQ_VECTOR_OBJECT
     vector<pair<std::vector<float>, size_t>> objects;
 #else
-    vector<pair<tann::ngt::Object*, size_t>> objects;
+    vector<pair<tann::Object*, size_t>> objects;
 #endif
     objects.reserve(property.batchSize);
     if (endID == 0) {
       endID = objectList.size() - 1;
     }
-    tann::ngt::Timer timer;
+    tann::Timer timer;
     timer.start();
     for (size_t id = beginID; id <= endID; id++) {
       if (id % 1000000 == 0) {
 	timer.stop();
 	std::cerr << "# of processed objects=" << id << " Time=" << timer << ", vm size="
-		  << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
+		  << tann::Common::getProcessVmSizeStr() << std::endl;
 	timer.restart();
       }
 #ifdef NGTQ_VECTOR_OBJECT
@@ -3517,13 +3517,13 @@ public:
 	continue;
       }
 #else
-      tann::ngt::Object *object = globalCodebookIndex.getObjectSpace().allocateObject();
+      tann::Object *object = globalCodebookIndex.getObjectSpace().allocateObject();
       objectList.get(id, *object, &globalCodebookIndex.getObjectSpace());
 #endif
 #ifdef NGTQ_VECTOR_OBJECT
       objects.push_back(pair<std::vector<float>, size_t>(object, id));
 #else
-      objects.push_back(pair<tann::ngt::Object*, size_t>(object, id));
+      objects.push_back(pair<tann::Object*, size_t>(object, id));
 #endif
       if (objects.size() >= property.batchSize) {
 	insert(objects, gqindex);   // batch insert
@@ -3597,13 +3597,13 @@ public:
 #endif 
 
   void create(const string &index,
-	      tann::ngt::Property &globalProperty,
+	      tann::Property &globalProperty,
 #ifdef NGTQ_QBG
-	      tann::ngt::Property &localProperty,
+	      tann::Property &localProperty,
 	      std::vector<float> *rotation = 0,
 	      const string &objectFile = ""
 #else
-	      tann::ngt::Property &localProperty
+	      tann::Property &localProperty
 #endif
 	      ) {
     if (property.localCentroidLimit > ((1UL << (sizeof(LOCAL_ID_TYPE) * 8)) - 1)) {
@@ -3612,8 +3612,8 @@ public:
       NGTThrowException(msg);
     }
 
-    tann::ngt::Property gp;
-    tann::ngt::Property lp;
+    tann::Property gp;
+    tann::Property lp;
 
     gp.setDefault();
     lp.setDefault();
@@ -3621,7 +3621,7 @@ public:
     gp.batchSizeForCreation = 500;
     gp.edgeSizeLimitForCreation = 0;
     gp.edgeSizeForCreation = 10;
-    gp.graphType = tann::ngt::Index::Property::GraphType::GraphTypeANNG;
+    gp.graphType = tann::Index::Property::GraphType::GraphTypeANNG;
     gp.insertionRadiusCoefficient = 1.1;
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
     gp.graphSharedMemorySize	= 512; // MB
@@ -3632,7 +3632,7 @@ public:
     lp.batchSizeForCreation = 500;
     lp.edgeSizeLimitForCreation = 0;
     lp.edgeSizeForCreation = 10;
-    lp.graphType = tann::ngt::Index::Property::GraphType::GraphTypeANNG;
+    lp.graphType = tann::Index::Property::GraphType::GraphTypeANNG;
     lp.insertionRadiusCoefficient = 1.1;
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
     lp.graphSharedMemorySize	= 128; // MB
@@ -3645,7 +3645,7 @@ public:
     gp.edgeSizeForSearch = 40;	
     lp.edgeSizeForSearch = 40;	
 
-    lp.objectType = tann::ngt::Index::Property::ObjectType::Float;
+    lp.objectType = tann::Index::Property::ObjectType::Float;
     gp.dimension = property.dimension;
     if (gp.dimension == 0) {
       stringstream msg;
@@ -3665,13 +3665,13 @@ public:
 
     switch (property.dataType) {
     case DataTypeFloat:
-      gp.objectType = tann::ngt::Index::Property::ObjectType::Float;
+      gp.objectType = tann::Index::Property::ObjectType::Float;
       break;
     case DataTypeFloat16:
-      gp.objectType = tann::ngt::Index::Property::ObjectType::Float16;
+      gp.objectType = tann::Index::Property::ObjectType::Float16;
       break;
     case DataTypeUint8:
-      gp.objectType = tann::ngt::Index::Property::ObjectType::Uint8;
+      gp.objectType = tann::Index::Property::ObjectType::Uint8;
       break;
     default:
       {
@@ -3683,8 +3683,8 @@ public:
 
     switch (property.distanceType) {
     case DistanceType::DistanceTypeL1:
-      gp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL1;
-      lp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL1;
+      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL1;
+      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL1;
       break;
     case DistanceType::DistanceTypeL2:
 #ifdef NGTQ_DISTANCE_ANGLE
@@ -3694,12 +3694,12 @@ public:
 	NGTThrowException(msg);
       }
 #endif
-      gp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
-      lp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
       break;
     case DistanceType::DistanceTypeHamming:
-      gp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeHamming;
-      lp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeHamming;
+      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeHamming;
+      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeHamming;
       break;
     case DistanceType::DistanceTypeAngle:
 #ifndef NGTQ_DISTANCE_ANGLE
@@ -3709,20 +3709,20 @@ public:
 	NGTThrowException(msg);
       }
 #endif
-      gp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeAngle;
-      lp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeAngle;
+      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeAngle;
+      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeAngle;
       break;
     case DistanceType::DistanceTypeNormalizedCosine:
-      gp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeNormalizedCosine;
-      lp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedCosine;
+      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
       break;
     case DistanceType::DistanceTypeCosine:
-      gp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeCosine;
-      lp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeCosine;
+      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
       break;
     case DistanceType::DistanceTypeNormalizedL2:
-      gp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeNormalizedL2;
-      lp.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedL2;
+      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
       break;
     default:
       {
@@ -3752,7 +3752,7 @@ public:
 	continue;
       }
 
-      tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex.getObjectSpace().getRepository().get(gidx);
+      tann::PersistentObject &gcentroid = *globalCodebookIndex.getObjectSpace().getRepository().get(gidx);
       vector<double> gco;
       globalCodebookIndex.getObjectSpace().getRepository().extractObject(&gcentroid, gco);
       {
@@ -3766,7 +3766,7 @@ public:
 	  exit(1);
         }
       }
-      tann::ngt::Object *gcentroidFromList = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
+      tann::Object *gcentroidFromList = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
       vector<double> gcolist;
       globalCodebookIndex.getObjectSpace().getRepository().extractObject(gcentroidFromList, gcolist);
       if (gco != gcolist) {
@@ -3783,9 +3783,9 @@ public:
         elements.push_back(invertedIndexEntry.id);
 	cerr << "  object ID=" << invertedIndexEntry.id;
 	{
-	  tann::ngt::Object *o = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
+	  tann::Object *o = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
 	  objectList.get(invertedIndexEntry.id, *o, &globalCodebookIndex.getObjectSpace());
-	  tann::ngt::Distance distance = globalCodebookIndex.getObjectSpace().getComparator()(*gcentroidFromList, *o);
+	  tann::Distance distance = globalCodebookIndex.getObjectSpace().getComparator()(*gcentroidFromList, *o);
 	  cerr << ":distance=" << distance;
 	}
 	cerr << ":local codebook IDs=";
@@ -3813,7 +3813,7 @@ public:
 	bool refine = true;
 	bool lookuptable = false;
 	double epsilon = 0.1;
-	tann::ngt::ObjectDistances objects;
+	tann::ObjectDistances objects;
 	search(gcentroidFromList, objects, resultSize, approximateSearchSize, codebookSearchSize, 
 	       refine, lookuptable, epsilon);
 	for (size_t resulti = 0; resulti < objects.size(); resulti++) {
@@ -3822,10 +3822,10 @@ public:
 	  } else {
 	    cerr << "x ";
 	    ngid.push_back(objects[resulti].id);
-	    tann::ngt::ObjectDistances result;
-	    tann::ngt::Object *o = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
+	    tann::ObjectDistances result;
+	    tann::Object *o = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
 	    objectList.get(ngid.back(), *o, &globalCodebookIndex.getObjectSpace());
-	    tann::ngt::GraphAndTreeIndex &graphIndex = (tann::ngt::GraphAndTreeIndex &)globalCodebookIndex.getIndex();
+	    tann::GraphAndTreeIndex &graphIndex = (tann::GraphAndTreeIndex &)globalCodebookIndex.getIndex();
 	    graphIndex.searchForNNGInsertion(*o, result);
 	    if (result[0].distance > objects[resulti].distance) {
 	      cerr << " Strange! ";
@@ -3841,14 +3841,14 @@ public:
 #endif  // NGTQ_QBG
   }
 
-  void searchGlobalCodebook(tann::ngt::Object *query, size_t size, tann::ngt::ObjectDistances &objects,
+  void searchGlobalCodebook(tann::Object *query, size_t size, tann::ObjectDistances &objects,
 			    size_t &approximateSearchSize,
 			    size_t codebookSearchSize, 
 			    double epsilon) {
 #ifdef	NGTQ_TRACE
     std::cerr << "searchGlobalCodebook codebookSearchSize=" << codebookSearchSize << std::endl;
 #endif
-    tann::ngt::SearchContainer sc(*query);
+    tann::SearchContainer sc(*query);
     sc.setResults(&objects);
     sc.size = codebookSearchSize;
     sc.radius = FLT_MAX;
@@ -3861,11 +3861,11 @@ public:
 
   }
 
-  inline void aggregateObjectsWithExactDistance(tann::ngt::ObjectDistance &globalCentroid, tann::ngt::Object *query, size_t size, tann::ngt::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+  inline void aggregateObjectsWithExactDistance(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
     abort();
   }
 
-   inline void aggregateObjectsWithLookupTable(tann::ngt::ObjectDistance &globalCentroid, tann::ngt::Object *query, size_t size, tann::ngt::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+   inline void aggregateObjectsWithLookupTable(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
      QuantizedObjectDistance::DistanceLookupTable distanceLUT;
      (*quantizedObjectDistance).initialize(distanceLUT);
      (*quantizedObjectDistance).createDistanceLookup(*query, globalCentroid.id, distanceLUT);
@@ -3883,7 +3883,7 @@ public:
        }  
 
 
-       tann::ngt::ObjectDistance obj;
+       tann::ObjectDistance obj;
        obj.id = invertedIndexEntry.id;
        obj.distance = distance;
        assert(obj.id > 0);
@@ -4015,7 +4015,7 @@ public:
     }
   }
 
-  inline tann::ngt::Distance getApproximateDistance(tann::ngt::Object &query, uint32_t globalID, LOCAL_ID_TYPE *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
+  inline tann::Distance getApproximateDistance(tann::Object &query, uint32_t globalID, LOCAL_ID_TYPE *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
     double distance;
       distance = (*quantizedObjectDistance)(query, globalID, localID, distanceLUT);
 
@@ -4023,7 +4023,7 @@ public:
   }
 
 
-   inline void aggregateObjectsWithCache(tann::ngt::ObjectDistance &globalCentroid, tann::ngt::Object *query, size_t size, tann::ngt::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+   inline void aggregateObjectsWithCache(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
 
      QuantizedObjectDistance::DistanceLookupTable distanceLUT;
      (*quantizedObjectDistance).initialize(distanceLUT);
@@ -4041,7 +4041,7 @@ public:
 	 distance = getApproximateDistance(*query, globalCentroid.id, invertedIndexEntry.localID, distanceLUT);
        }  
 
-       tann::ngt::ObjectDistance obj;
+       tann::ObjectDistance obj;
        obj.id = invertedIndexEntry.id;
        obj.distance = distance;
        assert(obj.id > 0);
@@ -4051,7 +4051,7 @@ public:
   }
 
 
-  inline void aggregateObjects(tann::ngt::ObjectDistance &globalCentroid, tann::ngt::Object *query, size_t size, tann::ngt::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+  inline void aggregateObjects(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
     for (size_t j = 0; j < invertedIndex[globalCentroid.id]->size() && results.size() < approximateSearchSize; j++) {
 #ifdef NGTQ_SHARED_INVERTED_INDEX
       InvertedIndexObject<LOCAL_ID_TYPE> &invertedIndexEntry = (*invertedIndex[globalCentroid.id]).at(j, invertedIndex.allocator);
@@ -4066,7 +4066,7 @@ public:
       }  
 
 
-      tann::ngt::ObjectDistance obj;
+      tann::ObjectDistance obj;
       obj.id = invertedIndexEntry.id;
       obj.distance = distance;
       assert(obj.id > 0);
@@ -4079,7 +4079,7 @@ public:
   }
 
 
-  inline void aggregateObjects(tann::ngt::Object *query, size_t size, tann::ngt::ObjectDistances &objects, tann::ngt::ObjectSpace::ResultSet &results, size_t approximateSearchSize, AggregateObjectsFunction aggregateObjectsFunction) {
+  inline void aggregateObjects(tann::Object *query, size_t size, tann::ObjectDistances &objects, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize, AggregateObjectsFunction aggregateObjectsFunction) {
     for (size_t i = 0; i < objects.size(); i++) {
       if (invertedIndex[objects[i].id] == 0) {
 	if (property.centroidCreationMode == CentroidCreationModeDynamic) {
@@ -4094,21 +4094,21 @@ public:
     } 
   }
 
-  void refineDistance(tann::ngt::Object *query, tann::ngt::ObjectDistances &results) {
+  void refineDistance(tann::Object *query, tann::ObjectDistances &results) {
 #ifndef NGTQ_QBG
-     tann::ngt::ObjectSpace &objectSpace = globalCodebookIndex.getObjectSpace();
+     tann::ObjectSpace &objectSpace = globalCodebookIndex.getObjectSpace();
      for (auto i = results.begin(); i != results.end(); ++i) {
-       tann::ngt::ObjectDistance &result = *i;
-       tann::ngt::Object o(&objectSpace);
-       objectList.get(result.id, (tann::ngt::Object&)o, &objectSpace);
-       double distance = objectSpace.getComparator()(*query, (tann::ngt::Object&)o);
+       tann::ObjectDistance &result = *i;
+       tann::Object o(&objectSpace);
+       objectList.get(result.id, (tann::Object&)o, &objectSpace);
+       double distance = objectSpace.getComparator()(*query, (tann::Object&)o);
        result.distance = distance;
      }
      std::sort(results.begin(), results.end());
 #endif 
   }
 
-  void search(tann::ngt::Object *query, tann::ngt::ObjectDistances &objs,
+  void search(tann::Object *query, tann::ObjectDistances &objs,
 	      size_t size, 
       	      float expansion,
 	      AggregationMode aggregationMode,
@@ -4118,7 +4118,7 @@ public:
     search(query, objs, size, approximateSearchSize, codebookSearchSize, aggregationMode, epsilon);
   }
 
-  void search(tann::ngt::Object *query, tann::ngt::ObjectDistances &objs,
+  void search(tann::Object *query, tann::ObjectDistances &objs,
 	      size_t size, size_t approximateSearchSize,
 	      size_t codebookSearchSize, bool resultRefinement,
 	      bool lookUpTable = false,
@@ -4136,7 +4136,7 @@ public:
     search(query, objs, size, approximateSearchSize, codebookSearchSize, aggregationMode, epsilon);
   }
 
-  void search(tann::ngt::Object *query, tann::ngt::ObjectDistances &objs,
+  void search(tann::Object *query, tann::ObjectDistances &objs,
 	      size_t size, size_t approximateSearchSize,
 	      size_t codebookSearchSize, 
 	      AggregationMode aggregationMode,
@@ -4146,11 +4146,11 @@ public:
 	NGTThrowException("NGTQ: Fatal inner error. the lookup table is only for dataType float!");
       }
     }
-    tann::ngt::ObjectDistances objects;
+    tann::ObjectDistances objects;
     searchGlobalCodebook(query, size, objects, approximateSearchSize, codebookSearchSize, epsilon);
 
     objs.clear();
-    tann::ngt::ObjectSpace::ResultSet results;
+    tann::ObjectSpace::ResultSet results;
     distanceComputationCount = 0;
 
     AggregateObjectsFunction aggregateObjectsFunction = &QuantizerInstance::aggregateObjectsWithCache;
@@ -4194,21 +4194,21 @@ public:
     std::cerr << "calculateQuantizationError: Not implemented." << std::endl;
     return 0.0;
 #else
-    tann::ngt::ObjectSpace &objectSpace = globalCodebookIndex.getObjectSpace();
+    tann::ObjectSpace &objectSpace = globalCodebookIndex.getObjectSpace();
     double distance = 0.0;
     double globalDistance = 0.0;
     size_t count = 0;
     for (size_t gi = 0; gi < invertedIndex.size(); gi++) {
       if (invertedIndex[gi] != 0) {
-	tann::ngt::PersistentObject &gcentroid = *globalCodebookIndex.getObjectSpace().getRepository().get(gi);
+	tann::PersistentObject &gcentroid = *globalCodebookIndex.getObjectSpace().getRepository().get(gi);
 	for (size_t li = 0; li < invertedIndex[gi]->size(); li++) {
 #ifdef NGTQ_SHARED_INVERTED_INDEX
           size_t id = invertedIndex[gi]->at(li, invertedIndex.allocator).id;
 #else
 	  size_t id = invertedIndex[gi]->at(li).id;
 #endif
-	  tann::ngt::Object object(&objectSpace);
-	  objectList.get(id, (tann::ngt::Object&)object, &objectSpace);
+	  tann::Object object(&objectSpace);
+	  objectList.get(id, (tann::Object&)object, &objectSpace);
 #ifdef NGTQ_SHARED_INVERTED_INDEX
 	  double d = (*quantizedObjectDistance)(object, gi, invertedIndex[gi]->at(li, invertedIndex.allocator).localID);
 #else
@@ -4216,7 +4216,7 @@ public:
 #endif
 	  distance += d;
 	  count++;
-	  tann::ngt::Distance gd = globalCodebookIndex.getObjectSpace().getComparator()(object, gcentroid);
+	  tann::Distance gd = globalCodebookIndex.getObjectSpace().getComparator()(object, gcentroid);
 	  globalDistance += gd;
 	}
       }
@@ -4325,7 +4325,7 @@ public:
     return size;
   }
 
-  size_t getNumberOfObjects(tann::ngt::GraphAndTreeIndex &index) {
+  size_t getNumberOfObjects(tann::GraphAndTreeIndex &index) {
     return index.getObjectRepositorySize() == 0 ? 0 : static_cast<int>(index.getObjectRepositorySize()) - 1;
   }
 
@@ -4334,9 +4334,9 @@ public:
   size_t getInvertedIndexSize() { return invertedIndex.size(); }
 
 #ifdef NGTQ_SHARED_INVERTED_INDEX
-  tann::ngt::PersistentRepository<IIEntry>	invertedIndex;
+  tann::PersistentRepository<IIEntry>	invertedIndex;
 #else
-  tann::ngt::Repository<IIEntry>	invertedIndex;
+  tann::Repository<IIEntry>	invertedIndex;
 #endif
   QuantizedObjectDistance	*quantizedObjectDistance;
   GenerateResidualObject	*generateResidualObject;
@@ -4383,13 +4383,13 @@ public:
 
 
    static void create(const string &index, Property &property, 
-		      tann::ngt::Property &globalProperty,
+		      tann::Property &globalProperty,
 #ifdef NGTQ_QBG
-		      tann::ngt::Property &localProperty,
+		      tann::Property &localProperty,
 		      std::vector<float> *rotation = 0,
 		      const std::string &objectFile = "") {
 #else
-		      tann::ngt::Property &localProperty) {
+		      tann::Property &localProperty) {
 #endif
      if (property.dimension == 0) {
        NGTThrowException("NGTQ::create: Error. The dimension is zero.");
@@ -4413,7 +4413,7 @@ public:
        if (property.dimension == 0) {
 	 NGTThrowException("Quantizer: Dimension is zero.");
        }
-     } catch(tann::ngt::Exception &err) {
+     } catch(tann::Exception &err) {
        delete quantizer;
        throw err;
      }
@@ -4457,7 +4457,7 @@ public:
 
       index.save();
       index.close();
-    } catch(tann::ngt::Exception &err) {
+    } catch(tann::Exception &err) {
       std::rename(dstObjectList.c_str(), srcObjectList.c_str());
       throw err;
     }
@@ -4467,7 +4467,7 @@ public:
 
   void open(const string &index, bool readOnly = false) {
      close();
-     tann::ngt::Property globalProperty;
+     tann::Property globalProperty;
      globalProperty.clear();
      globalProperty.edgeSizeForSearch = 40;
      quantizer = getQuantizer(index, globalProperty, readOnly);
@@ -4489,7 +4489,7 @@ public:
    }
 
 #ifndef NGTQ_QBG
-   void insert(vector<pair<tann::ngt::Object*, size_t> > &objects) {
+   void insert(vector<pair<tann::Object*, size_t> > &objects) {
      std::cerr << "Not implemented." << std::endl;
      abort();
    }
@@ -4525,21 +4525,21 @@ public:
    }
 #endif
 
-   tann::ngt::Object *allocateObject(string &line, const string &sep, size_t dimension) {
+   tann::Object *allocateObject(string &line, const string &sep, size_t dimension) {
      return getQuantizer().allocateObject(line, sep);
    }
 
-   tann::ngt::Object *allocateObject(vector<double> &obj) {
+   tann::Object *allocateObject(vector<double> &obj) {
      return getQuantizer().allocateObject(obj);
    }
 
-   tann::ngt::Object *allocateObject(vector<float> &obj) {
+   tann::Object *allocateObject(vector<float> &obj) {
      return getQuantizer().allocateObject(obj);
    }
 
-   void deleteObject(tann::ngt::Object *object) { getQuantizer().deleteObject(object); }
+   void deleteObject(tann::Object *object) { getQuantizer().deleteObject(object); }
 
-   void search(tann::ngt::Object *object, tann::ngt::ObjectDistances &objs,
+   void search(tann::Object *object, tann::ObjectDistances &objs,
 	       size_t size, size_t approximateSearchSize,
 	       size_t codebookSearchSize, bool resultRefinement, 
 	       bool lookUpTable, double epsilon) {
@@ -4547,7 +4547,7 @@ public:
 			   resultRefinement, lookUpTable, epsilon);
    }
 
-   void search(tann::ngt::Object *object, tann::ngt::ObjectDistances &objs,
+   void search(tann::Object *object, tann::ObjectDistances &objs,
 	       size_t size, float expansion,
 	       AggregationMode aggregationMode,
 	       double epsilon) {
@@ -4587,11 +4587,11 @@ public:
    }
 
  protected:
-   static NGTQ::Quantizer *getQuantizer(const string &index, tann::ngt::Property &globalProperty, bool readOnly) {
+   static NGTQ::Quantizer *getQuantizer(const string &index, tann::Property &globalProperty, bool readOnly) {
      NGTQ::Property property;
      try {
        property.load(index);
-     } catch (tann::ngt::Exception &err) {
+     } catch (tann::Exception &err) {
        stringstream msg;
        msg << "Quantizer::getQuantizer: Cannot load the property. " << index << " : " << err.what();
        NGTThrowException(msg);
@@ -4602,7 +4602,7 @@ public:
      }
      try {
        quantizer->open(index, globalProperty, property.quantizerType == NGTQ::QuantizerTypeQBG ? readOnly : false);
-     } catch(tann::ngt::Exception &err) {
+     } catch(tann::Exception &err) {
        delete quantizer;
        throw err;
      }

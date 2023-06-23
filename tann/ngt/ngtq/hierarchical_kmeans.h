@@ -81,7 +81,7 @@ namespace QBG {
 	  float min = std::numeric_limits<float>::max();
 	  int32_t minid = 0;
 	  for (auto &c : internalNode.children) {
-	    auto d = tann::ngt::PrimitiveComparator::compareL2(reinterpret_cast<float*>(&object[0]),
+	    auto d = tann::PrimitiveComparator::compareL2(reinterpret_cast<float*>(&object[0]),
 							 c.second.data(), c.second.size());
 	    if (d < min) {
 	      min = d;
@@ -95,7 +95,7 @@ namespace QBG {
     }
 
     static void aggregateObjects(HKLeafNode &leafNode, std::vector<std::vector<float>> &vectors,
-			  tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList)
+			  tann::ObjectSpace &objectSpace, QBGObjectList &objectList)
     {
       vectors.reserve(leafNode.members.size() + 1);
       std::vector<float> obj;
@@ -106,7 +106,7 @@ namespace QBG {
     }
 
     static void aggregateObjects(HKLeafNode &leafNode, std::vector<std::vector<float>> &vectors,
-			  tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList,
+			  tann::ObjectSpace &objectSpace, QBGObjectList &objectList,
 			  std::vector<float> &object)
     {
       aggregateObjects(leafNode, vectors, objectSpace, objectList);
@@ -114,10 +114,10 @@ namespace QBG {
     }
 
     static void split(uint32_t id, std::vector<std::vector<float>> &vectors,
-				 std::vector<HKNode*> &nodes, int32_t leafNodeID, tann::ngt::Clustering &clustering)
+				 std::vector<HKNode*> &nodes, int32_t leafNodeID, tann::Clustering &clustering)
     {
       HKLeafNode &leafNode = static_cast<HKLeafNode&>(*nodes[leafNodeID]);
-      std::vector<tann::ngt::Clustering::Cluster> clusters;
+      std::vector<tann::Clustering::Cluster> clusters;
       clustering.kmeans(vectors, clusters);
       auto *newNode = new HKInternalNode;
       for (auto &cluster : clusters) {
@@ -142,7 +142,7 @@ namespace QBG {
       nodes[leafNodeID] = newNode; 
     }
 
-    static double computeError(std::vector<HKNode*> &nodes, tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList) {
+    static double computeError(std::vector<HKNode*> &nodes, tann::ObjectSpace &objectSpace, QBGObjectList &objectList) {
       std::cerr << "node size=" << nodes.size() << std::endl;
       double distance = 0.0;
       size_t dcount = 0;
@@ -160,7 +160,7 @@ namespace QBG {
 	      HKLeafNode &leafNode = static_cast<HKLeafNode&>(*nodes[child.first]);
 	      for (auto &m : leafNode.members) {
 		objectList.get(m, obj, &objectSpace);
-		distance += tann::ngt::Clustering::distanceL2(centroid, obj);
+		distance += tann::Clustering::distanceL2(centroid, obj);
 		dcount++;
 	      }
 	    }
@@ -407,9 +407,9 @@ namespace QBG {
 
 
     static void hierarchicalKmeans(uint32_t id, int32_t rootID, std::vector<float> &object,
-				   QBGObjectList &objectList, tann::ngt::ObjectSpace &objectSpace,
-				   std::vector<HKNode*> &nodes,   tann::ngt::Clustering &clustering, size_t maxSize) {
-      tann::ngt::Timer timer;
+				   QBGObjectList &objectList, tann::ObjectSpace &objectSpace,
+				   std::vector<HKNode*> &nodes,   tann::Clustering &clustering, size_t maxSize) {
+      tann::Timer timer;
       objectList.get(id, object, &objectSpace);
       int32_t nodeID = searchLeaf(nodes, rootID, reinterpret_cast<float*>(&object[0]));
       if (nodeID < 0) {
@@ -419,7 +419,7 @@ namespace QBG {
       auto *node = nodes[nodeID];
       HKLeafNode &leafNode = static_cast<HKLeafNode&>(*node);
       if (leafNode.members.size() >= maxSize) {
-	tann::ngt::Timer subtimer;
+	tann::Timer subtimer;
 	subtimer.start();
 	std::vector<std::vector<float>> vectors;
 	aggregateObjects(leafNode, vectors, objectSpace, objectList, object);
@@ -436,8 +436,8 @@ namespace QBG {
 
     static void hierarchicalKmeansBatch(std::vector<uint32_t> &batch, std::vector<pair<uint32_t, uint32_t>> &exceededLeaves,
 					int32_t rootID, std::vector<float> &object,
-					QBGObjectList &objectList, tann::ngt::ObjectSpace &objectSpace,
-					std::vector<HKNode*> &nodes, tann::ngt::Clustering &clustering, size_t maxSize, size_t &nleaves,
+					QBGObjectList &objectList, tann::ObjectSpace &objectSpace,
+					std::vector<HKNode*> &nodes, tann::Clustering &clustering, size_t maxSize, size_t &nleaves,
 					size_t maxExceededLeaves) {
 
       if (batch.size() == 0) {
@@ -481,7 +481,7 @@ namespace QBG {
 	return;
       }
 	
-      std::vector<std::vector<tann::ngt::Clustering::Cluster>> clusters(exceededLeaves.size());
+      std::vector<std::vector<tann::Clustering::Cluster>> clusters(exceededLeaves.size());
 #pragma omp parallel for
       for (size_t idx = 0; idx < exceededLeaves.size(); idx++) {
 	HKLeafNode &leafNode = static_cast<HKLeafNode&>(*nodes[exceededLeaves[idx].second]);
@@ -513,8 +513,8 @@ namespace QBG {
     }
 
     static void hierarchicalKmeansWithNumberOfClusters(size_t numOfTotalClusters, size_t numOfObjects, size_t numOfLeaves, 
-						       QBGObjectList &objectList, tann::ngt::ObjectSpace &objectSpace,
-						       std::vector<HKNode*> &nodes, tann::ngt::Clustering::InitializationMode initMode){
+						       QBGObjectList &objectList, tann::ObjectSpace &objectSpace,
+						       std::vector<HKNode*> &nodes, tann::Clustering::InitializationMode initMode){
       std::cerr << "numOfTotalClusters=" << numOfTotalClusters << std::endl;
       std::cerr << "numOfLeaves=" << numOfLeaves << std::endl;
       if (numOfLeaves > numOfTotalClusters) {
@@ -538,8 +538,8 @@ namespace QBG {
 	  nClusters = nClusters == 0 ? 1 : nClusters;
 	  numOfRemainingVectors -= leafNode.members.size();
 	  numOfRemainingClusters -= nClusters;
-	  tann::ngt::Clustering clustering(initMode, tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT, 1000, nClusters);
-	  tann::ngt::Timer timer;
+	  tann::Clustering clustering(initMode, tann::Clustering::ClusteringTypeKmeansWithoutNGT, 1000, nClusters);
+	  tann::Timer timer;
 	  timer.start();
 	  split(0, vectors, nodes, nidx, clustering);
 	  timer.stop();
@@ -552,9 +552,9 @@ namespace QBG {
     }
 
     static void hierarchicalKmeansWithNumberOfClustersInParallel(size_t numOfTotalClusters, size_t numOfObjects, size_t numOfLeaves, 
-								 QBGObjectList &objectList, tann::ngt::ObjectSpace &objectSpace,
-								 std::vector<HKNode*> &nodes, tann::ngt::Clustering::InitializationMode initMode){
-      tann::ngt::Timer timer;
+								 QBGObjectList &objectList, tann::ObjectSpace &objectSpace,
+								 std::vector<HKNode*> &nodes, tann::Clustering::InitializationMode initMode){
+      tann::Timer timer;
       timer.start();
       auto numOfRemainingClusters = numOfTotalClusters;
       auto numOfRemainingVectors = numOfObjects;
@@ -584,14 +584,14 @@ namespace QBG {
       timer.start();
 
       std::cerr << "start kmeans..." << std::endl;
-      std::vector<std::vector<tann::ngt::Clustering::Cluster>> clusters(leafNodes.size());
+      std::vector<std::vector<tann::Clustering::Cluster>> clusters(leafNodes.size());
 #pragma omp parallel for
       for (size_t nidx = 0; nidx < leafNodes.size(); nidx++) {
 	HKLeafNode &leafNode = static_cast<HKLeafNode&>(*nodes[leafNodes[nidx].first]);
 	std::vector<std::vector<float>> vectors;
 #pragma omp critical
 	aggregateObjects(leafNode, vectors, objectSpace, objectList);
-	tann::ngt::Clustering clustering(initMode, tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT, 1000, leafNodes[nidx].second);
+	tann::Clustering clustering(initMode, tann::Clustering::ClusteringTypeKmeansWithoutNGT, 1000, leafNodes[nidx].second);
 	clustering.kmeans(vectors, clusters[nidx]);
       }
 
@@ -620,10 +620,10 @@ namespace QBG {
 
     }
 
-    static void flattenClusters(std::vector<tann::ngt::Clustering::Cluster> &upperClusters,
-				std::vector<std::vector<tann::ngt::Clustering::Cluster>> &lowerClusters,
+    static void flattenClusters(std::vector<tann::Clustering::Cluster> &upperClusters,
+				std::vector<std::vector<tann::Clustering::Cluster>> &lowerClusters,
 				size_t numOfLowerClusters,
-				std::vector<tann::ngt::Clustering::Cluster> &flatClusters) {
+				std::vector<tann::Clustering::Cluster> &flatClusters) {
 
 
       flatClusters.clear();
@@ -641,9 +641,9 @@ namespace QBG {
     }
 
 #ifndef MULTIPLE_OBJECT_LISTS
-    void subclustering(std::vector<tann::ngt::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
-		       tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList,
-		       tann::ngt::Clustering::InitializationMode initMode, std::vector<std::vector<tann::ngt::Clustering::Cluster>> &lowerClusters) {
+    void subclustering(std::vector<tann::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
+		       tann::ObjectSpace &objectSpace, QBGObjectList &objectList,
+		       tann::Clustering::InitializationMode initMode, std::vector<std::vector<tann::Clustering::Cluster>> &lowerClusters) {
       std::vector<uint32_t> nPartialClusters(upperClusters.size());
       auto numOfRemainingClusters = numOfLowerClusters;
       auto numOfRemainingVectors = numOfObjects;
@@ -685,7 +685,7 @@ namespace QBG {
 	  std::cerr << "the sizes of members are not consistent" << std::endl;
 	  abort();
 	}
-	tann::ngt::Clustering lowerClustering(initMode, tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT, 1000);
+	tann::Clustering lowerClustering(initMode, tann::Clustering::ClusteringTypeKmeansWithoutNGT, 1000);
 	lowerClustering.kmeans(partialVectors, nPartialClusters[idx], lowerClusters[idx]);
 	if (nPartialClusters[idx] != lowerClusters[idx].size()) {
 	  std::cerr << "the sizes of cluster members are not consistent" << std::endl;	    
@@ -702,11 +702,11 @@ namespace QBG {
       }
       std::cerr << "# of clusters=" << nc << " # of members=" << mc << std::endl;
     }
-    void subclustering(std::vector<tann::ngt::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
-		       tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList,
-		       tann::ngt::Clustering::InitializationMode initMode, std::vector<tann::ngt::Clustering::Cluster> &flatLowerClusters) {
+    void subclustering(std::vector<tann::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
+		       tann::ObjectSpace &objectSpace, QBGObjectList &objectList,
+		       tann::Clustering::InitializationMode initMode, std::vector<tann::Clustering::Cluster> &flatLowerClusters) {
 
-      std::vector<std::vector<tann::ngt::Clustering::Cluster>> lowerClusters;
+      std::vector<std::vector<tann::Clustering::Cluster>> lowerClusters;
       subclustering(upperClusters, numOfLowerClusters, numOfObjects, objectSpace, objectList, initMode, lowerClusters);
 
       flattenClusters(upperClusters, lowerClusters, numOfLowerClusters, flatLowerClusters);
@@ -714,9 +714,9 @@ namespace QBG {
     }
 
 #else 
-    static void subclustering(std::vector<tann::ngt::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
-			      tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList,
-			      tann::ngt::Clustering::InitializationMode initMode, std::vector<std::vector<tann::ngt::Clustering::Cluster>> &lowerClusters) {
+    static void subclustering(std::vector<tann::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
+			      tann::ObjectSpace &objectSpace, QBGObjectList &objectList,
+			      tann::Clustering::InitializationMode initMode, std::vector<std::vector<tann::Clustering::Cluster>> &lowerClusters) {
       std::vector<uint32_t> nPartialClusters(upperClusters.size());
       auto numOfRemainingClusters = numOfLowerClusters;
       auto numOfRemainingVectors = numOfObjects;
@@ -773,7 +773,7 @@ namespace QBG {
 	  std::cerr << "the sizes of members are not consistent" << std::endl;
 	  abort();
 	}
-	tann::ngt::Clustering lowerClustering(initMode, tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT, 1000);
+	tann::Clustering lowerClustering(initMode, tann::Clustering::ClusteringTypeKmeansWithoutNGT, 1000);
 	lowerClustering.kmeans(partialVectors, nPartialClusters[idx], lowerClusters[idx]);
 	if (nPartialClusters[idx] != lowerClusters[idx].size()) {
 	  std::cerr << "the sizes of cluster members are not consistent" << std::endl;	    
@@ -791,11 +791,11 @@ namespace QBG {
       std::cerr << "# of clusters=" << nc << " # of members=" << mc << std::endl;
     }
 
-    static void subclustering(std::vector<tann::ngt::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
-			      tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList,
-			      tann::ngt::Clustering::InitializationMode initMode, std::vector<tann::ngt::Clustering::Cluster> &flatLowerClusters) {
+    static void subclustering(std::vector<tann::Clustering::Cluster> &upperClusters, size_t numOfLowerClusters, size_t numOfObjects,
+			      tann::ObjectSpace &objectSpace, QBGObjectList &objectList,
+			      tann::Clustering::InitializationMode initMode, std::vector<tann::Clustering::Cluster> &flatLowerClusters) {
 
-      std::vector<std::vector<tann::ngt::Clustering::Cluster>> lowerClusters;
+      std::vector<std::vector<tann::Clustering::Cluster>> lowerClusters;
       subclustering(upperClusters, numOfLowerClusters, numOfObjects, objectSpace, objectList, initMode, lowerClusters);
 
       flattenClusters(upperClusters, lowerClusters, numOfLowerClusters, flatLowerClusters);
@@ -805,8 +805,8 @@ namespace QBG {
 #endif 
 
 
-    static void assign(std::vector<tann::ngt::Clustering::Cluster> &clusters, size_t beginID, size_t endID,
-		       tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList) {
+    static void assign(std::vector<tann::Clustering::Cluster> &clusters, size_t beginID, size_t endID,
+		       tann::ObjectSpace &objectSpace, QBGObjectList &objectList) {
 
 #ifdef MULTIPLE_OBJECT_LISTS
       if (!objectList.openMultipleStreams(omp_get_max_threads())) {
@@ -828,7 +828,7 @@ namespace QBG {
 	float min = std::numeric_limits<float>::max();
 	int minidx = -1;
 	for (size_t cidx = 0; cidx != clusters.size(); cidx++) {
-	  auto d = tann::ngt::PrimitiveComparator::compareL2(reinterpret_cast<float*>(obj.data()),
+	  auto d = tann::PrimitiveComparator::compareL2(reinterpret_cast<float*>(obj.data()),
 						       clusters[cidx].centroid.data(), obj.size());
 	  if (d < min) {
 	    min = d;
@@ -841,7 +841,7 @@ namespace QBG {
 	}
 #pragma omp critical
 	{
-	  clusters[minidx].members.push_back(tann::ngt::Clustering::Entry(id - 1, minidx, min));
+	  clusters[minidx].members.push_back(tann::Clustering::Entry(id - 1, minidx, min));
 	  count++;
 	  if (count % 1000000 == 0) {
 	    std::cerr << "# of assigned objects=" << count << std::endl;
@@ -851,24 +851,24 @@ namespace QBG {
 
     }
 
-    static void assignWithNGT(std::vector<tann::ngt::Clustering::Cluster> &clusters, size_t beginID, size_t endID,
-			      tann::ngt::ObjectSpace &objectSpace, QBGObjectList &objectList) {
+    static void assignWithNGT(std::vector<tann::Clustering::Cluster> &clusters, size_t beginID, size_t endID,
+			      tann::ObjectSpace &objectSpace, QBGObjectList &objectList) {
       if (beginID > endID) {
 	std::cerr << "assignWithNGT::Warning. beginID:" << beginID << " > endID:" << endID << std::endl;
 	return;
       }
 
-      tann::ngt::Property prop;
+      tann::Property prop;
       prop.dimension = objectSpace.getDimension();
-      prop.objectType = tann::ngt::Index::Property::ObjectType::Float;
-      prop.distanceType = tann::ngt::Property::DistanceType::DistanceTypeL2;
+      prop.objectType = tann::Index::Property::ObjectType::Float;
+      prop.distanceType = tann::Property::DistanceType::DistanceTypeL2;
       prop.edgeSizeForCreation = 10;
       prop.edgeSizeForSearch = 40;
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-      tann::ngt::Index index(prop, "dummy");
+      tann::Index index(prop, "dummy");
 #else
-      tann::ngt::Index index(prop);
+      tann::Index index(prop);
 #endif
       for (size_t cidx = 0; cidx < clusters.size(); cidx++) {
 	if (cidx % 100000 == 0) {
@@ -896,8 +896,8 @@ namespace QBG {
 #else
 	objectList.get(id, obj, &objectSpace);
 #endif
-	tann::ngt::SearchQuery sc(obj);
-	tann::ngt::ObjectDistances	objects;
+	tann::SearchQuery sc(obj);
+	tann::ObjectDistances	objects;
 	sc.setResults(&objects);
 	sc.setSize(10);
 	sc.setEpsilon(0.12);
@@ -909,16 +909,16 @@ namespace QBG {
       for (size_t id = beginID; id < endID; id++) {
 	auto cid = clusterIDs[id - beginID].first;
 	auto cdistance = clusterIDs[id - beginID].second;
-	clusters[cid].members.push_back(tann::ngt::Clustering::Entry(id - 1, cid, cdistance));
+	clusters[cid].members.push_back(tann::Clustering::Entry(id - 1, cid, cdistance));
       }
     }
 
 #ifdef NGTQ_QBG
-    void treeBasedTopdownClustering(std::string prefix, QBG::Index &index, uint32_t rootID, std::vector<float> &object, std::vector<HKNode*> &nodes, tann::ngt::Clustering &clustering) {
+    void treeBasedTopdownClustering(std::string prefix, QBG::Index &index, uint32_t rootID, std::vector<float> &object, std::vector<HKNode*> &nodes, tann::Clustering &clustering) {
       auto &quantizer = static_cast<NGTQ::QuantizerInstance<uint8_t>&>(index.getQuantizer());
       auto &objectSpace = quantizer.globalCodebookIndex.getObjectSpace();
       QBGObjectList &objectList = quantizer.objectList;
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       timer.start();
       std::vector<uint32_t> batch;
       std::vector<pair<uint32_t, uint32_t>> exceededLeaves;
@@ -942,7 +942,7 @@ namespace QBG {
 			      clustering, maxSize, nleaves, 0);
 
       if (numOfTotalClusters != 0) {
-	tann::ngt::Timer timer;
+	tann::Timer timer;
 	timer.start();
 	size_t numOfLeaves = 0;
 	for (auto node : nodes) {
@@ -956,7 +956,7 @@ namespace QBG {
 	hierarchicalKmeansWithNumberOfClustersInParallel(numOfTotalClusters, numOfObjects, numOfLeaves, 
 							 objectList, objectSpace, nodes, initMode);
 	if (numOfTotalBlobs != 0) {
-	  tann::ngt::Timer timer;
+	  tann::Timer timer;
 	  timer.start();
 	  size_t numOfLeaves = 0;
 	  for (auto node : nodes) {
@@ -1051,7 +1051,7 @@ namespace QBG {
 
 	std::cerr << "Three layer clustering:" << numOfFirstClusters << ":" << numOfFirstObjects << "," << numOfSecondClusters << ":" << numOfSecondObjects << "," << numOfThirdClusters << ":" << numOfObjects << std::endl;
 
-	tann::ngt::Clustering firstClustering(initMode, tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT, 300);
+	tann::Clustering firstClustering(initMode, tann::Clustering::ClusteringTypeKmeansWithoutNGT, 300);
 	float clusterSizeConstraint = 5.0;
 	firstClustering.setClusterSizeConstraintCoefficient(clusterSizeConstraint);
 	std::cerr << "size constraint=" << clusterSizeConstraint << std::endl;
@@ -1070,8 +1070,8 @@ namespace QBG {
 	  vectors.push_back(obj);
 	}
 	std::cerr << "Kmeans... " << vectors.size() << " to " << numOfFirstClusters << std::endl;
-	std::vector<tann::ngt::Clustering::Cluster> firstClusters;
-	tann::ngt::Timer timer;
+	std::vector<tann::Clustering::Cluster> firstClusters;
+	tann::Timer timer;
 
 	timer.start();
 	firstClustering.kmeans(vectors, numOfFirstClusters, firstClusters);
@@ -1086,20 +1086,20 @@ namespace QBG {
 	std::cerr << "Assign(1) time=" << timer << std::endl;
 
 	std::cerr << "subclustering for the second." << std::endl;
-	std::vector<tann::ngt::Clustering::Cluster> secondClusters;
+	std::vector<tann::Clustering::Cluster> secondClusters;
 	timer.start();
 	subclustering(firstClusters, numOfSecondClusters, numOfSecondObjects, objectSpace, objectList, initMode, secondClusters);
 	timer.stop();
 	std::cerr << "subclustering(1) time=" << timer << std::endl;
 	std::cerr << "save quantization centroid" << std::endl;
-	tann::ngt::Clustering::saveClusters(prefix + QBG::Index::getSecondCentroidSuffix(), secondClusters);
+	tann::Clustering::saveClusters(prefix + QBG::Index::getSecondCentroidSuffix(), secondClusters);
 	timer.start();
 	std::cerr << "Assign for the third. (" << numOfSecondObjects << "-" << numOfObjects << ")..." << std::endl;
 	assignWithNGT(secondClusters, numOfSecondObjects + 1, numOfObjects, objectSpace, objectList);
 	timer.stop();
 	std::cerr << "Assign(2) time=" << timer << std::endl;
 	std::cerr << "subclustering for the third." << std::endl;
-	std::vector<std::vector<tann::ngt::Clustering::Cluster>> thirdClusters;
+	std::vector<std::vector<tann::Clustering::Cluster>> thirdClusters;
 	timer.start();
 	subclustering(secondClusters, numOfThirdClusters, numOfObjects, objectSpace, objectList, initMode, thirdClusters);
 	timer.stop();
@@ -1112,14 +1112,14 @@ namespace QBG {
 	    }
 	  }
 	  std::cerr << "save bqindex..." << std::endl;
-	  tann::ngt::Clustering::saveVector(prefix + QBG::Index::get3rdTo2ndSuffix(), bqindex);
+	  tann::Clustering::saveVector(prefix + QBG::Index::get3rdTo2ndSuffix(), bqindex);
 	}
 	
-	std::vector<tann::ngt::Clustering::Cluster> thirdFlatClusters;
+	std::vector<tann::Clustering::Cluster> thirdFlatClusters;
 	flattenClusters(secondClusters, thirdClusters, numOfThirdClusters, thirdFlatClusters);
 
 	std::cerr << "save centroid..." << std::endl;
-	tann::ngt::Clustering::saveClusters(prefix + QBG::Index::getThirdCentroidSuffix(), thirdFlatClusters);
+	tann::Clustering::saveClusters(prefix + QBG::Index::getThirdCentroidSuffix(), thirdFlatClusters);
 
 	{
 	  std::vector<size_t> cindex(numOfObjects);
@@ -1130,7 +1130,7 @@ namespace QBG {
 	    }
 	  }
 	  std::cerr << "save index... " << cindex.size() << std::endl;
-	  tann::ngt::Clustering::saveVector(prefix + QBG::Index::getObjTo3rdSuffix(), cindex);
+	  tann::Clustering::saveVector(prefix + QBG::Index::getObjTo3rdSuffix(), cindex);
 	}
 	std::cerr << "end of clustering" << std::endl;
 	return;
@@ -1139,7 +1139,7 @@ namespace QBG {
     }
 
     void clustering(std::string indexPath, std::string prefix = "", std::string objectIDsFile = "") {
-      tann::ngt::StdOstreamRedirector redirector(silence);
+      tann::StdOstreamRedirector redirector(silence);
       redirector.begin();
 
       bool readOnly = false;
@@ -1160,7 +1160,7 @@ namespace QBG {
 	    std::cerr << "Prefix is not specified." << std::endl;
 	    prefix = indexPath + "/" + QBG::Index::getWorkspaceName();
 	    try {
-	      tann::ngt::Index::mkdir(prefix);
+	      tann::Index::mkdir(prefix);
 	    } catch(...) {}
 	    prefix +="/" + QBG::Index::getHierarchicalClusteringPrefix();
 	    std::cerr << prefix << " is used" << std::endl;
@@ -1173,7 +1173,7 @@ namespace QBG {
 	    std::cerr << "HierarachicalKmeans: Warning! Dimensions are inconsistent. Dimension=" << paddedDimension << ":" << dimension << std::endl;
 	  }
 	  multilayerClustering(prefix, index);
-	} catch(tann::ngt::Exception &err) {
+	} catch(tann::Exception &err) {
 	  redirector.end();
 	  throw err;
 	}
@@ -1181,7 +1181,7 @@ namespace QBG {
 	return;
       }
       try {
-	tann::ngt::Clustering::ClusteringType clusteringType = tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT;
+	tann::Clustering::ClusteringType clusteringType = tann::Clustering::ClusteringTypeKmeansWithoutNGT;
 
 	uint32_t rootID = 0;
 	std::vector<HKNode*> nodes;
@@ -1189,7 +1189,7 @@ namespace QBG {
 
 	std::vector<float> object;
 	size_t iteration = 1000;
-	tann::ngt::Clustering clustering(initMode, clusteringType, iteration, numOfClusters);
+	tann::Clustering clustering(initMode, clusteringType, iteration, numOfClusters);
 	auto &quantizer = static_cast<NGTQ::QuantizerInstance<uint8_t>&>(index.getQuantizer());
 	QBGObjectList &objectList = quantizer.objectList;
 	if (objectIDsFile.empty()) {
@@ -1255,7 +1255,7 @@ namespace QBG {
 	if (objectCount != numOfObjects) {
 	  std::cerr << "# of objects is invalid. " << objectCount << ":" << numOfObjects << std::endl;
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	redirector.end();
 	throw err;
       }
@@ -1270,7 +1270,7 @@ namespace QBG {
     size_t	numOfTotalBlobs;
     int32_t	clusterID;
 
-    tann::ngt::Clustering::InitializationMode initMode;
+    tann::Clustering::InitializationMode initMode;
 
     size_t	numOfRandomObjects;
 

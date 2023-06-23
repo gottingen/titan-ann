@@ -16,7 +16,7 @@
 
 #pragma once
 
-namespace tann::ngt {
+namespace tann {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
   class ObjectRepository : 
   public PersistentRepository<PersistentObject> {
@@ -43,7 +43,7 @@ namespace tann::ngt {
       std::ofstream objs(ofile);
       if (!objs.is_open()) {
 	std::stringstream msg;
-	msg << "tann::ngt::ObjectSpace: Cannot open the specified file " << ofile << ".";
+	msg << "tann::ObjectSpace: Cannot open the specified file " << ofile << ".";
 	NGTThrowException(msg);
       }
       Parent::serialize(objs, ospace); 
@@ -54,7 +54,7 @@ namespace tann::ngt {
       std::ifstream objs(ifile);
       if (!objs.is_open()) {
 	std::stringstream msg;
-	msg << "tann::ngt::ObjectSpace: Cannot open the specified file " << ifile << ".";
+	msg << "tann::ObjectSpace: Cannot open the specified file " << ifile << ".";
 	NGTThrowException(msg);
       }
       Parent::deserialize(objs, ospace);
@@ -64,7 +64,7 @@ namespace tann::ngt {
       std::ofstream objs(ofile);
       if (!objs.is_open()) {
 	std::stringstream msg;
-	msg << "tann::ngt::ObjectSpace: Cannot open the specified file " << ofile << ".";
+	msg << "tann::ObjectSpace: Cannot open the specified file " << ofile << ".";
 	NGTThrowException(msg);
       }
       Parent::serializeAsText(objs, ospace); 
@@ -74,7 +74,7 @@ namespace tann::ngt {
       std::ifstream objs(ifile);
       if (!objs.is_open()) {
 	std::stringstream msg;
-	msg << "tann::ngt::ObjectSpace: Cannot open the specified file " << ifile << ".";
+	msg << "tann::ObjectSpace: Cannot open the specified file " << ifile << ".";
 	NGTThrowException(msg);
       }
       Parent::deserializeAsText(objs, ospace); 
@@ -196,7 +196,7 @@ namespace tann::ngt {
       void extractObjectFromText(const std::string &textLine, const std::string &sep, std::vector<T> &object) {
       object.resize(dimension);
       std::vector<std::string> tokens;
-      tann::ngt::Common::tokenize(textLine, tokens, sep);
+      tann::Common::tokenize(textLine, tokens, sep);
       if (dimension > tokens.size()) {
 	std::stringstream msg;
 	msg << "ObjectSpace::allocate: too few dimension. " << tokens.size() << ":" << dimension << ". " 
@@ -401,4 +401,4 @@ namespace tann::ngt {
     bool sparse;		// sparse data format
   };
 
-} // namespace tann::ngt
+} // namespace tann

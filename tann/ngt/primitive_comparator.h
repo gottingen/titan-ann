@@ -24,7 +24,7 @@
 #include <immintrin.h>
 #endif
 
-namespace tann::ngt {
+namespace tann {
 
   class MemoryCache {
   public:
@@ -1023,5 +1023,5 @@ namespace tann::ngt {
 };
 
 
-} // namespace tann::ngt
+} // namespace tann
 

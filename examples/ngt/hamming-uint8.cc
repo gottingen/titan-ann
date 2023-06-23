@@ -11,12 +11,12 @@ main(int argc, char **argv) {
     size_t bitSize = 64;
     // index construction
     try {
-        tann::ngt::Property property;
+        tann::Property property;
         property.dimension = bitSize / 8;
-        property.objectType = tann::ngt::ObjectSpace::ObjectType::Uint8;
-        property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeHamming;
-        tann::ngt::Index::create(indexPath, property);
-        tann::ngt::Index index(indexPath);
+        property.objectType = tann::ObjectSpace::ObjectType::Uint8;
+        property.distanceType = tann::Index::Property::DistanceType::DistanceTypeHamming;
+        tann::Index::create(indexPath, property);
+        tann::Index index(indexPath);
         ifstream is(objectFile);
         string line;
         while (getline(is, line)) {
@@ -40,7 +40,7 @@ main(int argc, char **argv) {
         }
         index.createIndex(16);
         index.save();
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         cerr << "Error " << err.what() << endl;
         return 1;
     } catch (...) {
@@ -50,8 +50,8 @@ main(int argc, char **argv) {
 
     // nearest neighbor search
     try {
-        tann::ngt::Index index(indexPath);
-        tann::ngt::Property property;
+        tann::Index index(indexPath);
+        tann::Property property;
         index.getProperty(property);
         ifstream is(queryFile);
         string line;
@@ -71,8 +71,8 @@ main(int argc, char **argv) {
                 }
             }
 
-            tann::ngt::SearchQuery sc(query);
-            tann::ngt::ObjectDistances objects;
+            tann::SearchQuery sc(query);
+            tann::ObjectDistances objects;
             sc.setResults(&objects);
             sc.setSize(10);
             sc.setEpsilon(0.2);
@@ -81,7 +81,7 @@ main(int argc, char **argv) {
             cout << endl << "Rank\tID\tDistance" << std::showbase << endl;
             for (size_t i = 0; i < objects.size(); i++) {
                 cout << i + 1 << "\t" << objects[i].id << "\t" << objects[i].distance << "\t: ";
-                tann::ngt::ObjectSpace &objectSpace = index.getObjectSpace();
+                tann::ObjectSpace &objectSpace = index.getObjectSpace();
                 uint8_t *object = static_cast<uint8_t *>(objectSpace.getObject(objects[i].id));
                 for (size_t idx = 0; idx < objectSpace.getDimension(); idx++) {
                     cout << std::bitset<8>(object[idx]) << " ";
@@ -90,7 +90,7 @@ main(int argc, char **argv) {
             }
             cout << endl;
         }
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         cerr << "Error " << err.what() << endl;
         return 1;
     } catch (...) {

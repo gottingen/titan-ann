@@ -22,19 +22,19 @@
 #include "tann/ngt/graph_reconstructor.h"
 
 using namespace std;
-using namespace tann::ngt;
+using namespace tann;
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-tann::ngt::Index::Index(tann::ngt::Property &prop, const string &database):redirect(false) {
+tann::Index::Index(tann::Property &prop, const string &database):redirect(false) {
   if (prop.dimension == 0) {
     NGTThrowException("Index::Index. Dimension is not specified.");
   }
   Index* idx = 0;
   mkdir(database);
-  if (prop.indexType == tann::ngt::Index::Property::GraphAndTree) {
-    idx = new tann::ngt::GraphAndTreeIndex(database, prop);
-  } else if (prop.indexType == tann::ngt::Index::Property::Graph) {
-    idx = new tann::ngt::GraphIndex(database, prop);
+  if (prop.indexType == tann::Index::Property::GraphAndTree) {
+    idx = new tann::GraphAndTreeIndex(database, prop);
+  } else if (prop.indexType == tann::Index::Property::Graph) {
+    idx = new tann::GraphIndex(database, prop);
   } else {
     NGTThrowException("Index::Index: Not found IndexType in property file.");
   }
@@ -48,15 +48,15 @@ tann::ngt::Index::Index(tann::ngt::Property &prop, const string &database):redir
 }
 #else
 
-tann::ngt::Index::Index(tann::ngt::Property &prop) : redirect(false) {
+tann::Index::Index(tann::Property &prop) : redirect(false) {
     if (prop.dimension == 0) {
         NGTThrowException("Index::Index. Dimension is not specified.");
     }
     Index *idx = 0;
-    if (prop.indexType == tann::ngt::Index::Property::GraphAndTree) {
-        idx = new tann::ngt::GraphAndTreeIndex(prop);
-    } else if (prop.indexType == tann::ngt::Index::Property::Graph) {
-        idx = new tann::ngt::GraphIndex(prop);
+    if (prop.indexType == tann::Index::Property::GraphAndTree) {
+        idx = new tann::GraphAndTreeIndex(prop);
+    } else if (prop.indexType == tann::Index::Property::Graph) {
+        idx = new tann::GraphIndex(prop);
     } else {
         NGTThrowException("Index::Index: Not found IndexType in property file.");
     }
@@ -72,22 +72,22 @@ tann::ngt::Index::Index(tann::ngt::Property &prop) : redirect(false) {
 #endif
 
 float
-tann::ngt::Index::getEpsilonFromExpectedAccuracy(double accuracy) {
-    return static_cast<tann::ngt::GraphIndex &>(getIndex()).getEpsilonFromExpectedAccuracy(accuracy);
+tann::Index::getEpsilonFromExpectedAccuracy(double accuracy) {
+    return static_cast<tann::GraphIndex &>(getIndex()).getEpsilonFromExpectedAccuracy(accuracy);
 }
 
 void
-tann::ngt::Index::open(const string &database, bool rdOnly, bool graphDisabled) {
-    tann::ngt::Property prop;
+tann::Index::open(const string &database, bool rdOnly, bool graphDisabled) {
+    tann::Property prop;
     prop.load(database);
     Index *idx = 0;
-    if ((prop.indexType == tann::ngt::Index::Property::GraphAndTree) && !graphDisabled) {
-        idx = new tann::ngt::GraphAndTreeIndex(database, rdOnly);
-    } else if ((prop.indexType == tann::ngt::Index::Property::Graph) || graphDisabled) {
+    if ((prop.indexType == tann::Index::Property::GraphAndTree) && !graphDisabled) {
+        idx = new tann::GraphAndTreeIndex(database, rdOnly);
+    } else if ((prop.indexType == tann::Index::Property::Graph) || graphDisabled) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-        idx = new tann::ngt::GraphIndex(database, rdOnly);
+        idx = new tann::GraphIndex(database, rdOnly);
 #else
-        idx = new tann::ngt::GraphIndex(database, rdOnly, graphDisabled);
+        idx = new tann::GraphIndex(database, rdOnly, graphDisabled);
 #endif
     } else {
         NGTThrowException("Index::Open: Not found IndexType in property file.");
@@ -102,18 +102,18 @@ tann::ngt::Index::open(const string &database, bool rdOnly, bool graphDisabled) 
 }
 
 void
-tann::ngt::Index::createGraphAndTree(const string &database, tann::ngt::Property &prop, const string &dataFile,
+tann::Index::createGraphAndTree(const string &database, tann::Property &prop, const string &dataFile,
                                size_t dataSize, bool redirect) {
     if (prop.dimension == 0) {
         NGTThrowException("Index::createGraphAndTree. Dimension is not specified.");
     }
-    prop.indexType = tann::ngt::Index::Property::IndexType::GraphAndTree;
+    prop.indexType = tann::Index::Property::IndexType::GraphAndTree;
     Index *idx = 0;
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
     mkdir(database);
-    idx = new tann::ngt::GraphAndTreeIndex(database, prop);
+    idx = new tann::GraphAndTreeIndex(database, prop);
 #else
-    idx = new tann::ngt::GraphAndTreeIndex(prop);
+    idx = new tann::GraphAndTreeIndex(prop);
 #endif
     assert(idx != 0);
     StdOstreamRedirector redirector(redirect);
@@ -130,18 +130,18 @@ tann::ngt::Index::createGraphAndTree(const string &database, tann::ngt::Property
 }
 
 void
-tann::ngt::Index::createGraph(const string &database, tann::ngt::Property &prop, const string &dataFile, size_t dataSize,
+tann::Index::createGraph(const string &database, tann::Property &prop, const string &dataFile, size_t dataSize,
                         bool redirect) {
     if (prop.dimension == 0) {
         NGTThrowException("Index::createGraphAndTree. Dimension is not specified.");
     }
-    prop.indexType = tann::ngt::Index::Property::IndexType::Graph;
+    prop.indexType = tann::Index::Property::IndexType::Graph;
     Index *idx = 0;
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
     mkdir(database);
-    idx = new tann::ngt::GraphIndex(database, prop);
+    idx = new tann::GraphIndex(database, prop);
 #else
-    idx = new tann::ngt::GraphIndex(prop);
+    idx = new tann::GraphIndex(prop);
 #endif
     assert(idx != 0);
     StdOstreamRedirector redirector(redirect);
@@ -158,9 +158,9 @@ tann::ngt::Index::createGraph(const string &database, tann::ngt::Property &prop,
 }
 
 void
-tann::ngt::Index::loadAndCreateIndex(Index &index, const string &database, const string &dataFile, size_t threadSize,
+tann::Index::loadAndCreateIndex(Index &index, const string &database, const string &dataFile, size_t threadSize,
                                size_t dataSize) {
-    tann::ngt::Timer timer;
+    tann::Timer timer;
     timer.start();
     if (dataFile.size() != 0) {
         index.load(dataFile, dataSize);
@@ -183,9 +183,9 @@ tann::ngt::Index::loadAndCreateIndex(Index &index, const string &database, const
 }
 
 void
-tann::ngt::Index::append(const string &database, const string &dataFile, size_t threadSize, size_t dataSize) {
-    tann::ngt::Index index(database);
-    tann::ngt::Timer timer;
+tann::Index::append(const string &database, const string &dataFile, size_t threadSize, size_t dataSize) {
+    tann::Index index(database);
+    tann::Timer timer;
     timer.start();
     if (dataFile.size() != 0) {
         index.append(dataFile, dataSize);
@@ -203,9 +203,9 @@ tann::ngt::Index::append(const string &database, const string &dataFile, size_t 
 }
 
 void
-tann::ngt::Index::append(const string &database, const float *data, size_t dataSize, size_t threadSize) {
-    tann::ngt::Index index(database);
-    tann::ngt::Timer timer;
+tann::Index::append(const string &database, const float *data, size_t dataSize, size_t threadSize) {
+    tann::Index index(database);
+    tann::Timer timer;
     timer.start();
     if (data != 0 && dataSize != 0) {
         index.append(data, dataSize);
@@ -225,9 +225,9 @@ tann::ngt::Index::append(const string &database, const float *data, size_t dataS
 }
 
 void
-tann::ngt::Index::remove(const string &database, vector<ObjectID> &objects, bool force) {
-    tann::ngt::Index index(database);
-    tann::ngt::Timer timer;
+tann::Index::remove(const string &database, vector<ObjectID> &objects, bool force) {
+    tann::Index index(database);
+    tann::Timer timer;
     timer.start();
     for (vector<ObjectID>::iterator i = objects.begin(); i != objects.end(); i++) {
         try {
@@ -245,30 +245,30 @@ tann::ngt::Index::remove(const string &database, vector<ObjectID> &objects, bool
 }
 
 void
-tann::ngt::Index::importIndex(const string &database, const string &file) {
+tann::Index::importIndex(const string &database, const string &file) {
     Index *idx = 0;
-    tann::ngt::Property property;
+    tann::Property property;
     property.importProperty(file);
-    tann::ngt::Timer timer;
+    tann::Timer timer;
     timer.start();
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-    property.databaseType = tann::ngt::Index::Property::DatabaseType::MemoryMappedFile;
+    property.databaseType = tann::Index::Property::DatabaseType::MemoryMappedFile;
     mkdir(database);
 #else
-    property.databaseType = tann::ngt::Index::Property::DatabaseType::Memory;
+    property.databaseType = tann::Index::Property::DatabaseType::Memory;
 #endif
-    if (property.indexType == tann::ngt::Index::Property::IndexType::GraphAndTree) {
+    if (property.indexType == tann::Index::Property::IndexType::GraphAndTree) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-        idx = new tann::ngt::GraphAndTreeIndex(database, property);
+        idx = new tann::GraphAndTreeIndex(database, property);
 #else
-        idx = new tann::ngt::GraphAndTreeIndex(property);
+        idx = new tann::GraphAndTreeIndex(property);
 #endif
         assert(idx != 0);
-    } else if (property.indexType == tann::ngt::Index::Property::IndexType::Graph) {
+    } else if (property.indexType == tann::Index::Property::IndexType::Graph) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-        idx = new tann::ngt::GraphIndex(database, property);
+        idx = new tann::GraphIndex(database, property);
 #else
-        idx = new tann::ngt::GraphIndex(property);
+        idx = new tann::GraphIndex(property);
 #endif
         assert(idx != 0);
     } else {
@@ -283,9 +283,9 @@ tann::ngt::Index::importIndex(const string &database, const string &file) {
 }
 
 void
-tann::ngt::Index::exportIndex(const string &database, const string &file) {
-    tann::ngt::Index idx(database);
-    tann::ngt::Timer timer;
+tann::Index::exportIndex(const string &database, const string &file) {
+    tann::Index idx(database);
+    tann::Timer timer;
     timer.start();
     idx.exportIndex(file);
     timer.stop();
@@ -294,10 +294,10 @@ tann::ngt::Index::exportIndex(const string &database, const string &file) {
 }
 
 std::vector<float>
-tann::ngt::Index::makeSparseObject(std::vector<uint32_t> &object) {
-    if (static_cast<tann::ngt::GraphIndex &>(getIndex()).getProperty().distanceType !=
-        tann::ngt::ObjectSpace::DistanceType::DistanceTypeSparseJaccard) {
-        NGTThrowException("tann::ngt::Index::makeSparseObject: Not sparse jaccard.");
+tann::Index::makeSparseObject(std::vector<uint32_t> &object) {
+    if (static_cast<tann::GraphIndex &>(getIndex()).getProperty().distanceType !=
+        tann::ObjectSpace::DistanceType::DistanceTypeSparseJaccard) {
+        NGTThrowException("tann::Index::makeSparseObject: Not sparse jaccard.");
     }
     size_t dimension = getObjectSpace().getDimension();
     if (object.size() + 1 > dimension) {
@@ -313,7 +313,7 @@ tann::ngt::Index::makeSparseObject(std::vector<uint32_t> &object) {
 }
 
 void
-tann::ngt::Index::Property::set(tann::ngt::Property &prop) {
+tann::Index::Property::set(tann::Property &prop) {
     if (prop.dimension != -1) dimension = prop.dimension;
     if (prop.threadPoolSize != -1) threadPoolSize = prop.threadPoolSize;
     if (prop.objectType != ObjectSpace::ObjectTypeNone) objectType = prop.objectType;
@@ -333,7 +333,7 @@ tann::ngt::Index::Property::set(tann::ngt::Property &prop) {
 }
 
 void
-tann::ngt::Index::Property::get(tann::ngt::Property &prop) {
+tann::Index::Property::get(tann::Property &prop) {
     prop.dimension = dimension;
     prop.threadPoolSize = threadPoolSize;
     prop.objectType = objectType;
@@ -365,20 +365,20 @@ public:
 
     friend bool operator<(const CreateIndexJob &ja, const CreateIndexJob &jb) { return ja.batchIdx < jb.batchIdx; }
 
-    tann::ngt::ObjectID id;
-    tann::ngt::Object *object;    // this will be a node of the graph later.
-    tann::ngt::ObjectDistances *results;
+    tann::ObjectID id;
+    tann::Object *object;    // this will be a node of the graph later.
+    tann::ObjectDistances *results;
     size_t batchIdx;
 };
 
 class CreateIndexSharedData {
 public:
-    CreateIndexSharedData(tann::ngt::GraphIndex &nngt) : graphIndex(nngt) {}
+    CreateIndexSharedData(tann::GraphIndex &nngt) : graphIndex(nngt) {}
 
-    tann::ngt::GraphIndex &graphIndex;
+    tann::GraphIndex &graphIndex;
 };
 
-class CreateIndexThread : public tann::ngt::Thread {
+class CreateIndexThread : public tann::Thread {
 public:
     CreateIndexThread() {}
 
@@ -388,24 +388,24 @@ public:
 
 };
 
-typedef tann::ngt::ThreadPool<CreateIndexJob, CreateIndexSharedData *, CreateIndexThread> CreateIndexThreadPool;
+typedef tann::ThreadPool<CreateIndexJob, CreateIndexSharedData *, CreateIndexThread> CreateIndexThreadPool;
 
 int
 CreateIndexThread::run() {
 
-    tann::ngt::ThreadPool<CreateIndexJob, CreateIndexSharedData *, CreateIndexThread>::Thread &poolThread =
-            (tann::ngt::ThreadPool<CreateIndexJob, CreateIndexSharedData *, CreateIndexThread>::Thread &) *this;
+    tann::ThreadPool<CreateIndexJob, CreateIndexSharedData *, CreateIndexThread>::Thread &poolThread =
+            (tann::ThreadPool<CreateIndexJob, CreateIndexSharedData *, CreateIndexThread>::Thread &) *this;
 
     CreateIndexSharedData &sd = *poolThread.getSharedData();
-    tann::ngt::GraphIndex &graphIndex = sd.graphIndex;
+    tann::GraphIndex &graphIndex = sd.graphIndex;
 
     for (;;) {
         CreateIndexJob job;
         try {
             poolThread.getInputJobQueue().popFront(job);
-        } catch (tann::ngt::ThreadTerminationException &err) {
+        } catch (tann::ThreadTerminationException &err) {
             break;
-        } catch (tann::ngt::Exception &err) {
+        } catch (tann::Exception &err) {
             cerr << "CreateIndex::search:Error! popFront " << err.what() << endl;
             break;
         }
@@ -417,7 +417,7 @@ CreateIndexThread::run() {
             } else {
                 graphIndex.searchForNNGInsertion(obj, *rs);
             }
-        } catch (tann::ngt::Exception &err) {
+        } catch (tann::Exception &err) {
             stringstream msg;
             msg << "CreateIndex::search:Fatal error! ID=" << job.id << " " << err.what();
             NGTThrowException(msg);
@@ -484,22 +484,22 @@ public:
 };
 
 void
-tann::ngt::GraphIndex::constructObjectSpace(tann::ngt::Property &prop) {
+tann::GraphIndex::constructObjectSpace(tann::Property &prop) {
     assert(prop.dimension != 0);
     size_t dimension = prop.dimension;
-    if (prop.distanceType == tann::ngt::ObjectSpace::DistanceType::DistanceTypeSparseJaccard) {
+    if (prop.distanceType == tann::ObjectSpace::DistanceType::DistanceTypeSparseJaccard) {
         dimension++;
     }
 
     switch (prop.objectType) {
-        case tann::ngt::ObjectSpace::ObjectType::Float :
+        case tann::ObjectSpace::ObjectType::Float :
             objectSpace = new ObjectSpaceRepository<float, double>(dimension, typeid(float), prop.distanceType);
             break;
-        case tann::ngt::ObjectSpace::ObjectType::Uint8 :
+        case tann::ObjectSpace::ObjectType::Uint8 :
             objectSpace = new ObjectSpaceRepository<unsigned char, int>(dimension, typeid(uint8_t), prop.distanceType);
             break;
 #ifdef NGT_HALF_FLOAT
-        case tann::ngt::ObjectSpace::ObjectType::Float16 :
+        case tann::ObjectSpace::ObjectType::Float16 :
             objectSpace = new ObjectSpaceRepository<float16, float>(dimension, typeid(float16), prop.distanceType);
             break;
 #endif
@@ -511,19 +511,19 @@ tann::ngt::GraphIndex::constructObjectSpace(tann::ngt::Property &prop) {
 }
 
 void
-tann::ngt::GraphIndex::loadGraph(const string &ifile, tann::ngt::GraphRepository &graph) {
+tann::GraphIndex::loadGraph(const string &ifile, tann::GraphRepository &graph) {
     ifstream isg(ifile + "/grp");
     graph.deserialize(isg);
 }
 
 void
-tann::ngt::GraphIndex::loadIndex(const string &ifile, bool readOnly, bool graphDisabled) {
+tann::GraphIndex::loadIndex(const string &ifile, bool readOnly, bool graphDisabled) {
     objectSpace->deserialize(ifile + "/obj");
     if (graphDisabled) {
         return;
     }
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
-    if (readOnly && property.indexType == tann::ngt::Index::Property::IndexType::Graph) {
+    if (readOnly && property.indexType == tann::Index::Property::IndexType::Graph) {
         GraphIndex::NeighborhoodGraph::loadSearchGraph(ifile);
     } else {
         loadGraph(ifile, repository);
@@ -534,20 +534,20 @@ tann::ngt::GraphIndex::loadIndex(const string &ifile, bool readOnly, bool graphD
 }
 
 void
-tann::ngt::GraphIndex::saveProperty(const std::string &file) {
-    tann::ngt::Property::save(*this, file);
+tann::GraphIndex::saveProperty(const std::string &file) {
+    tann::Property::save(*this, file);
 }
 
 void
-tann::ngt::GraphIndex::exportProperty(const std::string &file) {
-    tann::ngt::Property::exportProperty(*this, file);
+tann::GraphIndex::exportProperty(const std::string &file) {
+    tann::Property::exportProperty(*this, file);
 }
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-tann::ngt::GraphIndex::GraphIndex(const string &allocator, bool rdonly):readOnly(rdonly) {
-  tann::ngt::Property prop;
+tann::GraphIndex::GraphIndex(const string &allocator, bool rdonly):readOnly(rdonly) {
+  tann::Property prop;
   prop.load(allocator);
-  if (prop.databaseType != tann::ngt::Index::Property::DatabaseType::MemoryMappedFile) {
+  if (prop.databaseType != tann::Index::Property::DatabaseType::MemoryMappedFile) {
     NGTThrowException("GraphIndex: Cannot open. Not memory mapped file type.");
   }
   initialize(allocator, prop);
@@ -557,7 +557,7 @@ tann::ngt::GraphIndex::GraphIndex(const string &allocator, bool rdonly):readOnly
 #endif
 }
 
-tann::ngt::GraphAndTreeIndex::GraphAndTreeIndex(const string &allocator, tann::ngt::Property &prop):GraphIndex(allocator, prop) {
+tann::GraphAndTreeIndex::GraphAndTreeIndex(const string &allocator, tann::Property &prop):GraphIndex(allocator, prop) {
   initialize(allocator, prop.treeSharedMemorySize);
 }
 
@@ -591,7 +591,7 @@ GraphAndTreeIndex::createTreeIndex()
 }
 
 void 
-tann::ngt::GraphIndex::initialize(const string &allocator, tann::ngt::Property &prop) {
+tann::GraphIndex::initialize(const string &allocator, tann::Property &prop) {
   constructObjectSpace(prop);
   repository.open(allocator + "/grp", prop.graphSharedMemorySize);
   objectSpace->open(allocator + "/obj", prop.objectSharedMemorySize);
@@ -599,10 +599,10 @@ tann::ngt::GraphIndex::initialize(const string &allocator, tann::ngt::Property &
 }
 #else // NGT_SHARED_MEMORY_ALLOCATOR
 
-tann::ngt::GraphIndex::GraphIndex(const string &database, bool rdOnly, bool graphDisabled) : readOnly(rdOnly) {
-    tann::ngt::Property prop;
+tann::GraphIndex::GraphIndex(const string &database, bool rdOnly, bool graphDisabled) : readOnly(rdOnly) {
+    tann::Property prop;
     prop.load(database);
-    if (prop.databaseType != tann::ngt::Index::Property::DatabaseType::Memory) {
+    if (prop.databaseType != tann::Index::Property::DatabaseType::Memory) {
         NGTThrowException("GraphIndex: Cannot open. Not memory type.");
     }
     assert(prop.dimension != 0);
@@ -627,7 +627,7 @@ GraphIndex::createIndex() {
     GraphRepository &anngRepo = repository;
     ObjectRepository &fr = objectSpace->getRepository();
     size_t pathAdjustCount = property.pathAdjustmentInterval;
-    tann::ngt::ObjectID id = 1;
+    tann::ObjectID id = 1;
     size_t count = 0;
     BuildTimeController buildTimeController(*this, NeighborhoodGraph::property);
     for (; id < fr.size(); id++) {
@@ -645,7 +645,7 @@ GraphIndex::createIndex() {
 
 static size_t
 searchMultipleQueryForCreation(GraphIndex &neighborhoodGraph,
-                               tann::ngt::ObjectID &id,
+                               tann::ObjectID &id,
                                CreateIndexJob &job,
                                CreateIndexThreadPool &threads,
                                size_t sizeOfRepository) {
@@ -732,7 +732,7 @@ insertMultipleSearchResults(GraphIndex &neighborhoodGraph,
         }
         try {
             neighborhoodGraph.insertNode(gr.id, *gr.results);
-        } catch (tann::ngt::Exception &err) {
+        } catch (tann::Exception &err) {
             std::stringstream msg;
             msg << " Cannot insert the node. " << gr.id << ". " << err.what();
             NGTThrowException(msg);
@@ -766,7 +766,7 @@ GraphIndex::createIndex(size_t threadPoolSize, size_t sizeOfRepository) {
 
         try {
             CreateIndexJob job;
-            tann::ngt::ObjectID id = 1;
+            tann::ObjectID id = 1;
             for (;;) {
                 // search for the nearest neighbors
                 size_t cnt = searchMultipleQueryForCreation(*this, id, job, threads, sizeOfRepository);
@@ -812,14 +812,14 @@ GraphIndex::createIndex(size_t threadPoolSize, size_t sizeOfRepository) {
 
 }
 
-void GraphIndex::setupPrefetch(tann::ngt::Property &prop) {
+void GraphIndex::setupPrefetch(tann::Property &prop) {
     assert(GraphIndex::objectSpace != 0);
     prop.prefetchOffset = GraphIndex::objectSpace->setPrefetchOffset(prop.prefetchOffset);
     prop.prefetchSize = GraphIndex::objectSpace->setPrefetchSize(prop.prefetchSize);
 }
 
 bool
-tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, char mode, size_t edgeSize) {
+tann::GraphIndex::showStatisticsOfGraph(tann::GraphIndex &outGraph, char mode, size_t edgeSize) {
     long double distance = 0.0;
     size_t numberOfNodes = 0;
     size_t numberOfOutdegree = 0;
@@ -830,8 +830,8 @@ tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, ch
     std::vector<size_t> outdegreeHistogram;
     std::vector<size_t> indegreeHistogram;
     std::vector<std::vector<float> > indegree;
-    tann::ngt::GraphRepository &graph = outGraph.repository;
-    tann::ngt::ObjectRepository &repo = outGraph.objectSpace->getRepository();
+    tann::GraphRepository &graph = outGraph.repository;
+    tann::ObjectRepository &repo = outGraph.objectSpace->getRepository();
     indegreeCount.resize(graph.size(), 0);
     indegree.resize(graph.size());
     size_t removedObjectCount = 0;
@@ -841,10 +841,10 @@ tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, ch
             removedObjectCount++;
             continue;
         }
-        tann::ngt::GraphNode *node = 0;
+        tann::GraphNode *node = 0;
         try {
             node = outGraph.getNode(id);
-        } catch (tann::ngt::Exception &err) {
+        } catch (tann::Exception &err) {
             std::cerr << "ngt info: Error. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
             valid = false;
             continue;
@@ -872,9 +872,9 @@ tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, ch
         }
         for (size_t i = 0; i < esize; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-            tann::ngt::ObjectDistance &n = (*node).at(i, graph.allocator);
+            tann::ObjectDistance &n = (*node).at(i, graph.allocator);
 #else
-            tann::ngt::ObjectDistance &n = (*node)[i];
+            tann::ObjectDistance &n = (*node)[i];
 #endif
             if (std::isnan(n.distance)) {
                 stringstream msg;
@@ -906,22 +906,22 @@ tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, ch
             if (repo[id] == 0) {
                 continue;
             }
-            tann::ngt::GraphNode *n = 0;
+            tann::GraphNode *n = 0;
             try {
                 n = outGraph.getNode(id);
-            } catch (tann::ngt::Exception &err) {
+            } catch (tann::Exception &err) {
                 continue;
             }
-            tann::ngt::GraphNode &node = *n;
+            tann::GraphNode &node = *n;
             for (size_t i = 0; i < node.size(); i++) {
-                tann::ngt::GraphNode *nn = 0;
+                tann::GraphNode *nn = 0;
                 try {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
                     nn = outGraph.getNode(node.at(i, graph.allocator).id);
 #else
                     nn = outGraph.getNode(node[i].id);
 #endif
-                } catch (tann::ngt::Exception &err) {
+                } catch (tann::Exception &err) {
                     count++;
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
                     std::cerr << "Directed edge! " << id << "->" << node.at(i, graph.allocator).id << " no object. "
@@ -932,7 +932,7 @@ tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, ch
 #endif
                     continue;
                 }
-                tann::ngt::GraphNode &nnode = *nn;
+                tann::GraphNode &nnode = *nn;
                 bool found = false;
                 for (size_t i = 0; i < nnode.size(); i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -968,14 +968,14 @@ tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, ch
         if (repo[id] == 0) {
             continue;
         }
-        tann::ngt::GraphNode *n = 0;
+        tann::GraphNode *n = 0;
         try {
             n = outGraph.getNode(id);
-        } catch (tann::ngt::Exception &err) {
+        } catch (tann::Exception &err) {
             std::cerr << "ngt info: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
             continue;
         }
-        tann::ngt::GraphNode &node = *n;
+        tann::GraphNode &node = *n;
         if (node.size() < dcsize - 1) {
             d10SkipCount++;
             continue;
@@ -1029,10 +1029,10 @@ tann::ngt::GraphIndex::showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, ch
         if (repo[id] == 0) {
             continue;
         }
-        tann::ngt::GraphNode *node = 0;
+        tann::GraphNode *node = 0;
         try {
             node = outGraph.getNode(id);
-        } catch (tann::ngt::Exception &err) {
+        } catch (tann::Exception &err) {
             std::cerr << "ngt info: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
             continue;
         }
@@ -1215,7 +1215,7 @@ GraphAndTreeIndex::createIndex(size_t threadPoolSize, size_t sizeOfRepository) {
 
     try {
         CreateIndexJob job;
-        tann::ngt::ObjectID id = 1;
+        tann::ObjectID id = 1;
         for (;;) {
             size_t cnt = searchMultipleQueryForCreation(*this, id, job, threads, sizeOfRepository);
 
@@ -1247,7 +1247,7 @@ GraphAndTreeIndex::createIndex(size_t threadPoolSize, size_t sizeOfRepository) {
                         GraphIndex::objectSpace->deleteObject(f);
 #endif
                     } catch (Exception &err) {
-                        cerr << "tann::ngt::createIndex: Fatal error. ID=" << job.id << ":";
+                        cerr << "tann::createIndex: Fatal error. ID=" << job.id << ":";
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
                         GraphIndex::objectSpace->deleteObject(f);
 #endif
@@ -1290,7 +1290,7 @@ GraphAndTreeIndex::createIndex(size_t threadPoolSize, size_t sizeOfRepository) {
 
 
 void
-GraphAndTreeIndex::createIndex(const vector<pair<tann::ngt::Object *, size_t> > &objects,
+GraphAndTreeIndex::createIndex(const vector<pair<tann::Object *, size_t> > &objects,
                                vector<InsertionResult> &ids,
                                float range, size_t threadPoolSize) {
     Timer timer;
@@ -1387,7 +1387,7 @@ GraphAndTreeIndex::createIndex(const vector<pair<tann::ngt::Object *, size_t> > 
                 for (size_t i = 0; i < cnt; i++) {
                     CreateIndexJob &job = output.front();
                     if (job.id != 0) {
-                        if (property.indexType == tann::ngt::Property::GraphAndTree) {
+                        if (property.indexType == tann::Property::GraphAndTree) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
                             Object *f = GraphIndex::objectSpace->allocateObject(*job.object);
                             DVPTree::InsertContainer tiobj(*f, job.id);
@@ -1400,7 +1400,7 @@ GraphAndTreeIndex::createIndex(const vector<pair<tann::ngt::Object *, size_t> > 
                                 GraphIndex::objectSpace->deleteObject(f);
 #endif
                             } catch (Exception &err) {
-                                cerr << "tann::ngt::createIndex: Fatal error. ID=" << job.id << ":" << err.what();
+                                cerr << "tann::createIndex: Fatal error. ID=" << job.id << ":" << err.what();
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
                                 GraphIndex::objectSpace->deleteObject(f);
 #endif
@@ -1417,7 +1417,7 @@ GraphAndTreeIndex::createIndex(const vector<pair<tann::ngt::Object *, size_t> > 
                         }
                         try {
                             GraphIndex::insertNode(job.id, *job.results);
-                        } catch (tann::ngt::Exception &err) {
+                        } catch (tann::Exception &err) {
                             std::stringstream msg;
                             msg << " Cannot insert the node. " << job.id << ". " << err.what();
                             NGTThrowException(msg);
@@ -1495,12 +1495,12 @@ GraphAndTreeIndex::verify(vector<uint8_t> &status, bool info, char mode) {
         if (status[id] != 0x00 && status[id] != 0x07) {
             if (status[id] == 0x03) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-                tann::ngt::Object *po = GraphIndex::objectSpace->allocateObject(*GraphIndex::getObjectRepository().get(id));
-                tann::ngt::SearchContainer sc(*po);
+                tann::Object *po = GraphIndex::objectSpace->allocateObject(*GraphIndex::getObjectRepository().get(id));
+                tann::SearchContainer sc(*po);
 #else
-                tann::ngt::SearchContainer sc(*GraphIndex::getObjectRepository().get(id));
+                tann::SearchContainer sc(*GraphIndex::getObjectRepository().get(id));
 #endif
-                tann::ngt::ObjectDistances objects;
+                tann::ObjectDistances objects;
                 sc.setResults(&objects);
                 sc.id = 0;
                 sc.radius = 0.0;

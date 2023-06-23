@@ -26,20 +26,20 @@
 #warning "*** OMP is *NOT* available! ***"
 #endif
 
-namespace tann::ngt {
+namespace tann {
 
 class GraphReconstructor {
  public:
-  static void extractGraph(std::vector<tann::ngt::ObjectDistances> &graph, tann::ngt::GraphIndex &graphIndex) {
+  static void extractGraph(std::vector<tann::ObjectDistances> &graph, tann::GraphIndex &graphIndex) {
     graph.reserve(graphIndex.repository.size());
     for (size_t id = 1; id < graphIndex.repository.size(); id++) {
       if (id % 1000000 == 0) {
 	std::cerr << "GraphReconstructor::extractGraph: Processed " << id << " objects." << std::endl;
       }
       try {
-	tann::ngt::GraphNode &node = *graphIndex.getNode(id);
+	tann::GraphNode &node = *graphIndex.getNode(id);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tann::ngt::ObjectDistances nd;
+	tann::ObjectDistances nd;
 	nd.reserve(node.size());
 	for (auto n = node.begin(graphIndex.repository.allocator); n != node.end(graphIndex.repository.allocator); ++n) {
 	  nd.push_back(ObjectDistance((*n).id, (*n).distance));
@@ -51,8 +51,8 @@ class GraphReconstructor {
 	if (graph.back().size() != graph.back().capacity()) {
 	  std::cerr << "GraphReconstructor::extractGraph: Warning! The graph size must be the same as the capacity. " << id << std::endl;
 	}
-      } catch(tann::ngt::Exception &err) {
-	graph.push_back(tann::ngt::ObjectDistances());
+      } catch(tann::Exception &err) {
+	graph.push_back(tann::ObjectDistances());
 	continue;
       }
     }
@@ -63,18 +63,18 @@ class GraphReconstructor {
 
 
   static void 
-    adjustPaths(tann::ngt::Index &outIndex)
+    adjustPaths(tann::Index &outIndex)
   {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     std::cerr << "construct index is not implemented." << std::endl;
     exit(1);
 #else
-    tann::ngt::GraphIndex	&outGraph = dynamic_cast<tann::ngt::GraphIndex&>(outIndex.getIndex());
+    tann::GraphIndex	&outGraph = dynamic_cast<tann::GraphIndex&>(outIndex.getIndex());
     size_t rStartRank = 0; 
-    std::list<std::pair<size_t, tann::ngt::GraphNode> > tmpGraph;
+    std::list<std::pair<size_t, tann::GraphNode> > tmpGraph;
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
-      tann::ngt::GraphNode &node = *outGraph.getNode(id);
-      tmpGraph.push_back(std::pair<size_t, tann::ngt::GraphNode>(id, node));
+      tann::GraphNode &node = *outGraph.getNode(id);
+      tmpGraph.push_back(std::pair<size_t, tann::GraphNode>(id, node));
       if (node.size() > rStartRank) {
 	node.resize(rStartRank);
       }
@@ -86,7 +86,7 @@ class GraphReconstructor {
       for (auto it = tmpGraph.begin(); it != tmpGraph.end();) {
 	size_t id = (*it).first;
 	try {
-	  tann::ngt::GraphNode &node = (*it).second;
+	  tann::GraphNode &node = (*it).second;
 	  if (rank >= node.size()) {
 	    it = tmpGraph.erase(it);
 	    continue;
@@ -96,14 +96,14 @@ class GraphReconstructor {
 	    std::cerr << "distance order is wrong!" << std::endl;
 	    std::cerr << id << ":" << rank << ":" << node[rank - 1].id << ":" << node[rank].id << std::endl;	    
 	  }
-	  tann::ngt::GraphNode &tn = *outGraph.getNode(id);
+	  tann::GraphNode &tn = *outGraph.getNode(id);
 	  volatile bool found = false;
 	  if (rank < 1000) {
 	    for (size_t tni = 0; tni < tn.size() && !found; tni++) {
 	      if (tn[tni].id == node[rank].id) {
 		continue;
 	      }
-	      tann::ngt::GraphNode &dstNode = *outGraph.getNode(tn[tni].id);
+	      tann::GraphNode &dstNode = *outGraph.getNode(tn[tni].id);
 	      for (size_t dni = 0; dni < dstNode.size(); dni++) {
 		if ((dstNode[dni].id == node[rank].id) && (dstNode[dni].distance < node[rank].distance)) {
 		  found = true;
@@ -122,7 +122,7 @@ class GraphReconstructor {
 	      if (tn[tni].id == node[rank].id) {
 		continue;
 	      }
-	      tann::ngt::GraphNode &dstNode = *outGraph.getNode(tn[tni].id);
+	      tann::GraphNode &dstNode = *outGraph.getNode(tn[tni].id);
 	      for (size_t dni = 0; dni < dstNode.size(); dni++) {
 		if ((dstNode[dni].id == node[rank].id) && (dstNode[dni].distance < node[rank].distance)) {
 		  found = true;
@@ -135,12 +135,12 @@ class GraphReconstructor {
 	    outGraph.addEdge(id, node.at(i, outGraph.repository.allocator).id,
 			     node.at(i, outGraph.repository.allocator).distance, true);
 #else
-	    tn.push_back(tann::ngt::ObjectDistance(node[rank].id, node[rank].distance));
+	    tn.push_back(tann::ObjectDistance(node[rank].id, node[rank].distance));
 #endif
 	  } else {
 	    removeCount++;
 	  }
-	} catch(tann::ngt::Exception &err) {
+	} catch(tann::Exception &err) {
 	  std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	  it++;
 	  continue;
@@ -155,39 +155,39 @@ class GraphReconstructor {
   }
 
   static void 
-    adjustPathsEffectively(tann::ngt::Index &outIndex, size_t minNoOfEdges = 0)
+    adjustPathsEffectively(tann::Index &outIndex, size_t minNoOfEdges = 0)
   {
-    tann::ngt::GraphIndex	&outGraph = dynamic_cast<tann::ngt::GraphIndex&>(outIndex.getIndex());
+    tann::GraphIndex	&outGraph = dynamic_cast<tann::GraphIndex&>(outIndex.getIndex());
     adjustPathsEffectively(outGraph, minNoOfEdges);
   }
 
-  static bool edgeComp(tann::ngt::ObjectDistance a, tann::ngt::ObjectDistance b) {
+  static bool edgeComp(tann::ObjectDistance a, tann::ObjectDistance b) {
     return a.id < b.id;
   }
 
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-  static void insert(tann::ngt::GraphNode &node, size_t edgeID, tann::ngt::Distance edgeDistance, tann::ngt::GraphIndex &graph) {
-    tann::ngt::ObjectDistance edge(edgeID, edgeDistance);
+  static void insert(tann::GraphNode &node, size_t edgeID, tann::Distance edgeDistance, tann::GraphIndex &graph) {
+    tann::ObjectDistance edge(edgeID, edgeDistance);
     GraphNode::iterator ni = std::lower_bound(node.begin(graph.repository.allocator), node.end(graph.repository.allocator), edge, edgeComp);
     node.insert(ni, edge, graph.repository.allocator);
   }
 
-  static bool hasEdge(tann::ngt::GraphIndex &graph, size_t srcNodeID, size_t dstNodeID)
+  static bool hasEdge(tann::GraphIndex &graph, size_t srcNodeID, size_t dstNodeID)
   {
-     tann::ngt::GraphNode &srcNode = *graph.getNode(srcNodeID);
+     tann::GraphNode &srcNode = *graph.getNode(srcNodeID);
      GraphNode::iterator ni = std::lower_bound(srcNode.begin(graph.repository.allocator), srcNode.end(graph.repository.allocator), ObjectDistance(dstNodeID, 0.0), edgeComp);
      return (ni != srcNode.end(graph.repository.allocator)) && ((*ni).id == dstNodeID);
   }
 #else
-  static void insert(tann::ngt::GraphNode &node, size_t edgeID, tann::ngt::Distance edgeDistance) {
-    tann::ngt::ObjectDistance edge(edgeID, edgeDistance);
+  static void insert(tann::GraphNode &node, size_t edgeID, tann::Distance edgeDistance) {
+    tann::ObjectDistance edge(edgeID, edgeDistance);
     GraphNode::iterator ni = std::lower_bound(node.begin(), node.end(), edge, edgeComp);
     node.insert(ni, edge);
   }
 
-  static bool hasEdge(tann::ngt::GraphIndex &graph, size_t srcNodeID, size_t dstNodeID)
+  static bool hasEdge(tann::GraphIndex &graph, size_t srcNodeID, size_t dstNodeID)
   {
-     tann::ngt::GraphNode &srcNode = *graph.getNode(srcNodeID);
+     tann::GraphNode &srcNode = *graph.getNode(srcNodeID);
      GraphNode::iterator ni = std::lower_bound(srcNode.begin(), srcNode.end(), ObjectDistance(dstNodeID, 0.0), edgeComp);
      return (ni != srcNode.end()) && ((*ni).id == dstNodeID);
   }
@@ -195,27 +195,27 @@ class GraphReconstructor {
 
 
   static void 
-    adjustPathsEffectively(tann::ngt::GraphIndex &outGraph,
+    adjustPathsEffectively(tann::GraphIndex &outGraph,
 			   size_t minNoOfEdges) 
   {
     Timer timer;
     timer.start();
-    std::vector<tann::ngt::GraphNode> tmpGraph;
+    std::vector<tann::GraphNode> tmpGraph;
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
       try {
-	tann::ngt::GraphNode &node = *outGraph.getNode(id);
+	tann::GraphNode &node = *outGraph.getNode(id);
 	tmpGraph.push_back(node);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	node.clear(outGraph.repository.allocator);
 #else
 	node.clear();
 #endif
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tmpGraph.push_back(tann::ngt::GraphNode(outGraph.repository.allocator));
+	tmpGraph.push_back(tann::GraphNode(outGraph.repository.allocator));
 #else
-	tmpGraph.push_back(tann::ngt::GraphNode());
+	tmpGraph.push_back(tann::GraphNode());
 #endif
       }
     }
@@ -238,7 +238,7 @@ class GraphReconstructor {
       auto it = tmpGraph.begin() + idx;
       size_t id = idx + 1;
       try {
-	tann::ngt::GraphNode &srcNode = *it;
+	tann::GraphNode &srcNode = *it;
 	std::unordered_map<uint32_t, std::pair<size_t, double> > neighbors;
 	for (size_t sni = 0; sni < srcNode.size(); ++sni) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -251,9 +251,9 @@ class GraphReconstructor {
 	std::vector<std::pair<int, std::pair<uint32_t, uint32_t> > > candidates;	
 	for (size_t sni = 0; sni < srcNode.size(); sni++) { 
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	  tann::ngt::GraphNode &pathNode = tmpGraph[srcNode.at(sni, outGraph.repository.allocator).id - 1];
+	  tann::GraphNode &pathNode = tmpGraph[srcNode.at(sni, outGraph.repository.allocator).id - 1];
 #else
-	  tann::ngt::GraphNode &pathNode = tmpGraph[srcNode[sni].id - 1];
+	  tann::GraphNode &pathNode = tmpGraph[srcNode[sni].id - 1];
 #endif
 	  for (size_t pni = 0; pni < pathNode.size(); pni++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -287,7 +287,7 @@ class GraphReconstructor {
 	for (size_t i = 0; i < candidates.size(); i++) {
 	  removeCandidates[id - 1].push_back(candidates[i].second);
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	continue;
       }
@@ -309,14 +309,14 @@ class GraphReconstructor {
 	size_t id = *it;
 	size_t idx = id - 1;
 	try {
-	  tann::ngt::GraphNode &srcNode = tmpGraph[idx];
+	  tann::GraphNode &srcNode = tmpGraph[idx];
 	  if (rank >= srcNode.size()) {
 	    if (!removeCandidates[idx].empty() && minNoOfEdges == 0) {
 	      std::cerr << "Something wrong! ID=" << id << " # of remaining candidates=" << removeCandidates[idx].size() << std::endl;
 	      abort();
 	    }
 #if !defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	    tann::ngt::GraphNode empty;
+	    tann::GraphNode empty;
             tmpGraph[idx] = empty;
 #endif
 	    it = ids.erase(it);
@@ -359,13 +359,13 @@ class GraphReconstructor {
 	      continue;
 	    }
 	  }
-	  tann::ngt::GraphNode &outSrcNode = *outGraph.getNode(id);
+	  tann::GraphNode &outSrcNode = *outGraph.getNode(id);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	  insert(outSrcNode, srcNode.at(rank, outGraph.repository.allocator).id, srcNode.at(rank, outGraph.repository.allocator).distance, outGraph);
 #else
 	  insert(outSrcNode, srcNode[rank].id, srcNode[rank].distance);
 #endif
-	} catch(tann::ngt::Exception &err) {
+	} catch(tann::Exception &err) {
 	  std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
           it++;
 	  continue;
@@ -375,7 +375,7 @@ class GraphReconstructor {
     }
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
       try {
-	tann::ngt::GraphNode &node = *outGraph.getNode(id);
+	tann::GraphNode &node = *outGraph.getNode(id);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	std::sort(node.begin(outGraph.repository.allocator), node.end(outGraph.repository.allocator));
 #else
@@ -387,7 +387,7 @@ class GraphReconstructor {
 
 
   static 
-    void convertToANNG(std::vector<tann::ngt::ObjectDistances> &graph)
+    void convertToANNG(std::vector<tann::ObjectDistances> &graph)
   {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     std::cerr << "convertToANNG is not implemented for shared memory." << std::endl;
@@ -395,18 +395,18 @@ class GraphReconstructor {
 #else
     std::cerr << "convertToANNG begin" << std::endl;
     for (size_t idx = 0; idx < graph.size(); idx++) {
-      tann::ngt::GraphNode &node = graph[idx];
+      tann::GraphNode &node = graph[idx];
       for (auto ni = node.begin(); ni != node.end(); ++ni) {
-	graph[(*ni).id - 1].push_back(tann::ngt::ObjectDistance(idx + 1, (*ni).distance));
+	graph[(*ni).id - 1].push_back(tann::ObjectDistance(idx + 1, (*ni).distance));
       }
     }
     for (size_t idx = 0; idx < graph.size(); idx++) {
-      tann::ngt::GraphNode &node = graph[idx];
+      tann::GraphNode &node = graph[idx];
       if (node.size() == 0) {
 	continue;
       }
       std::sort(node.begin(), node.end());
-      tann::ngt::ObjectID prev = 0;
+      tann::ObjectID prev = 0;
       for (auto it = node.begin(); it != node.end();) {
 	if (prev == (*it).id) {
 	  it = node.erase(it);
@@ -415,7 +415,7 @@ class GraphReconstructor {
 	prev = (*it).id;
 	it++;
       }
-      tann::ngt::GraphNode tmp = node;
+      tann::GraphNode tmp = node;
       node.swap(tmp);
     }
     std::cerr << "convertToANNG end" << std::endl;
@@ -423,30 +423,30 @@ class GraphReconstructor {
   }
 
   static 
-    void reconstructGraph(std::vector<tann::ngt::ObjectDistances> &graph, tann::ngt::GraphIndex &outGraph, size_t originalEdgeSize, size_t reverseEdgeSize)
+    void reconstructGraph(std::vector<tann::ObjectDistances> &graph, tann::GraphIndex &outGraph, size_t originalEdgeSize, size_t reverseEdgeSize)
   {
     if (reverseEdgeSize > 10000) {
       std::cerr << "something wrong. Edge size=" << reverseEdgeSize << std::endl;
       exit(1);
     }
 
-    tann::ngt::Timer	originalEdgeTimer, reverseEdgeTimer, normalizeEdgeTimer;
+    tann::Timer	originalEdgeTimer, reverseEdgeTimer, normalizeEdgeTimer;
     originalEdgeTimer.start();
 
     size_t warningCount = 0;
     const size_t warningLimit = 10;
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
       try {
-	tann::ngt::GraphNode &node = *outGraph.getNode(id);
+	tann::GraphNode &node = *outGraph.getNode(id);
 	if (originalEdgeSize == 0) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	  node.clear(outGraph.repository.allocator);
 #else
-	  tann::ngt::GraphNode empty;
+	  tann::GraphNode empty;
 	  node.swap(empty);
 #endif
 	} else {
-	  tann::ngt::ObjectDistances n = graph[id - 1];
+	  tann::ObjectDistances n = graph[id - 1];
 	  if (n.size() < originalEdgeSize) {
 	    warningCount++;
 	    if (warningCount <= warningLimit) {
@@ -464,7 +464,7 @@ class GraphReconstructor {
 	  node.swap(n);
 #endif
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	warningCount++;
 	if (warningCount <= warningLimit) {
 	  std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
@@ -484,25 +484,25 @@ class GraphReconstructor {
     int insufficientNodeCount = 0;
     for (size_t id = 1; id <= graph.size(); ++id) {
       try {
-	tann::ngt::ObjectDistances &node = graph[id - 1];
+	tann::ObjectDistances &node = graph[id - 1];
 	size_t rsize = reverseEdgeSize;
 	if (rsize > node.size()) {
 	  insufficientNodeCount++;
 	  rsize = node.size();
 	}
 	for (size_t i = 0; i < rsize; ++i) {
-	  tann::ngt::Distance distance = node[i].distance;
+	  tann::Distance distance = node[i].distance;
 	  size_t nodeID = node[i].id;
 	  try {
-	    tann::ngt::GraphNode &n = *outGraph.getNode(nodeID);
+	    tann::GraphNode &n = *outGraph.getNode(nodeID);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	    n.push_back(tann::ngt::ObjectDistance(id, distance), outGraph.repository.allocator);
+	    n.push_back(tann::ObjectDistance(id, distance), outGraph.repository.allocator);
 #else
-	    n.push_back(tann::ngt::ObjectDistance(id, distance));
+	    n.push_back(tann::ObjectDistance(id, distance));
 #endif
 	  } catch(...) {}
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	continue;
       }
@@ -515,7 +515,7 @@ class GraphReconstructor {
     normalizeEdgeTimer.start();    
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
       try {
-	tann::ngt::GraphNode &n = *outGraph.getNode(id);
+	tann::GraphNode &n = *outGraph.getNode(id);
 	if (id % 100000 == 0) {
 	  std::cerr << "Processed " << id << " nodes" << std::endl;
 	}
@@ -524,7 +524,7 @@ class GraphReconstructor {
 #else
 	std::sort(n.begin(), n.end());
 #endif
-	tann::ngt::ObjectID prev = 0;
+	tann::ObjectID prev = 0;
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	for (auto it = n.begin(outGraph.repository.allocator); it != n.end(outGraph.repository.allocator);) {
 #else
@@ -542,10 +542,10 @@ class GraphReconstructor {
 	  it++;
 	}
 #if !defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tann::ngt::GraphNode tmp = n;
+	tann::GraphNode tmp = n;
 	n.swap(tmp);
 #endif
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	continue;
       }
@@ -554,16 +554,16 @@ class GraphReconstructor {
     std::cerr << "Reconstruction time=" << originalEdgeTimer.time << ":" << reverseEdgeTimer.time 
 	 << ":" << normalizeEdgeTimer.time << std::endl;
 
-    tann::ngt::Property prop;
+    tann::Property prop;
     outGraph.getProperty().get(prop);
-    prop.graphType = tann::ngt::NeighborhoodGraph::GraphTypeONNG;
+    prop.graphType = tann::NeighborhoodGraph::GraphTypeONNG;
     outGraph.getProperty().set(prop);
   }
 
 
 
   static 
-    void reconstructGraphWithConstraint(std::vector<tann::ngt::ObjectDistances> &graph, tann::ngt::GraphIndex &outGraph,
+    void reconstructGraphWithConstraint(std::vector<tann::ObjectDistances> &graph, tann::GraphIndex &outGraph,
 					size_t originalEdgeSize, size_t reverseEdgeSize,
 					char mode = 'a') 
   {
@@ -572,7 +572,7 @@ class GraphReconstructor {
     abort();
 #else 
 
-    tann::ngt::Timer	originalEdgeTimer, reverseEdgeTimer, normalizeEdgeTimer;
+    tann::Timer	originalEdgeTimer, reverseEdgeTimer, normalizeEdgeTimer;
 
     if (reverseEdgeSize > 10000) {
       std::cerr << "something wrong. Edge size=" << reverseEdgeSize << std::endl;
@@ -584,31 +584,31 @@ class GraphReconstructor {
 	std::cerr << "Processed " << id << std::endl;
       }
       try {
-	tann::ngt::GraphNode &node = *outGraph.getNode(id);
+	tann::GraphNode &node = *outGraph.getNode(id);
 	if (node.size() == 0) {
 	  continue;
 	}
 	node.clear();
-	tann::ngt::GraphNode empty;
+	tann::GraphNode empty;
 	node.swap(empty);
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	continue;
       }
     }
-    tann::ngt::GraphIndex::showStatisticsOfGraph(outGraph);
+    tann::GraphIndex::showStatisticsOfGraph(outGraph);
 
     std::vector<ObjectDistances> reverse(graph.size() + 1);	
     for (size_t id = 1; id <= graph.size(); ++id) {
       try {
-	tann::ngt::GraphNode &node = graph[id - 1];
+	tann::GraphNode &node = graph[id - 1];
 	if (id % 100000 == 0) {
 	  std::cerr << "Processed (summing up) " << id << std::endl;
 	}
 	for (size_t rank = 0; rank < node.size(); rank++) {
 	  reverse[node[rank].id].push_back(ObjectDistance(id, node[rank].distance));
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	continue;
       }
@@ -636,28 +636,28 @@ class GraphReconstructor {
 	if (indegreeCount[(*rni).id] >= reverseEdgeSize) {	
 	  continue;
 	}
-	tann::ngt::GraphNode &node = *outGraph.getNode(rid);
+	tann::GraphNode &node = *outGraph.getNode(rid);
 	if (indegreeCount[(*rni).id] > 0 && node.size() >= originalEdgeSize) {
 	  continue;
 	}
 	
-	node.push_back(tann::ngt::ObjectDistance((*rni).id, (*rni).distance));
+	node.push_back(tann::ObjectDistance((*rni).id, (*rni).distance));
 	indegreeCount[(*rni).id]++;
       }
     }
     reverseEdgeTimer.stop();    
     std::cerr << "The number of nodes with zero outdegree by reverse edges=" << zeroCount << std::endl;
-    tann::ngt::GraphIndex::showStatisticsOfGraph(outGraph);
+    tann::GraphIndex::showStatisticsOfGraph(outGraph);
 
     normalizeEdgeTimer.start();    
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
       try {
-	tann::ngt::GraphNode &n = *outGraph.getNode(id);
+	tann::GraphNode &n = *outGraph.getNode(id);
 	if (id % 100000 == 0) {
 	  std::cerr << "Processed " << id << std::endl;
 	}
 	std::sort(n.begin(), n.end());
-	tann::ngt::ObjectID prev = 0;
+	tann::ObjectID prev = 0;
 	for (auto it = n.begin(); it != n.end();) {
 	  if (prev == (*it).id) {
 	    it = n.erase(it);
@@ -666,24 +666,24 @@ class GraphReconstructor {
 	  prev = (*it).id;
 	  it++;
 	}
-	tann::ngt::GraphNode tmp = n;
+	tann::GraphNode tmp = n;
 	n.swap(tmp);
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	continue;
       }
     }
     normalizeEdgeTimer.stop();
-    tann::ngt::GraphIndex::showStatisticsOfGraph(outGraph);
+    tann::GraphIndex::showStatisticsOfGraph(outGraph);
 
     originalEdgeTimer.start();
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
       if (id % 1000000 == 0) {
 	std::cerr << "Processed " << id << std::endl;
       }
-      tann::ngt::GraphNode &node = graph[id - 1];
+      tann::GraphNode &node = graph[id - 1];
       try {
-	tann::ngt::GraphNode &onode = *outGraph.getNode(id);
+	tann::GraphNode &onode = *outGraph.getNode(id);
 	bool stop = false;
 	for (size_t rank = 0; (rank < node.size() && rank < originalEdgeSize) && stop == false; rank++) {
 	  switch (mode) {
@@ -696,17 +696,17 @@ class GraphReconstructor {
 	  case 'c':
 	    break;
 	  }
-	  tann::ngt::Distance distance = node[rank].distance;
+	  tann::Distance distance = node[rank].distance;
 	  size_t nodeID = node[rank].id;
 	  outGraph.addEdge(id, nodeID, distance, false);
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	std::cerr << "GraphReconstructor: Warning. Cannot get the node. ID=" << id << ":" << err.what() << std::endl;
 	continue;
       }
     }
     originalEdgeTimer.stop();
-    tann::ngt::GraphIndex::showStatisticsOfGraph(outGraph);
+    tann::GraphIndex::showStatisticsOfGraph(outGraph);
 
     std::cerr << "Reconstruction time=" << originalEdgeTimer.time << ":" << reverseEdgeTimer.time 
 	 << ":" << normalizeEdgeTimer.time << std::endl;
@@ -718,14 +718,14 @@ class GraphReconstructor {
   // graph is a source ANNG
   // index is an index with a reconstructed ANNG
   static 
-    void reconstructANNGFromANNG(std::vector<tann::ngt::ObjectDistances> &graph, tann::ngt::Index &index, size_t edgeSize)
+    void reconstructANNGFromANNG(std::vector<tann::ObjectDistances> &graph, tann::Index &index, size_t edgeSize)
   {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     std::cerr << "reconstructANNGFromANNG is not implemented." << std::endl;
     abort();
 #else 
 
-    tann::ngt::GraphIndex	&outGraph = dynamic_cast<tann::ngt::GraphIndex&>(index.getIndex());
+    tann::GraphIndex	&outGraph = dynamic_cast<tann::GraphIndex&>(index.getIndex());
 
     // remove all edges in the index.
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
@@ -733,26 +733,26 @@ class GraphReconstructor {
 	std::cerr << "Processed " << id << " nodes." << std::endl;
       }
       try {
-	tann::ngt::GraphNode &node = *outGraph.getNode(id);
+	tann::GraphNode &node = *outGraph.getNode(id);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	node.clear(outGraph.repository.allocator);
 #else
-	tann::ngt::GraphNode empty;
+	tann::GraphNode empty;
 	node.swap(empty);
 #endif
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
       }
     }
 
     for (size_t id = 1; id <= graph.size(); ++id) {
       size_t edgeCount = 0;
       try {
-	tann::ngt::ObjectDistances &node = graph[id - 1];
-	tann::ngt::GraphNode &n = *outGraph.getNode(id);
-	tann::ngt::Distance prevDistance = 0.0;
+	tann::ObjectDistances &node = graph[id - 1];
+	tann::GraphNode &n = *outGraph.getNode(id);
+	tann::Distance prevDistance = 0.0;
 	assert(n.size() == 0);
 	for (size_t i = 0; i < node.size(); ++i) {
-	  tann::ngt::Distance distance = node[i].distance;
+	  tann::Distance distance = node[i].distance;
 	  if (prevDistance > distance) {
 	    NGTThrowException("Edge distance order is invalid");
 	  }
@@ -760,13 +760,13 @@ class GraphReconstructor {
 	  size_t nodeID = node[i].id;
 	  if (node[i].id < id) {
 	    try {
-	      tann::ngt::GraphNode &dn = *outGraph.getNode(nodeID);
+	      tann::GraphNode &dn = *outGraph.getNode(nodeID);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	      n.push_back(tann::ngt::ObjectDistance(nodeID, distance), outGraph.repository.allocator);
-	      dn.push_back(tann::ngt::ObjectDistance(id, distance), outGraph.repository.allocator);
+	      n.push_back(tann::ObjectDistance(nodeID, distance), outGraph.repository.allocator);
+	      dn.push_back(tann::ObjectDistance(id, distance), outGraph.repository.allocator);
 #else
-	      n.push_back(tann::ngt::ObjectDistance(nodeID, distance));
-	      dn.push_back(tann::ngt::ObjectDistance(id, distance));
+	      n.push_back(tann::ObjectDistance(nodeID, distance));
+	      dn.push_back(tann::ObjectDistance(id, distance));
 #endif
 	    } catch(...) {}
 	    edgeCount++;
@@ -775,15 +775,15 @@ class GraphReconstructor {
 	    break;
 	  }
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
       }
     } 
 
     for (size_t id = 1; id < outGraph.repository.size(); id++) {
       try {
-	tann::ngt::GraphNode &n = *outGraph.getNode(id);
+	tann::GraphNode &n = *outGraph.getNode(id);
 	std::sort(n.begin(), n.end());
-	tann::ngt::ObjectID prev = 0;
+	tann::ObjectID prev = 0;
 	for (auto it = n.begin(); it != n.end();) {
 	  if (prev == (*it).id) {
 	    it = n.erase(it);
@@ -792,7 +792,7 @@ class GraphReconstructor {
 	  prev = (*it).id;
 	  it++;
 	}
-	tann::ngt::GraphNode tmp = n;
+	tann::GraphNode tmp = n;
 	n.swap(tmp);
       } catch (...) {
       }
@@ -800,24 +800,24 @@ class GraphReconstructor {
 #endif
   }
 
-  static void refineANNG(tann::ngt::Index &index, bool unlog, float epsilon = 0.1, float accuracy = 0.0, int noOfEdges = 0, int exploreEdgeSize = INT_MIN, size_t batchSize = 10000) {
-    tann::ngt::StdOstreamRedirector redirector(unlog);
+  static void refineANNG(tann::Index &index, bool unlog, float epsilon = 0.1, float accuracy = 0.0, int noOfEdges = 0, int exploreEdgeSize = INT_MIN, size_t batchSize = 10000) {
+    tann::StdOstreamRedirector redirector(unlog);
     redirector.begin();
     try {
       refineANNG(index, epsilon, accuracy, noOfEdges, exploreEdgeSize, batchSize);
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
       redirector.end();
       throw(err);
     }
   }
 
-  static void refineANNG(tann::ngt::Index &index, float epsilon = 0.1, float accuracy = 0.0, int noOfEdges = 0, int exploreEdgeSize = INT_MIN, size_t batchSize = 10000) {
+  static void refineANNG(tann::Index &index, float epsilon = 0.1, float accuracy = 0.0, int noOfEdges = 0, int exploreEdgeSize = INT_MIN, size_t batchSize = 10000) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     NGTThrowException("GraphReconstructor::refineANNG: Not implemented for the shared memory option.");
 #else
     auto prop = static_cast<GraphIndex&>(index.getIndex()).getGraphProperty();
-    tann::ngt::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
-    tann::ngt::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
+    tann::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
+    tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
     size_t nOfObjects = objectRepository.size();
     bool error = false;
     std::string errorMessage;
@@ -825,7 +825,7 @@ class GraphReconstructor {
     size_t noOfSearchedEdges = noOfEdges < 0 ? -noOfEdges : (noOfEdges > prop.edgeSizeForCreation ? noOfEdges : prop.edgeSizeForCreation);
     noOfSearchedEdges++;
     for (size_t bid = 1; bid < nOfObjects; bid += batchSize) {
-      tann::ngt::ObjectDistances results[batchSize];
+      tann::ObjectDistances results[batchSize];
       // search
 #pragma omp parallel for
       for (size_t idx = 0; idx < batchSize; idx++) {
@@ -836,7 +836,7 @@ class GraphReconstructor {
 	if (objectRepository.isEmpty(id)) {
 	  continue;
 	}
-	tann::ngt::SearchContainer searchContainer(*objectRepository.get(id));
+	tann::SearchContainer searchContainer(*objectRepository.get(id));
 	searchContainer.setResults(&results[idx]);
 	assert(prop.edgeSizeForCreation > 0);
 	searchContainer.setSize(noOfSearchedEdges);
@@ -851,7 +851,7 @@ class GraphReconstructor {
 	if (!error) {
           try {
             index.search(searchContainer);
-          } catch (tann::ngt::Exception &err) {
+          } catch (tann::Exception &err) {
 #pragma omp critical
             {
       	      error = true;
@@ -872,7 +872,7 @@ class GraphReconstructor {
 	if (objectRepository.isEmpty(id)) {
 	  continue;
 	}
-	tann::ngt::GraphNode &node = *graphIndex.getNode(id);
+	tann::GraphNode &node = *graphIndex.getNode(id);
 	for (auto i = results[idx].begin(); i != results[idx].end(); ++i) {
 	  if ((*i).id != id) {
 	    node.push_back(*i);
@@ -901,7 +901,7 @@ class GraphReconstructor {
 	}
 	for (auto i = results[idx].begin(); i != results[idx].end(); ++i) {
 	  if ((*i).id != id) {
-	    tann::ngt::GraphNode &node = *graphIndex.getNode((*i).id);
+	    tann::GraphNode &node = *graphIndex.getNode((*i).id);
 	    graphIndex.addEdge(node, id, (*i).distance, false);
 	  }
 	}
@@ -915,7 +915,7 @@ class GraphReconstructor {
         if (objectRepository.isEmpty(id)) {
 	  continue;
         }
-	tann::ngt::GraphNode &node = *graphIndex.getNode(id);
+	tann::GraphNode &node = *graphIndex.getNode(id);
 	if (node.size() > nedges) {
 	  node.resize(nedges);
         }

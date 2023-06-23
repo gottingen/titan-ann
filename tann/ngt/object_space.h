@@ -20,17 +20,17 @@
 
 class ObjectSpace;
 
-namespace tann::ngt {
+namespace tann {
 
   class PersistentObjectDistances;
   class ObjectDistances : public std::vector<ObjectDistance> {
   public:
-    ObjectDistances(tann::ngt::ObjectSpace *os = 0) {}
-    void serialize(std::ofstream &os, ObjectSpace *objspace = 0) { tann::ngt::Serializer::write(os, (std::vector<ObjectDistance>&)*this);}
-    void deserialize(std::ifstream &is, ObjectSpace *objspace = 0) { tann::ngt::Serializer::read(is, (std::vector<ObjectDistance>&)*this);}
+    ObjectDistances(tann::ObjectSpace *os = 0) {}
+    void serialize(std::ofstream &os, ObjectSpace *objspace = 0) { tann::Serializer::write(os, (std::vector<ObjectDistance>&)*this);}
+    void deserialize(std::ifstream &is, ObjectSpace *objspace = 0) { tann::Serializer::read(is, (std::vector<ObjectDistance>&)*this);}
 
     void serializeAsText(std::ofstream &os, ObjectSpace *objspace = 0) { 
-      tann::ngt::Serializer::writeAsText(os, size());
+      tann::Serializer::writeAsText(os, size());
       os << " ";
       for (size_t i = 0; i < size(); i++) {
 	(*this)[i].serializeAsText(os);
@@ -39,7 +39,7 @@ namespace tann::ngt {
     }
     void deserializeAsText(std::ifstream &is, ObjectSpace *objspace = 0) {
       size_t s;
-      tann::ngt::Serializer::readAsText(is, s);
+      tann::Serializer::readAsText(is, s);
       resize(s);
       for (size_t i = 0; i < size(); i++) {
 	(*this)[i].deserializeAsText(is);
@@ -93,11 +93,11 @@ namespace tann::ngt {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
   class PersistentObjectDistances : public Vector<ObjectDistance> {
   public:
-    PersistentObjectDistances(SharedMemoryAllocator &allocator, tann::ngt::ObjectSpace *os = 0) {}
-    void serialize(std::ofstream &os, ObjectSpace *objectspace = 0) { tann::ngt::Serializer::write(os, (Vector<ObjectDistance>&)*this); }
-    void deserialize(std::ifstream &is, ObjectSpace *objectspace = 0) { tann::ngt::Serializer::read(is, (Vector<ObjectDistance>&)*this); }
+    PersistentObjectDistances(SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0) {}
+    void serialize(std::ofstream &os, ObjectSpace *objectspace = 0) { tann::Serializer::write(os, (Vector<ObjectDistance>&)*this); }
+    void deserialize(std::ifstream &is, ObjectSpace *objectspace = 0) { tann::Serializer::read(is, (Vector<ObjectDistance>&)*this); }
     void serializeAsText(std::ofstream &os, SharedMemoryAllocator &allocator, ObjectSpace *objspace = 0) { 
-      tann::ngt::Serializer::writeAsText(os, size());
+      tann::Serializer::writeAsText(os, size());
       os << " ";
       for (size_t i = 0; i < size(); i++) {
 	(*this).at(i, allocator).serializeAsText(os);
@@ -304,13 +304,13 @@ namespace tann::ngt {
     void serialize(std::ostream &os, ObjectSpace *objectspace = 0) { 
       assert(objectspace != 0);
       size_t byteSize = objectspace->getByteSizeOfObject();
-      tann::ngt::Serializer::write(os, (uint8_t*)&(*this)[0], byteSize);
+      tann::Serializer::write(os, (uint8_t*)&(*this)[0], byteSize);
     }
     void deserialize(std::istream &is, ObjectSpace *objectspace = 0) { 
       assert(objectspace != 0);
       size_t byteSize = objectspace->getByteSizeOfObject();
       assert(&(*this)[0] != 0);
-      tann::ngt::Serializer::read(is, (uint8_t*)&(*this)[0], byteSize);
+      tann::Serializer::read(is, (uint8_t*)&(*this)[0], byteSize);
       if (is.eof()) {
 	std::stringstream msg;
 	msg << "ObjectSpace::BaseObject: Fatal Error! Read beyond the end of the object file. The object file is corrupted?" << byteSize;
@@ -323,19 +323,19 @@ namespace tann::ngt {
       size_t dimension = objectspace->getDimension();
       void *ref = (void*)&(*this)[0];
       if (t == typeid(uint8_t)) {
-	tann::ngt::Serializer::writeAsText(os, (uint8_t*)ref, dimension);
+	tann::Serializer::writeAsText(os, (uint8_t*)ref, dimension);
       } else if (t == typeid(float)) {
-	tann::ngt::Serializer::writeAsText(os, (float*)ref, dimension);
+	tann::Serializer::writeAsText(os, (float*)ref, dimension);
 #ifdef NGT_HALF_FLOAT
       } else if (t == typeid(float16)) {
-	tann::ngt::Serializer::writeAsText(os, (float16*)ref, dimension);
+	tann::Serializer::writeAsText(os, (float16*)ref, dimension);
 #endif
       } else if (t == typeid(double)) {
-	tann::ngt::Serializer::writeAsText(os, (double*)ref, dimension);
+	tann::Serializer::writeAsText(os, (double*)ref, dimension);
       } else if (t == typeid(uint16_t)) {
-	tann::ngt::Serializer::writeAsText(os, (uint16_t*)ref, dimension);
+	tann::Serializer::writeAsText(os, (uint16_t*)ref, dimension);
       } else if (t == typeid(uint32_t)) {
-	tann::ngt::Serializer::writeAsText(os, (uint32_t*)ref, dimension);
+	tann::Serializer::writeAsText(os, (uint32_t*)ref, dimension);
       } else {
 	std::cerr << "Object::serializeAsText: not supported data type. [" << t.name() << "]" << std::endl;
 	assert(0);
@@ -348,19 +348,19 @@ namespace tann::ngt {
       void *ref = (void*)&(*this)[0];
       assert(ref != 0);
       if (t == typeid(uint8_t)) {
-	tann::ngt::Serializer::readAsText(is, (uint8_t*)ref, dimension);
+	tann::Serializer::readAsText(is, (uint8_t*)ref, dimension);
       } else if (t == typeid(float)) {
-	tann::ngt::Serializer::readAsText(is, (float*)ref, dimension);
+	tann::Serializer::readAsText(is, (float*)ref, dimension);
 #ifdef NGT_HALF_FLOAT
       } else if (t == typeid(float16)) {
-	tann::ngt::Serializer::readAsText(is, (float16*)ref, dimension);
+	tann::Serializer::readAsText(is, (float16*)ref, dimension);
 #endif
       } else if (t == typeid(double)) {
-	tann::ngt::Serializer::readAsText(is, (double*)ref, dimension);
+	tann::Serializer::readAsText(is, (double*)ref, dimension);
       } else if (t == typeid(uint16_t)) {
-	tann::ngt::Serializer::readAsText(is, (uint16_t*)ref, dimension);
+	tann::Serializer::readAsText(is, (uint16_t*)ref, dimension);
       } else if (t == typeid(uint32_t)) {
-	tann::ngt::Serializer::readAsText(is, (uint32_t*)ref, dimension);
+	tann::Serializer::readAsText(is, (uint32_t*)ref, dimension);
       } else {
 	std::cerr << "Object::deserializeAsText: not supported data type. [" << t.name() << "]" << std::endl;
 	assert(0);
@@ -371,7 +371,7 @@ namespace tann::ngt {
 
   class Object : public BaseObject {
   public:
-    Object(tann::ngt::ObjectSpace *os = 0):vector(0) {
+    Object(tann::ObjectSpace *os = 0):vector(0) {
       if (os == 0) {
 	return;
       }
@@ -423,7 +423,7 @@ namespace tann::ngt {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
   class PersistentObject : public BaseObject {
   public:
-    PersistentObject(SharedMemoryAllocator &allocator, tann::ngt::ObjectSpace *os = 0):array(0) {
+    PersistentObject(SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0):array(0) {
       assert(os != 0);
       size_t s = os->getByteSizeOfObject();
       construct(s, allocator);

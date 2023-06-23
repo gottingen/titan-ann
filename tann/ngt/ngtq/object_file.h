@@ -25,11 +25,11 @@
 #include <cerrno>
 #include <cstring>
 
-namespace tann::ngt {
+namespace tann {
     class ObjectSpace;
 };
 
-class ObjectFile : public ArrayFile<tann::ngt::Object> {
+class ObjectFile : public ArrayFile<tann::Object> {
 public:
     enum DataType {
         DataTypeUint8 = 0,
@@ -53,25 +53,25 @@ public:
     }
 
     bool open() {
-        if (!ArrayFile<tann::ngt::Object>::open(fileName)) {
+        if (!ArrayFile<tann::Object>::open(fileName)) {
             return false;
         }
         switch (dataType) {
             case DataTypeFloat:
-                genuineDimension = ArrayFile<tann::ngt::Object>::_fileHead.recordSize / sizeof(float);
-                objectSpace = new tann::ngt::ObjectSpaceRepository<float, double>(genuineDimension, typeid(float),
+                genuineDimension = ArrayFile<tann::Object>::_fileHead.recordSize / sizeof(float);
+                objectSpace = new tann::ObjectSpaceRepository<float, double>(genuineDimension, typeid(float),
                                                                             distanceType);
                 break;
             case DataTypeUint8:
-                genuineDimension = ArrayFile<tann::ngt::Object>::_fileHead.recordSize / sizeof(uint8_t);
-                objectSpace = new tann::ngt::ObjectSpaceRepository<unsigned char, int>(genuineDimension, typeid(uint8_t),
+                genuineDimension = ArrayFile<tann::Object>::_fileHead.recordSize / sizeof(uint8_t);
+                objectSpace = new tann::ObjectSpaceRepository<unsigned char, int>(genuineDimension, typeid(uint8_t),
                                                                                  distanceType);
                 break;
 #ifdef NGT_HALF_FLOAT
             case DataTypeFloat16:
-                genuineDimension = ArrayFile<tann::ngt::Object>::_fileHead.recordSize / sizeof(tann::ngt::float16);
-                objectSpace = new tann::ngt::ObjectSpaceRepository<tann::ngt::float16, float>(genuineDimension,
-                                                                                  typeid(tann::ngt::float16), distanceType);
+                genuineDimension = ArrayFile<tann::Object>::_fileHead.recordSize / sizeof(tann::float16);
+                objectSpace = new tann::ObjectSpaceRepository<tann::float16, float>(genuineDimension,
+                                                                                  typeid(tann::float16), distanceType);
                 break;
 #endif
             default:
@@ -83,7 +83,7 @@ public:
         return true;
     }
 
-    bool open(const std::string &file, DataType datat, tann::ngt::Index::Property::DistanceType distt, size_t pseudoDim) {
+    bool open(const std::string &file, DataType datat, tann::Index::Property::DistanceType distt, size_t pseudoDim) {
         dataType = datat;
         fileName = file;
         distanceType = distt;
@@ -121,7 +121,7 @@ public:
         objectFiles.clear();
     }
 
-    bool get(const size_t streamID, size_t id, std::vector<float> &data, tann::ngt::ObjectSpace *objectSpace) {
+    bool get(const size_t streamID, size_t id, std::vector<float> &data, tann::ObjectSpace *objectSpace) {
         if (streamID >= objectFiles.size()) {
             std::cerr << "ObjectFile::streamID is invalid. " << streamID << ":" << objectFiles.size() << std::endl;
             return false;
@@ -132,14 +132,14 @@ public:
         return true;
     }
 
-    bool get(const size_t id, std::vector<float> &data, tann::ngt::ObjectSpace *os = 0) {
+    bool get(const size_t id, std::vector<float> &data, tann::ObjectSpace *os = 0) {
         if (objectSpace == 0) {
             stringstream msg;
             msg << "ObjectFile::Fatal Error. objectSpace is not set." << std::endl;
             NGTThrowException(msg);
         }
-        tann::ngt::Object *object = objectSpace->allocateObject();
-        if (!ArrayFile<tann::ngt::Object>::get(id, *object, objectSpace)) {
+        tann::Object *object = objectSpace->allocateObject();
+        if (!ArrayFile<tann::Object>::get(id, *object, objectSpace)) {
             objectSpace->deleteObject(object);
             return false;
         }
@@ -151,8 +151,8 @@ public:
             for (size_t i = 0; i < dim; i++) {
                 data[i] = v[i];
             }
-        } else if (otype == typeid(tann::ngt::float16)) {
-            auto *v = static_cast<tann::ngt::float16 *>(object->getPointer());
+        } else if (otype == typeid(tann::float16)) {
+            auto *v = static_cast<tann::float16 *>(object->getPointer());
             for (size_t i = 0; i < dim; i++) {
                 data[i] = v[i];
             }
@@ -164,7 +164,7 @@ public:
         return true;
     }
 
-    void put(const size_t id, std::vector<float> &data, tann::ngt::ObjectSpace *os = 0) {
+    void put(const size_t id, std::vector<float> &data, tann::ObjectSpace *os = 0) {
         if (objectSpace == 0) {
             stringstream msg;
             msg << "ObjectFile::Fatal Error. objectSpace is not set." << std::endl;
@@ -175,15 +175,15 @@ public:
             msg << "ObjectFile::Dimensions are inconsistency. " << objectSpace->getDimension() << ":" << data.size();
             NGTThrowException(msg);
         }
-        tann::ngt::Object *object = objectSpace->allocateObject();
+        tann::Object *object = objectSpace->allocateObject();
         const std::type_info &otype = objectSpace->getObjectType();
         if (otype == typeid(uint8_t)) {
             auto *v = static_cast<uint8_t *>(object->getPointer());
             for (size_t i = 0; i < data.size(); i++) {
                 v[i] = data[i];
             }
-        } else if (otype == typeid(tann::ngt::float16)) {
-            auto *v = static_cast<tann::ngt::float16 *>(object->getPointer());
+        } else if (otype == typeid(tann::float16)) {
+            auto *v = static_cast<tann::float16 *>(object->getPointer());
             for (size_t i = 0; i < data.size(); i++) {
                 v[i] = data[i];
             }
@@ -191,17 +191,17 @@ public:
             auto *v = static_cast<float *>(object->getPointer());
             memcpy(v, data.data(), sizeof(float) * data.size());
         }
-        ArrayFile<tann::ngt::Object>::put(id, *object, objectSpace);
+        ArrayFile<tann::Object>::put(id, *object, objectSpace);
         objectSpace->deleteObject(object);
         return;
     }
 
-    void put(const size_t id, tann::ngt::Object &data, tann::ngt::ObjectSpace *os = 0) {
-        return ArrayFile<tann::ngt::Object>::put(id, data, objectSpace);
+    void put(const size_t id, tann::Object &data, tann::ObjectSpace *os = 0) {
+        return ArrayFile<tann::Object>::put(id, data, objectSpace);
     }
 
-    bool get(size_t id, tann::ngt::Object &data, tann::ngt::ObjectSpace *os = 0) {
-        return ArrayFile<tann::ngt::Object>::get(id, data, objectSpace);
+    bool get(size_t id, tann::Object &data, tann::ObjectSpace *os = 0) {
+        return ArrayFile<tann::Object>::get(id, data, objectSpace);
     }
 
 public:
@@ -209,8 +209,8 @@ public:
     size_t pseudoDimension;
     size_t genuineDimension;
     DataType dataType;
-    tann::ngt::ObjectSpace::DistanceType distanceType;
-    tann::ngt::ObjectSpace *objectSpace;
+    tann::ObjectSpace::DistanceType distanceType;
+    tann::ObjectSpace *objectSpace;
     std::vector<ObjectFile *> objectFiles;
 };
 
@@ -254,23 +254,23 @@ public:
 
     void close();
 
-    size_t insert(TYPE &data, tann::ngt::ObjectSpace *objectSpace = 0) {
+    size_t insert(TYPE &data, tann::ObjectSpace *objectSpace = 0) {
         std::cerr << "insert: not implemented.";
         abort();
     }
 
-    void put(const size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace = 0) {
+    void put(const size_t id, TYPE &data, tann::ObjectSpace *objectSpace = 0) {
         std::cerr << "put: not implemented.";
         abort();
     }
 
-    bool get(size_t id, std::vector<float> &data, tann::ngt::ObjectSpace *objectSpace = 0);
+    bool get(size_t id, std::vector<float> &data, tann::ObjectSpace *objectSpace = 0);
 
-    bool get(const size_t streamID, size_t id, std::vector<float> &data, tann::ngt::ObjectSpace *objectSpace = 0);
+    bool get(const size_t streamID, size_t id, std::vector<float> &data, tann::ObjectSpace *objectSpace = 0);
 
-    bool get(size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace = 0);
+    bool get(size_t id, TYPE &data, tann::ObjectSpace *objectSpace = 0);
 
-    bool get(const size_t streamID, size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace = 0);
+    bool get(const size_t streamID, size_t id, TYPE &data, tann::ObjectSpace *objectSpace = 0);
 
     void remove(const size_t id) {
         std::cerr << "remove: not implemented.";
@@ -416,7 +416,7 @@ bool StaticObjectFile<TYPE>::create(const std::string &file, const std::string &
         std::ofstream tmpstream;
         tmpstream.open(file);
         std::vector<std::string> tokens;
-        tann::ngt::Common::tokenize(objectPath, tokens, ".");
+        tann::Common::tokenize(objectPath, tokens, ".");
         tmpstream << _fileHead.noOfObjects << std::endl;
         tmpstream << _fileHead.noOfDimensions << std::endl;
         if (tokens.size() <= 1) {
@@ -507,7 +507,7 @@ bool StaticObjectFile<TYPE>::openMultipleStreams(const size_t nOfStreams) {
 
 template<class TYPE>
 bool
-StaticObjectFile<TYPE>::get(const size_t streamID, size_t id, std::vector<float> &data, tann::ngt::ObjectSpace *objectSpace) {
+StaticObjectFile<TYPE>::get(const size_t streamID, size_t id, std::vector<float> &data, tann::ObjectSpace *objectSpace) {
     if (streamID >= _objectFiles.size()) {
         std::cerr << "streamID is invalid. " << streamID << ":" << _objectFiles.size() << std::endl;
         return false;
@@ -519,7 +519,7 @@ StaticObjectFile<TYPE>::get(const size_t streamID, size_t id, std::vector<float>
 }
 
 template<class TYPE>
-bool StaticObjectFile<TYPE>::get(const size_t streamID, size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace) {
+bool StaticObjectFile<TYPE>::get(const size_t streamID, size_t id, TYPE &data, tann::ObjectSpace *objectSpace) {
     if (streamID >= _objectFiles.size()) {
         std::cerr << "streamID is invalid. " << streamID << ":" << _objectFiles.size() << std::endl;
         return false;
@@ -549,7 +549,7 @@ void StaticObjectFile<TYPE>::closeMultipleStreams() {
 
 
 template<class TYPE>
-bool StaticObjectFile<TYPE>::get(size_t id, TYPE &data, tann::ngt::ObjectSpace *objectSpace) {
+bool StaticObjectFile<TYPE>::get(size_t id, TYPE &data, tann::ObjectSpace *objectSpace) {
     std::vector<float> record;
     bool stat = get(id, record, objectSpace);
     std::stringstream object;
@@ -559,7 +559,7 @@ bool StaticObjectFile<TYPE>::get(size_t id, TYPE &data, tann::ngt::ObjectSpace *
 }
 
 template<class TYPE>
-bool StaticObjectFile<TYPE>::get(size_t id, std::vector<float> &data, tann::ngt::ObjectSpace *objectSpace) {
+bool StaticObjectFile<TYPE>::get(size_t id, std::vector<float> &data, tann::ObjectSpace *objectSpace) {
     id--;
     if (size() <= id) {
         return false;

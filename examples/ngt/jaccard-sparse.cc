@@ -15,7 +15,7 @@ void help() {
 }
 
 void
-append(tann::ngt::Args &args) {
+append(tann::Args &args) {
     const string usage = "Usage: jaccard-sparse append [-p #-of-thread] [-n data-size] "
                          "index(output) [data.tsv(input)]";
     string database;
@@ -41,7 +41,7 @@ append(tann::ngt::Args &args) {
     std::ifstream *ifs = 0;
 
     try {
-        tann::ngt::Index index(database);
+        tann::Index index(database);
         if (data == "-") {
             is = &std::cin;
         } else {
@@ -81,7 +81,7 @@ append(tann::ngt::Args &args) {
         }
         index.createIndex(threadSize);
         index.saveIndex(database);
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         if (data != "-") {
             delete ifs;
         }
@@ -93,7 +93,7 @@ append(tann::ngt::Args &args) {
 
 
 void
-search(tann::ngt::Index &index, tann::ngt::Command::SearchParameters &searchParameters, ostream &stream) {
+search(tann::Index &index, tann::Command::SearchParameters &searchParameters, ostream &stream) {
 
     std::ifstream is(searchParameters.query);
     if (!is) {
@@ -123,8 +123,8 @@ search(tann::ngt::Index &index, tann::ngt::Command::SearchParameters &searchPara
         }
         auto sparseQuery = index.makeSparseObject(query);
         queryCount++;
-        tann::ngt::SearchQuery sc(sparseQuery);
-        tann::ngt::ObjectDistances objects;
+        tann::SearchQuery sc(sparseQuery);
+        tann::ObjectDistances objects;
         sc.setResults(&objects);
         sc.setSize(searchParameters.size);
         sc.setRadius(searchParameters.radius);
@@ -134,7 +134,7 @@ search(tann::ngt::Index &index, tann::ngt::Command::SearchParameters &searchPara
             sc.setEpsilon(epsilon);
         }
         sc.setEdgeSize(searchParameters.edgeSize);
-        tann::ngt::Timer timer;
+        tann::Timer timer;
         switch (searchParameters.indexType) {
             case 't':
                 timer.start();
@@ -192,7 +192,7 @@ search(tann::ngt::Index &index, tann::ngt::Command::SearchParameters &searchPara
 }
 
 void
-search(tann::ngt::Args &args) {
+search(tann::Args &args) {
     const string usage = "Usage: ngt search [-i index-type(g|t|s)] [-n result-size] [-e epsilon] [-E edge-size] "
                          "[-m open-mode(r|w)] [-o output-mode] index(input) query.tsv(input)";
 
@@ -205,12 +205,12 @@ search(tann::ngt::Args &args) {
         return;
     }
 
-    tann::ngt::Command::SearchParameters searchParameters(args);
+    tann::Command::SearchParameters searchParameters(args);
 
     try {
-        tann::ngt::Index index(database, searchParameters.openMode == 'r');
+        tann::Index index(database, searchParameters.openMode == 'r');
         search(index, searchParameters, cout);
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         cerr << "jaccard-sparse: Error " << err.what() << endl;
         cerr << usage << endl;
     } catch (...) {
@@ -223,9 +223,9 @@ search(tann::ngt::Args &args) {
 int
 main(int argc, char **argv) {
 
-    tann::ngt::Args args(argc, argv);
+    tann::Args args(argc, argv);
 
-    tann::ngt::Command ngt;
+    tann::Command ngt;
 
     string command;
     try {
@@ -246,7 +246,7 @@ main(int argc, char **argv) {
             cerr << "jaccard-sparse: Error: Illegal command. " << command << endl;
             help();
         }
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         cerr << "jaccard-sparse: Error: " << err.what() << endl;
         help();
         return 0;

@@ -27,41 +27,41 @@ namespace QBG {
     int debugLevel;
 
 #if !defined(NGTQ_QBG) || defined(NGTQ_SHARED_INVERTED_INDEX)
-    void create(tann::ngt::Args &args) {};
-    void load(tann::ngt::Args &args) {};
-    void append(tann::ngt::Args &args) {};
-    void buildIndex(tann::ngt::Args &args) {};
-    void hierarchicalKmeans(tann::ngt::Args &args) {};
-    void search(tann::ngt::Args &args) {};
-    void assign(tann::ngt::Args &args) {};
-    void extract(tann::ngt::Args &args) {};
-    void gt(tann::ngt::Args &args) {};
-    void gtRange(tann::ngt::Args &args) {};
-    void optimize(tann::ngt::Args &args) {};
-    void build(tann::ngt::Args &args) {};
-    void createQG(tann::ngt::Args &args) {};
-    void buildQG(tann::ngt::Args &args) {};
-    void appendQG(tann::ngt::Args &args) {};
-    void searchQG(tann::ngt::Args &args) {};
-    void info(tann::ngt::Args &args) {};
+    void create(tann::Args &args) {};
+    void load(tann::Args &args) {};
+    void append(tann::Args &args) {};
+    void buildIndex(tann::Args &args) {};
+    void hierarchicalKmeans(tann::Args &args) {};
+    void search(tann::Args &args) {};
+    void assign(tann::Args &args) {};
+    void extract(tann::Args &args) {};
+    void gt(tann::Args &args) {};
+    void gtRange(tann::Args &args) {};
+    void optimize(tann::Args &args) {};
+    void build(tann::Args &args) {};
+    void createQG(tann::Args &args) {};
+    void buildQG(tann::Args &args) {};
+    void appendQG(tann::Args &args) {};
+    void searchQG(tann::Args &args) {};
+    void info(tann::Args &args) {};
 #else
-    void create(tann::ngt::Args &args);
-    void load(tann::ngt::Args &args);
-    void append(tann::ngt::Args &args);
-    void buildIndex(tann::ngt::Args &args);
-    void hierarchicalKmeans(tann::ngt::Args &args);
-    void search(tann::ngt::Args &args);
-    void assign(tann::ngt::Args &args);
-    void extract(tann::ngt::Args &args);
-    void gt(tann::ngt::Args &args);
-    void gtRange(tann::ngt::Args &args);
-    void optimize(tann::ngt::Args &args);
-    void build(tann::ngt::Args &args);
-    void createQG(tann::ngt::Args &args);
-    void buildQG(tann::ngt::Args &args);
-    void appendQG(tann::ngt::Args &args);
-    void searchQG(tann::ngt::Args &args);
-    void info(tann::ngt::Args &args);
+    void create(tann::Args &args);
+    void load(tann::Args &args);
+    void append(tann::Args &args);
+    void buildIndex(tann::Args &args);
+    void hierarchicalKmeans(tann::Args &args);
+    void search(tann::Args &args);
+    void assign(tann::Args &args);
+    void extract(tann::Args &args);
+    void gt(tann::Args &args);
+    void gtRange(tann::Args &args);
+    void optimize(tann::Args &args);
+    void build(tann::Args &args);
+    void createQG(tann::Args &args);
+    void buildQG(tann::Args &args);
+    void appendQG(tann::Args &args);
+    void searchQG(tann::Args &args);
+    void info(tann::Args &args);
 #endif
     
     void setDebugLevel(int level) { debugLevel = level; }
@@ -72,7 +72,7 @@ namespace QBG {
       cerr << "           command : create build quantize search" << endl;
     }
 
-    void execute(tann::ngt::Args args) {
+    void execute(tann::Args args) {
       string command;
       try {
 	command = args.get("#0");
@@ -122,7 +122,7 @@ namespace QBG {
 	} else {
 	  cerr << "Illegal command. " << command << endl;
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	cerr << "qbg: Fatal error: " << err.what() << endl;
       }
     }

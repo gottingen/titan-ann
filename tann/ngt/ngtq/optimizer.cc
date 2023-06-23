@@ -56,7 +56,7 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
   {
     // compute residual vectors by global centroids.
 #ifdef NGT_CLUSTERING
-    vector<tann::ngt::Clustering::Cluster> globalCentroid;
+    vector<tann::Clustering::Cluster> globalCentroid;
 #else
     vector<Cluster> globalCentroid;
 #endif
@@ -64,7 +64,7 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
       cerr << "generate residual vectors." << endl;
       try {
 #ifdef NGT_CLUSTERING
-	tann::ngt::Clustering::loadClusters(global, globalCentroid);
+	tann::Clustering::loadClusters(global, globalCentroid);
 #else
 	loadClusters(global, globalCentroid);
 #endif
@@ -74,7 +74,7 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
       }
       if (clusteringType == 'k') {
 #ifdef NGT_CLUSTERING
-	tann::ngt::Clustering::assign(vectors, globalCentroid);
+	tann::Clustering::assign(vectors, globalCentroid);
 #else
 	assign(vectors, globalCentroid);
 #endif
@@ -94,7 +94,7 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
 	  size_t vid = (*mit).vectorID;
 	  residualVectors[vid] = vectors[vid];
 #ifdef NGT_CLUSTERING
-	  tann::ngt::Clustering::subtract(residualVectors[vid], globalCentroid[cidx].centroid);
+	  tann::Clustering::subtract(residualVectors[vid], globalCentroid[cidx].centroid);
 #else
 	  subtract(residualVectors[vid], globalCentroid[cidx].centroid);
 #endif
@@ -115,14 +115,14 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
   Matrix<float>::mulSquare(xp, R);
   for (size_t m = 0; m < numberOfSubvectors; m++) {
 #ifdef NGT_CLUSTERING
-    vector<tann::ngt::Clustering::Cluster> subClusters;
+    vector<tann::Clustering::Cluster> subClusters;
 #else
     vector<Cluster> subClusters;
 #endif
     stringstream str;
     str << ofile << "-" << m;
 #ifdef NGT_CLUSTERING
-    tann::ngt::Clustering::loadClusters(str.str(), subClusters);
+    tann::Clustering::loadClusters(str.str(), subClusters);
 #else
     loadClusters(str.str(), subClusters);
 #endif
@@ -130,7 +130,7 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
     extractSubvector(xp, subVectors, m * subvectorSize, subvectorSize);
     if (clusteringType == 'k') {
 #ifdef NGT_CLUSTERING
-      tann::ngt::Clustering::assign(subVectors, subClusters);
+      tann::Clustering::assign(subVectors, subClusters);
 #else
       assign(subVectors, subClusters);
 #endif
@@ -144,7 +144,7 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
 #endif
     }
 #ifdef NGT_CLUSTERING
-    double distortion = tann::ngt::Clustering::calculateML2(subVectors, subClusters);
+    double distortion = tann::Clustering::calculateML2(subVectors, subClusters);
 #else
     double distortion = calculateML2(subVectors, subClusters);
 #endif
@@ -152,13 +152,13 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
     vector<vector<float>> subCentroids(vectors.size());
     for (size_t cidx = 0; cidx < subClusters.size(); ++cidx) {
 #ifdef NGT_CLUSTERING
-      vector<tann::ngt::Clustering::Entry> &members = subClusters[cidx].members;
+      vector<tann::Clustering::Entry> &members = subClusters[cidx].members;
 #else
       vector<Entry> &members = subClusters[cidx].members;
 #endif
       for (size_t eidx = 0; eidx < members.size(); ++eidx) {
 #ifdef NGT_CLUSTERING
-	tann::ngt::Clustering::Entry &entry = members[eidx];
+	tann::Clustering::Entry &entry = members[eidx];
 #else
 	Entry &entry = members[eidx];
 #endif
@@ -169,7 +169,7 @@ void QBG::Optimizer::evaluate(string global, vector<vector<float>> &vectors, cha
     catSubvector(qv, subCentroids);
   }
 #ifdef NGT_CLUSTERING
-  double distortion = tann::ngt::Clustering::distanceL2(qv, xp);
+  double distortion = tann::Clustering::distanceL2(qv, xp);
 #else
   double distortion = distanceL2(qv, xp);
 #endif
@@ -192,22 +192,22 @@ void QBG::Optimizer::evaluate(vector<vector<float>> &vectors, string &ofile, siz
   Matrix<float>::mulSquare(xp, R);
   for (size_t m = 0; m < numberOfSubvectors; m++) {
 #ifdef NGT_CLUSTERING
-    vector<tann::ngt::Clustering::Cluster> subClusters;
+    vector<tann::Clustering::Cluster> subClusters;
 #else
     vector<Cluster> subClusters;
 #endif
     stringstream str;
     str << ofile << "-" << m;
 #ifdef NGT_CLUSTERING
-    tann::ngt::Clustering::loadClusters(str.str(), subClusters);
+    tann::Clustering::loadClusters(str.str(), subClusters);
 #else
     loadClusters(str.str(), subClusters);
 #endif
     vector<vector<float>> subVectors;
     extractSubvector(xp, subVectors, m * subvectorSize, subvectorSize);
 #ifdef NGT_CLUSTERING
-    tann::ngt::Clustering::assign(subVectors, subClusters);
-    double distortion = tann::ngt::Clustering::calculateML2(subVectors, subClusters);
+    tann::Clustering::assign(subVectors, subClusters);
+    double distortion = tann::Clustering::calculateML2(subVectors, subClusters);
 #else
     assign(subVectors, subClusters);
     double distortion = calculateML2(subVectors, subClusters);
@@ -224,7 +224,7 @@ void QBG::Optimizer::evaluate(vector<vector<float>> &vectors, string &ofile, siz
 
 #ifdef NGTQ_QBG
 void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
-  tann::ngt::StdOstreamRedirector redirector(silence);
+  tann::StdOstreamRedirector redirector(silence);
   redirector.begin();
   try {
     QBG::Index index(indexPath);
@@ -266,7 +266,7 @@ void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
 
     const std::string ws = indexPath + "/" + QBG::Index::getWorkspaceName();
     try {
-      tann::ngt::Index::mkdir(ws);
+      tann::Index::mkdir(ws);
     } catch(...) {}
     const std::string object = QBG::Index::getTrainObjectFile(indexPath);
     std::ofstream ofs;
@@ -276,12 +276,12 @@ void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
       assert(index.getQuantizer().objectList.pseudoDimension != 0);
       std::vector<std::vector<float>> global(1);
       global[0].resize(index.getQuantizer().property.dimension, 0.0);
-      tann::ngt::Clustering::saveVectors(QBG::Index::getQuantizerCodebookFile(indexPath), global);
+      tann::Clustering::saveVectors(QBG::Index::getQuantizerCodebookFile(indexPath), global);
     } else if (globalType == GlobalTypeMean) {
       std::vector<std::vector<float>> vectors;
       std::string objects = QBG::Index::getTrainObjectFile(indexPath);
 #ifdef NGT_CLUSTERING
-      tann::ngt::Clustering::loadVectors(objects, vectors);
+      tann::Clustering::loadVectors(objects, vectors);
 #else
       loadVectors(objects, vectors);
 #endif
@@ -298,12 +298,12 @@ void QBG::Optimizer::optimize(const std::string indexPath, size_t threadSize) {
       for (size_t i = 0; i < global[0].size(); i++) {
 	global[0][i] /= vectors.size();
       }
-      tann::ngt::Clustering::saveVectors(QBG::Index::getQuantizerCodebookFile(indexPath), global);
+      tann::Clustering::saveVectors(QBG::Index::getQuantizerCodebookFile(indexPath), global);
     }
 
     optimizeWithinIndex(indexPath);
 
-  } catch(tann::ngt::Exception &err) {
+  } catch(tann::Exception &err) {
     redirector.end();
     throw err;
   }
@@ -324,7 +324,7 @@ void QBG::Optimizer::optimizeWithinIndex(std::string indexPath) {
   }
 
   try {
-    tann::ngt::Index::mkdir(pq);
+    tann::Index::mkdir(pq);
   } catch(...) {}
   pq += "/";
   optimize(object, pq, global);
@@ -343,7 +343,7 @@ void QBG::Optimizer::optimize(std::string invector, std::string ofile, std::stri
 
 
 #ifdef NGT_CLUSTERING
-  tann::ngt::Clustering::loadVectors(invector, vectors);
+  tann::Clustering::loadVectors(invector, vectors);
 #else
   loadVectors(invector, vectors);
 #endif
@@ -382,7 +382,7 @@ void QBG::Optimizer::optimize(std::string invector, std::string ofile, std::stri
   }
 
 
-  vector<vector<vector<tann::ngt::Clustering::Cluster>>> localClusters;
+  vector<vector<vector<tann::Clustering::Cluster>>> localClusters;
   vector<double> errors;
 
   bool useEye = false;
@@ -418,13 +418,13 @@ void QBG::Optimizer::optimize(std::string invector, std::string ofile, std::stri
     if (rs.size() > 1) {
       nOfMatrices = static_cast<float>(nOfMatrices) * (1.0 - reject);
       nOfMatrices = nOfMatrices == 0 ? 1 : nOfMatrices;
-      vector<pair<double, pair<Matrix<float>*, vector<vector<tann::ngt::Clustering::Cluster>>*>>> sortedErrors;
+      vector<pair<double, pair<Matrix<float>*, vector<vector<tann::Clustering::Cluster>>*>>> sortedErrors;
       for (size_t idx = 0; idx < errors.size(); idx++) {
 	sortedErrors.emplace_back(make_pair(errors[idx], make_pair(&rs[idx], &localClusters[idx])));
       }
       sort(sortedErrors.begin(), sortedErrors.end());
       vector<Matrix<float>> tmpMatrix;
-      vector<vector<vector<tann::ngt::Clustering::Cluster>>> tmpLocalClusters;
+      vector<vector<vector<tann::Clustering::Cluster>>> tmpLocalClusters;
       for (size_t idx = 0; idx < nOfMatrices; idx++) {
 	tmpMatrix.emplace_back(*sortedErrors[idx].second.first);
 	tmpLocalClusters.emplace_back(*sortedErrors[idx].second.second);
@@ -490,7 +490,7 @@ void QBG::Optimizer::optimize(std::string invector, std::string ofile, std::stri
     stringstream str;
     str << ofile << QBG::Index::getSubvectorPrefix() << "-" << m;
 #ifdef NGT_CLUSTERING
-    tann::ngt::Clustering::saveClusters(str.str(), minLocalClusters[m]);
+    tann::Clustering::saveClusters(str.str(), minLocalClusters[m]);
 #else
     saveClusters(str.str(), minLocalClusters[m]);
 #endif

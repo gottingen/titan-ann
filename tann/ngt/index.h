@@ -35,7 +35,7 @@
 #include "tann/ngt/graph.h"
 
 
-namespace tann::ngt {
+namespace tann {
 
     class Property;
 
@@ -108,7 +108,7 @@ namespace tann::ngt {
                 accuracyTable = "";
             }
 
-            void exportProperty(tann::ngt::PropertySet &p) {
+            void exportProperty(tann::PropertySet &p) {
                 p.set("Dimension", dimension);
                 p.set("ThreadPoolSize", threadPoolSize);
                 switch (objectType) {
@@ -218,7 +218,7 @@ namespace tann::ngt {
                 p.set("AccuracyTable", accuracyTable);
             }
 
-            void importProperty(tann::ngt::PropertySet &p) {
+            void importProperty(tann::PropertySet &p) {
                 setDefault();
                 dimension = p.getl("Dimension", dimension);
                 threadPoolSize = p.getl("ThreadPoolSize", threadPoolSize);
@@ -334,9 +334,9 @@ namespace tann::ngt {
                 }
             }
 
-            void set(tann::ngt::Property &prop);
+            void set(tann::Property &prop);
 
-            void get(tann::ngt::Property &prop);
+            void get(tann::Property &prop);
 
             int dimension;
             int threadPoolSize;
@@ -448,24 +448,24 @@ namespace tann::ngt {
             if (!CpuInfo::isAVX2()) {
                 std::stringstream msg;
                 msg
-                        << "tann::ngt::Index: Fatal Error!. Despite that This NGT library is built with AVX2, this CPU doesn't support AVX2. This CPU supoorts "
+                        << "tann::Index: Fatal Error!. Despite that This NGT library is built with AVX2, this CPU doesn't support AVX2. This CPU supoorts "
                         << CpuInfo::getSupportedSimdTypes();
                 NGTThrowException(msg);
             }
 #elif defined(NGT_AVX512)
             if (!CpuInfo::isAVX512()) {
           std::stringstream msg;
-          msg << "tann::ngt::Index: Fatal Error!. Despite that This NGT library is built with AVX512, this CPU doesn't support AVX512. This CPU supoorts " << CpuInfo::getSupportedSimdTypes();
+          msg << "tann::Index: Fatal Error!. Despite that This NGT library is built with AVX512, this CPU doesn't support AVX512. This CPU supoorts " << CpuInfo::getSupportedSimdTypes();
           NGTThrowException(msg);
             }
 #endif
         }
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-        Index(tann::ngt::Property &prop, const std::string &database);
+        Index(tann::Property &prop, const std::string &database);
 #else
 
-        Index(tann::ngt::Property &prop);
+        Index(tann::Property &prop);
 
 #endif
 
@@ -475,11 +475,11 @@ namespace tann::ngt {
             open(database, rdOnly, graphDisabled);
         }
 
-        Index(const std::string &database, tann::ngt::Property &prop) : index(0), redirect(false) { open(database, prop); }
+        Index(const std::string &database, tann::Property &prop) : index(0), redirect(false) { open(database, prop); }
 
         virtual ~Index() { close(); }
 
-        void open(const std::string &database, tann::ngt::Property &prop) {
+        void open(const std::string &database, tann::Property &prop) {
             open(database);
             setProperty(prop);
         }
@@ -498,7 +498,7 @@ namespace tann::ngt {
 
         void save() {
             if (path.empty()) {
-                NGTThrowException("tann::ngt::Index::saveIndex: path is empty");
+                NGTThrowException("tann::Index::saveIndex: path is empty");
             }
             saveIndex(path);
         }
@@ -514,23 +514,23 @@ namespace tann::ngt {
         static void mkdir(const std::string &dir) {
             if (::mkdir(dir.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) != 0) {
                 std::stringstream msg;
-                msg << "tann::ngt::Index::mkdir: Cannot make the specified directory. " << dir;
+                msg << "tann::Index::mkdir: Cannot make the specified directory. " << dir;
                 NGTThrowException(msg);
             }
         }
 
-        static void create(const std::string &database, tann::ngt::Property &prop, bool redirect = false) {
+        static void create(const std::string &database, tann::Property &prop, bool redirect = false) {
             createGraphAndTree(database, prop, redirect);
         }
 
-        static void createGraphAndTree(const std::string &database, tann::ngt::Property &prop, const std::string &dataFile,
+        static void createGraphAndTree(const std::string &database, tann::Property &prop, const std::string &dataFile,
                                        size_t dataSize = 0, bool redirect = false);
 
-        static void createGraphAndTree(const std::string &database, tann::ngt::Property &prop,
+        static void createGraphAndTree(const std::string &database, tann::Property &prop,
                                        bool redirect = false) { createGraphAndTree(database, prop, "", redirect); }
 
         static void
-        createGraph(const std::string &database, tann::ngt::Property &prop, const std::string &dataFile, size_t dataSize = 0,
+        createGraph(const std::string &database, tann::Property &prop, const std::string &dataFile, size_t dataSize = 0,
                     bool redirect = false);
 
         template<typename T>
@@ -622,23 +622,23 @@ namespace tann::ngt {
 
         virtual size_t getSizeOfElement() { return getIndex().getSizeOfElement(); }
 
-        virtual void setProperty(tann::ngt::Property &prop) { getIndex().setProperty(prop); }
+        virtual void setProperty(tann::Property &prop) { getIndex().setProperty(prop); }
 
-        virtual void getProperty(tann::ngt::Property &prop) { getIndex().getProperty(prop); }
+        virtual void getProperty(tann::Property &prop) { getIndex().getProperty(prop); }
 
         virtual void deleteObject(Object *po) { getIndex().deleteObject(po); }
 
-        virtual void linearSearch(tann::ngt::SearchContainer &sc) { getIndex().linearSearch(sc); }
+        virtual void linearSearch(tann::SearchContainer &sc) { getIndex().linearSearch(sc); }
 
-        virtual void linearSearch(tann::ngt::SearchQuery &sc) { getIndex().linearSearch(sc); }
+        virtual void linearSearch(tann::SearchQuery &sc) { getIndex().linearSearch(sc); }
 
-        virtual void search(tann::ngt::SearchContainer &sc) { getIndex().search(sc); }
+        virtual void search(tann::SearchContainer &sc) { getIndex().search(sc); }
 
-        virtual void search(tann::ngt::SearchQuery &sc) { getIndex().search(sc); }
+        virtual void search(tann::SearchQuery &sc) { getIndex().search(sc); }
 
-        virtual void search(tann::ngt::SearchContainer &sc, ObjectDistances &seeds) { getIndex().search(sc, seeds); }
+        virtual void search(tann::SearchContainer &sc, ObjectDistances &seeds) { getIndex().search(sc, seeds); }
 
-        virtual void getSeeds(tann::ngt::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
+        virtual void getSeeds(tann::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
             getIndex().getSeeds(sc, seeds, n);
         }
 
@@ -668,7 +668,7 @@ namespace tann::ngt {
 
         float getEpsilonFromExpectedAccuracy(double accuracy);
 
-        void searchUsingOnlyGraph(tann::ngt::SearchContainer &sc) {
+        void searchUsingOnlyGraph(tann::SearchContainer &sc) {
             sc.distanceComputationCount = 0;
             sc.visitCount = 0;
             ObjectDistances seeds;
@@ -680,7 +680,7 @@ namespace tann::ngt {
         Index &getIndex() {
             if (index == 0) {
                 assert(index != 0);
-                NGTThrowException("tann::ngt::Index::getIndex: Index is unavailable.");
+                NGTThrowException("tann::Index::getIndex: Index is unavailable.");
             }
             return *index;
         }
@@ -722,7 +722,7 @@ namespace tann::ngt {
         Object *allocateObject(void *vec, const std::type_info &objectType) {
             if (vec == 0) {
                 std::stringstream msg;
-                msg << "tann::ngt::Index::allocateObject: Object is not set. ";
+                msg << "tann::Index::allocateObject: Object is not set. ";
                 NGTThrowException(msg);
             }
             Object *object = 0;
@@ -738,7 +738,7 @@ namespace tann::ngt {
 #endif
             } else {
                 std::stringstream msg;
-                msg << "tann::ngt::Index::allocateObject: Unavailable object type.";
+                msg << "tann::Index::allocateObject: Unavailable object type.";
                 NGTThrowException(msg);
             }
             return object;
@@ -758,19 +758,19 @@ namespace tann::ngt {
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
         GraphIndex(const std::string &allocator, bool rdOnly = false);
-        GraphIndex(const std::string &allocator, tann::ngt::Property &prop):readOnly(false) {
+        GraphIndex(const std::string &allocator, tann::Property &prop):readOnly(false) {
           initialize(allocator, prop);
         }
-        void initialize(const std::string &allocator, tann::ngt::Property &prop);
+        void initialize(const std::string &allocator, tann::Property &prop);
 #else // NGT_SHARED_MEMORY_ALLOCATOR
 
         GraphIndex(const std::string &database, bool rdOnly = false, bool graphDisabled = false);
 
-        GraphIndex(tann::ngt::Property &prop) : readOnly(false) {
+        GraphIndex(tann::Property &prop) : readOnly(false) {
             initialize(prop);
         }
 
-        void initialize(tann::ngt::Property &prop) {
+        void initialize(tann::Property &prop) {
             constructObjectSpace(prop);
             setProperty(prop);
         }
@@ -781,26 +781,26 @@ namespace tann::ngt {
             destructObjectSpace();
         }
 
-        void constructObjectSpace(tann::ngt::Property &prop);
+        void constructObjectSpace(tann::Property &prop);
 
         void destructObjectSpace() {
             if (objectSpace == 0) {
                 return;
             }
-            if (property.objectType == tann::ngt::ObjectSpace::ObjectType::Float) {
+            if (property.objectType == tann::ObjectSpace::ObjectType::Float) {
                 ObjectSpaceRepository<float, double> *os = (ObjectSpaceRepository<float, double> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
 #endif
                 delete os;
-            } else if (property.objectType == tann::ngt::ObjectSpace::ObjectType::Uint8) {
+            } else if (property.objectType == tann::ObjectSpace::ObjectType::Uint8) {
                 ObjectSpaceRepository<unsigned char, int> *os = (ObjectSpaceRepository<unsigned char, int> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
 #endif
                 delete os;
 #ifdef NGT_HALF_FLOAT
-            } else if (property.objectType == tann::ngt::ObjectSpace::ObjectType::Float16) {
+            } else if (property.objectType == tann::ObjectSpace::ObjectType::Float16) {
                 ObjectSpaceRepository<float16, float> *os = (ObjectSpaceRepository<float16, float> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
@@ -916,7 +916,7 @@ namespace tann::ngt {
 
         void exportProperty(const std::string &file);
 
-        static void loadGraph(const std::string &ifile, tann::ngt::GraphRepository &graph);
+        static void loadGraph(const std::string &ifile, tann::GraphRepository &graph);
 
         virtual void loadIndex(const std::string &ifile, bool readOnly, bool graphDisabled);
 
@@ -946,17 +946,17 @@ namespace tann::ngt {
             repository.deserializeAsText(isg);
         }
 
-        void linearSearch(tann::ngt::SearchContainer &sc) {
+        void linearSearch(tann::SearchContainer &sc) {
             ObjectSpace::ResultSet results;
             objectSpace->linearSearch(sc.object, sc.radius, sc.size, results);
             ObjectDistances &qresults = sc.getResult();
             qresults.moveFrom(results);
         }
 
-        void linearSearch(tann::ngt::SearchQuery &searchQuery) {
+        void linearSearch(tann::SearchQuery &searchQuery) {
             Object *query = Index::allocateObject(searchQuery.getQuery(), searchQuery.getQueryType());
             try {
-                tann::ngt::SearchContainer sc(searchQuery, *query);
+                tann::SearchContainer sc(searchQuery, *query);
                 ObjectSpace::ResultSet results;
                 objectSpace->linearSearch(sc.object, sc.radius, sc.size, results);
                 ObjectDistances &qresults = sc.getResult();
@@ -969,17 +969,17 @@ namespace tann::ngt {
         }
 
         // GraphIndex
-        virtual void search(tann::ngt::SearchContainer &sc) {
+        virtual void search(tann::SearchContainer &sc) {
             sc.distanceComputationCount = 0;
             sc.visitCount = 0;
             ObjectDistances seeds;
             search(sc, seeds);
         }
 
-        void search(tann::ngt::SearchQuery &searchQuery) {
+        void search(tann::SearchQuery &searchQuery) {
             Object *query = Index::allocateObject(searchQuery.getQuery(), searchQuery.getQueryType());
             try {
-                tann::ngt::SearchContainer sc(searchQuery, *query);
+                tann::SearchContainer sc(searchQuery, *query);
                 sc.distanceComputationCount = 0;
                 sc.visitCount = 0;
                 ObjectDistances seeds;
@@ -991,7 +991,7 @@ namespace tann::ngt {
             deleteObject(query);
         }
 
-        void getSeeds(tann::ngt::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
+        void getSeeds(tann::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
             getRandomSeeds(repository, seeds, n);
             setupDistances(sc, seeds);
             std::sort(seeds.begin(), seeds.end());
@@ -1037,14 +1037,14 @@ namespace tann::ngt {
             try {
                 getObjectRepository().remove(id);
             } catch (Exception &err) {
-                std::cerr << "tann::ngt::GraphIndex::remove:: cannot remove from feature. id=" << id << " " << err.what()
+                std::cerr << "tann::GraphIndex::remove:: cannot remove from feature. id=" << id << " " << err.what()
                           << std::endl;
                 throw err;
             }
         }
 
         virtual void searchForNNGInsertion(Object &po, ObjectDistances &result) {
-            tann::ngt::SearchContainer sc(po);
+            tann::SearchContainer sc(po);
             sc.setResults(&result);
             sc.size = NeighborhoodGraph::property.edgeSizeForCreation;
             sc.radius = FLT_MAX;
@@ -1293,7 +1293,7 @@ namespace tann::ngt {
             return valid;
         }
 
-        static bool showStatisticsOfGraph(tann::ngt::GraphIndex &outGraph, char mode = '-', size_t edgeSize = UINT_MAX);
+        static bool showStatisticsOfGraph(tann::GraphIndex &outGraph, char mode = '-', size_t edgeSize = UINT_MAX);
 
         size_t getNumberOfObjects() { return objectSpace->getRepository().count(); }
 
@@ -1301,7 +1301,7 @@ namespace tann::ngt {
             ObjectRepository &repo = objectSpace->getRepository();
             GraphRepository &graphRepo = repository;
             size_t count = 0;
-            for (tann::ngt::ObjectID id = 1; id < repo.size() && id < graphRepo.size(); id++) {
+            for (tann::ObjectID id = 1; id < repo.size() && id < graphRepo.size(); id++) {
                 if (repo[id] != 0 && graphRepo[id] != 0) {
                     count++;
                 }
@@ -1347,9 +1347,9 @@ namespace tann::ngt {
 
         ObjectSpace &getObjectSpace() { return *objectSpace; }
 
-        void setupPrefetch(tann::ngt::Property &prop);
+        void setupPrefetch(tann::Property &prop);
 
-        void setProperty(tann::ngt::Property &prop) {
+        void setProperty(tann::Property &prop) {
             setupPrefetch(prop);
             GraphIndex::property.set(prop);
             NeighborhoodGraph::property.set(prop);
@@ -1357,7 +1357,7 @@ namespace tann::ngt {
             accuracyTable.set(property.accuracyTable);
         }
 
-        void getProperty(tann::ngt::Property &prop) {
+        void getProperty(tann::Property &prop) {
             GraphIndex::property.get(prop);
             NeighborhoodGraph::property.get(prop);
         }
@@ -1408,7 +1408,7 @@ namespace tann::ngt {
     protected:
 
         // GraphIndex
-        virtual void search(tann::ngt::SearchContainer &sc, ObjectDistances &seeds) {
+        virtual void search(tann::SearchContainer &sc, ObjectDistances &seeds) {
             if (sc.size == 0) {
                 while (!sc.workingResult.empty()) sc.workingResult.pop();
                 return;
@@ -1428,7 +1428,7 @@ namespace tann::ngt {
                 sc.setEpsilon(getEpsilonFromExpectedAccuracy(sc.expectedAccuracy));
             }
 
-            tann::ngt::SearchContainer so(sc);
+            tann::SearchContainer so(sc);
             try {
                 if (readOnly) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR) || !defined(NGT_GRAPH_READ_ONLY_GRAPH)
@@ -1454,7 +1454,7 @@ namespace tann::ngt {
         bool readOnly;
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
 
-        void (*searchUnupdatableGraph)(tann::ngt::NeighborhoodGraph &, tann::ngt::SearchContainer &, tann::ngt::ObjectDistances &);
+        void (*searchUnupdatableGraph)(tann::NeighborhoodGraph &, tann::SearchContainer &, tann::ObjectDistances &);
 
 #endif
 
@@ -1468,7 +1468,7 @@ namespace tann::ngt {
         GraphAndTreeIndex(const std::string &allocator, bool rdOnly = false):GraphIndex(allocator, false) {
           initialize(allocator, 0);
         }
-        GraphAndTreeIndex(const std::string &allocator, tann::ngt::Property &prop);
+        GraphAndTreeIndex(const std::string &allocator, tann::Property &prop);
         void initialize(const std::string &allocator, size_t sharedMemorySize) {
           DVPTree::objectSpace = GraphIndex::objectSpace;
           DVPTree::open(allocator + "/tre", sharedMemorySize);
@@ -1479,7 +1479,7 @@ namespace tann::ngt {
             GraphAndTreeIndex::loadIndex(database, rdOnly);
         }
 
-        GraphAndTreeIndex(tann::ngt::Property &prop) : GraphIndex(prop) {
+        GraphAndTreeIndex(tann::Property &prop) : GraphIndex(prop) {
             DVPTree::objectSpace = GraphIndex::objectSpace;
         }
 
@@ -1496,11 +1496,11 @@ namespace tann::ngt {
 #else
 
         void alignObjects() {
-            tann::ngt::ObjectSpace &space = getObjectSpace();
-            tann::ngt::ObjectRepository &repo = space.getRepository();
+            tann::ObjectSpace &space = getObjectSpace();
+            tann::ObjectRepository &repo = space.getRepository();
             Object **object = repo.getPtr();
             std::vector<bool> exist(repo.size(), false);
-            std::vector<tann::ngt::Node::ID> leafNodeIDs;
+            std::vector<tann::Node::ID> leafNodeIDs;
             DVPTree::getAllLeafNodeIDs(leafNodeIDs);
             size_t objectCount = 0;
             for (size_t i = 0; i < leafNodeIDs.size(); i++) {
@@ -1634,7 +1634,7 @@ namespace tann::ngt {
             DVPTree::deserialize(ist);
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
             if (readOnly) {
-                if (property.objectAlignment == tann::ngt::Index::Property::ObjectAlignmentTrue) {
+                if (property.objectAlignment == tann::Index::Property::ObjectAlignmentTrue) {
                     alignObjects();
                 }
                 GraphIndex::NeighborhoodGraph::loadSearchGraph(ifile);
@@ -1698,7 +1698,7 @@ namespace tann::ngt {
                 GraphIndex::remove(id, force);
                 return;
             }
-            tann::ngt::SearchContainer so(*obj);
+            tann::SearchContainer so(*obj);
             ObjectDistances results;
             so.setResults(&results);
             so.id = 0;
@@ -1733,7 +1733,7 @@ namespace tann::ngt {
         }
 
         void searchForNNGInsertion(Object &po, ObjectDistances &result) {
-            tann::ngt::SearchContainer sc(po);
+            tann::SearchContainer sc(po);
             sc.setResults(&result);
             sc.size = NeighborhoodGraph::property.edgeSizeForCreation;
             sc.radius = FLT_MAX;
@@ -1794,12 +1794,12 @@ namespace tann::ngt {
         void createIndex(size_t threadNumber, size_t sizeOfRepository = 0);
 
         void
-        createIndex(const std::vector<std::pair<tann::ngt::Object *, size_t> > &objects, std::vector<InsertionResult> &ids,
+        createIndex(const std::vector<std::pair<tann::Object *, size_t> > &objects, std::vector<InsertionResult> &ids,
                     float range, size_t threadNumber);
 
         void createTreeIndex();
 
-        void getSeeds(tann::ngt::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
+        void getSeeds(tann::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
             DVPTree::SearchContainer tso(sc.object);
             tso.mode = DVPTree::SearchContainer::SearchLeaf;
             tso.radius = 0.0;
@@ -1833,7 +1833,7 @@ namespace tann::ngt {
         }
 
         // GraphAndTreeIndex
-        void getSeedsFromTree(tann::ngt::SearchContainer &sc, ObjectDistances &seeds) {
+        void getSeedsFromTree(tann::SearchContainer &sc, ObjectDistances &seeds) {
             DVPTree::SearchContainer tso(sc.object);
             tso.mode = DVPTree::SearchContainer::SearchLeaf;
             tso.radius = 0.0;
@@ -1881,7 +1881,7 @@ namespace tann::ngt {
         }
 
         // GraphAndTreeIndex
-        void search(tann::ngt::SearchContainer &sc) {
+        void search(tann::SearchContainer &sc) {
             sc.distanceComputationCount = 0;
             sc.visitCount = 0;
             ObjectDistances seeds;
@@ -1890,10 +1890,10 @@ namespace tann::ngt {
             GraphIndex::search(sc, seeds);
         }
 
-        void search(tann::ngt::SearchQuery &searchQuery) {
+        void search(tann::SearchQuery &searchQuery) {
             Object *query = Index::allocateObject(searchQuery.getQuery(), searchQuery.getQueryType());
             try {
-                tann::ngt::SearchContainer sc(searchQuery, *query);
+                tann::SearchContainer sc(searchQuery, *query);
                 sc.distanceComputationCount = 0;
                 sc.visitCount = 0;
                 ObjectDistances seeds;
@@ -1926,51 +1926,51 @@ namespace tann::ngt {
             NeighborhoodGraph::Property::clear();
         }
 
-        void set(tann::ngt::Property &p) {
+        void set(tann::Property &p) {
             Index::Property::set(p);
             NeighborhoodGraph::Property::set(p);
         }
 
         void load(const std::string &file) {
-            tann::ngt::PropertySet prop;
+            tann::PropertySet prop;
             prop.load(file + "/prf");
             Index::Property::importProperty(prop);
             NeighborhoodGraph::Property::importProperty(prop);
         }
 
         void save(const std::string &file) {
-            tann::ngt::PropertySet prop;
+            tann::PropertySet prop;
             Index::Property::exportProperty(prop);
             NeighborhoodGraph::Property::exportProperty(prop);
             prop.save(file + "/prf");
         }
 
         static void save(GraphIndex &graphIndex, const std::string &file) {
-            tann::ngt::PropertySet prop;
+            tann::PropertySet prop;
             graphIndex.getGraphIndexProperty().exportProperty(prop);
             graphIndex.getGraphProperty().exportProperty(prop);
             prop.save(file + "/prf");
         }
 
         void importProperty(const std::string &file) {
-            tann::ngt::PropertySet prop;
+            tann::PropertySet prop;
             prop.load(file + "/prf");
             Index::Property::importProperty(prop);
             NeighborhoodGraph::Property::importProperty(prop);
         }
 
         static void exportProperty(GraphIndex &graphIndex, const std::string &file) {
-            tann::ngt::PropertySet prop;
+            tann::PropertySet prop;
             graphIndex.getGraphIndexProperty().exportProperty(prop);
             graphIndex.getGraphProperty().exportProperty(prop);
             prop.save(file + "/prf");
         }
     };
 
-} // namespace tann::ngt
+} // namespace tann
 
 template<typename T>
-size_t tann::ngt::Index::append(const std::vector<T> &object) {
+size_t tann::Index::append(const std::vector<T> &object) {
     if (getObjectSpace().getRepository().size() == 0) {
         getObjectSpace().getRepository().initialize();
     }
@@ -1982,7 +1982,7 @@ size_t tann::ngt::Index::append(const std::vector<T> &object) {
 }
 
 template<typename T>
-size_t tann::ngt::Index::insert(const std::vector<T> &object) {
+size_t tann::Index::insert(const std::vector<T> &object) {
     if (getObjectSpace().getRepository().size() == 0) {
         getObjectSpace().getRepository().initialize();
     }

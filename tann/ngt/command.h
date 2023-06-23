@@ -17,7 +17,7 @@
 
 #include "tann/ngt/index.h"
 
-namespace tann::ngt {
+namespace tann {
 
 
 class Command {
@@ -30,7 +30,7 @@ public:
     std::string index;
     std::string objectPath;
     size_t numOfObjects;
-    tann::ngt::Property property;
+    tann::Property property;
     char indexType;
   };
   
@@ -77,12 +77,12 @@ public:
 	beginOfEpsilon = endOfEpsilon = stepOfEpsilon = 0.1;
 	std::string epsilon = args.getString("e", epsilonDefault.c_str());
 	std::vector<std::string> tokens;
-	tann::ngt::Common::tokenize(epsilon, tokens, ":");
-	if (tokens.size() >= 1) { beginOfEpsilon = endOfEpsilon = tann::ngt::Common::strtod(tokens[0]); }
-	if (tokens.size() >= 2) { endOfEpsilon = tann::ngt::Common::strtod(tokens[1]); }
-	if (tokens.size() >= 3) { stepOfEpsilon = tann::ngt::Common::strtod(tokens[2]); }
+	tann::Common::tokenize(epsilon, tokens, ":");
+	if (tokens.size() >= 1) { beginOfEpsilon = endOfEpsilon = tann::Common::strtod(tokens[0]); }
+	if (tokens.size() >= 2) { endOfEpsilon = tann::Common::strtod(tokens[1]); }
+	if (tokens.size() >= 3) { stepOfEpsilon = tann::Common::strtod(tokens[2]); }
 	step = 0;
-	if (tokens.size() >= 4) { step = tann::ngt::Common::strtol(tokens[3]); }
+	if (tokens.size() >= 4) { step = tann::Common::strtol(tokens[3]); }
       }
       accuracy		= args.getf("a", 0.0);
     }
@@ -106,7 +106,7 @@ public:
 
   void create(Args &args);
   void append(Args &args);
-  static void search(tann::ngt::Index &index, SearchParameters &searchParameters, std::ostream &stream)
+  static void search(tann::Index &index, SearchParameters &searchParameters, std::ostream &stream)
   {
     std::ifstream		is(searchParameters.query);
     if (!is) {
@@ -115,7 +115,7 @@ public:
     }
     search(index, searchParameters, is, stream);
   }
-  static void search(tann::ngt::Index &index, SearchParameters &searchParameters, std::istream &is, std::ostream &stream);
+  static void search(tann::Index &index, SearchParameters &searchParameters, std::istream &is, std::ostream &stream);
   void search(Args &args);
   void remove(Args &args);
   void exportIndex(Args &args);

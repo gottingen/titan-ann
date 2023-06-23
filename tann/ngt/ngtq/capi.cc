@@ -75,7 +75,7 @@ static bool ngtqg_search_index_(NGTQG::Index* pindex, std::vector<float> &query,
   // set search parameters.
   NGTQG::SearchQuery sq(query);  // Query.
 
-  sq.setResults(static_cast<tann::ngt::ObjectDistances*>(results));          // set the result set.
+  sq.setResults(static_cast<tann::ObjectDistances*>(results));          // set the result set.
   sq.setSize(param.size);                        // the number of resultant objects.
   sq.setRadius(param.radius);                    // search radius.
   sq.setEpsilon(param.epsilon);                  // exploration coefficient.
@@ -97,7 +97,7 @@ bool ngtqg_search_index(NGTQGIndex index, NGTQGQuery query, NGTObjectDistances r
   NGTQG::Index* pindex = static_cast<NGTQG::Index*>(index);   
   int32_t dim = pindex->getObjectSpace().getDimension();
 
-  tann::ngt::Object *ngtquery = NULL;
+  tann::Object *ngtquery = NULL;
 
   if(query.radius < 0.0){
     query.radius = FLT_MAX;
@@ -168,8 +168,8 @@ bool qbg_create(const char *indexPath, QBGConstructionParameters *parameters, NG
     cerr << "qbgcapi: Create" << endl;
     std::vector<float> r;
     NGTQ::Property property;
-    tann::ngt::Property globalProperty;
-    tann::ngt::Property localProperty;
+    tann::Property globalProperty;
+    tann::Property localProperty;
     property.dimension = parameters->extended_dimension; 
     if (property.dimension == 0) {
       property.dimension = parameters->dimension;
@@ -190,7 +190,7 @@ bool qbg_create(const char *indexPath, QBGConstructionParameters *parameters, NG
 
     globalProperty.edgeSizeForCreation = 10;
     globalProperty.edgeSizeForSearch = 40;
-    globalProperty.indexType = tann::ngt::Property::GraphAndTree;
+    globalProperty.indexType = tann::Property::GraphAndTree;
     globalProperty.insertionRadiusCoefficient = 1.1;
 
     localProperty.indexType = globalProperty.indexType;
@@ -199,7 +199,7 @@ bool qbg_create(const char *indexPath, QBGConstructionParameters *parameters, NG
     std::vector<float> *rotation = 0;
     const std::string objectPath;
     QBG::Index::create(indexPath, property, globalProperty, localProperty, rotation, objectPath);
-  } catch(tann::ngt::Exception &err) {
+  } catch(tann::Exception &err) {
     std::stringstream ss;
     ss << "Capi : " << __FUNCTION__ << "() : Error: " << err.what();
     operate_error_string_(ss, error);    
@@ -263,7 +263,7 @@ ObjectID qbg_append_object(QBGIndex index, float *obj, uint32_t obj_dim, QBGErro
 }
 
 void qbg_initialize_build_parameters(QBGBuildParameters *parameters) {
-  parameters->hierarchical_clustering_init_mode = static_cast<int>(tann::ngt::Clustering::InitializationModeKmeansPlusPlus);
+  parameters->hierarchical_clustering_init_mode = static_cast<int>(tann::Clustering::InitializationModeKmeansPlusPlus);
   parameters->number_of_first_objects = 0;
   parameters->number_of_first_clusters = 0;
   parameters->number_of_second_objects = 0;
@@ -272,7 +272,7 @@ void qbg_initialize_build_parameters(QBGBuildParameters *parameters) {
 
   parameters->number_of_objects = 1000;
   parameters->number_of_subvectors = 1;
-  parameters->optimization_clustering_init_mode = static_cast<int>(tann::ngt::Clustering::InitializationModeKmeansPlusPlus);
+  parameters->optimization_clustering_init_mode = static_cast<int>(tann::Clustering::InitializationModeKmeansPlusPlus);
   parameters->rotation_iteration = 2000;
   parameters->subvector_iteration = 400;
   parameters->number_of_matrices = 3;
@@ -289,7 +289,7 @@ bool qbg_build_index(const char *index_path, QBGBuildParameters *parameters, QBG
   hierarchicalKmeans.numOfTotalClusters = 0;
   hierarchicalKmeans.numOfTotalBlobs = 0; 
   hierarchicalKmeans.clusterID = -1;
-  hierarchicalKmeans.initMode = static_cast<tann::ngt::Clustering::InitializationMode>(parameters->hierarchical_clustering_init_mode);
+  hierarchicalKmeans.initMode = static_cast<tann::Clustering::InitializationMode>(parameters->hierarchical_clustering_init_mode);
   hierarchicalKmeans.numOfRandomObjects = 0;
   hierarchicalKmeans.extractCentroid = false;
   hierarchicalKmeans.numOfFirstObjects = parameters->number_of_first_objects;
@@ -303,7 +303,7 @@ bool qbg_build_index(const char *index_path, QBGBuildParameters *parameters, QBG
 
   try {
     hierarchicalKmeans.clustering(index_path);
-  } catch (tann::ngt::Exception &err) {
+  } catch (tann::Exception &err) {
     std::stringstream ss;
     ss << "Capi : " << __FUNCTION__ << "() : Error: " << err.what();
     operate_error_string_(ss, error);
@@ -315,8 +315,8 @@ bool qbg_build_index(const char *index_path, QBGBuildParameters *parameters, QBG
   optimizer.numberOfObjects = parameters->number_of_objects;
   optimizer.numberOfClusters = 16;	
   optimizer.numberOfSubvectors = 0;	
-  optimizer.clusteringType = tann::ngt::Clustering::ClusteringTypeKmeansWithNGT;
-  optimizer.initMode = static_cast<tann::ngt::Clustering::InitializationMode>(parameters->optimization_clustering_init_mode);
+  optimizer.clusteringType = tann::Clustering::ClusteringTypeKmeansWithNGT;
+  optimizer.initMode = static_cast<tann::Clustering::InitializationMode>(parameters->optimization_clustering_init_mode);
   optimizer.convergenceLimitTimes = 5;
   optimizer.iteration = parameters->rotation_iteration;
   optimizer.clusterIteration = parameters->subvector_iteration;
@@ -335,7 +335,7 @@ bool qbg_build_index(const char *index_path, QBGBuildParameters *parameters, QBG
   try {
     auto nthreads = omp_get_max_threads();
     optimizer.optimize(index_path, nthreads);
-  } catch (tann::ngt::Exception &err) {
+  } catch (tann::Exception &err) {
     std::stringstream ss;
     ss << "Capi : " << __FUNCTION__ << "() : Error: " << err.what();
     operate_error_string_(ss, error);
@@ -345,7 +345,7 @@ bool qbg_build_index(const char *index_path, QBGBuildParameters *parameters, QBG
   try {
     auto silence = true;
     QBG::Index::build(index_path, silence);
-  } catch (tann::ngt::Exception &err) {
+  } catch (tann::Exception &err) {
     std::stringstream ss;
     ss << "Capi : " << __FUNCTION__ << "() : Error: " << err.what();
     operate_error_string_(ss, error);
@@ -373,7 +373,7 @@ static bool qbg_search_index_(QBG::Index* pindex, std::vector<float> &query, QBG
 
   QBG::SearchContainer sc;
   sc.setObjectVector(query);
-  sc.setResults(static_cast<tann::ngt::ObjectDistances*>(results));
+  sc.setResults(static_cast<tann::ObjectDistances*>(results));
   if (param.result_expansion >= 1.0) {
     sc.setSize(static_cast<float>(param.number_of_results) * param.result_expansion);
     sc.setExactResultSize(param.number_of_results);

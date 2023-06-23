@@ -23,7 +23,7 @@
 using namespace std;
 
 
-  tann::ngt::Command::CreateParameters::CreateParameters(Args &args) {
+  tann::Command::CreateParameters::CreateParameters(Args &args) {
     try {
       index = args.get("#1");
     } catch (...) {
@@ -53,47 +53,47 @@ using namespace std;
       NGTThrowException(msg);
     }
 
-    property.objectAlignment = args.getChar("A", 'f') == 't' ? tann::ngt::Property::ObjectAlignmentTrue : tann::ngt::Property::ObjectAlignmentFalse;
+    property.objectAlignment = args.getChar("A", 'f') == 't' ? tann::Property::ObjectAlignmentTrue : tann::Property::ObjectAlignmentFalse;
 
     char graphType = args.getChar("g", 'a');
     switch(graphType) {
-    case 'a': property.graphType = tann::ngt::Property::GraphType::GraphTypeANNG; break;
-    case 'k': property.graphType = tann::ngt::Property::GraphType::GraphTypeKNNG; break;
-    case 'b': property.graphType = tann::ngt::Property::GraphType::GraphTypeBKNNG; break;
-    case 'd': property.graphType = tann::ngt::Property::GraphType::GraphTypeDNNG; break;
-    case 'o': property.graphType = tann::ngt::Property::GraphType::GraphTypeONNG; break;
-    case 'i': property.graphType = tann::ngt::Property::GraphType::GraphTypeIANNG; break;
+    case 'a': property.graphType = tann::Property::GraphType::GraphTypeANNG; break;
+    case 'k': property.graphType = tann::Property::GraphType::GraphTypeKNNG; break;
+    case 'b': property.graphType = tann::Property::GraphType::GraphTypeBKNNG; break;
+    case 'd': property.graphType = tann::Property::GraphType::GraphTypeDNNG; break;
+    case 'o': property.graphType = tann::Property::GraphType::GraphTypeONNG; break;
+    case 'i': property.graphType = tann::Property::GraphType::GraphTypeIANNG; break;
     default:
       std::stringstream msg;
       msg << "Command::CreateParameter: Error: Invalid graph type. " << graphType;
       NGTThrowException(msg);
     }    
 
-    if (property.graphType == tann::ngt::Property::GraphType::GraphTypeONNG) {
+    if (property.graphType == tann::Property::GraphType::GraphTypeONNG) {
       property.outgoingEdge = 10;
       property.incomingEdge = 80;
       string str = args.getString("O", "-");
       if (str != "-") {
 	vector<string> tokens;
-	tann::ngt::Common::tokenize(str, tokens, "x");
+	tann::Common::tokenize(str, tokens, "x");
 	if (str != "-" && tokens.size() != 2) {
 	  std::stringstream msg;
 	  msg << "Command::CreateParameter: Error: outgoing/incoming edge size specification is invalid. (out)x(in) " << str;
 	  NGTThrowException(msg);
 	}
-	property.outgoingEdge = tann::ngt::Common::strtod(tokens[0]);
-	property.incomingEdge = tann::ngt::Common::strtod(tokens[1]);
+	property.outgoingEdge = tann::Common::strtod(tokens[0]);
+	property.incomingEdge = tann::Common::strtod(tokens[1]);
       }
     }
 
     char seedType = args.getChar("s", '-');
     switch(seedType) {
-    case 'f': property.seedType = tann::ngt::Property::SeedType::SeedTypeFixedNodes; break;
-    case '1': property.seedType = tann::ngt::Property::SeedType::SeedTypeFirstNode; break;
-    case 'r': property.seedType = tann::ngt::Property::SeedType::SeedTypeRandomNodes; break;
-    case 'l': property.seedType = tann::ngt::Property::SeedType::SeedTypeAllLeafNodes; break;
+    case 'f': property.seedType = tann::Property::SeedType::SeedTypeFixedNodes; break;
+    case '1': property.seedType = tann::Property::SeedType::SeedTypeFirstNode; break;
+    case 'r': property.seedType = tann::Property::SeedType::SeedTypeRandomNodes; break;
+    case 'l': property.seedType = tann::Property::SeedType::SeedTypeAllLeafNodes; break;
     default:
-    case '-': property.seedType = tann::ngt::Property::SeedType::SeedTypeNone; break;
+    case '-': property.seedType = tann::Property::SeedType::SeedTypeNone; break;
     }
 
     char objectType = args.getChar("o", 'f');
@@ -104,14 +104,14 @@ using namespace std;
 
     switch (objectType) {
     case 'f': 
-      property.objectType = tann::ngt::Index::Property::ObjectType::Float;
+      property.objectType = tann::Index::Property::ObjectType::Float;
       break;
     case 'c':
-      property.objectType = tann::ngt::Index::Property::ObjectType::Uint8;
+      property.objectType = tann::Index::Property::ObjectType::Uint8;
       break;
 #ifdef NGT_HALF_FLOAT
     case 'h':
-      property.objectType = tann::ngt::Index::Property::ObjectType::Float16;
+      property.objectType = tann::Index::Property::ObjectType::Float16;
       break;
 #endif
     default:
@@ -122,41 +122,41 @@ using namespace std;
 
     switch (distanceType) {
     case '1': 
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL1;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL1;
       break;
     case '2':
     case 'e':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
       break;
     case 'a':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeAngle;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeAngle;
       break;
     case 'A':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeNormalizedAngle;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedAngle;
       break;
     case 'h':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeHamming;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeHamming;
       break;
     case 'j':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeJaccard;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeJaccard;
       break;
     case 'J':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeSparseJaccard;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeSparseJaccard;
       break;
     case 'c':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeCosine;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeCosine;
       break;
     case 'C':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeNormalizedCosine;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedCosine;
       break;
     case 'E':
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeNormalizedL2;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedL2;
       break;
     case 'p':  // added by Nyapicom
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypePoincare;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypePoincare;
       break;
     case 'l':  // added by Nyapicom
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeLorentz;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeLorentz;
       break;
     default:
       std::stringstream msg;
@@ -175,7 +175,7 @@ using namespace std;
   }
 
   void 
-  tann::ngt::Command::create(Args &args)
+  tann::Command::create(Args &args)
   {
     const string usage = "Usage: ngt create "
       "-d dimension [-p #-of-thread] [-i index-type(t|g)] [-g graph-type(a|k|b|o|i)] "
@@ -211,20 +211,20 @@ using namespace std;
 
       switch (createParameters.indexType) {
       case 't':
-	tann::ngt::Index::createGraphAndTree(createParameters.index, createParameters.property, createParameters.objectPath, createParameters.numOfObjects);
+	tann::Index::createGraphAndTree(createParameters.index, createParameters.property, createParameters.objectPath, createParameters.numOfObjects);
 	break;
       case 'g':
-	tann::ngt::Index::createGraph(createParameters.index, createParameters.property, createParameters.objectPath, createParameters.numOfObjects);
+	tann::Index::createGraph(createParameters.index, createParameters.property, createParameters.objectPath, createParameters.numOfObjects);
 	break;
       }
-    } catch(tann::ngt::Exception &err) {
+    } catch(tann::Exception &err) {
       std::cerr << err.what() << std::endl;
       cerr << usage << endl;
     }
   }
 
   void 
-  tann::ngt::Command::append(Args &args)
+  tann::Command::append(Args &args)
   {
     const string usage = "Usage: ngt append [-p #-of-thread] [-d dimension] [-n data-size] "
       "index(output) [data.tsv(input)]";
@@ -254,8 +254,8 @@ using namespace std;
 
 
     try {
-      tann::ngt::Index::append(database, data, threadSize, dataSize);
-    } catch (tann::ngt::Exception &err) {
+      tann::Index::append(database, data, threadSize, dataSize);
+    } catch (tann::Exception &err) {
       cerr << "ngt: Error " << err.what() << endl;
       cerr << usage << endl;
     } catch (...) {
@@ -266,7 +266,7 @@ using namespace std;
 
 
   void
-  tann::ngt::Command::search(tann::ngt::Index &index, tann::ngt::Command::SearchParameters &searchParameters, istream &is, ostream &stream)
+  tann::Command::search(tann::Index &index, tann::Command::SearchParameters &searchParameters, istream &is, ostream &stream)
   {
 
     if (searchParameters.outputMode[0] == 'e') { 
@@ -280,11 +280,11 @@ using namespace std;
       if (searchParameters.querySize > 0 && queryCount >= searchParameters.querySize) {
 	break;
       }
-      tann::ngt::Object *object = index.allocateObject(line, " \t");
+      tann::Object *object = index.allocateObject(line, " \t");
       queryCount++;
       size_t step = searchParameters.step == 0 ? UINT_MAX : searchParameters.step;
       for (size_t n = 0; n <= step; n++) {
-	tann::ngt::SearchContainer sc(*object);
+	tann::SearchContainer sc(*object);
 	double epsilon;
 	if (searchParameters.step != 0) {
 	  epsilon = searchParameters.beginOfEpsilon + (searchParameters.endOfEpsilon - searchParameters.beginOfEpsilon) * n / step; 
@@ -294,7 +294,7 @@ using namespace std;
 	    break;
 	  }
 	}
-	tann::ngt::ObjectDistances objects;
+	tann::ObjectDistances objects;
 	sc.setResults(&objects);
 	sc.setSize(searchParameters.size);
 	sc.setRadius(searchParameters.radius);
@@ -304,7 +304,7 @@ using namespace std;
 	  sc.setEpsilon(epsilon);
 	}
  	sc.setEdgeSize(searchParameters.edgeSize);
-	tann::ngt::Timer timer;
+	tann::Timer timer;
 	try {
 	  if (searchParameters.outputMode[0] == 'e') {
 	    double time = 0.0;
@@ -334,7 +334,7 @@ using namespace std;
 	    case 's': timer.start(); index.linearSearch(sc); timer.stop(); break;
 	    }
 	  }
-	} catch (tann::ngt::Exception &err) {
+	} catch (tann::Exception &err) {
 	  if (searchParameters.outputMode != "ei") {
 	    // not ignore exceptions
 	    throw err;
@@ -382,12 +382,12 @@ using namespace std;
 	size_t numberOfNodes = 0;
 	size_t numberOfEdges = 0;
 
-	tann::ngt::GraphIndex	&graph = (tann::ngt::GraphIndex&)index.getIndex();
+	tann::GraphIndex	&graph = (tann::GraphIndex&)index.getIndex();
 	for (size_t id = 1; id < graph.repository.size(); id++) {
-	  tann::ngt::GraphNode *node = 0;
+	  tann::GraphNode *node = 0;
 	  try {
 	    node = graph.getNode(id);
-	  } catch(tann::ngt::Exception &err) {
+	  } catch(tann::Exception &err) {
 	    cerr << "Graph::search: Warning. Cannot get the node. ID=" << id << ":" << err.what() << " If the node was removed, no problem." << endl;
 	    continue;
 	  }
@@ -422,7 +422,7 @@ using namespace std;
 
 
   void
-  tann::ngt::Command::search(Args &args) {
+  tann::Command::search(Args &args) {
     const string usage = "Usage: ngt search [-i index-type(g|t|s)] [-n result-size] [-e epsilon] [-E edge-size] "
       "[-m open-mode(r|w)] [-o output-mode] index(input) query.tsv(input)";
 
@@ -446,9 +446,9 @@ using namespace std;
     }
 
     try {
-      tann::ngt::Index	index(database, searchParameters.openMode == 'r');
+      tann::Index	index(database, searchParameters.openMode == 'r');
       search(index, searchParameters, cout);
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
       cerr << "ngt: Error " << err.what() << endl;
       cerr << usage << endl;
     } catch (...) {
@@ -460,7 +460,7 @@ using namespace std;
 
 
   void
-  tann::ngt::Command::remove(Args &args)
+  tann::Command::remove(Args &args)
   {
     const string usage = "Usage: ngt remove [-d object-ID-type(f|d)] [-m f] index(input) object-ID(input)";
     string database;
@@ -489,7 +489,7 @@ using namespace std;
     }
 
     try {
-      vector<tann::ngt::ObjectID> objects;
+      vector<tann::ObjectID> objects;
       if (dataType == 'f') {
 	string ids;
 	try {
@@ -510,7 +510,7 @@ using namespace std;
 	while(getline(is, line)) {
 	  count++;
 	  vector<string> tokens;
-	  tann::ngt::Common::tokenize(line, tokens, "\t ");
+	  tann::Common::tokenize(line, tokens, "\t ");
 	  if (tokens.size() == 0 || tokens[0].size() == 0) {
 	    continue;
 	  }
@@ -532,8 +532,8 @@ using namespace std;
 	cerr << "removed ID=" << id << endl;
 	objects.push_back(id);
       }
-      tann::ngt::Index::remove(database, objects, force);
-    } catch (tann::ngt::Exception &err) {
+      tann::Index::remove(database, objects, force);
+    } catch (tann::Exception &err) {
       cerr << "ngt: Error " << err.what() << endl;
       cerr << usage << endl;
     } catch (...) {
@@ -543,7 +543,7 @@ using namespace std;
   }
 
   void
-  tann::ngt::Command::exportIndex(Args &args)
+  tann::Command::exportIndex(Args &args)
   {
     const string usage = "Usage: ngt export index(input) export-file(output)";
     string database;
@@ -563,8 +563,8 @@ using namespace std;
       return;
     }
     try {
-      tann::ngt::Index::exportIndex(database, exportFile);
-    } catch (tann::ngt::Exception &err) {
+      tann::Index::exportIndex(database, exportFile);
+    } catch (tann::Exception &err) {
       cerr << "ngt: Error " << err.what() << endl;
       cerr << usage << endl;
     } catch (...) {
@@ -574,7 +574,7 @@ using namespace std;
   }
 
   void
-  tann::ngt::Command::importIndex(Args &args)
+  tann::Command::importIndex(Args &args)
   {
     const string usage = "Usage: ngt import index(output) import-file(input)";
     string database;
@@ -595,8 +595,8 @@ using namespace std;
     }
 
     try {
-      tann::ngt::Index::importIndex(database, importFile);
-    } catch (tann::ngt::Exception &err) {
+      tann::Index::importIndex(database, importFile);
+    } catch (tann::Exception &err) {
       cerr << "ngt: Error " << err.what() << endl;
       cerr << usage << endl;
     } catch (...) {
@@ -607,7 +607,7 @@ using namespace std;
   }
 
   void
-  tann::ngt::Command::prune(Args &args)
+  tann::Command::prune(Args &args)
   {
     const string usage = "Usage: ngt prune -e #-of-forcedly-pruned-edges -s #-of-selecively-pruned-edge index(in/out)";
     string indexName;
@@ -639,14 +639,14 @@ using namespace std;
       return;
     }
 
-    tann::ngt::Index	index(indexName);
+    tann::Index	index(indexName);
     cerr << "loaded the input index." << endl;
 
-    tann::ngt::GraphIndex	&graph = (tann::ngt::GraphIndex&)index.getIndex();
+    tann::GraphIndex	&graph = (tann::GraphIndex&)index.getIndex();
 
     for (size_t id = 1; id < graph.repository.size(); id++) {
       try {
-	tann::ngt::GraphNode &node = *graph.getNode(id);
+	tann::GraphNode &node = *graph.getNode(id);
 	if (id % 1000000 == 0) {
 	  cerr << "Processed " << id << endl;
 	}
@@ -663,7 +663,7 @@ using namespace std;
 	  abort();
 #else
 	  size_t rank = 0;
-	  for (tann::ngt::GraphNode::iterator i = node.begin(); i != node.end(); ++rank) {
+	  for (tann::GraphNode::iterator i = node.begin(); i != node.end(); ++rank) {
 	    if (rank >= selectivelyPrunedEdgeSize) {
 	      bool found = false;
 	      for (size_t t1 = 0; t1 < node.size() && found == false; ++t1) {
@@ -673,7 +673,7 @@ using namespace std;
 		if (rank == t1) {
 		  continue;
 		}
-		tann::ngt::GraphNode &node2 = *graph.getNode(node[t1].id);
+		tann::GraphNode &node2 = *graph.getNode(node[t1].id);
 		for (size_t t2 = 0; t2 < node2.size(); ++t2) {		
 		  if (t2 >= selectivelyPrunedEdgeSize) {
 		    break;
@@ -695,7 +695,7 @@ using namespace std;
 #endif
 	}
 	  
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
 	cerr << "Graph::search: Warning. Cannot get the node. ID=" << id << ":" << err.what() << endl;
 	continue;
       }
@@ -706,7 +706,7 @@ using namespace std;
   }
 
   void
-  tann::ngt::Command::reconstructGraph(Args &args)
+  tann::Command::reconstructGraph(Args &args)
   {
     const string usage = "Usage: ngt reconstruct-graph [-m mode] [-P path-adjustment-mode] -o #-of-outgoing-edges -i #-of-incoming(reversed)-edges [-q #-of-queries] [-n #-of-results] [-E minimum-#-of-edges] index(input) index(output)\n"
       "\t-m mode\n"
@@ -748,7 +748,7 @@ using namespace std;
     // the number (rank) of reverse edges
     int numOfIncomingEdges		= args.getl("i", -1);
 
-    tann::ngt::GraphOptimizer graphOptimizer(false);
+    tann::GraphOptimizer graphOptimizer(false);
 
     if (mode == 'P') {
       numOfOutgoingEdges = 0;
@@ -770,7 +770,7 @@ using namespace std;
   }
 
   void
-  tann::ngt::Command::optimizeSearchParameters(Args &args)
+  tann::Command::optimizeSearchParameters(Args &args)
   {
     const string usage = "Usage: ngt optimize-search-parameters [-m optimization-target(s|p|a)] [-q #-of-queries] [-n #-of-results] index\n"
       "\t-m mode\n"
@@ -794,7 +794,7 @@ using namespace std;
 
 
     try {
-      tann::ngt::GraphOptimizer graphOptimizer(false);
+      tann::GraphOptimizer graphOptimizer(false);
 
       graphOptimizer.searchParameterOptimization = (mode == '-' || mode == 's') ? true : false;
       graphOptimizer.prefetchParameterOptimization = (mode == '-' || mode == 'p') ? true : false;
@@ -806,7 +806,7 @@ using namespace std;
       graphOptimizer.optimizeSearchParameters(indexPath);
 
       std::cout << "Successfully completed." << std::endl;
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
       cerr << "ngt: Error " << err.what() << endl;
       cerr << usage << endl;
     }
@@ -814,7 +814,7 @@ using namespace std;
   }
 
   void
-  tann::ngt::Command::refineANNG(Args &args)
+  tann::Command::refineANNG(Args &args)
   {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     std::cerr << "refineANNG. Not implemented." << std::endl;
@@ -840,7 +840,7 @@ using namespace std;
       return;
     }
 
-    tann::ngt::Index	index(inIndexPath);
+    tann::Index	index(inIndexPath);
 
     float  epsilon		= args.getf("e", 0.1);
     float  expectedAccuracy	= args.getf("a", 0.0);
@@ -850,7 +850,7 @@ using namespace std;
 
     try {
       GraphReconstructor::refineANNG(index, epsilon, expectedAccuracy, noOfEdges, exploreEdgeSize, batchSize);
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
       std::cerr << "Error!! Cannot refine the index. " << err.what() << std::endl;
       return;
     }
@@ -859,7 +859,7 @@ using namespace std;
   }
 
   void
-  tann::ngt::Command::repair(Args &args)
+  tann::Command::repair(Args &args)
   {
     const string usage = "Usage: ngt [-m c|r|R] repair index \n"
       "\t-m mode\n"
@@ -894,11 +894,11 @@ using namespace std;
       }
     }
 
-    tann::ngt::Index	index(path);
+    tann::Index	index(path);
 
-    tann::ngt::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
-    tann::ngt::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
-    tann::ngt::GraphAndTreeIndex &graphAndTreeIndex = static_cast<GraphAndTreeIndex&>(index.getIndex());
+    tann::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
+    tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
+    tann::GraphAndTreeIndex &graphAndTreeIndex = static_cast<GraphAndTreeIndex&>(index.getIndex());
     size_t objSize = objectRepository.size();
     std::cerr << "aggregate removed objects from the repository." << std::endl;
     std::set<ObjectID> removedIDs;
@@ -965,7 +965,7 @@ using namespace std;
 	  }
 	  invalidGraphObjectCount++;
 	}
-      } catch(tann::ngt::Exception &err) {
+      } catch(tann::Exception &err) {
         if (removedIDs.find(id) == removedIDs.end() && id < objSize) {
           std::cerr << "Not found an object in the graph. It should be inserted into the graph. " << err.what() << " ID=" << id << std::endl;
 	  uninsertedGraphObjectCount++;
@@ -984,7 +984,7 @@ using namespace std;
 //#pragma omp parallel for
     for (size_t id = 1; id < graphIndex.repository.size(); id++) {
       try {
-        tann::ngt::GraphNode &node = *graphIndex.getNode(id);
+        tann::GraphNode &node = *graphIndex.getNode(id);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	for (auto n = node.begin(graphIndex.repository.allocator); n != node.end(graphIndex.repository.allocator);) {
 #else
@@ -1028,7 +1028,7 @@ using namespace std;
 	}
 	std::cerr << "Saving index." << std::endl;
 	index.saveIndex(path);
-      } catch (tann::ngt::Exception &err) {
+      } catch (tann::Exception &err) {
 	cerr << "ngt: Error " << err.what() << endl;
 	cerr << usage << endl;
 	return;
@@ -1038,7 +1038,7 @@ using namespace std;
 
 
   void
-  tann::ngt::Command::optimizeNumberOfEdgesForANNG(Args &args)
+  tann::Command::optimizeNumberOfEdgesForANNG(Args &args)
   {
     const string usage = "Usage: ngt optimize-#-of-edges [-q #-of-queries] [-k #-of-retrieved-objects] "
       "[-p #-of-threads] [-a target-accuracy] [-o target-#-of-objects] [-s #-of-sampe-objects] "
@@ -1063,7 +1063,7 @@ using namespace std;
     parameter.noOfSampleObjects	= args.getl("s", 100000);
     parameter.maxNoOfEdges	= args.getl("e", 100);
 
-    tann::ngt::GraphOptimizer graphOptimizer(false); // false=log
+    tann::GraphOptimizer graphOptimizer(false); // false=log
     auto optimizedEdge = graphOptimizer.optimizeNumberOfEdgesForANNG(indexPath, parameter);
     std::cout << "The optimized # of edges=" << optimizedEdge.first << "(" << optimizedEdge.second << ")" << std::endl;
     std::cout << "Successfully completed." << std::endl;
@@ -1072,11 +1072,11 @@ using namespace std;
 
 
   void
-  tann::ngt::Command::info(Args &args)
+  tann::Command::info(Args &args)
   {
     const string usage = "Usage: ngt info [-E #-of-edges] [-m h|e] index";
 
-    std::cout << "NGT version: " << tann::ngt::Index::getVersion() << std::endl;
+    std::cout << "NGT version: " << tann::Index::getVersion() << std::endl;
     std::cout << "CPU SIMD types: ";
     CpuInfo::showSimdTypes();
 
@@ -1093,13 +1093,13 @@ using namespace std;
     char mode = args.getChar("m", '-');
 
     try {
-      tann::ngt::Index	index(database);
-      tann::ngt::GraphIndex::showStatisticsOfGraph(static_cast<tann::ngt::GraphIndex&>(index.getIndex()), mode, edgeSize);
+      tann::Index	index(database);
+      tann::GraphIndex::showStatisticsOfGraph(static_cast<tann::GraphIndex&>(index.getIndex()), mode, edgeSize);
       if (mode == 'v') {
 	vector<uint8_t> status;
 	index.verify(status);
       }
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
       cerr << "ngt: Error " << err.what() << endl;
       cerr << usage << endl;
     } catch (...) {
@@ -1109,7 +1109,7 @@ using namespace std;
   }
 
 
-  void tann::ngt::Command::exportGraph(Args &args) {
+  void tann::Command::exportGraph(Args &args) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     std::cerr << "ngt: Error: exportGraph is not implemented." << std::endl;
     abort();
@@ -1126,13 +1126,13 @@ using namespace std;
 
     int k = args.getl("k", 0);
 
-    tann::ngt::Index		index(indexPath);
-    tann::ngt::GraphIndex	&graph = static_cast<tann::ngt::GraphIndex&>(index.getIndex());
+    tann::Index		index(indexPath);
+    tann::GraphIndex	&graph = static_cast<tann::GraphIndex&>(index.getIndex());
 
     size_t size = index.getObjectRepositorySize();
 
     for (size_t id = 1; id < size; ++id) {
-      tann::ngt::GraphNode *node = 0;
+      tann::GraphNode *node = 0;
       try {
 	node = graph.getNode(id);
       } catch(...) {
@@ -1153,7 +1153,7 @@ using namespace std;
 #endif
   }
 
-  void tann::ngt::Command::exportObjects(Args &args) {
+  void tann::Command::exportObjects(Args &args) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     std::cerr << "ngt: Error: exportObjects is not implemented." << std::endl;
     abort();
@@ -1168,7 +1168,7 @@ using namespace std;
       return;
     }
 
-    tann::ngt::Index		index(indexPath);
+    tann::Index		index(indexPath);
     auto &objectSpace = index.getObjectSpace();
     size_t size = objectSpace.getRepository().size();
 

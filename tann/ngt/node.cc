@@ -23,9 +23,9 @@
 
 using namespace std;
 
-const double tann::ngt::Node::Object::Pivot = -1.0;
+const double tann::Node::Object::Pivot = -1.0;
 
-using namespace tann::ngt;
+using namespace tann;
 
 void
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)

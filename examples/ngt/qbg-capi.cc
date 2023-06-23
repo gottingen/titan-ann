@@ -105,7 +105,7 @@ main(int argc, char **argv) {
         std::vector<double> queryObject;
         {
             std::vector<std::string> tokens;
-            tann::ngt::Common::tokenize(line, tokens, " \t");
+            tann::Common::tokenize(line, tokens, " \t");
             tokens.resize(dimension);
             if (tokens.size() != dimension) {
                 std::cerr << "dimension of the query is invalid. dimesion=" << tokens.size() << ":" << dimension
@@ -113,7 +113,7 @@ main(int argc, char **argv) {
                 return 1;
             }
             for (std::vector<std::string>::iterator ti = tokens.begin(); ti != tokens.end(); ++ti) {
-                queryVector[distance(tokens.begin(), ti)] = tann::ngt::Common::strtod(*ti);
+                queryVector[distance(tokens.begin(), ti)] = tann::Common::strtod(*ti);
             }
         }
         QBGObjectDistances result = ngt_create_empty_results(err);

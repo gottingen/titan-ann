@@ -54,7 +54,7 @@
 #define NGT_CREATION_EDGE_SIZE			10
 #endif
 
-namespace tann::ngt {
+namespace tann {
   class Property;
 
   typedef GraphNode	GRAPH_NODE;
@@ -221,15 +221,15 @@ namespace tann::ngt {
 
       void deserialize(std::ifstream &is, ObjectRepository &objectRepository) {
 	if (!is.is_open()) {
-	  NGTThrowException("tann::ngt::SearchGraph: Not open the specified stream yet.");
+	  NGTThrowException("tann::SearchGraph: Not open the specified stream yet.");
 	}
 	clear();
 	size_t s;
-	tann::ngt::Serializer::read(is, s);
+	tann::Serializer::read(is, s);
 	resize(s);
 	for (size_t id = 0; id < s; id++) {
 	  char type;
-	  tann::ngt::Serializer::read(is, type);
+	  tann::Serializer::read(is, type);
 	  switch(type) {
 	  case '-':
 	    break;
@@ -287,156 +287,156 @@ namespace tann::ngt {
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
       class Search {
       public:
-	static void (*getMethod(tann::ngt::ObjectSpace::DistanceType dtype, tann::ngt::ObjectSpace::ObjectType otype, size_t size))(tann::ngt::NeighborhoodGraph&, tann::ngt::SearchContainer&, tann::ngt::ObjectDistances&)  {
+	static void (*getMethod(tann::ObjectSpace::DistanceType dtype, tann::ObjectSpace::ObjectType otype, size_t size))(tann::NeighborhoodGraph&, tann::SearchContainer&, tann::ObjectDistances&)  {
 	  if (size < 5000000) {
 	    switch (otype) {
-	    case tann::ngt::ObjectSpace::Float:
+	    case tann::ObjectSpace::Float:
 	      switch (dtype) {
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloat;
-	      case tann::ngt::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloat;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloat;
-	      case tann::ngt::ObjectSpace::DistanceTypeAngle : 	    return angleFloat;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2Float;
-	      case tann::ngt::ObjectSpace::DistanceTypeL2 : 		    return l2Float;
-	      case tann::ngt::ObjectSpace::DistanceTypeL1 : 		    return l1Float;
-	      case tann::ngt::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloat;
-	      case tann::ngt::ObjectSpace::DistanceTypePoincare :         return poincareFloat;  // added by Nyapicom
-	      case tann::ngt::ObjectSpace::DistanceTypeLorentz :          return lorentzFloat;  // added by Nyapicom
+	      case tann::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloat;
+	      case tann::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloat;
+	      case tann::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloat;
+	      case tann::ObjectSpace::DistanceTypeAngle : 	    return angleFloat;
+	      case tann::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2Float;
+	      case tann::ObjectSpace::DistanceTypeL2 : 		    return l2Float;
+	      case tann::ObjectSpace::DistanceTypeL1 : 		    return l1Float;
+	      case tann::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloat;
+	      case tann::ObjectSpace::DistanceTypePoincare :         return poincareFloat;  // added by Nyapicom
+	      case tann::ObjectSpace::DistanceTypeLorentz :          return lorentzFloat;  // added by Nyapicom
 	      default:						    return l2Float;
 	      }
 	      break;
-	    case tann::ngt::ObjectSpace::Uint8:
+	    case tann::ObjectSpace::Uint8:
 	      switch (dtype) {
-	      case tann::ngt::ObjectSpace::DistanceTypeHamming : return hammingUint8;
-	      case tann::ngt::ObjectSpace::DistanceTypeJaccard : return jaccardUint8;
-	      case tann::ngt::ObjectSpace::DistanceTypeL2 : 	   return l2Uint8;
-	      case tann::ngt::ObjectSpace::DistanceTypeL1 : 	   return l1Uint8;
+	      case tann::ObjectSpace::DistanceTypeHamming : return hammingUint8;
+	      case tann::ObjectSpace::DistanceTypeJaccard : return jaccardUint8;
+	      case tann::ObjectSpace::DistanceTypeL2 : 	   return l2Uint8;
+	      case tann::ObjectSpace::DistanceTypeL1 : 	   return l1Uint8;
 	      default : 				   return l2Uint8;
 	      }
 	      break;
 #ifdef NGT_HALF_FLOAT
-	    case tann::ngt::ObjectSpace::Float16:
+	    case tann::ObjectSpace::Float16:
 	      switch (dtype) {
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloat16;
-	      case tann::ngt::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloat16;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloat16;
-	      case tann::ngt::ObjectSpace::DistanceTypeAngle : 	    return angleFloat16;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2Float16;
-	      case tann::ngt::ObjectSpace::DistanceTypeL2 : 		    return l2Float16;
-	      case tann::ngt::ObjectSpace::DistanceTypeL1 : 		    return l1Float16;
-	      case tann::ngt::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloat16;
-	      case tann::ngt::ObjectSpace::DistanceTypePoincare :         return poincareFloat16;  // added by Nyapicom
-	      case tann::ngt::ObjectSpace::DistanceTypeLorentz :          return lorentzFloat16;  // added by Nyapicom
+	      case tann::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloat16;
+	      case tann::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloat16;
+	      case tann::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloat16;
+	      case tann::ObjectSpace::DistanceTypeAngle : 	    return angleFloat16;
+	      case tann::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2Float16;
+	      case tann::ObjectSpace::DistanceTypeL2 : 		    return l2Float16;
+	      case tann::ObjectSpace::DistanceTypeL1 : 		    return l1Float16;
+	      case tann::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloat16;
+	      case tann::ObjectSpace::DistanceTypePoincare :         return poincareFloat16;  // added by Nyapicom
+	      case tann::ObjectSpace::DistanceTypeLorentz :          return lorentzFloat16;  // added by Nyapicom
 	      default:						    return l2Float16;
 	      }
 	      break;
 #endif
 	    default:
-	      NGTThrowException("tann::ngt::Graph::Search: Not supported object type.");
+	      NGTThrowException("tann::Graph::Search: Not supported object type.");
 	      break;
 	    }
 	    return l1Uint8;
 	  } else {
 	    switch (otype) {
-	    case tann::ngt::ObjectSpace::Float:
+	    case tann::ObjectSpace::Float:
 	      switch (dtype) {
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeAngle : 	    return angleFloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2FloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeL2 : 		    return l2FloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeL1 : 		    return l1FloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypePoincare :         return poincareFloatForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeLorentz :          return lorentzFloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeAngle : 	    return angleFloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2FloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeL2 : 		    return l2FloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeL1 : 		    return l1FloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypePoincare :         return poincareFloatForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeLorentz :          return lorentzFloatForLargeDataset;
 	      default:						    return l2FloatForLargeDataset;
 	      }
 	      break;
-	    case tann::ngt::ObjectSpace::Uint8:
+	    case tann::ObjectSpace::Uint8:
 	      switch (dtype) {
-	      case tann::ngt::ObjectSpace::DistanceTypeHamming : return hammingUint8ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeJaccard : return jaccardUint8ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeL2 : 	   return l2Uint8ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeL1 : 	   return l1Uint8ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeHamming : return hammingUint8ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeJaccard : return jaccardUint8ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeL2 : 	   return l2Uint8ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeL1 : 	   return l1Uint8ForLargeDataset;
 	      default : 				   return l2Uint8ForLargeDataset;
 	      }
 	      break;
 #ifdef NGT_HALF_FLOAT
-	    case tann::ngt::ObjectSpace::Float16:
+	    case tann::ObjectSpace::Float16:
 	      switch (dtype) {
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloat16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloat16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloat16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeAngle : 	    return angleFloat16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2Float16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeL2 : 		    return l2Float16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeL1 : 		    return l1Float16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloat16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypePoincare :         return poincareFloat16ForLargeDataset;
-	      case tann::ngt::ObjectSpace::DistanceTypeLorentz :          return lorentzFloat16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeNormalizedCosine : return normalizedCosineSimilarityFloat16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeCosine : 	    return cosineSimilarityFloat16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeNormalizedAngle :  return normalizedAngleFloat16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeAngle : 	    return angleFloat16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeNormalizedL2 :     return normalizedL2Float16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeL2 : 		    return l2Float16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeL1 : 		    return l1Float16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeSparseJaccard :    return sparseJaccardFloat16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypePoincare :         return poincareFloat16ForLargeDataset;
+	      case tann::ObjectSpace::DistanceTypeLorentz :          return lorentzFloat16ForLargeDataset;
 	      default:						    return l2Float16ForLargeDataset;
 	      }
 #endif
 	    default:
-	      NGTThrowException("tann::ngt::Graph::Search: Not supported object type.");
+	      NGTThrowException("tann::Graph::Search: Not supported object type.");
 	      break;
 	    }
 	    return l1Uint8ForLargeDataset;
 	  }
 	}
-	static void l1Uint8(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l2Uint8(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l1Float(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l2Float(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void hammingUint8(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void jaccardUint8(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void sparseJaccardFloat(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void cosineSimilarityFloat(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void angleFloat(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedCosineSimilarityFloat(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedAngleFloat(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedL2Float(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void poincareFloat(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
-	static void lorentzFloat(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
+	static void l1Uint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l2Uint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l1Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l2Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void hammingUint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void jaccardUint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void sparseJaccardFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void cosineSimilarityFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void angleFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedCosineSimilarityFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedAngleFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedL2Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void poincareFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
+	static void lorentzFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
 #ifdef NGT_HALF_FLOAT
-	static void l1Float16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l2Float16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void sparseJaccardFloat16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void cosineSimilarityFloat16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void angleFloat16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedCosineSimilarityFloat16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedAngleFloat16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedL2Float16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void poincareFloat16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
-	static void lorentzFloat16(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
+	static void l1Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l2Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void sparseJaccardFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void cosineSimilarityFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void angleFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedCosineSimilarityFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedAngleFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedL2Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void poincareFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
+	static void lorentzFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);  // added by Nyapicom
 #endif
 
-	static void l1Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l2Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l1FloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l2FloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void hammingUint8ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void jaccardUint8ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void sparseJaccardFloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void cosineSimilarityFloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void angleFloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedCosineSimilarityFloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedAngleFloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedL2FloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void poincareFloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void lorentzFloatForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
+	static void l1Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l2Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l1FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l2FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void hammingUint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void jaccardUint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void sparseJaccardFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void cosineSimilarityFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void angleFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedCosineSimilarityFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedAngleFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedL2FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void poincareFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void lorentzFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
 #ifdef NGT_HALF_FLOAT
-	static void l1Float16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void l2Float16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void sparseJaccardFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void cosineSimilarityFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void angleFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedCosineSimilarityFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedAngleFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void normalizedL2Float16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void poincareFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-	static void lorentzFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
+	static void l1Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void l2Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void sparseJaccardFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void cosineSimilarityFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void angleFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedCosineSimilarityFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedAngleFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void normalizedL2Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void poincareFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+	static void lorentzFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
 #endif
       };
 #endif
@@ -478,10 +478,10 @@ namespace tann::ngt {
 	  outgoingEdge			= -1;
 	  incomingEdge			= -1;
 	}
-	void set(tann::ngt::Property &prop);
-	void get(tann::ngt::Property &prop);
+	void set(tann::Property &prop);
+	void get(tann::Property &prop);
 
-	void exportProperty(tann::ngt::PropertySet &p) {
+	void exportProperty(tann::PropertySet &p) {
 	  p.set("IncrimentalEdgeSizeLimitForTruncation", truncationThreshold);
 	  p.set("EdgeSizeForCreation", edgeSizeForCreation);
 	  p.set("EdgeSizeForSearch", edgeSizeForSearch);
@@ -513,7 +513,7 @@ namespace tann::ngt {
 	  default: std::cerr << "Graph::exportProperty: Fatal error! Invalid Seed Type. " << seedType << std::endl; abort();
 	  }
 	}
-	void importProperty(tann::ngt::PropertySet &p) {
+	void importProperty(tann::PropertySet &p) {
 	  setDefault();
 	  truncationThreshold = p.getl("IncrimentalEdgeSizeLimitForTruncation", truncationThreshold);
 	  edgeSizeForCreation = p.getl("EdgeSizeForCreation", edgeSizeForCreation);
@@ -614,10 +614,10 @@ namespace tann::ngt {
 	  insertBKNNGNode(id, objects);
 	  break;
 	case GraphTypeNone:
-	  NGTThrowException("tann::ngt::insertNode: GraphType is not specified.");
+	  NGTThrowException("tann::insertNode: GraphType is not specified.");
 	  break;
 	default:
-	  NGTThrowException("tann::ngt::insertNode: GraphType is invalid.");
+	  NGTThrowException("tann::insertNode: GraphType is invalid.");
 	  break;
 	}
       }
@@ -698,7 +698,7 @@ namespace tann::ngt {
       void insertONNGNode(ObjectID id, ObjectDistances &results) {
 	if (property.truncationThreshold != 0) {
 	  std::stringstream msg;
-	  msg << "tann::ngt::insertONNGNode: truncation should be disabled!" << std::endl;
+	  msg << "tann::insertONNGNode: truncation should be disabled!" << std::endl;
 	  NGTThrowException(msg);
 	}
 	int count = 0;
@@ -733,7 +733,7 @@ namespace tann::ngt {
       }
 
       // setup edgeSize
-      inline size_t getEdgeSize(tann::ngt::SearchContainer &sc) {
+      inline size_t getEdgeSize(tann::SearchContainer &sc) {
 	int64_t esize = sc.edgeSize == -1 ? property.edgeSizeForSearch : sc.edgeSize;
 	size_t edgeSize = INT_MAX;
 
@@ -746,16 +746,16 @@ namespace tann::ngt {
 	  edgeSize = add >= static_cast<double>(INT_MAX) ? INT_MAX : property.dynamicEdgeSizeBase + add;
 	} else {
 	  std::stringstream msg;
-	  msg << "tann::ngt::getEdgeSize: Invalid edge size parameters " << sc.edgeSize << ":" << property.edgeSizeForSearch;
+	  msg << "tann::getEdgeSize: Invalid edge size parameters " << sc.edgeSize << ":" << property.edgeSizeForSearch;
 	  NGTThrowException(msg);
 	}
 	return edgeSize;
       }
 
-      void search(tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
+      void search(tann::SearchContainer &sc, ObjectDistances &seeds);
 
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
-      template <typename COMPARATOR, typename CHECK_LIST> void searchReadOnlyGraph(tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
+      template <typename COMPARATOR, typename CHECK_LIST> void searchReadOnlyGraph(tann::SearchContainer &sc, ObjectDistances &seeds);
 #endif
 
       void removeEdge(ObjectID fid, ObjectID rmid) {
@@ -795,11 +795,11 @@ namespace tann::ngt {
 	if (ni == node.end()) {
 #endif
 	  std::stringstream msg;
-	  msg << "tann::ngt::removeEdge: Cannot found " << edge.id;
+	  msg << "tann::removeEdge: Cannot found " << edge.id;
 	  NGTThrowException(msg);
 	} else {
 	  std::stringstream msg;
-	  msg << "tann::ngt::removeEdge: Cannot found " << (*ni).id << ":" << edge.id;
+	  msg << "tann::removeEdge: Cannot found " << (*ni).id << ":" << edge.id;
 	  NGTThrowException(msg);
 	}
       }
@@ -858,8 +858,8 @@ namespace tann::ngt {
       typedef std::priority_queue<ObjectDistance, std::vector<ObjectDistance>, std::greater<ObjectDistance> > UncheckedSet;
 #endif
 #endif
-      void setupDistances(tann::ngt::SearchContainer &sc, ObjectDistances &seeds);
-      void setupDistances(tann::ngt::SearchContainer &sc, ObjectDistances &seeds, double (&comparator)(const void*, const void*, size_t));
+      void setupDistances(tann::SearchContainer &sc, ObjectDistances &seeds);
+      void setupDistances(tann::SearchContainer &sc, ObjectDistances &seeds, double (&comparator)(const void*, const void*, size_t));
 
       void setupSeeds(SearchContainer &sc, ObjectDistances &seeds, ResultSet &results, 
 		      UncheckedSet &unchecked, DistanceCheckedSet &distanceChecked);
@@ -880,7 +880,7 @@ namespace tann::ngt {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
 	assert(0);
 #else
-	for (std::vector<tann::ngt::GraphNode*>::iterator i = repository.begin(); i != repository.end(); i++) {
+	for (std::vector<tann::GraphNode*>::iterator i = repository.begin(); i != repository.end(); i++) {
 	  if ((*i) != 0) {
 	    delete (*i);
 	  }
@@ -910,7 +910,7 @@ namespace tann::ngt {
 	if ((ni != node.end(repository.allocator)) && ((*ni).id == addID)) {
 	  if (identityCheck) {
 	    std::stringstream msg;
-	    msg << "tann::ngt::addEdge: already existed! " << (*ni).id << ":" << addID;
+	    msg << "tann::addEdge: already existed! " << (*ni).id << ":" << addID;
 	    NGTThrowException(msg);
 	  }
 	  return;
@@ -920,7 +920,7 @@ namespace tann::ngt {
 	if ((ni != node.end()) && ((*ni).id == addID)) {
 	  if (identityCheck) {
 	    std::stringstream msg;
-	    msg << "tann::ngt::addEdge: already existed! " << (*ni).id << ":" << addID;
+	    msg << "tann::addEdge: already existed! " << (*ni).id << ":" << addID;
 	    NGTThrowException(msg);
 	  }
 	  return;
@@ -940,7 +940,7 @@ namespace tann::ngt {
 	GraphNode &node = property.truncationThreshold == 0 ? *getNode(target) : *getNode(target, minsize);
 	try {
 	  addEdge(node, addID, addDistance, identityCheck);
-	} catch(tann::ngt::Exception &err) {
+	} catch(tann::Exception &err) {
 	  std::stringstream msg;
 	  msg << " Cannot add the edge. " << target << "->" << addID << ". " << err.what();
 	  NGTThrowException(msg);

@@ -44,8 +44,8 @@ namespace QBG {
         };
 
         Optimizer() {
-            clusteringType = tann::ngt::Clustering::ClusteringTypeKmeansWithNGT;
-            initMode = tann::ngt::Clustering::InitializationModeRandom;
+            clusteringType = tann::Clustering::ClusteringTypeKmeansWithNGT;
+            initMode = tann::Clustering::InitializationModeRandom;
 
             iteration = 100;
             clusterIteration = 100;
@@ -97,7 +97,7 @@ namespace QBG {
 
         static void
 #ifdef NGT_CLUSTERING
-        extractQuantizedVector(vector <vector<float>> &qvectors, vector <tann::ngt::Clustering::Cluster> &clusters)
+        extractQuantizedVector(vector <vector<float>> &qvectors, vector <tann::Clustering::Cluster> &clusters)
 #else
         extractQuantizedVector(vector<vector<float>> &qvectors, vector<Cluster> &clusters)
 #endif
@@ -152,22 +152,22 @@ namespace QBG {
             vector<vector<float>> residualVectors;
             vector<vector<float>> globalCentroid;
             try {
-                tann::ngt::Clustering::loadVectors(global, globalCentroid);
+                tann::Clustering::loadVectors(global, globalCentroid);
             } catch (...) {
                 std::stringstream msg;
                 msg << "Optimizer::generateResidualObjects: Cannot load global vectors. " << global;
                 NGTThrowException(msg);
             }
 
-            tann::ngt::Property property;
-            property.objectType = tann::ngt::Index::Property::ObjectType::Float;
-            property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+            tann::Property property;
+            property.objectType = tann::Index::Property::ObjectType::Float;
+            property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
             if (globalCentroid[0].size() != vectors[0].size()) {
                 std::cerr << "optimizer: Warning. The dimension is inconsistency. " << globalCentroid[0].size() << ":"
                           << vectors[0].size() << std::endl;
             }
             property.dimension = vectors[0].size();
-            tann::ngt::Index index(property);
+            tann::Index index(property);
             for (auto &c: globalCentroid) {
                 if (static_cast<int>(c.size()) != property.dimension) {
                     c.resize(property.dimension);
@@ -180,8 +180,8 @@ namespace QBG {
                 auto &v = vectors[idx];
                 if ((idx + 1) % 10000 == 0) {
                 }
-                tann::ngt::ObjectDistances gc;
-                tann::ngt::SearchQuery query(v);
+                tann::ObjectDistances gc;
+                tann::SearchQuery query(v);
                 query.setResults(&gc);
                 query.setSize(10);
                 query.setEpsilon(0.1);
@@ -196,8 +196,8 @@ namespace QBG {
                 }
                 auto gcidx = gc[0].id - 1;
                 try {
-                    tann::ngt::Clustering::subtract(v, globalCentroid[gcidx]);
-                } catch (tann::ngt::Exception &err) {
+                    tann::Clustering::subtract(v, globalCentroid[gcidx]);
+                } catch (tann::Exception &err) {
                     std::cerr << err.what() << ":" << v.size() << "x" << globalCentroid[gcidx].size() << std::endl;
                     abort();
                 }
@@ -211,9 +211,9 @@ namespace QBG {
                 Matrix<float> &xt,
                 Matrix<float> &R,
                 Matrix<float> &minR,
-                vector <vector<tann::ngt::Clustering::Cluster>> &minLocalClusters,
-                tann::ngt::Clustering::ClusteringType clusteringType,
-                tann::ngt::Clustering::InitializationMode initMode,
+                vector <vector<tann::Clustering::Cluster>> &minLocalClusters,
+                tann::Clustering::ClusteringType clusteringType,
+                tann::Clustering::InitializationMode initMode,
                 size_t numberOfClusters,
                 size_t numberOfSubvectors,
                 size_t subvectorSize,
@@ -222,7 +222,7 @@ namespace QBG {
                 float clusterSizeConstraintCoefficient,
                 size_t convergenceLimitTimes,
                 double &minDistortion,
-                tann::ngt::Timer &timelimitTimer, float timelimit,
+                tann::Timer &timelimitTimer, float timelimit,
                 bool rotation
         ) {
 
@@ -234,7 +234,7 @@ namespace QBG {
                 Matrix<float>::mulSquare(xp, R);
                 float distance = 0.0;
 #ifdef NGT_CLUSTERING
-                vector <vector<tann::ngt::Clustering::Cluster>> localClusters(numberOfSubvectors);
+                vector <vector<tann::Clustering::Cluster>> localClusters(numberOfSubvectors);
 #else
                 vector<vector<Cluster>> localClusters(numberOfSubvectors);
 #endif
@@ -248,12 +248,12 @@ namespace QBG {
                     vector <vector<float>> subVectors;
                     extractSubvector(xp, subVectors, m * subvectorSize, subvectorSize);
 #ifdef NGT_CLUSTERING
-                    vector <tann::ngt::Clustering::Cluster> &clusters = localClusters[m];
+                    vector <tann::Clustering::Cluster> &clusters = localClusters[m];
 #else
                     vector<Cluster> &clusters = localClusters[m];
 #endif
 #ifdef NGT_CLUSTERING
-                    tann::ngt::Clustering clustering(initMode, clusteringType, clusterIteration);
+                    tann::Clustering clustering(initMode, clusteringType, clusterIteration);
                     clustering.setClusterSizeConstraintCoefficient(clusterSizeConstraintCoefficient);
                     clustering.clusterSizeConstraint = clusterSizeConstraint;
                     clustering.kmeans(subVectors, numberOfClusters, clusters);
@@ -323,7 +323,7 @@ namespace QBG {
                       string ofile,
                       Matrix<float> &reposition,
                       vector <Matrix<float>> &rs,
-                      vector <vector<vector < tann::ngt::Clustering::Cluster>>
+                      vector <vector<vector < tann::Clustering::Cluster>>
 
         > &localClusters,
         vector<double> &errors
@@ -341,12 +341,12 @@ namespace QBG {
 #endif
             localClusters.resize(rs.size());
             errors.resize(rs.size());
-            tann::ngt::Timer timer;
+            tann::Timer timer;
             for (size_t ri = 0; ri < rs.size(); ri++) {
                 auto imode = initMode;
-                if (imode == tann::ngt::Clustering::InitializationModeBest) {
-                    imode = ri % 2 == 0 ? tann::ngt::Clustering::InitializationModeRandom
-                                        : tann::ngt::Clustering::InitializationModeKmeansPlusPlus;
+                if (imode == tann::Clustering::InitializationModeBest) {
+                    imode = ri % 2 == 0 ? tann::Clustering::InitializationModeRandom
+                                        : tann::Clustering::InitializationModeKmeansPlusPlus;
                 }
                 timer.start();
                 Matrix<float> optr;
@@ -393,10 +393,10 @@ namespace QBG {
 
 #endif
 
-        tann::ngt::Clustering::ClusteringType clusteringType;
-        tann::ngt::Clustering::InitializationMode initMode;
+        tann::Clustering::ClusteringType clusteringType;
+        tann::Clustering::InitializationMode initMode;
 
-        tann::ngt::Timer timelimitTimer;
+        tann::Timer timelimitTimer;
         float timelimit;
         size_t iteration;
         size_t clusterIteration;

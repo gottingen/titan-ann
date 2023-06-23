@@ -19,9 +19,9 @@
 #include    "thread.h"
 
 using namespace std;
-using namespace tann::ngt;
+using namespace tann;
 
-namespace tann::ngt {
+namespace tann {
 class ThreadInfo {
   public:
     pthread_t		threadid;

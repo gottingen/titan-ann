@@ -21,7 +21,7 @@
 #include "tann/ngt/object_space_repository.h"
 #include	<algorithm>
 
-namespace tann::ngt {
+namespace tann {
   class DVPTree;
   class InternalNode;
   class LeafNode;
@@ -52,10 +52,10 @@ namespace tann::ngt {
       void setType(Type t) { id = (t << 31) | getID(); }
       void setRaw(NodeID i) { id = i; }
       void setNull() { id = 0; }
-      void serialize(std::ofstream &os) { tann::ngt::Serializer::write(os, id); }
-      void deserialize(std::ifstream &is) { tann::ngt::Serializer::read(is, id); }
-      void serializeAsText(std::ofstream &os) { tann::ngt::Serializer::writeAsText(os, id); }
-      void deserializeAsText(std::ifstream &is) { tann::ngt::Serializer::readAsText(is, id); }
+      void serialize(std::ofstream &os) { tann::Serializer::write(os, id); }
+      void deserialize(std::ifstream &is) { tann::Serializer::read(is, id); }
+      void serializeAsText(std::ofstream &os) { tann::Serializer::writeAsText(os, id); }
+      void deserializeAsText(std::ifstream &is) { tann::Serializer::readAsText(is, id); }
     protected:
       NodeID id;
     };
@@ -111,7 +111,7 @@ namespace tann::ngt {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
     void setPivot(PersistentObject &f, ObjectSpace &os, SharedMemoryAllocator &allocator) {
       if (pivot == 0) {
-	pivot = tann::ngt::PersistentObject::allocate(os);
+	pivot = tann::PersistentObject::allocate(os);
       }
       getPivot(os).set(f, os);
     }
@@ -122,13 +122,13 @@ namespace tann::ngt {
       os.deleteObject(&getPivot(os));
     }
 #else // NGT_SHARED_MEMORY_ALLOCATOR
-    void setPivot(tann::ngt::Object &f, ObjectSpace &os) {
+    void setPivot(tann::Object &f, ObjectSpace &os) {
       if (pivot == 0) {
-	pivot = tann::ngt::Object::allocate(os);
+	pivot = tann::Object::allocate(os);
       }
       os.copy(getPivot(), f);
     }
-    tann::ngt::Object &getPivot() { return *pivot; }
+    tann::Object &getPivot() { return *pivot; }
     void deletePivot(ObjectSpace &os) {
       os.deleteObject(pivot);
     }
@@ -144,7 +144,7 @@ namespace tann::ngt {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
     off_t		pivot;
 #else
-    tann::ngt::Object		*pivot;
+    tann::Object		*pivot;
 #endif
 
   };
@@ -154,10 +154,10 @@ namespace tann::ngt {
   public:
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     InternalNode(size_t csize, SharedMemoryAllocator &allocator) : childrenSize(csize) { initialize(allocator); }
-    InternalNode(SharedMemoryAllocator &allocator, tann::ngt::ObjectSpace *os = 0) : childrenSize(5) { initialize(allocator); }
+    InternalNode(SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0) : childrenSize(5) { initialize(allocator); }
 #else
     InternalNode(size_t csize) : childrenSize(csize) { initialize(); }
-    InternalNode(tann::ngt::ObjectSpace *os = 0) : childrenSize(5) { initialize(); }
+    InternalNode(tann::ObjectSpace *os = 0) : childrenSize(5) { initialize(); }
 #endif
 
     ~InternalNode() {
@@ -233,7 +233,7 @@ namespace tann::ngt {
 #else
       getPivot().serialize(os, objectspace);
 #endif
-      tann::ngt::Serializer::write(os, childrenSize);
+      tann::Serializer::write(os, childrenSize);
       for (size_t i = 0; i < childrenSize; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	getChildren(allocator)[i].serialize(os);
@@ -243,9 +243,9 @@ namespace tann::ngt {
       }
       for (size_t i = 0; i < childrenSize - 1; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tann::ngt::Serializer::write(os, getBorders(allocator)[i]);
+	tann::Serializer::write(os, getBorders(allocator)[i]);
 #else
-	tann::ngt::Serializer::write(os, getBorders()[i]);
+	tann::Serializer::write(os, getBorders()[i]);
 #endif
       }
     }
@@ -265,7 +265,7 @@ namespace tann::ngt {
 #else
       getPivot().deserialize(is, objectspace);
 #endif
-      tann::ngt::Serializer::read(is, childrenSize);
+      tann::Serializer::read(is, childrenSize);
       assert(children != 0);
       for (size_t i = 0; i < childrenSize; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -279,7 +279,7 @@ namespace tann::ngt {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	assert(0);
 #else
-	tann::ngt::Serializer::read(is, getBorders()[i]);
+	tann::Serializer::read(is, getBorders()[i]);
 #endif
       }
     }
@@ -301,7 +301,7 @@ namespace tann::ngt {
       getPivot().serializeAsText(os, objectspace);
 #endif
       os << " ";
-      tann::ngt::Serializer::writeAsText(os, childrenSize);
+      tann::Serializer::writeAsText(os, childrenSize);
       os << " ";
       for (size_t i = 0; i < childrenSize; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -313,9 +313,9 @@ namespace tann::ngt {
       }
       for (size_t i = 0; i < childrenSize - 1; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tann::ngt::Serializer::writeAsText(os, getBorders(allocator)[i]);
+	tann::Serializer::writeAsText(os, getBorders(allocator)[i]);
 #else
-	tann::ngt::Serializer::writeAsText(os, getBorders()[i]);
+	tann::Serializer::writeAsText(os, getBorders()[i]);
 #endif
 	os << " ";
       }
@@ -340,7 +340,7 @@ namespace tann::ngt {
       getPivot().deserializeAsText(is, objectspace);
 #endif
       size_t csize;
-      tann::ngt::Serializer::readAsText(is, csize);
+      tann::Serializer::readAsText(is, csize);
       assert(children != 0);
       assert(childrenSize == csize);
       for (size_t i = 0; i < childrenSize; i++) {
@@ -353,9 +353,9 @@ namespace tann::ngt {
       assert(borders != 0);
       for (size_t i = 0; i < childrenSize - 1; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-	tann::ngt::Serializer::readAsText(is, getBorders(allocator)[i]);
+	tann::Serializer::readAsText(is, getBorders(allocator)[i]);
 #else
-	tann::ngt::Serializer::readAsText(is, getBorders()[i]);
+	tann::Serializer::readAsText(is, getBorders()[i]);
 #endif
       }
     }
@@ -394,9 +394,9 @@ namespace tann::ngt {
   class LeafNode : public Node {
   public:
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-    LeafNode(SharedMemoryAllocator &allocator, tann::ngt::ObjectSpace *os = 0) {
+    LeafNode(SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0) {
 #else
-    LeafNode(tann::ngt::ObjectSpace *os = 0) {
+    LeafNode(tann::ObjectSpace *os = 0) {
 #endif
       id = 0;
       id.setType(ID::Leaf);
@@ -408,7 +408,7 @@ namespace tann::ngt {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
       objectIDs = allocator.getOffset(new(allocator) Object[LeafObjectsSizeMax]);
 #else
-      objectIDs = new tann::ngt::ObjectDistance[LeafObjectsSizeMax];
+      objectIDs = new tann::ObjectDistance[LeafObjectsSizeMax];
 #endif
 #endif
     }
@@ -440,20 +440,20 @@ namespace tann::ngt {
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
 #ifndef NGT_NODE_USE_VECTOR
-    tann::ngt::ObjectDistance *getObjectIDs(SharedMemoryAllocator &allocator) {
-      return (tann::ngt::ObjectDistance *)allocator.getAddr(objectIDs);
+    tann::ObjectDistance *getObjectIDs(SharedMemoryAllocator &allocator) {
+      return (tann::ObjectDistance *)allocator.getAddr(objectIDs);
     }
 #endif
 #else // NGT_SHARED_MEMORY_ALLOCATOR
-    tann::ngt::ObjectDistance *getObjectIDs() { return objectIDs; }
+    tann::ObjectDistance *getObjectIDs() { return objectIDs; }
 #endif // NGT_SHARED_MEMORY_ALLOCATOR
 
     void serialize(std::ofstream &os, ObjectSpace *objectspace = 0) {
       Node::serialize(os);
 #ifdef NGT_NODE_USE_VECTOR
-      tann::ngt::Serializer::write(os, objectIDs);
+      tann::Serializer::write(os, objectIDs);
 #else
-      tann::ngt::Serializer::write(os, objectSize);
+      tann::Serializer::write(os, objectSize);
       for (int i = 0; i < objectSize; i++) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
 	std::cerr << "not implemented" << std::endl;
@@ -483,10 +483,10 @@ namespace tann::ngt {
 
 #ifdef NGT_NODE_USE_VECTOR
       objectIDs.clear();
-      tann::ngt::Serializer::read(is, objectIDs);
+      tann::Serializer::read(is, objectIDs);
 #else
       assert(objectIDs != 0);
-      tann::ngt::Serializer::read(is, objectSize);
+      tann::Serializer::read(is, objectSize);
       for (int i = 0; i < objectSize; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	std::cerr << "not implemented" << std::endl;
@@ -540,9 +540,9 @@ namespace tann::ngt {
 #endif
       os << " ";
 #ifdef NGT_NODE_USE_VECTOR
-      tann::ngt::Serializer::writeAsText(os, objectIDs);
+      tann::Serializer::writeAsText(os, objectIDs);
 #else
-      tann::ngt::Serializer::writeAsText(os, objectSize);
+      tann::Serializer::writeAsText(os, objectSize);
       for (int i = 0; i < objectSize; i++) {
 	os << " ";
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
@@ -575,10 +575,10 @@ namespace tann::ngt {
 #endif
 #ifdef NGT_NODE_USE_VECTOR
       objectIDs.clear();
-      tann::ngt::Serializer::readAsText(is, objectIDs);
+      tann::Serializer::readAsText(is, objectIDs);
 #else
       assert(objectIDs != 0);
-      tann::ngt::Serializer::readAsText(is, objectSize);
+      tann::Serializer::readAsText(is, objectSize);
       for (int i = 0; i < objectSize; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
 	getObjectIDs(allocator)[i].deserializeAsText(is);

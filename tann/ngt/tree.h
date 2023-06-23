@@ -25,7 +25,7 @@
 #include	<stack>
 #include	<set>
 
-namespace tann::ngt {
+namespace tann {
 
   class DVPTree {
 
@@ -37,21 +37,21 @@ namespace tann::ngt {
 
     typedef std::vector<Node::ID>	IDVector;
 
-    class Container : public tann::ngt::Container {
+    class Container : public tann::Container {
     public:
-      Container(Object &f, ObjectID i):tann::ngt::Container(f, i) {}
+      Container(Object &f, ObjectID i):tann::Container(f, i) {}
       DVPTree			*vptree;
     };
 
-    class SearchContainer : public tann::ngt::SearchContainer {
+    class SearchContainer : public tann::SearchContainer {
     public:
       enum Mode {
 	SearchLeaf	= 0,
 	SearchObject	= 1
       };
 
-      SearchContainer(Object &f, ObjectID i):tann::ngt::SearchContainer(f, i) {}
-      SearchContainer(Object &f):tann::ngt::SearchContainer(f, 0) {}
+      SearchContainer(Object &f, ObjectID i):tann::SearchContainer(f, i) {}
+      SearchContainer(Object &f):tann::SearchContainer(f, 0) {}
 
       DVPTree			*vptree;
 
@@ -406,13 +406,13 @@ namespace tann::ngt {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
       assert(0);
 #else
-      for (std::vector<tann::ngt::LeafNode*>::iterator i = leafNodes.begin(); i != leafNodes.end(); i++) {
+      for (std::vector<tann::LeafNode*>::iterator i = leafNodes.begin(); i != leafNodes.end(); i++) {
 	if ((*i) != 0) {
 	  delete (*i);
 	}
       }
       leafNodes.clear();
-      for (std::vector<tann::ngt::InternalNode*>::iterator i = internalNodes.begin(); i != internalNodes.end(); i++) {
+      for (std::vector<tann::InternalNode*>::iterator i = internalNodes.begin(); i != internalNodes.end(); i++) {
 	if ((*i) != 0) {
 	  delete (*i);
 	}

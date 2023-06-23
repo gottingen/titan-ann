@@ -40,7 +40,7 @@ using namespace std;
 #include <random>
 
 
-namespace tann::ngt {
+namespace tann {
 
   class Clustering {
   public:
@@ -119,7 +119,7 @@ namespace tann::ngt {
       extractVector(const std::string &str, std::vector<float> &vec)
     {
       std::vector<std::string> tokens;
-      tann::ngt::Common::tokenize(str, tokens, " \t");
+      tann::Common::tokenize(str, tokens, " \t");
       convert(tokens, vec);
     }
 
@@ -324,7 +324,7 @@ namespace tann::ngt {
       size_t idx = dist(mt);
       clusters.push_back(Cluster(vectors[idx]));
 
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       for (size_t k = 1; k < size; k++) {
 	double sum = 0;
 	std::priority_queue<DescendingEntry> sortedObjects;
@@ -364,7 +364,7 @@ namespace tann::ngt {
       assign(std::vector<std::vector<float>> &vectors, std::vector<Cluster> &clusters, 
              size_t clusterSize = std::numeric_limits<size_t>::max(), bool clear = true) {
       // compute distances to the nearest clusters, and construct heap by the distances.
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       timer.start();
 
       size_t nOfVectors = 0;
@@ -496,7 +496,7 @@ namespace tann::ngt {
     }
 
     static void
-      assignWithNGT(tann::ngt::Index &index, std::vector<std::vector<float> > &vectors, std::vector<Cluster> &clusters,
+      assignWithNGT(tann::Index &index, std::vector<std::vector<float> > &vectors, std::vector<Cluster> &clusters,
 		    size_t &resultSize, float epsilon = 0.12,
 		    size_t clusterSize = std::numeric_limits<size_t>::max()) {
       size_t dataSize = vectors.size();
@@ -505,10 +505,10 @@ namespace tann::ngt {
 #pragma omp parallel for
       for (size_t ci = 0; ci < clusters.size(); ci++) {
 	auto cit = clusters.begin() + ci;
-	tann::ngt::ObjectDistances objects;
-	tann::ngt::Object *query = 0;
+	tann::ObjectDistances objects;
+	tann::Object *query = 0;
 	query = index.allocateObject((*cit).centroid);
-	tann::ngt::SearchContainer sc(*query);
+	tann::SearchContainer sc(*query);
 	sc.setResults(&objects);
 	sc.setEpsilon(epsilon);
 	sc.setSize(resultSize);
@@ -680,7 +680,7 @@ namespace tann::ngt {
     double kmeansWithoutNGT(std::vector<std::vector<float> > &vectors, std::vector<Cluster> &clusters,
 			    size_t clusterSize)
     {
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       timer.start();
       double diff = std::numeric_limits<double>::max();
       size_t stabilityLimit = 2;
@@ -734,7 +734,7 @@ namespace tann::ngt {
 
 
 
-    double kmeansWithNGT(tann::ngt::Index &index, std::vector<std::vector<float> > &vectors, size_t numberOfClusters, std::vector<Cluster> &clusters, float epsilon)
+    double kmeansWithNGT(tann::Index &index, std::vector<std::vector<float> > &vectors, size_t numberOfClusters, std::vector<Cluster> &clusters, float epsilon)
     {
       size_t clusterSize = std::numeric_limits<size_t>::max();
       if (clusterSizeConstraint) {
@@ -745,7 +745,7 @@ namespace tann::ngt {
       }
 
       diffHistory.clear();
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       timer.start();
       double diff = 0.0;
       size_t resultSize;
@@ -781,11 +781,11 @@ namespace tann::ngt {
       string dataFile;
       size_t dataSize = 0;
       size_t dim = clusters.front().centroid.size();
-      tann::ngt::Property property;
+      tann::Property property;
       property.dimension = dim;
-      property.graphType = tann::ngt::Property::GraphType::GraphTypeANNG;
-      property.objectType = tann::ngt::Index::Property::ObjectType::Float;
-      property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+      property.graphType = tann::Property::GraphType::GraphTypeANNG;
+      property.objectType = tann::Index::Property::ObjectType::Float;
+      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
 
       float *data = new float[vectors.size() * dim];
       float *ptr = data;
@@ -796,7 +796,7 @@ namespace tann::ngt {
       }
       size_t threadSize = 20;
 
-      tann::ngt::Index index(property);
+      tann::Index index(property);
       index.append(data, dataSize);
       index.createIndex(threadSize);
 
@@ -805,10 +805,10 @@ namespace tann::ngt {
     }
 #endif
     
-    double kmeansWithNGT(tann::ngt::Index &index, size_t numberOfClusters, std::vector<Cluster> &clusters)
+    double kmeansWithNGT(tann::Index &index, size_t numberOfClusters, std::vector<Cluster> &clusters)
     {
-      tann::ngt::GraphIndex	&graph = static_cast<tann::ngt::GraphIndex&>(index.getIndex());
-      tann::ngt::ObjectSpace &os = graph.getObjectSpace();
+      tann::GraphIndex	&graph = static_cast<tann::GraphIndex&>(index.getIndex());
+      tann::ObjectSpace &os = graph.getObjectSpace();
       size_t size = os.getRepository().size();
       std::vector<std::vector<float> > vectors(size - 1);
       for (size_t idx = 1; idx < size; idx++) {
@@ -830,7 +830,7 @@ namespace tann::ngt {
       return diff;
     }
 
-    double kmeansWithNGT(tann::ngt::Index &index, size_t numberOfClusters, tann::ngt::Index &outIndex)
+    double kmeansWithNGT(tann::Index &index, size_t numberOfClusters, tann::Index &outIndex)
     {
       std::vector<Cluster>		clusters;
       double diff = kmeansWithNGT(index, numberOfClusters, clusters);
@@ -841,9 +841,9 @@ namespace tann::ngt {
       return diff;
     }
 
-    double kmeansWithNGT(tann::ngt::Index &index, size_t numberOfClusters)
+    double kmeansWithNGT(tann::Index &index, size_t numberOfClusters)
     {
-      tann::ngt::Property prop;
+      tann::Property prop;
       index.getProperty(prop);
       string path = index.getPath();
       index.save();
@@ -851,18 +851,18 @@ namespace tann::ngt {
       string outIndexName = path;
       string inIndexName = path + ".tmp";
       std::rename(outIndexName.c_str(), inIndexName.c_str());
-      tann::ngt::Index::createGraphAndTree(outIndexName, prop);
+      tann::Index::createGraphAndTree(outIndexName, prop);
       index.open(outIndexName);
-      tann::ngt::Index inIndex(inIndexName);
+      tann::Index inIndex(inIndexName);
       double diff = kmeansWithNGT(inIndex, numberOfClusters, index);
       inIndex.close();
-      tann::ngt::Index::destroy(inIndexName);
+      tann::Index::destroy(inIndexName);
       return diff;
     }
 
     double kmeansWithNGT(string &indexName, size_t numberOfClusters)
     {
-      tann::ngt::Index inIndex(indexName);
+      tann::Index inIndex(indexName);
       double diff = kmeansWithNGT(inIndex, numberOfClusters);
       inIndex.save();
       inIndex.close();

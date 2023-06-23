@@ -27,7 +27,7 @@ typedef NGTQ::Quantizer::ObjectList QBGObjectList;
 
 class QbgCliBuildParameters : public QBG::BuildParameters {
 public:
-  QbgCliBuildParameters(tann::ngt::Args &a):args(a){
+  QbgCliBuildParameters(tann::Args &a):args(a){
     args.parse("Zv");
   }
 
@@ -87,7 +87,7 @@ public:
     creation.globalEdgeSizeForSearch = args.getl("S", 40);
     {
       char indexType = args.getChar("i", 't');
-      creation.globalIndexType = indexType == 't' ? tann::ngt::Property::GraphAndTree : tann::ngt::Property::Graph;
+      creation.globalIndexType = indexType == 't' ? tann::Property::GraphAndTree : tann::Property::Graph;
       creation.localIndexType = creation.globalIndexType;
     }
     creation.globalInsertionRadiusCoefficient = args.getf("e", 0.1) + 1.0;
@@ -154,16 +154,16 @@ public:
     silence = !args.getBool("v");
   
     char iMode = args.getChar("i", '-');
-    hierarchicalClustering.initMode = tann::ngt::Clustering::InitializationModeKmeansPlusPlus;
+    hierarchicalClustering.initMode = tann::Clustering::InitializationModeKmeansPlusPlus;
     switch (iMode) {
     case 'l':
-    case 'h': hierarchicalClustering.initMode = tann::ngt::Clustering::InitializationModeHead; break;
-    case 'r': hierarchicalClustering.initMode = tann::ngt::Clustering::InitializationModeRandom; break;
-    case 'R': hierarchicalClustering.initMode = tann::ngt::Clustering::InitializationModeRandomFixedSeed; break;
-    case 'P': hierarchicalClustering.initMode = tann::ngt::Clustering::InitializationModeKmeansPlusPlusFixedSeed; break;
+    case 'h': hierarchicalClustering.initMode = tann::Clustering::InitializationModeHead; break;
+    case 'r': hierarchicalClustering.initMode = tann::Clustering::InitializationModeRandom; break;
+    case 'R': hierarchicalClustering.initMode = tann::Clustering::InitializationModeRandomFixedSeed; break;
+    case 'P': hierarchicalClustering.initMode = tann::Clustering::InitializationModeKmeansPlusPlusFixedSeed; break;
     default:
     case '-':
-    case 'p': hierarchicalClustering.initMode = tann::ngt::Clustering::InitializationModeKmeansPlusPlus; break;
+    case 'p': hierarchicalClustering.initMode = tann::Clustering::InitializationModeKmeansPlusPlus; break;
     }
 
     hierarchicalClustering.numOfRandomObjects = args.getl("r", 0);
@@ -190,39 +190,39 @@ public:
     }
     if (hierarchicalClustering.threeLayerClustering) {
       std::vector<std::string> tokens;
-      tann::ngt::Common::tokenize(blob, tokens, ",");
+      tann::Common::tokenize(blob, tokens, ",");
       if (tokens.size() > 0) {
 	std::vector<std::string> ftokens;
-	tann::ngt::Common::tokenize(tokens[0], ftokens, ":");
+	tann::Common::tokenize(tokens[0], ftokens, ":");
 	if (ftokens.size() >= 1) {
-	  hierarchicalClustering.numOfFirstObjects = tann::ngt::Common::strtof(ftokens[0]);
+	  hierarchicalClustering.numOfFirstObjects = tann::Common::strtof(ftokens[0]);
 	}
 	if (ftokens.size() >= 2) {
-	  hierarchicalClustering.numOfFirstClusters = tann::ngt::Common::strtof(ftokens[1]);
+	  hierarchicalClustering.numOfFirstClusters = tann::Common::strtof(ftokens[1]);
 	}
       }
       if (tokens.size() > 1) {
 	std::vector<std::string> ftokens;
-	tann::ngt::Common::tokenize(tokens[1], ftokens, ":");
+	tann::Common::tokenize(tokens[1], ftokens, ":");
 	if (ftokens.size() >= 1) {
-	  hierarchicalClustering.numOfSecondObjects = tann::ngt::Common::strtof(ftokens[0]);
+	  hierarchicalClustering.numOfSecondObjects = tann::Common::strtof(ftokens[0]);
 	}
 	if (ftokens.size() >= 2) {
-	  hierarchicalClustering.numOfSecondClusters = tann::ngt::Common::strtof(ftokens[1]);
+	  hierarchicalClustering.numOfSecondClusters = tann::Common::strtof(ftokens[1]);
 	}
       }
       if (tokens.size() > 2) {
 	std::vector<std::string> ftokens;
-	tann::ngt::Common::tokenize(tokens[2], ftokens, ":");
+	tann::Common::tokenize(tokens[2], ftokens, ":");
 	if (ftokens.size() >= 1) {
 	  if (ftokens[0] == "" || ftokens[0] == "-") {
 	    hierarchicalClustering.numOfObjects = 0;
 	  } else {
-	    hierarchicalClustering.numOfObjects = tann::ngt::Common::strtof(ftokens[0]);
+	    hierarchicalClustering.numOfObjects = tann::Common::strtof(ftokens[0]);
 	  }
 	}
 	if (ftokens.size() >= 2) {
-	  hierarchicalClustering.numOfThirdClusters = tann::ngt::Common::strtof(ftokens[1]);
+	  hierarchicalClustering.numOfThirdClusters = tann::Common::strtof(ftokens[1]);
 	}
       }
     }
@@ -241,13 +241,13 @@ public:
       cType = args.getString("C", "k");
     } catch(...) {}
 
-    optimization.clusteringType = tann::ngt::Clustering::ClusteringTypeKmeansWithNGT;
+    optimization.clusteringType = tann::Clustering::ClusteringTypeKmeansWithNGT;
     if (cType == "k") {
-      optimization.clusteringType = tann::ngt::Clustering::ClusteringTypeKmeansWithoutNGT;
+      optimization.clusteringType = tann::Clustering::ClusteringTypeKmeansWithoutNGT;
     } else if (cType == "KS") {
-      optimization.clusteringType = tann::ngt::Clustering::ClusteringTypeKmeansWithNGT;
+      optimization.clusteringType = tann::Clustering::ClusteringTypeKmeansWithNGT;
     } else if (cType == "i") {
-      optimization.clusteringType = tann::ngt::Clustering::ClusteringTypeKmeansWithIteration;
+      optimization.clusteringType = tann::Clustering::ClusteringTypeKmeansWithIteration;
     } else {
       std::stringstream msg;
       msg << "invalid clustering type. " << cType;
@@ -262,16 +262,16 @@ public:
   
 #ifdef NGT_CLUSTERING
     char iMode = args.getChar("i", '-');
-    optimization.initMode = tann::ngt::Clustering::InitializationModeKmeansPlusPlus;
+    optimization.initMode = tann::Clustering::InitializationModeKmeansPlusPlus;
     switch (iMode) {
-    case 'h': optimization.initMode = tann::ngt::Clustering::InitializationModeHead; break;
-    case 'r': optimization.initMode = tann::ngt::Clustering::InitializationModeRandom; break;
-    case 'p': optimization.initMode = tann::ngt::Clustering::InitializationModeKmeansPlusPlus; break;
-    case 'R': optimization.initMode = tann::ngt::Clustering::InitializationModeRandomFixedSeed; break;
-    case 'P': optimization.initMode = tann::ngt::Clustering::InitializationModeKmeansPlusPlusFixedSeed; break;
+    case 'h': optimization.initMode = tann::Clustering::InitializationModeHead; break;
+    case 'r': optimization.initMode = tann::Clustering::InitializationModeRandom; break;
+    case 'p': optimization.initMode = tann::Clustering::InitializationModeKmeansPlusPlus; break;
+    case 'R': optimization.initMode = tann::Clustering::InitializationModeRandomFixedSeed; break;
+    case 'P': optimization.initMode = tann::Clustering::InitializationModeKmeansPlusPlusFixedSeed; break;
     default:
     case '-':
-    case 'b': optimization.initMode = tann::ngt::Clustering::InitializationModeBest; break;
+    case 'b': optimization.initMode = tann::Clustering::InitializationModeBest; break;
     }
 #else
     optimization.initMode = args.getChar("i", '-');
@@ -337,20 +337,20 @@ public:
     }
   }
 protected:
-  tann::ngt::Args &args;
+  tann::Args &args;
 };
 
 
-class SearchParameters : public tann::ngt::Command::SearchParameters {
+class SearchParameters : public tann::Command::SearchParameters {
 public:
-  SearchParameters(tann::ngt::Args &args): tann::ngt::Command::SearchParameters(args, "0.02") {
+  SearchParameters(tann::Args &args): tann::Command::SearchParameters(args, "0.02") {
     stepOfResultExpansion = 2;
     std::string resultExpansion = args.getString("p", "3.0");
     std::vector<std::string> tokens;
-    tann::ngt::Common::tokenize(resultExpansion, tokens, ":");
-    if (tokens.size() >= 1) { beginOfResultExpansion = endOfResultExpansion = tann::ngt::Common::strtod(tokens[0]); }
-    if (tokens.size() >= 2) { endOfResultExpansion = tann::ngt::Common::strtod(tokens[1]); }
-    if (tokens.size() >= 3) { stepOfResultExpansion = tann::ngt::Common::strtod(tokens[2]); }
+    tann::Common::tokenize(resultExpansion, tokens, ":");
+    if (tokens.size() >= 1) { beginOfResultExpansion = endOfResultExpansion = tann::Common::strtod(tokens[0]); }
+    if (tokens.size() >= 2) { endOfResultExpansion = tann::Common::strtod(tokens[1]); }
+    if (tokens.size() >= 3) { stepOfResultExpansion = tann::Common::strtod(tokens[2]); }
   }
   float	beginOfResultExpansion;
   float	endOfResultExpansion;
@@ -359,7 +359,7 @@ public:
 
 
 void 
-QBG::CLI::buildQG(tann::ngt::Args &args)
+QBG::CLI::buildQG(tann::Args &args)
 {
   const std::string usage = "Usage: qbg build-qg [-Q dimension-of-subvector] [-E max-number-of-edges] index";
 
@@ -457,7 +457,7 @@ searchQG(NGTQG::Index &index, SearchParameters &searchParameters, ostream &strea
     }
     for (float param = beginOfParam; param <= endOfParam; param += stepOfParam) {
       NGTQG::SearchQuery	searchQuery(query);
-      tann::ngt::ObjectDistances	objects;
+      tann::ObjectDistances	objects;
       searchQuery.setResults(&objects);
       searchQuery.setSize(searchParameters.size);
       searchQuery.setRadius(searchParameters.radius);
@@ -475,7 +475,7 @@ searchQG(NGTQG::Index &index, SearchParameters &searchParameters, ostream &strea
       searchQuery.setResultExpansion(resultExpansion);
       searchQuery.setEpsilon(epsilon);
       searchQuery.setEdgeSize(searchParameters.edgeSize);
-      tann::ngt::Timer timer;
+      tann::Timer timer;
       switch (searchParameters.indexType) {
       case 't': timer.start(); index.NGTQG::Index::search(searchQuery); timer.stop(); break;
       case 's': timer.start(); index.linearSearch(searchQuery); timer.stop(); break;
@@ -523,7 +523,7 @@ searchQG(NGTQG::Index &index, SearchParameters &searchParameters, ostream &strea
 }
 
 void
-QBG::CLI::searchQG(tann::ngt::Args &args) {
+QBG::CLI::searchQG(tann::Args &args) {
   const string usage = "Usage: ngtqg search-qg [-i index-type(g|t|s)] [-n result-size] [-e epsilon] [-E edge-size] "
     "[-o output-mode] [-p result-expansion] index(input) query.tsv(input)";
 
@@ -553,7 +553,7 @@ QBG::CLI::searchQG(tann::ngt::Args &args) {
 
   try {
     ::searchQG(index, searchParameters, std::cout);
-  } catch (tann::ngt::Exception &err) {
+  } catch (tann::Exception &err) {
     cerr << "qbg: Error " << err.what() << endl;
     cerr << usage << endl;
   } catch (std::exception &err) {
@@ -568,7 +568,7 @@ QBG::CLI::searchQG(tann::ngt::Args &args) {
 
 
 void 
-QBG::CLI::createQG(tann::ngt::Args &args)
+QBG::CLI::createQG(tann::Args &args)
 {
   const std::string usage = "Usage: qbg create-qg [-Q dimension-of-subvector] index";
 
@@ -589,7 +589,7 @@ QBG::CLI::createQG(tann::ngt::Args &args)
 }
 
 void 
-QBG::CLI::appendQG(tann::ngt::Args &args)
+QBG::CLI::appendQG(tann::Args &args)
 {
   const std::string usage = "Usage: qbg append-qbg ngt-index";
   string indexPath;
@@ -605,7 +605,7 @@ QBG::CLI::appendQG(tann::ngt::Args &args)
 
 
 void 
-QBG::CLI::create(tann::ngt::Args &args)
+QBG::CLI::create(tann::Args &args)
 {
   const string usage = "Usage: qbg create "
     " -d dimension [-o object-type (f:float|c:unsigned char)] [-D distance-function] [-n data-size] "
@@ -636,9 +636,9 @@ QBG::CLI::create(tann::ngt::Args &args)
 	std::string line;
 	while (getline(stream, line)) {
 	  std::vector<std::string> tokens;
-	  tann::ngt::Common::tokenize(line, tokens, " \t");
+	  tann::Common::tokenize(line, tokens, " \t");
 	  for (auto &token : tokens) {
-	    r.push_back(tann::ngt::Common::strtof(token));
+	    r.push_back(tann::Common::strtof(token));
 	  }
 	}
       } catch (...) {
@@ -653,7 +653,7 @@ QBG::CLI::create(tann::ngt::Args &args)
     } catch(...) {}
 
     QBG::Index::create(indexPath, buildParameters, rotation, objectPath);
-  } catch(tann::ngt::Exception &err) {
+  } catch(tann::Exception &err) {
     std::cerr << err.what() << std::endl;
     cerr << usage << endl;
   }
@@ -661,7 +661,7 @@ QBG::CLI::create(tann::ngt::Args &args)
 
 
 void
-QBG::CLI::load(tann::ngt::Args &args)
+QBG::CLI::load(tann::Args &args)
 {
   const string usage = "Usage: qbg load ";
 
@@ -697,7 +697,7 @@ QBG::CLI::load(tann::ngt::Args &args)
 }
 
 void
-QBG::CLI::search(tann::ngt::Args &args)
+QBG::CLI::search(tann::Args &args)
 {
   
   const string usage = "Usage: qbg search [-i g|t|s] [-n result-size] [-e epsilon] [-m mode(r|l|c|a)] "
@@ -746,18 +746,18 @@ QBG::CLI::search(tann::ngt::Args &args)
     stepOfResultExpansion = 1;
     string str = args.getString("p", "0.0");
     vector<string> tokens;
-    tann::ngt::Common::tokenize(str, tokens, ":");
+    tann::Common::tokenize(str, tokens, ":");
     if (tokens.size() >= 1) { 
-      beginOfResultExpansion = tann::ngt::Common::strtod(tokens[0]);
+      beginOfResultExpansion = tann::Common::strtod(tokens[0]);
       endOfResultExpansion = beginOfResultExpansion;
     }
-    if (tokens.size() >= 2) { endOfResultExpansion = tann::ngt::Common::strtod(tokens[1]); }
+    if (tokens.size() >= 2) { endOfResultExpansion = tann::Common::strtod(tokens[1]); }
     if (tokens.size() >= 3) { 
       if (tokens[2][0] == 'x') {
 	mulStep = true;
-	stepOfResultExpansion = tann::ngt::Common::strtod(tokens[2].substr(1));
+	stepOfResultExpansion = tann::Common::strtod(tokens[2].substr(1));
       } else {
-	stepOfResultExpansion = tann::ngt::Common::strtod(tokens[2]);
+	stepOfResultExpansion = tann::Common::strtod(tokens[2]);
       }
     }
   }
@@ -768,8 +768,8 @@ QBG::CLI::search(tann::ngt::Args &args)
 
   QBG::Index index(indexPath, true);
   std::cerr << "qbg::The index is open." << std::endl;
-  std::cerr << "  vmsize==" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-  std::cerr << "  peak vmsize==" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+  std::cerr << "  vmsize==" << tann::Common::getProcessVmSizeStr() << std::endl;
+  std::cerr << "  peak vmsize==" << tann::Common::getProcessVmPeakStr() << std::endl;
   auto dimension = index.getQuantizer().globalCodebookIndex.getObjectSpace().getDimension();
   try {
     ifstream		is(query);
@@ -795,8 +795,8 @@ QBG::CLI::search(tann::ngt::Args &args)
 	   resultExpansion <= endOfResultExpansion; 
 	   resultExpansion = mulStep ? resultExpansion * stepOfResultExpansion : 
 			     resultExpansion + stepOfResultExpansion) {
-	tann::ngt::ObjectDistances objects;
-	tann::ngt::Timer timer;
+	tann::ObjectDistances objects;
+	tann::Timer timer;
 	timer.start();
 	QBG::SearchContainer searchContainer;
 	auto query = queryVector;
@@ -870,7 +870,7 @@ QBG::CLI::search(tann::ngt::Args &args)
 	   << totalTime * 1000.0 / (double)queryCount << " (msec), (" 
 	   << totalTime << "/" << queryCount << ")" << endl;
     }
-  } catch (tann::ngt::Exception &err) {
+  } catch (tann::Exception &err) {
     cerr << "Error " << err.what() << endl;
     cerr << usage << endl;
   } catch (...) {
@@ -878,14 +878,14 @@ QBG::CLI::search(tann::ngt::Args &args)
     cerr << usage << endl;
   }
   std::cerr << "qbg::The end of search" << std::endl;
-  std::cerr << "  vmsize==" << tann::ngt::Common::getProcessVmSizeStr() << std::endl;
-  std::cerr << "  peak vmsize==" << tann::ngt::Common::getProcessVmPeakStr() << std::endl;
+  std::cerr << "  vmsize==" << tann::Common::getProcessVmSizeStr() << std::endl;
+  std::cerr << "  peak vmsize==" << tann::Common::getProcessVmPeakStr() << std::endl;
   index.close();
 }
 
 
 void 
-QBG::CLI::append(tann::ngt::Args &args)
+QBG::CLI::append(tann::Args &args)
 {
   const string usage = "Usage: qbg append [-n data-size] index(output) data.tsv(input)";
   string index;
@@ -915,7 +915,7 @@ QBG::CLI::append(tann::ngt::Args &args)
 
 
 void 
-QBG::CLI::buildIndex(tann::ngt::Args &args)
+QBG::CLI::buildIndex(tann::Args &args)
 {
   const std::string usage = "Usage: qbg build-index  [-Q dimension-of-subvector] [-E max-number-of-edges] index";
   string indexPath;
@@ -954,10 +954,10 @@ QBG::CLI::buildIndex(tann::ngt::Args &args)
 	std::string line;
 	while (getline(stream, line)) {
 	  std::vector<std::string> tokens;
-	  tann::ngt::Common::tokenize(line, tokens, " \t");
+	  tann::Common::tokenize(line, tokens, " \t");
 	  std::vector<float> object;
 	  for (auto &token : tokens) {
-	    object.push_back(tann::ngt::Common::strtof(token));
+	    object.push_back(tann::Common::strtof(token));
 	  }
 	  if (!quantizerCodebook.empty() && quantizerCodebook[0].size() != object.size()) {
 	    cerr << "The specified quantizer codebook is invalid. " << quantizerCodebook[0].size()
@@ -991,14 +991,14 @@ QBG::CLI::buildIndex(tann::ngt::Args &args)
 	std::string line;
 	while (getline(stream, line)) {
 	  std::vector<std::string> tokens;
-	  tann::ngt::Common::tokenize(line, tokens, " \t");
+	  tann::Common::tokenize(line, tokens, " \t");
 	  std::vector<float> object;
 	  if (tokens.size() != 1) {
 	    cerr << "The specified codebook index is invalid. " << line << std::endl;
 	    cerr << usage << endl;
 	    return;
 	  }
-	  codebookIndex.push_back(tann::ngt::Common::strtol(tokens[0]));
+	  codebookIndex.push_back(tann::Common::strtol(tokens[0]));
 	}
 
       } catch (...) {}
@@ -1021,14 +1021,14 @@ QBG::CLI::buildIndex(tann::ngt::Args &args)
 	std::string line;
 	while (getline(stream, line)) {
 	  std::vector<std::string> tokens;
-	  tann::ngt::Common::tokenize(line, tokens, " \t");
+	  tann::Common::tokenize(line, tokens, " \t");
 	  std::vector<float> object;
 	  if (tokens.size() != 1) {
 	    cerr << "The specified codebook index is invalid. " << line << std::endl;
 	    cerr << usage << endl;
 	    return;
 	  }
-	  objectIndex.push_back(tann::ngt::Common::strtol(tokens[0]));
+	  objectIndex.push_back(tann::Common::strtol(tokens[0]));
 	}
 
       } catch (...) {}
@@ -1054,7 +1054,7 @@ QBG::CLI::buildIndex(tann::ngt::Args &args)
 }
 
 void 
-QBG::CLI::build(tann::ngt::Args &args)
+QBG::CLI::build(tann::Args &args)
 {
   const std::string usage = "Usage: qbg build [-Q dimension-of-subvector] [-E max-number-of-edges] index";
 
@@ -1094,7 +1094,7 @@ QBG::CLI::build(tann::ngt::Args &args)
 
 
 void
-QBG::CLI::hierarchicalKmeans(tann::ngt::Args &args)
+QBG::CLI::hierarchicalKmeans(tann::Args &args)
 {
   const std::string usage = "qbg kmeans -O #-of-objects -B x1:y1,x2,y2,x3 index [prefix] [object-ID-file]";
   std::string indexPath;
@@ -1132,7 +1132,7 @@ QBG::CLI::hierarchicalKmeans(tann::ngt::Args &args)
 }
 
 void
-QBG::CLI::assign(tann::ngt::Args &args)
+QBG::CLI::assign(tann::Args &args)
 {
   const std::string usage = "qbg assign";
   std::string indexPath;
@@ -1160,8 +1160,8 @@ QBG::CLI::assign(tann::ngt::Args &args)
   auto mode = args.getChar("m", '-');
 
   try {
-    tann::ngt::Index		index(indexPath);
-    tann::ngt::Property	property;
+    tann::Index		index(indexPath);
+    tann::Property	property;
     index.getProperty(property);
     ifstream		is(queryPath);
     if (!is) {
@@ -1183,8 +1183,8 @@ QBG::CLI::assign(tann::ngt::Args &args)
 	  return;
 	}
       }
-      tann::ngt::SearchQuery		sc(query);
-      tann::ngt::ObjectDistances	objects;
+      tann::SearchQuery		sc(query);
+      tann::ObjectDistances	objects;
       sc.setResults(&objects);
       sc.setSize(numOfObjects);
       sc.setEpsilon(epsilon);
@@ -1200,7 +1200,7 @@ QBG::CLI::assign(tann::ngt::Args &args)
 	std::cout << objects[0].id << std::endl;
       }
     }
-  } catch (tann::ngt::Exception &err) {
+  } catch (tann::Exception &err) {
     cerr << "Error " << err.what() << endl;
     return;
   } catch (...) {
@@ -1210,7 +1210,7 @@ QBG::CLI::assign(tann::ngt::Args &args)
 }
 
 void
-QBG::CLI::extract(tann::ngt::Args &args)
+QBG::CLI::extract(tann::Args &args)
 { 
 
   const string usage = "Usage: qbg extract binary-file|index [output-file]";
@@ -1249,7 +1249,7 @@ QBG::CLI::extract(tann::ngt::Args &args)
       os = &ofs;
     }
     index.extract(*os, n, mode == 'r');
-  } catch (tann::ngt::Exception &err) {
+  } catch (tann::Exception &err) {
     try {
       outputFile = args.get("#2");
       ofs.open(outputFile);
@@ -1317,7 +1317,7 @@ QBG::CLI::extract(tann::ngt::Args &args)
 }
 
 void 
-QBG::CLI::gt(tann::ngt::Args &args)
+QBG::CLI::gt(tann::Args &args)
 { 
   string	path;
 
@@ -1379,7 +1379,7 @@ QBG::CLI::gt(tann::ngt::Args &args)
 }
 
 void 
-QBG::CLI::gtRange(tann::ngt::Args &args)
+QBG::CLI::gtRange(tann::Args &args)
 { 
   string	path;
 
@@ -1446,7 +1446,7 @@ QBG::CLI::gtRange(tann::ngt::Args &args)
 
 
 void
-QBG::CLI::optimize(tann::ngt::Args &args)
+QBG::CLI::optimize(tann::Args &args)
 {
 
   string usage = "Usage: qbg optimize -n number-of-clusters -m number-of subspaces [-O t|f] [-s t|f] [-I cluster-iteration] [-t R-max-iteration] [-c convergence-limit-times] vector-file [output-file-prefix]\n"

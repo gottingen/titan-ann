@@ -22,7 +22,7 @@
 #include	<vector>
 
 using namespace std;
-using namespace tann::ngt;
+using namespace tann;
 
 void
 DVPTree::insert(InsertContainer &iobj) {
@@ -48,7 +48,7 @@ DVPTree::insert(InsertContainer &iobj,  LeafNode *leafNode)
   LeafNode &leaf = *leafNode;
   size_t fsize = leaf.getObjectSize();
   if (fsize != 0) {
-    tann::ngt::ObjectSpace::Comparator &comparator = objectSpace->getComparator();
+    tann::ObjectSpace::Comparator &comparator = objectSpace->getComparator();
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     Distance d = comparator(iobj.object, leaf.getPivot(*objectSpace));
 #else
@@ -56,9 +56,9 @@ DVPTree::insert(InsertContainer &iobj,  LeafNode *leafNode)
 #endif
 
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-    tann::ngt::ObjectDistance *objects = leaf.getObjectIDs(leafNodes.allocator);
+    tann::ObjectDistance *objects = leaf.getObjectIDs(leafNodes.allocator);
 #else
-    tann::ngt::ObjectDistance *objects = leaf.getObjectIDs();
+    tann::ObjectDistance *objects = leaf.getObjectIDs();
 #endif
 
     for (size_t i = 0; i < fsize; i++) {
@@ -497,9 +497,9 @@ DVPTree::search(SearchContainer &so, LeafNode &node, UncheckedNode &uncheckedNod
 
   ObjectDistance r;
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-  tann::ngt::ObjectDistance *objects = node.getObjectIDs(leafNodes.allocator);
+  tann::ObjectDistance *objects = node.getObjectIDs(leafNodes.allocator);
 #else
-  tann::ngt::ObjectDistance *objects = node.getObjectIDs();
+  tann::ObjectDistance *objects = node.getObjectIDs();
 #endif
 
   for (size_t i = 0; i < node.getObjectSize(); i++) {

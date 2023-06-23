@@ -10,13 +10,13 @@ main(int argc, char **argv) {
 
     // index construction
     try {
-        tann::ngt::Property property;
+        tann::Property property;
         property.dimension = 128;
-        property.objectType = tann::ngt::ObjectSpace::ObjectType::Uint8;
-        property.distanceType = tann::ngt::Index::Property::DistanceType::DistanceTypeL2;
+        property.objectType = tann::ObjectSpace::ObjectType::Uint8;
+        property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
         std::cout << "creating the index framework..." << std::endl;
-        tann::ngt::Index::create(indexPath, property);
-        tann::ngt::Index index(indexPath);
+        tann::Index::create(indexPath, property);
+        tann::Index index(indexPath);
         ifstream is(objectFile);
         string line;
         std::cout << "appending the objects..." << std::endl;
@@ -42,7 +42,7 @@ main(int argc, char **argv) {
         std::cout << "building the index..." << std::endl;
         index.createIndex(16);
         index.save();
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         cerr << "Error " << err.what() << endl;
         return 1;
     } catch (...) {
@@ -56,7 +56,7 @@ main(int argc, char **argv) {
     try {
         std::cout << "quantizing the index..." << std::endl;
         NGTQG::Index::quantize(indexPath, dimensionOfSubvector, maxNumberOfEdges, true);
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         cerr << "Error " << err.what() << endl;
         return 1;
     } catch (...) {
@@ -66,8 +66,8 @@ main(int argc, char **argv) {
 
     // nearest neighbor search
     try {
-        tann::ngt::Index index(indexPath);
-        tann::ngt::Property property;
+        tann::Index index(indexPath);
+        tann::Property property;
         index.getProperty(property);
         ifstream is(queryFile);
         string line;
@@ -89,8 +89,8 @@ main(int argc, char **argv) {
                 cout << "...";
             }
 
-            tann::ngt::SearchQuery sc(query);
-            tann::ngt::ObjectDistances objects;
+            tann::SearchQuery sc(query);
+            tann::ObjectDistances objects;
             sc.setResults(&objects);
             sc.setSize(10);
             sc.setEpsilon(0.1);
@@ -99,7 +99,7 @@ main(int argc, char **argv) {
             cout << endl << "Rank\tID\tDistance: Object" << std::showbase << endl;
             for (size_t i = 0; i < objects.size(); i++) {
                 cout << i + 1 << "\t" << objects[i].id << "\t" << objects[i].distance << "\t: ";
-                tann::ngt::ObjectSpace &objectSpace = index.getObjectSpace();
+                tann::ObjectSpace &objectSpace = index.getObjectSpace();
                 uint8_t *object = static_cast<uint8_t *>(objectSpace.getObject(objects[i].id));
                 for (size_t idx = 0; idx < 5; idx++) {
                     cout << static_cast<int>(object[idx]) << " ";
@@ -108,7 +108,7 @@ main(int argc, char **argv) {
             }
             cout << endl;
         }
-    } catch (tann::ngt::Exception &err) {
+    } catch (tann::Exception &err) {
         cerr << "Error " << err.what() << endl;
         return 1;
     } catch (...) {

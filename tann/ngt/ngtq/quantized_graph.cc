@@ -23,11 +23,11 @@
 void
 NGTQG::Index::quantize(const std::string indexPath, size_t dimensionOfSubvector, size_t maxNumOfEdges, bool silence) {
     {
-        tann::ngt::Index index(indexPath);
+        tann::Index index(indexPath);
         const std::string quantizedIndexPath = indexPath + "/qg";
         struct stat st;
         if (stat(quantizedIndexPath.c_str(), &st) != 0) {
-            tann::ngt::Property ngtProperty;
+            tann::Property ngtProperty;
             index.getProperty(ngtProperty);
             QBG::BuildParameters buildParameters;
             buildParameters.creation.dimensionOfSubvector = dimensionOfSubvector;

@@ -21,11 +21,11 @@
 
 #define NGT_LOG_BASED_OPTIMIZATION
 
-namespace tann::ngt {
+namespace tann {
   class Optimizer {
   public:
 
-    Optimizer(tann::ngt::Index &i, size_t n = 10):index(i), nOfResults(n) {
+    Optimizer(tann::Index &i, size_t n = 10):index(i), nOfResults(n) {
     }
     ~Optimizer() {}
 
@@ -94,7 +94,7 @@ namespace tann::ngt {
     void enableLog() { redirector.disable(); }
     void disableLog() { redirector.enable(); }
 
-    static void search(tann::ngt::Index &index, std::istream &gtStream, Command::SearchParameters &sp, std::vector<MeasuredValue> &acc) {
+    static void search(tann::Index &index, std::istream &gtStream, Command::SearchParameters &sp, std::vector<MeasuredValue> &acc) {
       std::ifstream		is(sp.query);
       if (!is) {
 	std::stringstream msg;
@@ -105,10 +105,10 @@ namespace tann::ngt {
       search(index, is, gtStream, sp, acc);
     }
 
-    static void search(tann::ngt::Index &index, std::istream &queries, std::istream &gtStream, Command::SearchParameters &sp, std::vector<MeasuredValue> &acc) {
+    static void search(tann::Index &index, std::istream &queries, std::istream &gtStream, Command::SearchParameters &sp, std::vector<MeasuredValue> &acc) {
       sp.stepOfEpsilon = 1.0;
       std::stringstream resultStream;
-      tann::ngt::Command::search(index, sp, queries, resultStream);
+      tann::Command::search(index, sp, queries, resultStream);
       resultStream.clear();
       resultStream.seekg(0, std::ios_base::beg);
       std::string type;
@@ -198,12 +198,12 @@ namespace tann::ngt {
 
       while (getline(gtStream, line)) {
 	std::vector<std::string> tokens;
-	tann::ngt::Common::tokenize(line, tokens, "=");
+	tann::Common::tokenize(line, tokens, "=");
 	if (tokens.size() == 0) {
 	  continue;
 	}
 	if (tokens[0] == "# Query No.") {
-	  if (tokens.size() > 1 && (size_t)tann::ngt::Common::strtol(tokens[1]) == queryNo) {
+	  if (tokens.size() > 1 && (size_t)tann::Common::strtol(tokens[1]) == queryNo) {
 	    std::unordered_set<size_t> gt;
 	    double farthestDistance;
 	    if (groundTruthSize == 0) {
@@ -233,7 +233,7 @@ namespace tann::ngt {
       while (getline(gtf, line)) {
 	if (line.size() != 0 && line.at(0) == '#') {
 	  std::vector<std::string> gtf;
-	  tann::ngt::Common::tokenize(line, gtf, "=");
+	  tann::Common::tokenize(line, gtf, "=");
 	  if (gtf.size() >= 1) {
 	    if (gtf[0] == "# End of Search") {
 	      searchCount++;
@@ -259,14 +259,14 @@ namespace tann::ngt {
 	  continue;
 	}
 	std::vector<std::string> result;      
-	tann::ngt::Common::tokenize(line, result, " \t");
+	tann::Common::tokenize(line, result, " \t");
 	if (result.size() < 3) {
 	  std::stringstream msg;
 	  msg << "result format is wrong. ";
 	  NGTThrowException(msg);
 	}
-	size_t id = tann::ngt::Common::strtol(result[1]);
-	distance = tann::ngt::Common::strtod(result[2]);
+	size_t id = tann::Common::strtol(result[1]);
+	distance = tann::Common::strtod(result[2]);
 	try {
 	  gt.insert(id);
 	} catch(...) {
@@ -288,7 +288,7 @@ namespace tann::ngt {
 	lineCount++;
 	if (line.size() != 0 && line.at(0) == '#') {
 	  std::vector<std::string> tf;
-	  tann::ngt::Common::tokenize(line, tf, "=");
+	  tann::Common::tokenize(line, tf, "=");
 	  if (tf.size() >= 1 && tf[0] == "# Query No.") {
 	    size_t dataCount = 0;
 	    std::string lastDataLine;
@@ -296,7 +296,7 @@ namespace tann::ngt {
 	      lineCount++;
 	      if (line.size() != 0 && line.at(0) == '#') {
 		std::vector<std::string> gtf;
-		tann::ngt::Common::tokenize(line, gtf, "=");
+		tann::Common::tokenize(line, gtf, "=");
 		if (gtf.size() >= 1 && gtf[0] == "# End of Search") {
 		  if (prevDataCount == 0) {
 		    prevDataCount = dataCount;
@@ -317,13 +317,13 @@ namespace tann::ngt {
 	      }
 	      lastDataLine = line;
 	      std::vector<std::string> result;      
-	      tann::ngt::Common::tokenize(line, result, " \t");
+	      tann::Common::tokenize(line, result, " \t");
 	      if (result.size() < 3) {
 		std::stringstream msg;
 		msg << "result format is wrong. ";
 		NGTThrowException(msg);
 	      }
-	      size_t rank = tann::ngt::Common::strtol(result[0]);
+	      size_t rank = tann::Common::strtol(result[0]);
 	      dataCount++;
 	      if (rank != dataCount) {
 		std::stringstream msg;
@@ -358,9 +358,9 @@ namespace tann::ngt {
 	size_t resultNo = 0;
 	if (line.size() != 0 && line.at(0) == '#') {
 	  std::vector<std::string> tf;
-	  tann::ngt::Common::tokenize(line, tf, "=");
+	  tann::Common::tokenize(line, tf, "=");
 	  if (tf.size() >= 1 && tf[0] == "# Query No.") {
-	    if (tf.size() >= 2 && (size_t)tann::ngt::Common::strtol(tf[1]) == queryNo) {
+	    if (tf.size() >= 2 && (size_t)tann::Common::strtol(tf[1]) == queryNo) {
 	      size_t relevantCount = 0;
 	      size_t dataCount = 0;
 	      std::string epsilon;
@@ -374,17 +374,17 @@ namespace tann::ngt {
 		lineNo++;
 		if (line.size() != 0 && line.at(0) == '#') {
 		  std::vector<std::string> gtf;
-		  tann::ngt::Common::tokenize(line, gtf, "=");
+		  tann::Common::tokenize(line, gtf, "=");
 		  if (gtf.size() >= 2 && (gtf[0] == "# Epsilon" || gtf[0] == "# Factor")) {
 		    epsilon = gtf[1];
 		  } else if (gtf.size() >= 2 && gtf[0] == "# Result expansion") {
 		    expansion = gtf[1];
 		  } else if (gtf.size() >= 2 && gtf[0] == "# Query Time (msec)") {
-		    queryTime = tann::ngt::Common::strtod(gtf[1]);
+		    queryTime = tann::Common::strtod(gtf[1]);
 		  } else if (gtf.size() >= 2 && gtf[0] == "# Distance Computation") {
-		    distanceCount = tann::ngt::Common::strtol(gtf[1]);
+		    distanceCount = tann::Common::strtol(gtf[1]);
 		  } else if (gtf.size() >= 2 && gtf[0] == "# Visit Count") {
-		    visitCount = tann::ngt::Common::strtol(gtf[1]);
+		    visitCount = tann::Common::strtol(gtf[1]);
 		  } else if (gtf.size() >= 1 && gtf[0] == "# End of Query") {
 		    return;
 		  } else if (gtf.size() >= 1 && gtf[0] == "# End of Search") {
@@ -400,10 +400,10 @@ namespace tann::ngt {
 		    double accuracy = (double)relevantCount / (double)resultDataSize;
 		    double key;
 		    if (epsilon != "") {
-		      key = tann::ngt::Common::strtod(epsilon);
+		      key = tann::Common::strtod(epsilon);
 		      keyValue = "Factor (Epsilon)";
 		    } else if (expansion != "") {
-		      key = tann::ngt::Common::strtod(expansion);
+		      key = tann::Common::strtod(expansion);
 		      keyValue = "Expansion";
 		    } else {
 		      std::stringstream msg;
@@ -484,14 +484,14 @@ namespace tann::ngt {
 		  continue;
 		} 
 		std::vector<std::string> result;      
-		tann::ngt::Common::tokenize(line, result, " \t");
+		tann::Common::tokenize(line, result, " \t");
 		if (result.size() < 3) {
 		  std::cerr << "result format is wrong. " << std::endl;
 		  abort();
 		}
-		size_t rank = tann::ngt::Common::strtol(result[0]);
-		size_t id = tann::ngt::Common::strtol(result[1]);
-		double distance = tann::ngt::Common::strtod(result[2]);
+		size_t rank = tann::Common::strtol(result[0]);
+		size_t id = tann::Common::strtol(result[1]);
+		double distance = tann::Common::strtod(result[2]);
 		totalDistance += distance;
 		if (gt.count(id) != 0) {
 		  relevantCount++;
@@ -520,7 +520,7 @@ namespace tann::ngt {
       } 
     }
 
-    static void exploreEpsilonForAccuracy(tann::ngt::Index &index, std::istream &queries, std::istream &gtStream,
+    static void exploreEpsilonForAccuracy(tann::Index &index, std::istream &queries, std::istream &gtStream,
 					  Command::SearchParameters &sp, std::pair<float, float> accuracyRange, double margin) 
     {
       double fromUnder = 0.0;
@@ -662,7 +662,7 @@ namespace tann::ngt {
       std::stringstream resultStream;
       queries.clear();
       queries.seekg(0, std::ios_base::beg);
-      tann::ngt::Command::search(index, searchParameters, queries, resultStream);
+      tann::Command::search(index, searchParameters, queries, resultStream);
       gtStream.clear();
       gtStream.seekg(0, std::ios_base::beg);
       resultStream.clear();
@@ -713,7 +713,7 @@ namespace tann::ngt {
 		NGTThrowException(msg);
 	      }
 	      searchParameters.step = 10;
-	      tann::ngt::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
+	      tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
 	      NeighborhoodGraph::Property &prop = graphIndex.getGraphProperty();
 	      prop.dynamicEdgeSizeBase = base;
 	      double time;
@@ -723,7 +723,7 @@ namespace tann::ngt {
 		    auto values = measure(queries, gtStream, searchParameters, accuracyRange, margin);
 		    time = values.meanTime;
 		    break;
-		  } catch(tann::ngt::Exception &err) {
+		  } catch(tann::Exception &err) {
 		    if (err.getMessage().find("Error!! Epsilon") != std::string::npos &&
 			err.getMessage().find("is too large") != std::string::npos) {
 		      std::cerr << "Warning: Cannot adjust the base edge size." << err.what() << std::endl;
@@ -759,7 +759,7 @@ namespace tann::ngt {
 	      }
 	    }
 	  }
-	} catch(tann::ngt::Exception &err) {
+	} catch(tann::Exception &err) {
 	  if (err.getMessage().find("**Retry**") != std::string::npos) {
 	    baseStartInit += minimumStep;
 	  } else {
@@ -813,7 +813,7 @@ namespace tann::ngt {
 		NGTThrowException(msg);
 	      }
 	      searchParameters.step = 10;
-	      tann::ngt::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
+	      tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
 	      NeighborhoodGraph::Property &prop = graphIndex.getGraphProperty();
 	      prop.dynamicEdgeSizeRate = rate;
 	      double time;
@@ -823,7 +823,7 @@ namespace tann::ngt {
 		    auto values = measure(queries, gtStream, searchParameters, accuracyRange, margin);
 		    time = values.meanTime;
 		    break;
-		  } catch(tann::ngt::Exception &err) {
+		  } catch(tann::Exception &err) {
 		    if (err.getMessage().find("Error!! Epsilon") != std::string::npos &&
 			err.getMessage().find("is too large") != std::string::npos) {
 		      std::cerr << "Warning: Cannot adjust the rate of edge size." << err.what() << std::endl;
@@ -859,7 +859,7 @@ namespace tann::ngt {
 	      }
 	    }
 	  }
-	} catch(tann::ngt::Exception &err) {
+	} catch(tann::Exception &err) {
 	  if (err.getMessage().find("**Retry**") != std::string::npos) {
 	    rateStartInit += minimumStep;
 	  } else {
@@ -879,7 +879,7 @@ namespace tann::ngt {
 
       Command::SearchParameters searchParameters;
       searchParameters.edgeSize = -1;
-      tann::ngt::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
+      tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
       NeighborhoodGraph::Property &prop = graphIndex.getGraphProperty();
       searchParameters.size = nOfResults;
       redirector.begin();
@@ -888,7 +888,7 @@ namespace tann::ngt {
 	extractQueries(querySize, queries);
 	std::cerr << "adjustSearchEdgeSize: create GT..." << std::endl;
 	createGroundTruth(index, epsilon, searchParameters, queries, gtStream);
-      } catch (tann::ngt::Exception &err) {
+      } catch (tann::Exception &err) {
 	std::cerr << "adjustSearchEdgeSize: Error!! Cannot adjust. " << err.what() << std::endl;
 	redirector.end();
 	return std::pair<size_t, size_t>(0, 0);
@@ -933,7 +933,7 @@ namespace tann::ngt {
 	  }
 	  // store parameters here to prioritize high accuracy
 	  history.insert(std::make_pair(std::make_pair(base.first, rate.first), rate.second));
-	} catch (tann::ngt::Exception &err) {
+	} catch (tann::Exception &err) {
 	  std::cerr << "adjustRateSearchEdgeSize: Error!! Cannot adjust. " << err.what() << std::endl;
 	  redirector.end();
 	  return std::pair<size_t, size_t>(0, 0);
@@ -962,11 +962,11 @@ namespace tann::ngt {
       std::string opt = args.getString("A", "");
       if (opt.size() != 0) {
 	std::vector<std::string> tokens;
-	tann::ngt::Common::tokenize(opt, tokens, ":");
-	if (tokens.size() >= 1) { baseAccuracyRange.first = tann::ngt::Common::strtod(tokens[0]); }
-	if (tokens.size() >= 2) { baseAccuracyRange.second = tann::ngt::Common::strtod(tokens[1]); }
-	if (tokens.size() >= 3) { rateAccuracyRange.first = tann::ngt::Common::strtod(tokens[2]); }
-	if (tokens.size() >= 4) { rateAccuracyRange.second = tann::ngt::Common::strtod(tokens[3]); }
+	tann::Common::tokenize(opt, tokens, ":");
+	if (tokens.size() >= 1) { baseAccuracyRange.first = tann::Common::strtod(tokens[0]); }
+	if (tokens.size() >= 2) { baseAccuracyRange.second = tann::Common::strtod(tokens[1]); }
+	if (tokens.size() >= 3) { rateAccuracyRange.first = tann::Common::strtod(tokens[2]); }
+	if (tokens.size() >= 4) { rateAccuracyRange.second = tann::Common::strtod(tokens[3]); }
       }
 
       double margin = args.getf("m", 0.2);
@@ -978,12 +978,12 @@ namespace tann::ngt {
 	   << "," << rateAccuracyRange.first << "-" << rateAccuracyRange.second << std::endl;
       std::cerr << "adjustRateSearchEdgeSize: # of queries=" << querySize << std::endl;
 
-      tann::ngt::Index	index(indexName);
+      tann::Index	index(indexName);
 
       Optimizer		optimizer(index, nOfResults);
       try {
 	auto v = optimizer.adjustSearchEdgeSize(baseAccuracyRange, rateAccuracyRange, querySize, epsilon, margin);
-	tann::ngt::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
+	tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
 	NeighborhoodGraph::Property &prop = graphIndex.getGraphProperty();
 	if (v.first > 0) {
 	  prop.dynamicEdgeSizeBase = v.first;
@@ -994,16 +994,16 @@ namespace tann::ngt {
 	if (prop.dynamicEdgeSizeRate > 0 && prop.dynamicEdgeSizeBase > 0) {
 	  graphIndex.saveProperty(indexName);
 	}
-      } catch (tann::ngt::Exception &err) {
+      } catch (tann::Exception &err) {
 	std::cerr << "adjustRateSearchEdgeSize: Error!! Cannot adjust. " << err.what() << std::endl;
 	return;
       }
     }
 
 
-    void outputObject(std::ostream &os, std::vector<float> &v, tann::ngt::Property &prop) {
+    void outputObject(std::ostream &os, std::vector<float> &v, tann::Property &prop) {
       switch (prop.objectType) {
-      case tann::ngt::ObjectSpace::ObjectType::Uint8:
+      case tann::ObjectSpace::ObjectType::Uint8:
 	{
 	  for (auto i = v.begin(); i != v.end(); ++i) {
 	    int d = *i;
@@ -1017,9 +1017,9 @@ namespace tann::ngt {
 	break;
       default:
 #ifdef NGT_HALF_FLOAT
-      case tann::ngt::ObjectSpace::ObjectType::Float16:
+      case tann::ObjectSpace::ObjectType::Float16:
 #endif
-      case tann::ngt::ObjectSpace::ObjectType::Float:
+      case tann::ObjectSpace::ObjectType::Float:
 	{
 	  for (auto i = v.begin(); i != v.end(); ++i) {
 	    os << *i;
@@ -1034,7 +1034,7 @@ namespace tann::ngt {
     }
 
     void outputObjects(std::vector<std::vector<float>> &vs, std::ostream &os) {
-      tann::ngt::Property prop;
+      tann::Property prop;
       index.getProperty(prop);
 
       for (auto i = vs.begin(); i != vs.end(); ++i) {
@@ -1042,10 +1042,10 @@ namespace tann::ngt {
       }
     }
 
-    std::vector<float> extractObject(size_t id, tann::ngt::Property &prop) {
+    std::vector<float> extractObject(size_t id, tann::Property &prop) {
       std::vector<float> v;
       switch (prop.objectType) {
-      case tann::ngt::ObjectSpace::ObjectType::Uint8:
+      case tann::ObjectSpace::ObjectType::Uint8:
 	{
 	  auto *obj = static_cast<uint8_t*>(index.getObjectSpace().getObject(id));
 	  for (int i = 0; i < prop.dimension; i++) {
@@ -1055,9 +1055,9 @@ namespace tann::ngt {
 	}
 	break;
 #ifdef NGT_HALF_FLOAT
-      case tann::ngt::ObjectSpace::ObjectType::Float16:
+      case tann::ObjectSpace::ObjectType::Float16:
 	{
-	  auto *obj = static_cast<tann::ngt::float16*>(index.getObjectSpace().getObject(id));
+	  auto *obj = static_cast<tann::float16*>(index.getObjectSpace().getObject(id));
 	  for (int i = 0; i < prop.dimension; i++) {
 	    float d = *obj++;
 	    v.push_back(d);
@@ -1066,7 +1066,7 @@ namespace tann::ngt {
 	break;
 #endif
       default:
-      case tann::ngt::ObjectSpace::ObjectType::Float:
+      case tann::ObjectSpace::ObjectType::Float:
 	{
 	  auto *obj = static_cast<float*>(index.getObjectSpace().getObject(id));
 	  for (int i = 0; i < prop.dimension; i++) {
@@ -1079,10 +1079,10 @@ namespace tann::ngt {
       return v;
     }
 
-    std::vector<float> meanObject(size_t id1, size_t id2, tann::ngt::Property &prop) {
+    std::vector<float> meanObject(size_t id1, size_t id2, tann::Property &prop) {
       std::vector<float> v;
       switch (prop.objectType) {
-      case tann::ngt::ObjectSpace::ObjectType::Uint8:
+      case tann::ObjectSpace::ObjectType::Uint8:
 	{
 	  auto *obj1 = static_cast<uint8_t*>(index.getObjectSpace().getObject(id1));
 	  auto *obj2 = static_cast<uint8_t*>(index.getObjectSpace().getObject(id2));
@@ -1093,10 +1093,10 @@ namespace tann::ngt {
 	}
 	break;
 #ifdef NGT_HALF_FLOAT
-      case tann::ngt::ObjectSpace::ObjectType::Float16:
+      case tann::ObjectSpace::ObjectType::Float16:
 	{
-	  auto *obj1 = static_cast<tann::ngt::float16*>(index.getObjectSpace().getObject(id1));
-	  auto *obj2 = static_cast<tann::ngt::float16*>(index.getObjectSpace().getObject(id2));
+	  auto *obj1 = static_cast<tann::float16*>(index.getObjectSpace().getObject(id1));
+	  auto *obj2 = static_cast<tann::float16*>(index.getObjectSpace().getObject(id2));
 	  for (int i = 0; i < prop.dimension; i++) {
 	    float d = (*obj1++ + *obj2++) / 2.0F;
 	    v.push_back(d);
@@ -1105,7 +1105,7 @@ namespace tann::ngt {
 	break;
 #endif
       default:
-      case tann::ngt::ObjectSpace::ObjectType::Float:
+      case tann::ObjectSpace::ObjectType::Float:
 	{
 	  auto *obj1 = static_cast<float*>(index.getObjectSpace().getObject(id1));
 	  auto *obj2 = static_cast<float*>(index.getObjectSpace().getObject(id2));
@@ -1120,7 +1120,7 @@ namespace tann::ngt {
     }
 
     void extractQueries(std::vector<std::vector<float>> &queries, std::ostream &os) {
-      tann::ngt::Property prop;
+      tann::Property prop;
       index.getProperty(prop);
 
       for (auto i = queries.begin(); i != queries.end(); ++i) {
@@ -1137,10 +1137,10 @@ namespace tann::ngt {
     }
 
     void extractAndRemoveRandomQueries(size_t nqueries, std::vector<std::vector<float>> &queries) {
-      tann::ngt::Property prop;
+      tann::Property prop;
       index.getProperty(prop);
       size_t repositorySize = index.getObjectRepositorySize();
-      tann::ngt::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
+      tann::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
       
       queries.clear();
 
@@ -1164,7 +1164,7 @@ namespace tann::ngt {
 
     void extractQueries(size_t nqueries, std::vector<std::vector<float>> &queries, bool similarObject = false) {
 
-      tann::ngt::Property prop;
+      tann::Property prop;
       index.getProperty(prop);
 
       size_t osize = index.getObjectRepositorySize();
@@ -1182,12 +1182,12 @@ namespace tann::ngt {
 	}
 	if (similarObject) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-	  tann::ngt::Object *query = index.getObjectSpace().allocateObject(*index.getObjectSpace().getRepository().get(id1 + oft));
+	  tann::Object *query = index.getObjectSpace().allocateObject(*index.getObjectSpace().getRepository().get(id1 + oft));
 #else
-	  tann::ngt::Object *query = index.getObjectSpace().getRepository().get(id1 + oft);
+	  tann::Object *query = index.getObjectSpace().getRepository().get(id1 + oft);
 #endif
-	  tann::ngt::SearchContainer sc(*query);
-	  tann::ngt::ObjectDistances results;
+	  tann::SearchContainer sc(*query);
+	  tann::ObjectDistances results;
 	  sc.setResults(&results);
 	  sc.setSize(nOfResults);
 	  index.search(sc);
@@ -1240,18 +1240,18 @@ namespace tann::ngt {
       }
       size_t nqueries = args.getl("n", 1000);
 
-      tann::ngt::Index	index(indexName);
-      tann::ngt::Optimizer	optimizer(index);
+      tann::Index	index(indexName);
+      tann::Optimizer	optimizer(index);
       optimizer.extractQueries(nqueries, std::cout);
 
     }
 
-    static void createGroundTruth(tann::ngt::Index &index, double epsilon, Command::SearchParameters &searchParameters, std::stringstream &queries, std::stringstream &gtStream){
+    static void createGroundTruth(tann::Index &index, double epsilon, Command::SearchParameters &searchParameters, std::stringstream &queries, std::stringstream &gtStream){
       queries.clear();
       queries.seekg(0, std::ios_base::beg);
       searchParameters.outputMode = 'e';
       searchParameters.beginOfEpsilon = searchParameters.endOfEpsilon = epsilon;
-      tann::ngt::Command::search(index, searchParameters, queries, gtStream);
+      tann::Command::search(index, searchParameters, queries, gtStream);
     }
 
     static int 
@@ -1453,21 +1453,21 @@ namespace tann::ngt {
       size_t nOfQueries = queries.size();
       maxEpsilon = 0.0;
       {
-	std::vector<tann::ngt::Object *> queryObjects;
+	std::vector<tann::Object *> queryObjects;
 	for (auto i = queries.begin(); i != queries.end(); ++i) {
 	  queryObjects.push_back(index.allocateObject(*i));
 	}
 	int identityCount = 0;
-	std::vector<tann::ngt::Distance> lastDistances(nOfQueries);
+	std::vector<tann::Distance> lastDistances(nOfQueries);
 	double time = 0.0;
 	double step = 0.02;
 	for (float e = 0.0; e < 10.0; e += step) {
 	  size_t idx;
 	  bool identity = true;
-	  tann::ngt::Timer timer;
+	  tann::Timer timer;
 	  for (idx = 0; idx < queryObjects.size(); idx++) {
-	    tann::ngt::SearchContainer sc(*queryObjects[idx]);
-	    tann::ngt::ObjectDistances results;
+	    tann::SearchContainer sc(*queryObjects[idx]);
+	    tann::ObjectDistances results;
 	    sc.setResults(&results);
 	    sc.setSize(nOfResults);
 	    sc.setEpsilon(e);
@@ -1479,7 +1479,7 @@ namespace tann::ngt {
 	      msg << "generatePseudoGroundTruth: Cannot get any search result.";
 	      NGTThrowException(msg);
 	    }
-	    tann::ngt::Distance d = results.back().distance;
+	    tann::Distance d = results.back().distance;
 	    if (d != lastDistances[idx]) {
 	      identity = false;
 	    }
@@ -1512,20 +1512,20 @@ namespace tann::ngt {
 
       {
 	// generate (pseudo) ground truth data
-	tann::ngt::Command::SearchParameters searchParameters;
+	tann::Command::SearchParameters searchParameters;
 	searchParameters.size = nOfResults;
 	searchParameters.outputMode = 'e';
 	searchParameters.edgeSize = 0;	// get the best accuracy by using all edges
 	//searchParameters.indexType = 's'; // linear search
 	extractQueries(queries, queryStream);
-	tann::ngt::Optimizer::createGroundTruth(index, maxEpsilon, searchParameters, queryStream, gtStream);
+	tann::Optimizer::createGroundTruth(index, maxEpsilon, searchParameters, queryStream, gtStream);
       }
     }
 
     static std::vector<std::pair<float, double>> 
-      generateAccuracyTable(tann::ngt::Index &index, size_t nOfResults = 50, size_t querySize = 100) {
+      generateAccuracyTable(tann::Index &index, size_t nOfResults = 50, size_t querySize = 100) {
 
-      tann::ngt::Property prop;
+      tann::Property prop;
       index.getProperty(prop);
       if (prop.edgeSizeForSearch != 0 && prop.edgeSizeForSearch != -2) {
 	std::stringstream msg;
@@ -1533,7 +1533,7 @@ namespace tann::ngt {
 	NGTThrowException(msg);
       }
 
-      tann::ngt::Optimizer optimizer(index, nOfResults);
+      tann::Optimizer optimizer(index, nOfResults);
 
       float maxEpsilon = 0.0;
       std::stringstream queryStream;
@@ -1545,18 +1545,18 @@ namespace tann::ngt {
       {
 	float interval = 0.05;
 	float prev = 0.0;
-	std::vector<tann::ngt::Optimizer::MeasuredValue> acc;
+	std::vector<tann::Optimizer::MeasuredValue> acc;
 	float epsilon = -0.6;
 	double accuracy;
 	do {
 	  auto pair = map.find(epsilon);
 	  if (pair == map.end()) {
-	    tann::ngt::Command::SearchParameters searchParameters;
+	    tann::Command::SearchParameters searchParameters;
 	    searchParameters.outputMode = 'e';
 	    searchParameters.beginOfEpsilon = searchParameters.endOfEpsilon = epsilon;
 	    queryStream.clear();
 	    queryStream.seekg(0, std::ios_base::beg);
-	    tann::ngt::Optimizer::search(index, queryStream, gtStream, searchParameters, acc);
+	    tann::Optimizer::search(index, queryStream, gtStream, searchParameters, acc);
 	    if (acc.size() == 0) {
 	      NGTThrowException("Fatal error! Cannot get any accuracy value.");
 	    }
@@ -1602,7 +1602,7 @@ namespace tann::ngt {
       return epsilonAccuracyMap;
     }
 
-    tann::ngt::Index &index;
+    tann::Index &index;
     size_t nOfResults;
     StdOstreamRedirector redirector;
   };

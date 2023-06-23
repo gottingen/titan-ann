@@ -26,7 +26,7 @@
 #include    <iostream>
 #include    <deque>
 
-namespace tann::ngt {
+namespace tann {
 void * evaluate_responce(void *);
 
 class ThreadTerminationException : public Exception {
