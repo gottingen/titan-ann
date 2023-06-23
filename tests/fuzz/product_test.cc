@@ -5,7 +5,7 @@
 //#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <iostream>
 //#include <doctest/doctest.h>
-#include "flare/simd/xsimd.h"
+#include "flare/simd/simd.h"
 #include "turbo/times/stop_watcher.h"
 #include "turbo/log/logging.h"
 #include <cstdlib>
