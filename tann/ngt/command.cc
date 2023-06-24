@@ -294,7 +294,7 @@ using namespace std;
 	    break;
 	  }
 	}
-	tann::ObjectDistances objects;
+	tann::VectorDistances objects;
 	sc.setResults(&objects);
 	sc.setSize(searchParameters.size);
 	sc.setRadius(searchParameters.radius);
@@ -896,7 +896,7 @@ using namespace std;
 
     tann::Index	index(path);
 
-    tann::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
+    tann::VectorRepository &objectRepository = index.getObjectSpace().getRepository();
     tann::GraphIndex &graphIndex = static_cast<GraphIndex&>(index.getIndex());
     tann::GraphAndTreeIndex &graphAndTreeIndex = static_cast<GraphAndTreeIndex&>(index.getIndex());
     size_t objSize = objectRepository.size();

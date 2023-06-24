@@ -20,10 +20,10 @@
 
 class ItemID {
 public:
-  void serialize(std::ostream &os, tann::ObjectSpace *ospace = 0) {
+  void serialize(std::ostream &os, tann::VectorSpace *ospace = 0) {
     os.write((char*)&value, sizeof(value));
   }
-  void deserialize(std::istream &is, tann::ObjectSpace *ospace = 0) {
+  void deserialize(std::istream &is, tann::VectorSpace *ospace = 0) {
     is.read((char*)&value, sizeof(value));
   }
   static size_t getSerializedDataSize() {

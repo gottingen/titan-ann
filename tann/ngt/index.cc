@@ -16,7 +16,7 @@
 
 #include "tann/common/defines.h"
 #include "tann/ngt/common.h"
-#include "tann/ngt/object_space_repository.h"
+#include "tann/vector/vector_space_repository.h"
 #include "tann/ngt/index.h"
 #include "tann/ngt/thread.h"
 #include "tann/ngt/graph_reconstructor.h"
@@ -103,7 +103,7 @@ tann::Index::open(const string &database, bool rdOnly, bool graphDisabled) {
 
 void
 tann::Index::createGraphAndTree(const string &database, tann::Property &prop, const string &dataFile,
-                               size_t dataSize, bool redirect) {
+                                size_t dataSize, bool redirect) {
     if (prop.dimension == 0) {
         TANN_THROW("Index::createGraphAndTree. Dimension is not specified.");
     }
@@ -131,7 +131,7 @@ tann::Index::createGraphAndTree(const string &database, tann::Property &prop, co
 
 void
 tann::Index::createGraph(const string &database, tann::Property &prop, const string &dataFile, size_t dataSize,
-                        bool redirect) {
+                         bool redirect) {
     if (prop.dimension == 0) {
         TANN_THROW("Index::createGraphAndTree. Dimension is not specified.");
     }
@@ -159,7 +159,7 @@ tann::Index::createGraph(const string &database, tann::Property &prop, const str
 
 void
 tann::Index::loadAndCreateIndex(Index &index, const string &database, const string &dataFile, size_t threadSize,
-                               size_t dataSize) {
+                                size_t dataSize) {
     tann::Timer timer;
     timer.start();
     if (dataFile.size() != 0) {
@@ -296,7 +296,7 @@ tann::Index::exportIndex(const string &database, const string &file) {
 std::vector<float>
 tann::Index::makeSparseObject(std::vector<uint32_t> &object) {
     if (static_cast<tann::GraphIndex &>(getIndex()).getProperty().distanceType !=
-        tann::ObjectSpace::DistanceType::DistanceTypeSparseJaccard) {
+        tann::VectorSpace::DistanceType::DistanceTypeSparseJaccard) {
         TANN_THROW("tann::Index::makeSparseObject: Not sparse jaccard.");
     }
     size_t dimension = getObjectSpace().getDimension();
@@ -316,7 +316,7 @@ void
 tann::Index::Property::set(tann::Property &prop) {
     if (prop.dimension != -1) dimension = prop.dimension;
     if (prop.threadPoolSize != -1) threadPoolSize = prop.threadPoolSize;
-    if (prop.objectType != ObjectSpace::ObjectTypeNone) objectType = prop.objectType;
+    if (prop.objectType != VectorSpace::ObjectTypeNone) objectType = prop.objectType;
     if (prop.distanceType != DistanceType::DistanceTypeNone) distanceType = prop.distanceType;
     if (prop.indexType != IndexTypeNone) indexType = prop.indexType;
     if (prop.databaseType != DatabaseTypeNone) databaseType = prop.databaseType;
@@ -367,7 +367,7 @@ public:
 
     tann::ObjectID id;
     tann::Object *object;    // this will be a node of the graph later.
-    tann::ObjectDistances *results;
+    tann::VectorDistances *results;
     size_t batchIdx;
 };
 
@@ -409,7 +409,7 @@ CreateIndexThread::run() {
             cerr << "CreateIndex::search:Error! popFront " << err.what() << endl;
             break;
         }
-        ObjectDistances *rs = new ObjectDistances;
+        VectorDistances *rs = new VectorDistances;
         Object &obj = *job.object;
         try {
             if (graphIndex.NeighborhoodGraph::property.graphType == NeighborhoodGraph::GraphTypeKNNG) {
@@ -487,20 +487,20 @@ void
 tann::GraphIndex::constructObjectSpace(tann::Property &prop) {
     assert(prop.dimension != 0);
     size_t dimension = prop.dimension;
-    if (prop.distanceType == tann::ObjectSpace::DistanceType::DistanceTypeSparseJaccard) {
+    if (prop.distanceType == tann::VectorSpace::DistanceType::DistanceTypeSparseJaccard) {
         dimension++;
     }
 
     switch (prop.objectType) {
-        case tann::ObjectSpace::ObjectType::Float :
-            objectSpace = new ObjectSpaceRepository<float, double>(dimension, typeid(float), prop.distanceType);
+        case tann::VectorSpace::ObjectType::Float :
+            objectSpace = new VectorSpaceRepository<float, double>(dimension, typeid(float), prop.distanceType);
             break;
-        case tann::ObjectSpace::ObjectType::Uint8 :
-            objectSpace = new ObjectSpaceRepository<unsigned char, int>(dimension, typeid(uint8_t), prop.distanceType);
+        case tann::VectorSpace::ObjectType::Uint8 :
+            objectSpace = new VectorSpaceRepository<unsigned char, int>(dimension, typeid(uint8_t), prop.distanceType);
             break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-        case tann::ObjectSpace::ObjectType::Float16 :
-            objectSpace = new ObjectSpaceRepository<float16, float>(dimension, typeid(float16), prop.distanceType);
+        case tann::VectorSpace::ObjectType::Float16 :
+            objectSpace = new VectorSpaceRepository<float16, float>(dimension, typeid(float16), prop.distanceType);
             break;
 #endif
         default:
@@ -564,7 +564,7 @@ tann::GraphAndTreeIndex::GraphAndTreeIndex(const string &allocator, tann::Proper
 void 
 GraphAndTreeIndex::createTreeIndex() 
 {
-  ObjectRepository &fr = GraphIndex::objectSpace->getRepository();
+  VectorRepository &fr = GraphIndex::objectSpace->getRepository();
   for (size_t id = 0; id < fr.size(); id++){
     if (id % 100000 == 0) {
       cerr << " Processed id=" << id << endl;
@@ -625,7 +625,7 @@ tann::GraphIndex::GraphIndex(const string &database, bool rdOnly, bool graphDisa
 void
 GraphIndex::createIndex() {
     GraphRepository &anngRepo = repository;
-    ObjectRepository &fr = objectSpace->getRepository();
+    VectorRepository &fr = objectSpace->getRepository();
     size_t pathAdjustCount = property.pathAdjustmentInterval;
     tann::ObjectID id = 1;
     size_t count = 0;
@@ -649,7 +649,7 @@ searchMultipleQueryForCreation(GraphIndex &neighborhoodGraph,
                                CreateIndexJob &job,
                                CreateIndexThreadPool &threads,
                                size_t sizeOfRepository) {
-    ObjectRepository &repo = neighborhoodGraph.objectSpace->getRepository();
+    VectorRepository &repo = neighborhoodGraph.objectSpace->getRepository();
     GraphRepository &anngRepo = neighborhoodGraph.repository;
     size_t cnt = 0;
     for (; id < repo.size(); id++) {
@@ -701,9 +701,9 @@ insertMultipleSearchResults(GraphIndex &neighborhoodGraph,
 
         for (size_t idxi = 0; idxi < dataSize; idxi++) {
             // add distances
-            ObjectDistances &objs = *output[idxi].results;
+            VectorDistances &objs = *output[idxi].results;
             for (size_t idxj = 0; idxj < idxi; idxj++) {
-                ObjectDistance r;
+                VectorDistance r;
                 r.distance = neighborhoodGraph.objectSpace->getComparator()(*output[idxi].object, *output[idxj].object);
                 r.id = output[idxj].id;
                 objs.push_back(r);
@@ -831,7 +831,7 @@ tann::GraphIndex::showStatisticsOfGraph(tann::GraphIndex &outGraph, char mode, s
     std::vector<size_t> indegreeHistogram;
     std::vector<std::vector<float> > indegree;
     tann::GraphRepository &graph = outGraph.repository;
-    tann::ObjectRepository &repo = outGraph.objectSpace->getRepository();
+    tann::VectorRepository &repo = outGraph.objectSpace->getRepository();
     indegreeCount.resize(graph.size(), 0);
     indegree.resize(graph.size());
     size_t removedObjectCount = 0;
@@ -872,9 +872,9 @@ tann::GraphIndex::showStatisticsOfGraph(tann::GraphIndex &outGraph, char mode, s
         }
         for (size_t i = 0; i < esize; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-            tann::ObjectDistance &n = (*node).at(i, graph.allocator);
+            tann::VectorDistance &n = (*node).at(i, graph.allocator);
 #else
-            tann::ObjectDistance &n = (*node)[i];
+            tann::VectorDistance &n = (*node)[i];
 #endif
             if (std::isnan(n.distance)) {
                 stringstream msg;
@@ -1345,7 +1345,7 @@ GraphAndTreeIndex::createIndex(const vector<pair<tann::Object *, size_t> > &obje
                     sort(output.begin(), output.end());
                     for (size_t idxi = 0; idxi < cnt; idxi++) {
                         // add distances
-                        ObjectDistances &objs = *output[idxi].results;
+                        VectorDistances &objs = *output[idxi].results;
                         for (size_t idxj = 0; idxj < idxi; idxj++) {
                             if (output[idxi].batchIdx == output[idxj].batchIdx) {
                                 continue;
@@ -1353,7 +1353,7 @@ GraphAndTreeIndex::createIndex(const vector<pair<tann::Object *, size_t> > &obje
                             if (output[idxj].id == 0) {
                                 continue;
                             }
-                            ObjectDistance r;
+                            VectorDistance r;
                             r.distance = GraphIndex::objectSpace->getComparator()(*output[idxi].object,
                                                                                   *output[idxj].object);
                             r.id = output[idxj].id;
@@ -1500,14 +1500,14 @@ GraphAndTreeIndex::verify(vector<uint8_t> &status, bool info, char mode) {
 #else
                 tann::SearchContainer sc(*GraphIndex::getObjectRepository().get(id));
 #endif
-                tann::ObjectDistances objects;
+                tann::VectorDistances objects;
                 sc.setResults(&objects);
                 sc.id = 0;
                 sc.radius = 0.0;
                 sc.explorationCoefficient = 1.1;
                 sc.edgeSize = 0;
-                ObjectDistances seeds;
-                seeds.push_back(ObjectDistance(id, 0.0));
+                VectorDistances seeds;
+                seeds.push_back(VectorDistance(id, 0.0));
                 objects.clear();
                 try {
                     GraphIndex::search(sc, seeds);
@@ -1536,8 +1536,8 @@ GraphAndTreeIndex::verify(vector<uint8_t> &status, bool info, char mode) {
                     sc.explorationCoefficient = 1.2;
                     sc.edgeSize = 0;
                     sc.size = objects.size() < 100 ? 100 : objects.size() * 2;
-                    ObjectDistances seeds;
-                    seeds.push_back(ObjectDistance(id, 0.0));
+                    VectorDistances seeds;
+                    seeds.push_back(VectorDistance(id, 0.0));
                     objects.clear();
                     try {
                         GraphIndex::search(sc, seeds);

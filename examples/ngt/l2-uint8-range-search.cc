@@ -13,7 +13,7 @@ main(int argc, char **argv)
   try {
     tann::Property	property;
     property.dimension		= 128;
-    property.objectType		= tann::ObjectSpace::ObjectType::Uint8;
+    property.objectType		= tann::VectorSpace::ObjectType::Uint8;
     property.distanceType	= tann::Index::Property::DistanceType::DistanceTypeL2;
     tann::Index::create(indexPath, property);
     tann::Index	index(indexPath);
@@ -73,7 +73,7 @@ main(int argc, char **argv)
       }
 
       tann::SearchQuery		sc(query);
-      tann::ObjectDistances	objects;
+      tann::VectorDistances	objects;
       sc.setResults(&objects);
       sc.setRadius(250.0);
       sc.setSize(10);
@@ -83,7 +83,7 @@ main(int argc, char **argv)
       cout << endl << "Rank\tID\tDistance" << std::showbase << endl;
       for (size_t i = 0; i < objects.size(); i++) {
 	cout << i + 1 << "\t" << objects[i].id << "\t" << objects[i].distance << "\t: ";
-	tann::ObjectSpace &objectSpace = index.getObjectSpace();
+	tann::VectorSpace &objectSpace = index.getObjectSpace();
 	uint8_t *object = static_cast<uint8_t*>(objectSpace.getObject(objects[i].id));
 	for (size_t idx = 0; idx < 5; idx++) {
 	  cout << static_cast<int>(object[idx]) << " ";

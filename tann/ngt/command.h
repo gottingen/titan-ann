@@ -17,6 +17,7 @@
 
 #include "tann/ngt/index.h"
 #include "tann/common/args.h"
+#include "tann/common/utility.h"
 namespace tann {
 
 

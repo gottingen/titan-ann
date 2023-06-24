@@ -21,6 +21,7 @@
 #include "tann/ngt/clustering.h"
 #include <unordered_map>
 #include "tann/ngt/ngtq/object_file.h"
+#include "tann/vector/dynamic_vector.h"
 
 
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR) || defined(NGT_QBG_DISABLED)
@@ -252,7 +253,7 @@ class QuantizationCodebook : public std::vector<T> {
       std::cerr << "QuantizeationCodebook: Fatal Error! The index is not available." << std::endl;
       abort();
     }
-    tann::ObjectDistances result;
+    tann::VectorDistances result;
     tann::SearchContainer sc(object);
     sc.setResults(&result);
     sc.setSize(10);
@@ -266,7 +267,7 @@ class QuantizationCodebook : public std::vector<T> {
       return result[0].id - 1;
     }
   }
-  size_t find(tann::Object &object, tann::ObjectSpace::Comparator &comparator) {
+  size_t find(tann::Object &object, tann::VectorSpace::Comparator &comparator) {
     size_t noOfCentroids = PARENT::size() / paddedDimension;
     auto mind = std::numeric_limits<float>::max();
     size_t minidx = 0;
@@ -362,18 +363,18 @@ public:
 };
  
 template <typename T>
-class InvertedIndexEntry : public tann::DynamicLengthVector<InvertedIndexObject<T>> {
+class InvertedIndexEntry : public tann::DynamicVector<InvertedIndexObject<T>> {
 public:
-  typedef tann::DynamicLengthVector<InvertedIndexObject<T>> PARENT;
+  typedef tann::DynamicVector<InvertedIndexObject<T>> PARENT;
 #ifdef NGTQ_SHARED_INVERTED_INDEX
-  InvertedIndexEntry(size_t n, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
+  InvertedIndexEntry(size_t n, tann::VectorSpace *os = 0):numOfLocalIDs(n)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
   {
     PARENT::elementSize = getSizeOfElement();
   }
-  InvertedIndexEntry(size_t n, tann::SharedMemoryAllocator &allocator, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
+  InvertedIndexEntry(size_t n, tann::SharedMemoryAllocator &allocator, tann::VectorSpace *os = 0):numOfLocalIDs(n)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
@@ -389,12 +390,12 @@ public:
     PARENT::back(allocator).setID(id);
   }
 #else // NGTQ_SHARED_INVERTED_INDEX
-  InvertedIndexEntry(tann::ObjectSpace *os = 0):numOfLocalIDs(0)
+  InvertedIndexEntry(tann::VectorSpace *os = 0):numOfLocalIDs(0)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
   {}
-  InvertedIndexEntry(size_t n, tann::ObjectSpace *os = 0):numOfLocalIDs(n)
+  InvertedIndexEntry(size_t n, tann::VectorSpace *os = 0):numOfLocalIDs(n)
 #ifdef NGTQ_QBG
     , subspaceID(std::numeric_limits<uint32_t>::max())
 #endif
@@ -410,7 +411,7 @@ public:
     PARENT::back().setID(id);
   }
 
-  void serialize(std::ofstream &os, tann::ObjectSpace *objspace = 0) {
+  void serialize(std::ofstream &os, tann::VectorSpace *objspace = 0) {
     uint32_t sz = PARENT::size();
     tann::Serializer::write(os, sz);
     if (numOfLocalIDs > 0xFFFF) {
@@ -426,7 +427,7 @@ public:
     os.write(reinterpret_cast<char*>(PARENT::vector), PARENT::size() * PARENT::elementSize);
   }
 
-  void deserialize(std::ifstream &is, tann::ObjectSpace *objectspace = 0) {
+  void deserialize(std::ifstream &is, tann::VectorSpace *objectspace = 0) {
     uint32_t sz;
     uint16_t nids;
 #ifdef NGTQ_QBG
@@ -497,7 +498,7 @@ public:
 #endif
  };
 
- typedef tann::ObjectSpace::DistanceType		DistanceType;
+ typedef tann::VectorSpace::DistanceType		DistanceType;
 
  enum CentroidCreationMode {
    CentroidCreationModeDynamic		= 0,
@@ -2073,17 +2074,17 @@ public:
     abort();
   }
 
-  virtual void search(tann::Object *object, tann::ObjectDistances &objs, size_t size,
+  virtual void search(tann::Object *object, tann::VectorDistances &objs, size_t size,
 		      size_t approximateSearchSize,
 		      size_t codebookSearchSize, bool resultRefinement, bool lookUpTable,
 		      double epsilon) = 0;
 
-  virtual void search(tann::Object *object, tann::ObjectDistances &objs, size_t size,
+  virtual void search(tann::Object *object, tann::VectorDistances &objs, size_t size,
 		      size_t approximateSearchSize,
 		      size_t codebookSearchSize, AggregationMode aggregationMode,
 		      double epsilon) = 0;
 
-  virtual void search(tann::Object *object, tann::ObjectDistances &objs, size_t size,
+  virtual void search(tann::Object *object, tann::VectorDistances &objs, size_t size,
 		      float expansion,
 		      AggregationMode aggregationMode,
 		      double epsilon) = 0;
@@ -2137,7 +2138,7 @@ public:
   size_t	distanceComputationCount;
 
   size_t	localIDByteSize;
-  tann::ObjectSpace::ObjectType objectType;
+  tann::VectorSpace::ObjectType objectType;
   size_t	divisionNo;
 
   std::vector<tann::Index>	localCodebookIndexes;
@@ -2407,7 +2408,7 @@ template <typename LOCAL_ID_TYPE>
 class QuantizerInstance : public Quantizer {
 public:
 
-  typedef void (QuantizerInstance::*AggregateObjectsFunction)(tann::ObjectDistance &, tann::Object *, size_t size, tann::ObjectSpace::ResultSet &, size_t);
+  typedef void (QuantizerInstance::*AggregateObjectsFunction)(tann::VectorDistance &, tann::Object *, size_t size, tann::VectorSpace::ResultSet &, size_t);
   typedef InvertedIndexEntry<LOCAL_ID_TYPE>	IIEntry;
 
   QuantizerInstance() {
@@ -3190,7 +3191,7 @@ public:
 #else
       auto qid = quantizationCodebook.search(*objects[idx].first);
 #endif
-      tann::ObjectDistances result;
+      tann::VectorDistances result;
       if (gqindex != 0) {
 	std::vector<float> object(globalCodebookIndex.getObjectSpace().getDimension());
 #ifdef NGTQ_VECTOR_OBJECT
@@ -3271,7 +3272,7 @@ public:
       ids[idx].identical = true;
 #ifdef GET_BLOG_EVAL
       {
-	tann::ObjectDistances result;
+	tann::VectorDistances result;
 	tann::SearchContainer sc(*objects[idx].first);
 	sc.setResults(&result);
 	sc.setSize(50);
@@ -3813,7 +3814,7 @@ public:
 	bool refine = true;
 	bool lookuptable = false;
 	double epsilon = 0.1;
-	tann::ObjectDistances objects;
+	tann::VectorDistances objects;
 	search(gcentroidFromList, objects, resultSize, approximateSearchSize, codebookSearchSize, 
 	       refine, lookuptable, epsilon);
 	for (size_t resulti = 0; resulti < objects.size(); resulti++) {
@@ -3822,7 +3823,7 @@ public:
 	  } else {
 	    cerr << "x ";
 	    ngid.push_back(objects[resulti].id);
-	    tann::ObjectDistances result;
+	    tann::VectorDistances result;
 	    tann::Object *o = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
 	    objectList.get(ngid.back(), *o, &globalCodebookIndex.getObjectSpace());
 	    tann::GraphAndTreeIndex &graphIndex = (tann::GraphAndTreeIndex &)globalCodebookIndex.getIndex();
@@ -3841,7 +3842,7 @@ public:
 #endif  // NGTQ_QBG
   }
 
-  void searchGlobalCodebook(tann::Object *query, size_t size, tann::ObjectDistances &objects,
+  void searchGlobalCodebook(tann::Object *query, size_t size, tann::VectorDistances &objects,
 			    size_t &approximateSearchSize,
 			    size_t codebookSearchSize, 
 			    double epsilon) {
@@ -3861,11 +3862,11 @@ public:
 
   }
 
-  inline void aggregateObjectsWithExactDistance(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+  inline void aggregateObjectsWithExactDistance(tann::VectorDistance &globalCentroid, tann::Object *query, size_t size, tann::VectorSpace::ResultSet &results, size_t approximateSearchSize) {
     abort();
   }
 
-   inline void aggregateObjectsWithLookupTable(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+   inline void aggregateObjectsWithLookupTable(tann::VectorDistance &globalCentroid, tann::Object *query, size_t size, tann::VectorSpace::ResultSet &results, size_t approximateSearchSize) {
      QuantizedObjectDistance::DistanceLookupTable distanceLUT;
      (*quantizedObjectDistance).initialize(distanceLUT);
      (*quantizedObjectDistance).createDistanceLookup(*query, globalCentroid.id, distanceLUT);
@@ -3883,7 +3884,7 @@ public:
        }  
 
 
-       tann::ObjectDistance obj;
+       tann::VectorDistance obj;
        obj.id = invertedIndexEntry.id;
        obj.distance = distance;
        assert(obj.id > 0);
@@ -4023,7 +4024,7 @@ public:
   }
 
 
-   inline void aggregateObjectsWithCache(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+   inline void aggregateObjectsWithCache(tann::VectorDistance &globalCentroid, tann::Object *query, size_t size, tann::VectorSpace::ResultSet &results, size_t approximateSearchSize) {
 
      QuantizedObjectDistance::DistanceLookupTable distanceLUT;
      (*quantizedObjectDistance).initialize(distanceLUT);
@@ -4041,7 +4042,7 @@ public:
 	 distance = getApproximateDistance(*query, globalCentroid.id, invertedIndexEntry.localID, distanceLUT);
        }  
 
-       tann::ObjectDistance obj;
+       tann::VectorDistance obj;
        obj.id = invertedIndexEntry.id;
        obj.distance = distance;
        assert(obj.id > 0);
@@ -4051,7 +4052,7 @@ public:
   }
 
 
-  inline void aggregateObjects(tann::ObjectDistance &globalCentroid, tann::Object *query, size_t size, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize) {
+  inline void aggregateObjects(tann::VectorDistance &globalCentroid, tann::Object *query, size_t size, tann::VectorSpace::ResultSet &results, size_t approximateSearchSize) {
     for (size_t j = 0; j < invertedIndex[globalCentroid.id]->size() && results.size() < approximateSearchSize; j++) {
 #ifdef NGTQ_SHARED_INVERTED_INDEX
       InvertedIndexObject<LOCAL_ID_TYPE> &invertedIndexEntry = (*invertedIndex[globalCentroid.id]).at(j, invertedIndex.allocator);
@@ -4066,7 +4067,7 @@ public:
       }  
 
 
-      tann::ObjectDistance obj;
+      tann::VectorDistance obj;
       obj.id = invertedIndexEntry.id;
       obj.distance = distance;
       assert(obj.id > 0);
@@ -4079,7 +4080,7 @@ public:
   }
 
 
-  inline void aggregateObjects(tann::Object *query, size_t size, tann::ObjectDistances &objects, tann::ObjectSpace::ResultSet &results, size_t approximateSearchSize, AggregateObjectsFunction aggregateObjectsFunction) {
+  inline void aggregateObjects(tann::Object *query, size_t size, tann::VectorDistances &objects, tann::VectorSpace::ResultSet &results, size_t approximateSearchSize, AggregateObjectsFunction aggregateObjectsFunction) {
     for (size_t i = 0; i < objects.size(); i++) {
       if (invertedIndex[objects[i].id] == 0) {
 	if (property.centroidCreationMode == CentroidCreationModeDynamic) {
@@ -4094,11 +4095,11 @@ public:
     } 
   }
 
-  void refineDistance(tann::Object *query, tann::ObjectDistances &results) {
+  void refineDistance(tann::Object *query, tann::VectorDistances &results) {
 #ifndef NGTQ_QBG
-     tann::ObjectSpace &objectSpace = globalCodebookIndex.getObjectSpace();
+     tann::VectorSpace &objectSpace = globalCodebookIndex.getObjectSpace();
      for (auto i = results.begin(); i != results.end(); ++i) {
-       tann::ObjectDistance &result = *i;
+       tann::VectorDistance &result = *i;
        tann::Object o(&objectSpace);
        objectList.get(result.id, (tann::Object&)o, &objectSpace);
        double distance = objectSpace.getComparator()(*query, (tann::Object&)o);
@@ -4108,7 +4109,7 @@ public:
 #endif 
   }
 
-  void search(tann::Object *query, tann::ObjectDistances &objs,
+  void search(tann::Object *query, tann::VectorDistances &objs,
 	      size_t size, 
       	      float expansion,
 	      AggregationMode aggregationMode,
@@ -4118,7 +4119,7 @@ public:
     search(query, objs, size, approximateSearchSize, codebookSearchSize, aggregationMode, epsilon);
   }
 
-  void search(tann::Object *query, tann::ObjectDistances &objs,
+  void search(tann::Object *query, tann::VectorDistances &objs,
 	      size_t size, size_t approximateSearchSize,
 	      size_t codebookSearchSize, bool resultRefinement,
 	      bool lookUpTable = false,
@@ -4136,7 +4137,7 @@ public:
     search(query, objs, size, approximateSearchSize, codebookSearchSize, aggregationMode, epsilon);
   }
 
-  void search(tann::Object *query, tann::ObjectDistances &objs,
+  void search(tann::Object *query, tann::VectorDistances &objs,
 	      size_t size, size_t approximateSearchSize,
 	      size_t codebookSearchSize, 
 	      AggregationMode aggregationMode,
@@ -4146,11 +4147,11 @@ public:
 	TANN_THROW("NGTQ: Fatal inner error. the lookup table is only for dataType float!");
       }
     }
-    tann::ObjectDistances objects;
+    tann::VectorDistances objects;
     searchGlobalCodebook(query, size, objects, approximateSearchSize, codebookSearchSize, epsilon);
 
     objs.clear();
-    tann::ObjectSpace::ResultSet results;
+    tann::VectorSpace::ResultSet results;
     distanceComputationCount = 0;
 
     AggregateObjectsFunction aggregateObjectsFunction = &QuantizerInstance::aggregateObjectsWithCache;
@@ -4194,7 +4195,7 @@ public:
     std::cerr << "calculateQuantizationError: Not implemented." << std::endl;
     return 0.0;
 #else
-    tann::ObjectSpace &objectSpace = globalCodebookIndex.getObjectSpace();
+    tann::VectorSpace &objectSpace = globalCodebookIndex.getObjectSpace();
     double distance = 0.0;
     double globalDistance = 0.0;
     size_t count = 0;
@@ -4539,7 +4540,7 @@ public:
 
    void deleteObject(tann::Object *object) { getQuantizer().deleteObject(object); }
 
-   void search(tann::Object *object, tann::ObjectDistances &objs,
+   void search(tann::Object *object, tann::VectorDistances &objs,
 	       size_t size, size_t approximateSearchSize,
 	       size_t codebookSearchSize, bool resultRefinement, 
 	       bool lookUpTable, double epsilon) {
@@ -4547,7 +4548,7 @@ public:
 			   resultRefinement, lookUpTable, epsilon);
    }
 
-   void search(tann::Object *object, tann::ObjectDistances &objs,
+   void search(tann::Object *object, tann::VectorDistances &objs,
 	       size_t size, float expansion,
 	       AggregationMode aggregationMode,
 	       double epsilon) {

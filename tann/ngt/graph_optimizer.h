@@ -16,6 +16,7 @@
 
 #include    "graph_reconstructor.h"
 #include    "optimizer.h"
+#include "tann/common/std_ostream_redirector.h"
 
 namespace tann {
   class GraphOptimizer {
@@ -101,8 +102,8 @@ namespace tann {
     }
 
     static double measureQueryTime(tann::Index &index, size_t start) {
-      tann::ObjectSpace &objectSpace = index.getObjectSpace();
-      tann::ObjectRepository &objectRepository = objectSpace.getRepository();
+      tann::VectorSpace &objectSpace = index.getObjectSpace();
+      tann::VectorRepository &objectRepository = objectSpace.getRepository();
       size_t nQueries = 200;
       nQueries = objectRepository.size() - 1 < nQueries ? objectRepository.size() - 1 : nQueries;
 
@@ -134,7 +135,7 @@ namespace tann {
 #else
 	tann::SearchContainer searchContainer(*objectRepository.get(*id));
 #endif
-	tann::ObjectDistances objects;
+	tann::VectorDistances objects;
 	searchContainer.setResults(&objects);
 	searchContainer.setSize(10);
 	searchContainer.setEpsilon(0.1);
@@ -150,7 +151,7 @@ namespace tann {
 
     static std::pair<size_t, double> searchMinimumQueryTime(tann::Index &index, size_t prefetchOffset,
 							    int maxPrefetchSize, size_t seedID) {
-      tann::ObjectSpace &objectSpace = index.getObjectSpace();
+      tann::VectorSpace &objectSpace = index.getObjectSpace();
       int step = 256;
       int prevPrefetchSize = 64;
       size_t minPrefetchSize = 0;
@@ -188,7 +189,7 @@ namespace tann {
       size_t prefetchOffset = 0;
       size_t prefetchSize = 0;
       std::vector<std::pair<size_t, size_t>> mins;
-      tann::ObjectSpace &objectSpace = index.getObjectSpace();
+      tann::VectorSpace &objectSpace = index.getObjectSpace();
       int maxSize = objectSpace.getByteSizeOfObject() * 4;
       maxSize = maxSize < 64 * 28 ? maxSize : 64 * 28; 
       for (int trial = 0; trial < 10; trial++) {
@@ -255,7 +256,7 @@ namespace tann {
 	  redirector.begin();
 	  tann::Timer timer;
 	  timer.start();
-	  std::vector<tann::ObjectDistances> graph;
+	  std::vector<tann::VectorDistances> graph;
 	  try {
 	    std::cerr << "Optimizer::execute: Extract the graph data." << std::endl;
 	    // extract only edges from the index to reduce the memory usage.
@@ -400,7 +401,7 @@ namespace tann {
       double prevAccuracy = 0.0;
       double gain = 0.0;
       {
-	std::vector<tann::ObjectDistances> graph;
+	std::vector<tann::VectorDistances> graph;
 	tann::GraphReconstructor::extractGraph(graph, static_cast<tann::GraphIndex&>(index.getIndex()));
 	float epsilon = 0.0;  
 	for (size_t edgeSize = 5; edgeSize <= maxNoOfEdges; edgeSize += (edgeSize >= 10 ? 10 : 5) ) {
@@ -441,7 +442,7 @@ namespace tann {
 
       tann::Optimizer optimizer(index, parameter.noOfResults);
 
-      tann::ObjectRepository &objectRepository = index.getObjectSpace().getRepository();
+      tann::VectorRepository &objectRepository = index.getObjectSpace().getRepository();
       tann::GraphIndex &graphIndex = static_cast<tann::GraphIndex&>(index.getIndex());
       tann::GraphAndTreeIndex &treeIndex = static_cast<tann::GraphAndTreeIndex&>(index.getIndex());
       tann::GraphRepository &graphRepository = graphIndex.NeighborhoodGraph::repository;

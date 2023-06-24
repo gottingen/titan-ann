@@ -75,7 +75,7 @@ static bool ngtqg_search_index_(NGTQG::Index* pindex, std::vector<float> &query,
   // set search parameters.
   NGTQG::SearchQuery sq(query);  // Query.
 
-  sq.setResults(static_cast<tann::ObjectDistances*>(results));          // set the result set.
+  sq.setResults(static_cast<tann::VectorDistances*>(results));          // set the result set.
   sq.setSize(param.size);                        // the number of resultant objects.
   sq.setRadius(param.radius);                    // search radius.
   sq.setEpsilon(param.epsilon);                  // exploration coefficient.
@@ -373,7 +373,7 @@ static bool qbg_search_index_(QBG::Index* pindex, std::vector<float> &query, QBG
 
   QBG::SearchContainer sc;
   sc.setObjectVector(query);
-  sc.setResults(static_cast<tann::ObjectDistances*>(results));
+  sc.setResults(static_cast<tann::VectorDistances*>(results));
   if (param.result_expansion >= 1.0) {
     sc.setSize(static_cast<float>(param.number_of_results) * param.result_expansion);
     sc.setExactResultSize(param.number_of_results);

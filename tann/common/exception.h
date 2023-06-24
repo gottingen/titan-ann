@@ -17,6 +17,7 @@
 
 #include <exception>
 #include <string>
+#include <string_view>
 #include "turbo/format/str_format.h"
 
 namespace tann {
@@ -28,15 +29,20 @@ namespace tann {
     public:
         Exception() : message("No message") {}
 
-        Exception(const std::string &file, const std::string &function, size_t line, std::stringstream &m) {
-            set(file, function, line, m.str());
-        }
+        Exception(const Exception &) = default;
 
-        Exception(const std::string &file, const std::string &function, size_t line, const std::string &m) {
+        Exception(const std::string_view &file, const std::string_view &function, size_t line,
+                  const std::string_view &m) {
             set(file, function, line, m);
         }
 
-        void set(const std::string &file, const std::string &function, size_t line, const std::string &m) {
+        Exception(const std::string_view &file, const std::string_view &function, size_t line,
+                  const std::stringstream &m) {
+            set(file, function, line, m.str());
+        }
+
+        void
+        set(const std::string_view &file, const std::string_view &function, size_t line, const std::string_view &m) {
             message = turbo::Format("{}:{}:{}: {}", file, function, line, m);
         }
 

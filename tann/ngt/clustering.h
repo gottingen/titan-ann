@@ -17,7 +17,7 @@
 #pragma once
 
 #include "tann/ngt/index.h"
-
+#include "tann/common/timer.h"
 using namespace std;
 
 #if defined(NGT_AVX_DISABLED) 
@@ -505,7 +505,7 @@ namespace tann {
 #pragma omp parallel for
       for (size_t ci = 0; ci < clusters.size(); ci++) {
 	auto cit = clusters.begin() + ci;
-	tann::ObjectDistances objects;
+	tann::VectorDistances objects;
 	tann::Object *query = 0;
 	query = index.allocateObject((*cit).centroid);
 	tann::SearchContainer sc(*query);
@@ -808,7 +808,7 @@ namespace tann {
     double kmeansWithNGT(tann::Index &index, size_t numberOfClusters, std::vector<Cluster> &clusters)
     {
       tann::GraphIndex	&graph = static_cast<tann::GraphIndex&>(index.getIndex());
-      tann::ObjectSpace &os = graph.getObjectSpace();
+      tann::VectorSpace &os = graph.getObjectSpace();
       size_t size = os.getRepository().size();
       std::vector<std::vector<float> > vectors(size - 1);
       for (size_t idx = 1; idx < size; idx++) {

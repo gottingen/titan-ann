@@ -180,7 +180,7 @@ namespace QBG {
                 auto &v = vectors[idx];
                 if ((idx + 1) % 10000 == 0) {
                 }
-                tann::ObjectDistances gc;
+                tann::VectorDistances gc;
                 tann::SearchQuery query(v);
                 query.setResults(&gc);
                 query.setSize(10);

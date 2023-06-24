@@ -16,14 +16,15 @@
 
 #pragma once
 
-#include    <bitset>
+#include <bitset>
 
 #include "tann/common/defines.h"
 #include "tann/ngt/common.h"
-#include "tann/ngt/object_space_repository.h"
-
-
+#include "tann/vector/vector_space_repository.h"
+#include "tann/index/search_query.h"
+#include "tann/common/boolean_set.h"
 #include "tann/common/hash_based_boolean_set.h"
+#include "tann/common/property_set.h"
 
 #ifndef NGT_GRAPH_CHECK_VECTOR
 #include	<unordered_set>
@@ -112,7 +113,7 @@ namespace tann {
         }
 #endif
 
-        void insert(ObjectID id, ObjectDistances &objects) {
+        void insert(ObjectID id, VectorDistances &objects) {
             GRAPH_NODE *r = allocate();
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
             (*r).copy(objects, VECTOR::getAllocator());
@@ -231,7 +232,7 @@ namespace tann {
 
         bool isEmpty(size_t idx) { return (*this)[idx].empty(); }
 
-        void deserialize(std::ifstream &is, ObjectRepository &objectRepository) {
+        void deserialize(std::ifstream &is, VectorRepository &objectRepository) {
             if (!is.is_open()) {
                 TANN_THROW("tann::SearchGraph: Not open the specified stream yet.");
             }
@@ -246,7 +247,7 @@ namespace tann {
                     case '-':
                         break;
                     case '+': {
-                        ObjectDistances node;
+                        VectorDistances node;
                         node.deserialize(is);
                         ReadOnlyGraphNode &searchNode = at(id);
                         searchNode.reserve(node.size());
@@ -300,72 +301,72 @@ namespace tann {
         class Search {
         public:
             static void
-            (*getMethod(tann::ObjectSpace::DistanceType dtype, tann::ObjectSpace::ObjectType otype, size_t size))(
-                    tann::NeighborhoodGraph &, tann::SearchContainer &, tann::ObjectDistances &) {
+            (*getMethod(tann::VectorSpace::DistanceType dtype, tann::VectorSpace::ObjectType otype, size_t size))(
+                    tann::NeighborhoodGraph &, tann::SearchContainer &, tann::VectorDistances &) {
                 if (size < 5000000) {
                     switch (otype) {
-                        case tann::ObjectSpace::Float:
+                        case tann::VectorSpace::Float:
                             switch (dtype) {
-                                case tann::ObjectSpace::DistanceTypeNormalizedCosine :
+                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloat;
-                                case tann::ObjectSpace::DistanceTypeCosine :
+                                case tann::VectorSpace::DistanceTypeCosine :
                                     return cosineSimilarityFloat;
-                                case tann::ObjectSpace::DistanceTypeNormalizedAngle :
+                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
                                     return normalizedAngleFloat;
-                                case tann::ObjectSpace::DistanceTypeAngle :
+                                case tann::VectorSpace::DistanceTypeAngle :
                                     return angleFloat;
-                                case tann::ObjectSpace::DistanceTypeNormalizedL2 :
+                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
                                     return normalizedL2Float;
-                                case tann::ObjectSpace::DistanceTypeL2 :
+                                case tann::VectorSpace::DistanceTypeL2 :
                                     return l2Float;
-                                case tann::ObjectSpace::DistanceTypeL1 :
+                                case tann::VectorSpace::DistanceTypeL1 :
                                     return l1Float;
-                                case tann::ObjectSpace::DistanceTypeSparseJaccard :
+                                case tann::VectorSpace::DistanceTypeSparseJaccard :
                                     return sparseJaccardFloat;
-                                case tann::ObjectSpace::DistanceTypePoincare :
+                                case tann::VectorSpace::DistanceTypePoincare :
                                     return poincareFloat;  // added by Nyapicom
-                                case tann::ObjectSpace::DistanceTypeLorentz :
+                                case tann::VectorSpace::DistanceTypeLorentz :
                                     return lorentzFloat;  // added by Nyapicom
                                 default:
                                     return l2Float;
                             }
                             break;
-                        case tann::ObjectSpace::Uint8:
+                        case tann::VectorSpace::Uint8:
                             switch (dtype) {
-                                case tann::ObjectSpace::DistanceTypeHamming :
+                                case tann::VectorSpace::DistanceTypeHamming :
                                     return hammingUint8;
-                                case tann::ObjectSpace::DistanceTypeJaccard :
+                                case tann::VectorSpace::DistanceTypeJaccard :
                                     return jaccardUint8;
-                                case tann::ObjectSpace::DistanceTypeL2 :
+                                case tann::VectorSpace::DistanceTypeL2 :
                                     return l2Uint8;
-                                case tann::ObjectSpace::DistanceTypeL1 :
+                                case tann::VectorSpace::DistanceTypeL1 :
                                     return l1Uint8;
                                 default :
                                     return l2Uint8;
                             }
                             break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                        case tann::ObjectSpace::Float16:
+                        case tann::VectorSpace::Float16:
                             switch (dtype) {
-                                case tann::ObjectSpace::DistanceTypeNormalizedCosine :
+                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloat16;
-                                case tann::ObjectSpace::DistanceTypeCosine :
+                                case tann::VectorSpace::DistanceTypeCosine :
                                     return cosineSimilarityFloat16;
-                                case tann::ObjectSpace::DistanceTypeNormalizedAngle :
+                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
                                     return normalizedAngleFloat16;
-                                case tann::ObjectSpace::DistanceTypeAngle :
+                                case tann::VectorSpace::DistanceTypeAngle :
                                     return angleFloat16;
-                                case tann::ObjectSpace::DistanceTypeNormalizedL2 :
+                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
                                     return normalizedL2Float16;
-                                case tann::ObjectSpace::DistanceTypeL2 :
+                                case tann::VectorSpace::DistanceTypeL2 :
                                     return l2Float16;
-                                case tann::ObjectSpace::DistanceTypeL1 :
+                                case tann::VectorSpace::DistanceTypeL1 :
                                     return l1Float16;
-                                case tann::ObjectSpace::DistanceTypeSparseJaccard :
+                                case tann::VectorSpace::DistanceTypeSparseJaccard :
                                     return sparseJaccardFloat16;
-                                case tann::ObjectSpace::DistanceTypePoincare :
+                                case tann::VectorSpace::DistanceTypePoincare :
                                     return poincareFloat16;  // added by Nyapicom
-                                case tann::ObjectSpace::DistanceTypeLorentz :
+                                case tann::VectorSpace::DistanceTypeLorentz :
                                     return lorentzFloat16;  // added by Nyapicom
                                 default:
                                     return l2Float16;
@@ -379,68 +380,68 @@ namespace tann {
                     return l1Uint8;
                 } else {
                     switch (otype) {
-                        case tann::ObjectSpace::Float:
+                        case tann::VectorSpace::Float:
                             switch (dtype) {
-                                case tann::ObjectSpace::DistanceTypeNormalizedCosine :
+                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeCosine :
+                                case tann::VectorSpace::DistanceTypeCosine :
                                     return cosineSimilarityFloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeNormalizedAngle :
+                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
                                     return normalizedAngleFloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeAngle :
+                                case tann::VectorSpace::DistanceTypeAngle :
                                     return angleFloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeNormalizedL2 :
+                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
                                     return normalizedL2FloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeL2 :
+                                case tann::VectorSpace::DistanceTypeL2 :
                                     return l2FloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeL1 :
+                                case tann::VectorSpace::DistanceTypeL1 :
                                     return l1FloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeSparseJaccard :
+                                case tann::VectorSpace::DistanceTypeSparseJaccard :
                                     return sparseJaccardFloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypePoincare :
+                                case tann::VectorSpace::DistanceTypePoincare :
                                     return poincareFloatForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeLorentz :
+                                case tann::VectorSpace::DistanceTypeLorentz :
                                     return lorentzFloatForLargeDataset;
                                 default:
                                     return l2FloatForLargeDataset;
                             }
                             break;
-                        case tann::ObjectSpace::Uint8:
+                        case tann::VectorSpace::Uint8:
                             switch (dtype) {
-                                case tann::ObjectSpace::DistanceTypeHamming :
+                                case tann::VectorSpace::DistanceTypeHamming :
                                     return hammingUint8ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeJaccard :
+                                case tann::VectorSpace::DistanceTypeJaccard :
                                     return jaccardUint8ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeL2 :
+                                case tann::VectorSpace::DistanceTypeL2 :
                                     return l2Uint8ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeL1 :
+                                case tann::VectorSpace::DistanceTypeL1 :
                                     return l1Uint8ForLargeDataset;
                                 default :
                                     return l2Uint8ForLargeDataset;
                             }
                             break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                        case tann::ObjectSpace::Float16:
+                        case tann::VectorSpace::Float16:
                             switch (dtype) {
-                                case tann::ObjectSpace::DistanceTypeNormalizedCosine :
+                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloat16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeCosine :
+                                case tann::VectorSpace::DistanceTypeCosine :
                                     return cosineSimilarityFloat16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeNormalizedAngle :
+                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
                                     return normalizedAngleFloat16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeAngle :
+                                case tann::VectorSpace::DistanceTypeAngle :
                                     return angleFloat16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeNormalizedL2 :
+                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
                                     return normalizedL2Float16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeL2 :
+                                case tann::VectorSpace::DistanceTypeL2 :
                                     return l2Float16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeL1 :
+                                case tann::VectorSpace::DistanceTypeL1 :
                                     return l1Float16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeSparseJaccard :
+                                case tann::VectorSpace::DistanceTypeSparseJaccard :
                                     return sparseJaccardFloat16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypePoincare :
+                                case tann::VectorSpace::DistanceTypePoincare :
                                     return poincareFloat16ForLargeDataset;
-                                case tann::ObjectSpace::DistanceTypeLorentz :
+                                case tann::VectorSpace::DistanceTypeLorentz :
                                     return lorentzFloat16ForLargeDataset;
                                 default:
                                     return l2Float16ForLargeDataset;
@@ -454,141 +455,141 @@ namespace tann {
                 }
             }
 
-            static void l1Uint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void l1Uint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void l2Uint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void l2Uint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void l1Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void l1Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void l2Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void l2Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void hammingUint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void hammingUint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void jaccardUint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void jaccardUint8(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void sparseJaccardFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void sparseJaccardFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            cosineSimilarityFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            cosineSimilarityFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void angleFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void angleFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void normalizedCosineSimilarityFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                        ObjectDistances &seeds);
+                                                        VectorDistances &seeds);
 
             static void
-            normalizedAngleFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            normalizedAngleFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void normalizedL2Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void normalizedL2Float(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void poincareFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                      ObjectDistances &seeds);  // added by Nyapicom
+                                      VectorDistances &seeds);  // added by Nyapicom
             static void lorentzFloat(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                     ObjectDistances &seeds);  // added by Nyapicom
+                                     VectorDistances &seeds);  // added by Nyapicom
 #ifdef TANN_ENABLE_HALF_FLOAT
 
-            static void l1Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void l1Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void l2Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
-
-            static void
-            sparseJaccardFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void l2Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            cosineSimilarityFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            sparseJaccardFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
-            static void angleFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            static void
+            cosineSimilarityFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
+
+            static void angleFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void normalizedCosineSimilarityFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                          ObjectDistances &seeds);
+                                                          VectorDistances &seeds);
 
             static void
-            normalizedAngleFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            normalizedAngleFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            normalizedL2Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            normalizedL2Float16(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void poincareFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                        ObjectDistances &seeds);  // added by Nyapicom
+                                        VectorDistances &seeds);  // added by Nyapicom
             static void lorentzFloat16(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                       ObjectDistances &seeds);  // added by Nyapicom
+                                       VectorDistances &seeds);  // added by Nyapicom
 #endif
 
             static void
-            l1Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            l1Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            l2Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            l2Uint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            l1FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            l1FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            l2FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            l2FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            hammingUint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            hammingUint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            jaccardUint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            jaccardUint8ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void sparseJaccardFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                          ObjectDistances &seeds);
+                                                          VectorDistances &seeds);
 
             static void cosineSimilarityFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                             ObjectDistances &seeds);
+                                                             VectorDistances &seeds);
 
             static void
-            angleFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            angleFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
             normalizedCosineSimilarityFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                           ObjectDistances &seeds);
+                                                           VectorDistances &seeds);
 
             static void normalizedAngleFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                            ObjectDistances &seeds);
+                                                            VectorDistances &seeds);
 
             static void normalizedL2FloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                         ObjectDistances &seeds);
+                                                         VectorDistances &seeds);
 
             static void
-            poincareFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            poincareFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            lorentzFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            lorentzFloatForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
 #ifdef TANN_ENABLE_HALF_FLOAT
 
             static void
-            l1Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            l1Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            l2Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            l2Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void sparseJaccardFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                            ObjectDistances &seeds);
+                                                            VectorDistances &seeds);
 
             static void cosineSimilarityFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                               ObjectDistances &seeds);
+                                                               VectorDistances &seeds);
 
             static void
-            angleFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            angleFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
             normalizedCosineSimilarityFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                             ObjectDistances &seeds);
+                                                             VectorDistances &seeds);
 
             static void normalizedAngleFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                              ObjectDistances &seeds);
+                                                              VectorDistances &seeds);
 
             static void normalizedL2Float16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc,
-                                                           ObjectDistances &seeds);
+                                                           VectorDistances &seeds);
 
             static void
-            poincareFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            poincareFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
             static void
-            lorentzFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, ObjectDistances &seeds);
+            lorentzFloat16ForLargeDataset(NeighborhoodGraph &graph, tann::SearchContainer &sc, VectorDistances &seeds);
 
 #endif
         };
@@ -791,7 +792,7 @@ namespace tann {
 
         inline GraphNode *getNode(ObjectID fid) { return repository.VECTOR::get(fid); }
 
-        void insertNode(ObjectID id, ObjectDistances &objects) {
+        void insertNode(ObjectID id, VectorDistances &objects) {
             switch (property.graphType) {
                 case GraphTypeANNG:
                     insertANNGNode(id, objects);
@@ -817,12 +818,12 @@ namespace tann {
             }
         }
 
-        void insertBKNNGNode(ObjectID id, ObjectDistances &results) {
+        void insertBKNNGNode(ObjectID id, VectorDistances &results) {
             if (repository.isEmpty(id)) {
                 repository.insert(id, results);
             } else {
                 GraphNode &rs = *getNode(id);
-                for (ObjectDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
+                for (VectorDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
                     rs.push_back((*ri), repository.allocator);
 #else
@@ -853,21 +854,21 @@ namespace tann {
                 }
 #endif
             }
-            for (ObjectDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
+            for (VectorDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
                 assert(id != (*ri).id);
                 addBKNNGEdge((*ri).id, id, (*ri).distance);
             }
             return;
         }
 
-        void insertKNNGNode(ObjectID id, ObjectDistances &results) {
+        void insertKNNGNode(ObjectID id, VectorDistances &results) {
             repository.insert(id, results);
         }
 
-        void insertANNGNode(ObjectID id, ObjectDistances &results) {
+        void insertANNGNode(ObjectID id, VectorDistances &results) {
             repository.insert(id, results);
             std::queue<ObjectID> truncateQueue;
-            for (ObjectDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
+            for (VectorDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
                 assert(id != (*ri).id);
                 if (addEdge((*ri).id, id, (*ri).distance)) {
                     truncateQueue.push((*ri).id);
@@ -881,23 +882,23 @@ namespace tann {
             return;
         }
 
-        void insertIANNGNode(ObjectID id, ObjectDistances &results) {
+        void insertIANNGNode(ObjectID id, VectorDistances &results) {
             repository.insert(id, results);
-            for (ObjectDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
+            for (VectorDistances::iterator ri = results.begin(); ri != results.end(); ri++) {
                 assert(id != (*ri).id);
                 addEdgeDeletingExcessEdges((*ri).id, id, (*ri).distance);
             }
             return;
         }
 
-        void insertONNGNode(ObjectID id, ObjectDistances &results) {
+        void insertONNGNode(ObjectID id, VectorDistances &results) {
             if (property.truncationThreshold != 0) {
                 std::stringstream msg;
                 msg << "tann::insertONNGNode: truncation should be disabled!" << std::endl;
                 TANN_THROW(msg);
             }
             int count = 0;
-            for (ObjectDistances::iterator ri = results.begin(); ri != results.end(); ri++, count++) {
+            for (VectorDistances::iterator ri = results.begin(); ri != results.end(); ri++, count++) {
                 assert(id != (*ri).id);
                 if (count >= property.incomingEdge) {
                     break;
@@ -949,12 +950,12 @@ namespace tann {
             return edgeSize;
         }
 
-        void search(tann::SearchContainer &sc, ObjectDistances &seeds);
+        void search(tann::SearchContainer &sc, VectorDistances &seeds);
 
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
 
         template<typename COMPARATOR, typename CHECK_LIST>
-        void searchReadOnlyGraph(tann::SearchContainer &sc, ObjectDistances &seeds);
+        void searchReadOnlyGraph(tann::SearchContainer &sc, VectorDistances &seeds);
 
 #endif
 
@@ -977,7 +978,7 @@ namespace tann {
 #endif
         }
 
-        void removeEdge(GraphNode &node, ObjectDistance &edge) {
+        void removeEdge(GraphNode &node, VectorDistance &edge) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
             GraphNode::iterator ni = std::lower_bound(node.begin(repository.allocator), node.end(repository.allocator), edge);
             if (ni != node.end(repository.allocator) && (*ni).id == edge.id) {
@@ -1017,9 +1018,9 @@ namespace tann {
         };
 
 #ifdef NGT_GRAPH_VECTOR_RESULT
-        typedef ObjectDistances ResultSet;
+        typedef VectorDistances ResultSet;
 #else
-        typedef std::priority_queue<ObjectDistance, std::vector<ObjectDistance>, std::less<ObjectDistance> > ResultSet;
+        typedef std::priority_queue<VectorDistance, std::vector<VectorDistance>, std::less<VectorDistance> > ResultSet;
 #endif
 
 #if defined(NGT_GRAPH_CHECK_BOOLEANSET)
@@ -1037,14 +1038,14 @@ namespace tann {
 
         typedef HashBasedBooleanSet DistanceCheckedSetForLargeDataset;
 
-        class NodeWithPosition : public ObjectDistance {
+        class NodeWithPosition : public VectorDistance {
         public:
             NodeWithPosition(uint32_t p = 0) : position(p) {}
 
-            NodeWithPosition(ObjectDistance &o) : ObjectDistance(o), position(0) {}
+            NodeWithPosition(VectorDistance &o) : VectorDistance(o), position(0) {}
 
             NodeWithPosition &operator=(const NodeWithPosition &n) {
-                ObjectDistance::operator=(static_cast<const ObjectDistance &>(n));
+                VectorDistance::operator=(static_cast<const VectorDistance &>(n));
                 position = n.position;
                 assert(id != 0);
                 return *this;
@@ -1054,26 +1055,26 @@ namespace tann {
         };
 
 #ifdef NGT_GRAPH_UNCHECK_STACK
-        typedef std::stack<ObjectDistance> UncheckedSet;
+        typedef std::stack<VectorDistance> UncheckedSet;
 #else
 #ifdef NGT_GRAPH_BETTER_FIRST_RESTORE
         typedef std::priority_queue<NodeWithPosition, std::vector<NodeWithPosition>, std::greater<NodeWithPosition> > UncheckedSet;
 #else
-        typedef std::priority_queue<ObjectDistance, std::vector<ObjectDistance>, std::greater<ObjectDistance> > UncheckedSet;
+        typedef std::priority_queue<VectorDistance, std::vector<VectorDistance>, std::greater<VectorDistance> > UncheckedSet;
 #endif
 #endif
 
-        void setupDistances(tann::SearchContainer &sc, ObjectDistances &seeds);
+        void setupDistances(tann::SearchContainer &sc, VectorDistances &seeds);
 
-        void setupDistances(tann::SearchContainer &sc, ObjectDistances &seeds,
+        void setupDistances(tann::SearchContainer &sc, VectorDistances &seeds,
                             double (&comparator)(const void *, const void *, size_t));
 
-        void setupSeeds(SearchContainer &sc, ObjectDistances &seeds, ResultSet &results,
+        void setupSeeds(SearchContainer &sc, VectorDistances &seeds, ResultSet &results,
                         UncheckedSet &unchecked, DistanceCheckedSet &distanceChecked);
 
 #if !defined(NGT_GRAPH_CHECK_HASH_BASED_BOOLEAN_SET)
 
-        void setupSeeds(SearchContainer &sc, ObjectDistances &seeds, ResultSet &results,
+        void setupSeeds(SearchContainer &sc, VectorDistances &seeds, ResultSet &results,
                         UncheckedSet &unchecked, DistanceCheckedSetForLargeDataset &distanceChecked);
 
 #endif
@@ -1081,9 +1082,9 @@ namespace tann {
 
         int getEdgeSize() { return property.edgeSizeForCreation; }
 
-        ObjectRepository &getObjectRepository() { return objectSpace->getRepository(); }
+        VectorRepository &getObjectRepository() { return objectSpace->getRepository(); }
 
-        ObjectSpace &getObjectSpace() { return *objectSpace; }
+        VectorSpace &getObjectSpace() { return *objectSpace; }
 
         void deleteInMemory() {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
@@ -1103,8 +1104,8 @@ namespace tann {
         void
         addBKNNGEdge(ObjectID target, ObjectID addID, Distance addDistance) {
             if (repository.isEmpty(target)) {
-                ObjectDistances objs;
-                objs.push_back(ObjectDistance(addID, addDistance));
+                VectorDistances objs;
+                objs.push_back(VectorDistance(addID, addDistance));
                 repository.insert(target, objs);
                 return;
             }
@@ -1113,7 +1114,7 @@ namespace tann {
 
     public:
         void addEdge(GraphNode &node, ObjectID addID, Distance addDistance, bool identityCheck = true) {
-            ObjectDistance obj(addID, addDistance);
+            VectorDistance obj(addID, addDistance);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
             GraphNode::iterator ni = std::lower_bound(node.begin(repository.allocator), node.end(repository.allocator), obj);
             if ((ni != node.end(repository.allocator)) && ((*ni).id == addID)) {
@@ -1168,13 +1169,13 @@ namespace tann {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
             if (node.size() > kEdge && node.at(kEdge, repository.allocator).distance >= addDistance) {
               GraphNode &linkedNode = *getNode(node.at(kEdge, repository.allocator).id);
-              ObjectDistance linkedNodeEdge(target, node.at(kEdge, repository.allocator).distance);
+              VectorDistance linkedNodeEdge(target, node.at(kEdge, repository.allocator).distance);
               if ((linkedNode.size() > kEdge) && node.at(kEdge, repository.allocator).distance >=
                 linkedNode.at(kEdge, repository.allocator).distance) {
 #else
             if (node.size() > kEdge && node[kEdge].distance >= addDistance) {
                 GraphNode &linkedNode = *getNode(node[kEdge].id);
-                ObjectDistance linkedNodeEdge(target, node[kEdge].distance);
+                VectorDistance linkedNodeEdge(target, node[kEdge].distance);
                 if ((linkedNode.size() > kEdge) && node[kEdge].distance >= linkedNode[kEdge].distance) {
 #endif
                     try {
@@ -1225,7 +1226,7 @@ namespace tann {
     public:
 
         GraphRepository repository;
-        ObjectSpace *objectSpace;
+        VectorSpace *objectSpace;
 
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
         SearchGraphRepository searchRepository;

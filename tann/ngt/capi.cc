@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "tann/ngt/index.h"
+#include "tann/common/utility.h"
 #include "tann/ngt/graph_optimizer.h"
 #include "capi.h"
 
@@ -202,15 +203,15 @@ int32_t ngt_get_property_object_type(NGTProperty prop, NGTError error) {
 }
 
 bool ngt_is_property_object_type_float(int32_t object_type) {
-    return (object_type == tann::ObjectSpace::ObjectType::Float);
+    return (object_type == tann::VectorSpace::ObjectType::Float);
 }
 
 bool ngt_is_property_object_type_float16(int32_t object_type) {
-    return (object_type == tann::ObjectSpace::ObjectType::Float16);
+    return (object_type == tann::VectorSpace::ObjectType::Float16);
 }
 
 bool ngt_is_property_object_type_integer(int32_t object_type) {
-    return (object_type == tann::ObjectSpace::ObjectType::Uint8);
+    return (object_type == tann::VectorSpace::ObjectType::Uint8);
 }
 
 bool ngt_set_property_object_type_float(NGTProperty prop, NGTError error) {
@@ -221,7 +222,7 @@ bool ngt_set_property_object_type_float(NGTProperty prop, NGTError error) {
     return false;
   }
 
-  (*static_cast<tann::Property*>(prop)).objectType = tann::ObjectSpace::ObjectType::Float;
+  (*static_cast<tann::Property*>(prop)).objectType = tann::VectorSpace::ObjectType::Float;
   return true;
 }
 
@@ -233,7 +234,7 @@ bool ngt_set_property_object_type_float16(NGTProperty prop, NGTError error) {
     return false;
   }
 
-  (*static_cast<tann::Property*>(prop)).objectType = tann::ObjectSpace::ObjectType::Float16;
+  (*static_cast<tann::Property*>(prop)).objectType = tann::VectorSpace::ObjectType::Float16;
   return true;
 }
 
@@ -245,7 +246,7 @@ bool ngt_set_property_object_type_integer(NGTProperty prop, NGTError error) {
     return false;
   }
 
-  (*static_cast<tann::Property*>(prop)).objectType = tann::ObjectSpace::ObjectType::Uint8;
+  (*static_cast<tann::Property*>(prop)).objectType = tann::VectorSpace::ObjectType::Uint8;
   return true;
 }
 
@@ -395,7 +396,7 @@ bool ngt_set_property_distance_type_normalized_cosine(NGTProperty prop, NGTError
 
 NGTObjectDistances ngt_create_empty_results(NGTError error) {
   try{
-    return static_cast<NGTObjectDistances>(new tann::ObjectDistances());
+    return static_cast<NGTObjectDistances>(new tann::VectorDistances());
   }catch(std::exception &err) {
     std::stringstream ss;
     ss << "Capi : " << __FUNCTION__ << "() : Error: " << err.what();
@@ -408,7 +409,7 @@ static bool ngt_search_index_(tann::Index* pindex, tann::Object *ngtquery, size_
   // set search parameters.
   tann::SearchContainer sc(*ngtquery);      // search parametera container.
 
-  sc.setResults(static_cast<tann::ObjectDistances*>(results));          // set the result set.
+  sc.setResults(static_cast<tann::VectorDistances*>(results));          // set the result set.
   sc.setSize(size);                        // the number of resultant objects.
   sc.setRadius(radius);                    // search radius.
   sc.setEpsilon(epsilon);                  // set exploration coefficient.
@@ -522,7 +523,7 @@ static bool ngt_linear_search_index_(tann::Index* pindex, tann::Object *ngtquery
   // set search parameters.
   tann::SearchContainer sc(*ngtquery);      // search parametera container.
 
-  sc.setResults(static_cast<tann::ObjectDistances*>(results));          // set the result set.
+  sc.setResults(static_cast<tann::VectorDistances*>(results));          // set the result set.
   sc.setSize(size);                        // the number of resultant objects.
   if (edge_size != INT_MIN) {
     sc.setEdgeSize(edge_size);// set # of edges for each node
@@ -628,7 +629,7 @@ int32_t ngt_get_size(NGTObjectDistances results, NGTError error) {
     return -1;
   }
 
-  return (static_cast<tann::ObjectDistances*>(results))->size();
+  return (static_cast<tann::VectorDistances*>(results))->size();
 }
 
 uint32_t ngt_get_result_size(NGTObjectDistances results, NGTError error) {
@@ -639,12 +640,12 @@ uint32_t ngt_get_result_size(NGTObjectDistances results, NGTError error) {
     return 0;
   }
 
-  return (static_cast<tann::ObjectDistances*>(results))->size();
+  return (static_cast<tann::VectorDistances*>(results))->size();
 }
 
 NGTObjectDistance ngt_get_result(const NGTObjectDistances results, const uint32_t i, NGTError error) {
   try{
-    tann::ObjectDistances objects = *(static_cast<tann::ObjectDistances*>(results));
+    tann::VectorDistances objects = *(static_cast<tann::VectorDistances*>(results));
     NGTObjectDistance ret_val = {objects[i].id, objects[i].distance};
     return ret_val;
   }catch(std::exception &err) {
@@ -835,7 +836,7 @@ void* ngt_get_object(NGTObjectSpace object_space, ObjectID id, NGTError error) {
     return NULL;
   }
   try{
-    return (static_cast<tann::ObjectSpace*>(object_space))->getObject(id);
+    return (static_cast<tann::VectorSpace*>(object_space))->getObject(id);
   }catch(std::exception &err) {
     std::stringstream ss;
     ss << "Capi : " << __FUNCTION__ << "() : Error: " << err.what();
@@ -854,7 +855,7 @@ uint8_t* ngt_get_object_as_integer(NGTObjectSpace object_space, ObjectID id, NGT
 
 void ngt_destroy_results(NGTObjectDistances results) {
     if(results == NULL) return;
-    delete static_cast<tann::ObjectDistances*>(results);
+    delete static_cast<tann::VectorDistances*>(results);
 }
 
 void ngt_destroy_property(NGTProperty prop) {
@@ -1087,7 +1088,7 @@ bool ngt_get_edges(NGTIndex index, ObjectID id, NGTObjectDistances edges, NGTErr
   tann::GraphIndex	&graph = static_cast<tann::GraphIndex&>(pindex->getIndex());
 
   try {
-    tann::ObjectDistances &objects = *static_cast<tann::ObjectDistances*>(edges);
+    tann::VectorDistances &objects = *static_cast<tann::VectorDistances*>(edges);
     objects = *graph.getNode(id);
   }catch(std::exception &err){
     std::stringstream ss;

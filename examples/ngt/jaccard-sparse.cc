@@ -6,6 +6,7 @@
 //
 
 #include "tann/ngt/command.h"
+#include "tann/common/timer.h"
 
 using namespace std;
 
@@ -124,7 +125,7 @@ search(tann::Index &index, tann::Command::SearchParameters &searchParameters, os
         auto sparseQuery = index.makeSparseObject(query);
         queryCount++;
         tann::SearchQuery sc(sparseQuery);
-        tann::ObjectDistances objects;
+        tann::VectorDistances objects;
         sc.setResults(&objects);
         sc.setSize(searchParameters.size);
         sc.setRadius(searchParameters.radius);

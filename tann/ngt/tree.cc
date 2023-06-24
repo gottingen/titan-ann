@@ -48,7 +48,7 @@ DVPTree::insert(InsertContainer &iobj,  LeafNode *leafNode)
   LeafNode &leaf = *leafNode;
   size_t fsize = leaf.getObjectSize();
   if (fsize != 0) {
-    tann::ObjectSpace::Comparator &comparator = objectSpace->getComparator();
+    tann::VectorSpace::Comparator &comparator = objectSpace->getComparator();
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
     Distance d = comparator(iobj.object, leaf.getPivot(*objectSpace));
 #else
@@ -56,9 +56,9 @@ DVPTree::insert(InsertContainer &iobj,  LeafNode *leafNode)
 #endif
 
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-    tann::ObjectDistance *objects = leaf.getObjectIDs(leafNodes.allocator);
+    tann::VectorDistance *objects = leaf.getObjectIDs(leafNodes.allocator);
 #else
-    tann::ObjectDistance *objects = leaf.getObjectIDs();
+    tann::VectorDistance *objects = leaf.getObjectIDs();
 #endif
 
     for (size_t i = 0; i < fsize; i++) {
@@ -410,10 +410,10 @@ DVPTree::search(SearchContainer &sc, InternalNode &node, UncheckedNode &unchecke
 
   int bsize = internalChildrenSize - 1;
 
-  vector<ObjectDistance> regions;
+  vector<VectorDistance> regions;
   regions.reserve(internalChildrenSize);
 
-  ObjectDistance child;
+  VectorDistance child;
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
   Distance *borders = node.getBorders(internalNodes.allocator);
 #else
@@ -462,7 +462,7 @@ DVPTree::search(SearchContainer &sc, InternalNode &node, UncheckedNode &unchecke
   Node::ID *children = node.getChildren();
 #endif
 
-  vector<ObjectDistance>::iterator i;
+  vector<VectorDistance>::iterator i;
   if (sc.mode == DVPTree::SearchContainer::SearchLeaf) {
     if (children[regions.front().id].getType() == Node::ID::Leaf) {
       sc.nodeID.setRaw(children[regions.front().id].get());
@@ -495,11 +495,11 @@ DVPTree::search(SearchContainer &so, LeafNode &node, UncheckedNode &uncheckedNod
   so.distanceComputationCount++;
 #endif
 
-  ObjectDistance r;
+  VectorDistance r;
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-  tann::ObjectDistance *objects = node.getObjectIDs(leafNodes.allocator);
+  tann::VectorDistance *objects = node.getObjectIDs(leafNodes.allocator);
 #else
-  tann::ObjectDistance *objects = node.getObjectIDs();
+  tann::VectorDistance *objects = node.getObjectIDs();
 #endif
 
   for (size_t i = 0; i < node.getObjectSize(); i++) {

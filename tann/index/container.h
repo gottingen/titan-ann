@@ -12,25 +12,23 @@
 // limitations under the License.
 //
 
-#ifndef TANN_COMMON_CONFIG_H_
-#define TANN_COMMON_CONFIG_H_
 
-#include "tann/common/defines.h"
+#ifndef TANN_INDEX_CONTAINER_H_
+#define TANN_INDEX_CONTAINER_H_
 
-#ifdef TANN_ENABLE_HALF_FLOAT
-    #include "tann/common/half.hpp"
-#endif
+#include "tann/vector/vector_view.h"
 
 namespace tann {
-    typedef unsigned int ObjectID;
-    typedef float Distance;
-#ifdef TANN_ENABLE_HALF_FLOAT
-    typedef half_float::half float16;
-#endif
 
-}
+    class Container {
+    public:
+        Container(Object &o, ObjectID i) : object(o), id(i) {}
 
-#define ADVANCED_USE_REMOVED_LIST
-#define    SHARED_REMOVED_LIST
+        Container(Container &c) = default;
 
-#endif  // TANN_COMMON_CONFIG_H_
+        Object &object;
+        ObjectID id;
+    };
+}  // namespace tann
+
+#endif  // TANN_INDEX_CONTAINER_H_

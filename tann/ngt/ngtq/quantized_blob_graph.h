@@ -16,14 +16,15 @@
 
 #pragma once
 
+#include "turbo/strings/numbers.h"
 #include "tann/ngt/index.h"
 #include "tann/ngt/ngtq/quantizer.h"
 
 #ifdef NGTQ_QBG
 #include "tann/ngt/ngtq/quantized_graph.h"
 #include "tann/ngt/ngtq/optimizer.h"
-
-#include	<thread>
+#include "tann/common/utility.h"
+#include <thread>
 
 
 namespace QBG {
@@ -484,7 +485,7 @@ namespace QBG {
       redirector.end();
     }
 
-    void getSeeds(tann::Index &index, tann::Object *object, tann::ObjectDistances &seeds, size_t noOfSeeds) {
+    void getSeeds(tann::Index &index, tann::Object *object, tann::VectorDistances &seeds, size_t noOfSeeds) {
       auto &graph = static_cast<tann::GraphAndTreeIndex&>(index.getIndex());
       tann::SearchContainer sc(*object);
       sc.setResults(&seeds);
@@ -529,7 +530,7 @@ namespace QBG {
       bool found = false;
       for (size_t i = 0; i < noOfObjects; i++) {
 	if (distances[i] <= radius) {
-	  result.push(tann::ObjectDistance(ivi.ids[i], distances[i]));
+	  result.push(tann::VectorDistance(ivi.ids[i], distances[i]));
 	  found = true;
 	  if (result.size() > k) {
 	    result.pop();
@@ -554,7 +555,7 @@ namespace QBG {
       auto &quantizer = getQuantizer();
       auto &globalIndex = quantizer.globalCodebookIndex;
       auto &globalGraph = static_cast<tann::GraphAndTreeIndex&>(globalIndex.getIndex());
-      tann::ObjectDistances seeds;
+      tann::VectorDistances seeds;
       getSeeds(globalIndex, query, seeds, 5);
 
       if (seeds.empty()) {
@@ -600,7 +601,7 @@ namespace QBG {
 	abort();
       }
       auto *nodes = globalGraph.searchRepository.data();
-      uncheckedBlobs.push(tann::ObjectDistance(seedBlobID, distance));
+      uncheckedBlobs.push(tann::VectorDistance(seedBlobID, distance));
       float explorationRadius = radius * searchContainer.explorationCoefficient;
       while (!uncheckedBlobs.empty()) {
 	auto targetBlob = uncheckedBlobs.top();
@@ -637,7 +638,7 @@ namespace QBG {
 	    break;
 	  }
 	  if (distance <= explorationRadius) {
-	    uncheckedBlobs.push(tann::ObjectDistance(neighborID, distance));
+	    uncheckedBlobs.push(tann::VectorDistance(neighborID, distance));
 	  }
 	}
       }
@@ -654,7 +655,7 @@ namespace QBG {
 
 
     void searchBlobNaively(QBG::SearchContainer &searchContainer) {
-      tann::ObjectDistances blobs;
+      tann::VectorDistances blobs;
       tann::SearchContainer sc(searchContainer);
       sc.setResults(&blobs);
       sc.setSize(searchContainer.numOfProbes);
@@ -712,7 +713,7 @@ namespace QBG {
    void searchBlobGraph(QBG::SearchContainer &searchContainer) {
      auto &globalIndex = getQuantizer().globalCodebookIndex;
      auto &globalGraph = static_cast<tann::GraphAndTreeIndex&>(globalIndex.getIndex());
-     tann::ObjectDistances	seeds;
+     tann::VectorDistances	seeds;
      tann::Object *query = allocateObject(searchContainer.objectVector);
      SearchContainer sc(searchContainer, *query);
      globalGraph.getSeedsFromTree(sc, seeds);
@@ -724,7 +725,7 @@ namespace QBG {
      searchContainer.workingResult = std::move(sc.workingResult);
    }
 
-   void searchBlobGraph(QBG::SearchContainer &searchContainer, tann::ObjectDistances &seeds) {
+   void searchBlobGraph(QBG::SearchContainer &searchContainer, tann::VectorDistances &seeds) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
      std::cerr << "searchBlobGraph: Not implemented. " << std::endl;
      abort();
@@ -763,9 +764,9 @@ namespace QBG {
     }
 #endif
     std::sort(seeds.begin(), seeds.end());
-    tann::ObjectDistance currentNearestBlob = seeds.front();
+    tann::VectorDistance currentNearestBlob = seeds.front();
     tann::Distance explorationRadius = searchContainer.blobExplorationCoefficient * currentNearestBlob.distance;
-    std::priority_queue<tann::ObjectDistance, std::vector<tann::ObjectDistance>, std::greater<tann::ObjectDistance>> discardedObjects;
+    std::priority_queue<tann::VectorDistance, std::vector<tann::VectorDistance>, std::greater<tann::VectorDistance>> discardedObjects;
     untracedNodes.push(seeds.front());
     distanceChecked.insert(seeds.front().id);
     for (size_t i = 1; i < seeds.size(); i++) {
@@ -800,7 +801,7 @@ namespace QBG {
     }
     tann::ReadOnlyGraphNode *nodes = globalGraph.searchRepository.data();
     tann::ReadOnlyGraphNode *neighbors = 0;
-    tann::ObjectDistance target;
+    tann::VectorDistance target;
     const size_t prefetchSize = objectSpace.getPrefetchSize();
     const size_t prefetchOffset = objectSpace.getPrefetchOffset();
     pair<uint64_t, tann::PersistentObject*> *neighborptr;
@@ -895,7 +896,7 @@ namespace QBG {
 	} else {
 	  assert(false);
 	}
-	tann::ObjectDistance r;
+	tann::VectorDistance r;
 	r.set(neighborptr->first, distance);
 	untracedNodes.push(r);
 	if (distance < currentNearestBlob.distance) {
@@ -910,7 +911,7 @@ namespace QBG {
 
     if (searchContainer.resultIsAvailable()) { 
       if (searchContainer.exactResultSize > 0) {
-	tann::ObjectDistances &qresults = searchContainer.getResult();
+	tann::VectorDistances &qresults = searchContainer.getResult();
 	auto threadid = omp_get_thread_num();
 	auto paddedDimension = getQuantizer().globalCodebookIndex.getObjectSpace().getPaddedDimension();
 	tann::ResultPriorityQueue	rs;
@@ -939,7 +940,7 @@ namespace QBG {
 	std::sort(qresults.begin(), qresults.end());
 	qresults.resize(searchContainer.exactResultSize);
       } else {
-	tann::ObjectDistances &qresults = searchContainer.getResult();
+	tann::VectorDistances &qresults = searchContainer.getResult();
 	qresults.moveFrom(results);
       }
     } else {

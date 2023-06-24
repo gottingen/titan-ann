@@ -25,6 +25,8 @@
 #include	<stack>
 #include	<set>
 
+#include "tann/index/search_query.h"
+
 namespace tann {
 
   class DVPTree {
@@ -258,10 +260,10 @@ namespace tann {
 
     Node::Objects * getObjects(LeafNode	&n, Container	&iobj);
 
-    void getObjectIDsFromLeaf(Node::ID		nid,      ObjectDistances	&rl) {
+    void getObjectIDsFromLeaf(Node::ID		nid,      VectorDistances	&rl) {
       LeafNode &ln = *(LeafNode*)getNode(nid);
       rl.clear();
-      ObjectDistance	r;
+      VectorDistance	r;
       for (size_t i = 0; i < ln.getObjectSize(); i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
         r.id = ln.getObjectIDs(leafNodes.allocator)[i].id;
@@ -421,7 +423,7 @@ namespace tann {
 #endif
     }
 
-    ObjectRepository &getObjectRepository() { return objectSpace->getRepository(); }
+    VectorRepository &getObjectRepository() { return objectSpace->getRepository(); }
 
     size_t getSharedMemorySize(std::ostream &os, SharedMemoryAllocator::GetMemorySizeType t) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
@@ -467,7 +469,7 @@ namespace tann {
     Repository<InternalNode>	internalNodes;
 #endif
 
-    ObjectSpace		*objectSpace;
+    VectorSpace		*objectSpace;
 
   };
 } // namespace DVPTree

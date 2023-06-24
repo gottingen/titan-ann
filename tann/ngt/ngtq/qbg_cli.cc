@@ -457,7 +457,7 @@ searchQG(NGTQG::Index &index, SearchParameters &searchParameters, ostream &strea
     }
     for (float param = beginOfParam; param <= endOfParam; param += stepOfParam) {
       NGTQG::SearchQuery	searchQuery(query);
-      tann::ObjectDistances	objects;
+      tann::VectorDistances	objects;
       searchQuery.setResults(&objects);
       searchQuery.setSize(searchParameters.size);
       searchQuery.setRadius(searchParameters.radius);
@@ -795,7 +795,7 @@ QBG::CLI::search(tann::Args &args)
 	   resultExpansion <= endOfResultExpansion; 
 	   resultExpansion = mulStep ? resultExpansion * stepOfResultExpansion : 
 			     resultExpansion + stepOfResultExpansion) {
-	tann::ObjectDistances objects;
+	tann::VectorDistances objects;
 	tann::Timer timer;
 	timer.start();
 	QBG::SearchContainer searchContainer;
@@ -1184,7 +1184,7 @@ QBG::CLI::assign(tann::Args &args)
 	}
       }
       tann::SearchQuery		sc(query);
-      tann::ObjectDistances	objects;
+      tann::VectorDistances	objects;
       sc.setResults(&objects);
       sc.setSize(numOfObjects);
       sc.setEpsilon(epsilon);

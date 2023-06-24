@@ -16,24 +16,25 @@
 
 #pragma once
 
-#include    <string>
-#include    <vector>
-#include    <map>
-#include    <set>
-#include    <bitset>
-#include    <iomanip>
-#include    <unordered_set>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <bitset>
+#include <iomanip>
+#include <unordered_set>
 
-#include    <sys/time.h>
-#include    <sys/stat.h>
-#include    <stdint.h>
-
+#include <sys/time.h>
+#include <sys/stat.h>
+#include <stdint.h>
+#include "tann/common/utility.h"
 #include "tann/common/defines.h"
+#include "tann/common/cpu_info.h"
 #include "tann/ngt/common.h"
 #include "tann/ngt/tree.h"
 #include "tann/ngt/thread.h"
 #include "tann/ngt/graph.h"
-
+#include "tann/common/std_ostream_redirector.h"
 
 namespace tann {
 
@@ -44,8 +45,8 @@ namespace tann {
 
         class Property {
         public:
-            typedef ObjectSpace::ObjectType ObjectType;
-            typedef ObjectSpace::DistanceType DistanceType;
+            typedef VectorSpace::ObjectType ObjectType;
+            typedef VectorSpace::DistanceType DistanceType;
             typedef NeighborhoodGraph::SeedType SeedType;
             typedef NeighborhoodGraph::GraphType GraphType;
             enum ObjectAlignment {
@@ -69,7 +70,7 @@ namespace tann {
             void setDefault() {
                 dimension = 0;
                 threadPoolSize = 32;
-                objectType = ObjectSpace::ObjectType::Float;
+                objectType = VectorSpace::ObjectType::Float;
                 distanceType = DistanceType::DistanceTypeL2;
                 indexType = IndexType::GraphAndTree;
                 objectAlignment = ObjectAlignment::ObjectAlignmentFalse;
@@ -92,7 +93,7 @@ namespace tann {
             void clear() {
                 dimension = -1;
                 threadPoolSize = -1;
-                objectType = ObjectSpace::ObjectTypeNone;
+                objectType = VectorSpace::ObjectTypeNone;
                 distanceType = DistanceType::DistanceTypeNone;
                 indexType = IndexTypeNone;
                 databaseType = DatabaseTypeNone;
@@ -112,14 +113,14 @@ namespace tann {
                 p.set("Dimension", dimension);
                 p.set("ThreadPoolSize", threadPoolSize);
                 switch (objectType) {
-                    case ObjectSpace::ObjectType::Uint8:
+                    case VectorSpace::ObjectType::Uint8:
                         p.set("ObjectType", "Integer-1");
                         break;
-                    case ObjectSpace::ObjectType::Float:
+                    case VectorSpace::ObjectType::Float:
                         p.set("ObjectType", "Float-4");
                         break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                    case ObjectSpace::ObjectType::Float16:
+                    case VectorSpace::ObjectType::Float16:
                         p.set("ObjectType", "Float-2");
                         break;
 #endif
@@ -225,12 +226,12 @@ namespace tann {
                 PropertySet::iterator it = p.find("ObjectType");
                 if (it != p.end()) {
                     if (it->second == "Float-4") {
-                        objectType = ObjectSpace::ObjectType::Float;
+                        objectType = VectorSpace::ObjectType::Float;
                     } else if (it->second == "Integer-1") {
-                        objectType = ObjectSpace::ObjectType::Uint8;
+                        objectType = VectorSpace::ObjectType::Uint8;
 #ifdef TANN_ENABLE_HALF_FLOAT
                     } else if (it->second == "Float-2") {
-                        objectType = ObjectSpace::ObjectType::Float16;
+                        objectType = VectorSpace::ObjectType::Float16;
 #endif
                     } else {
                         std::cerr << "Invalid Object Type in the property. " << it->first << ":" << it->second
@@ -340,7 +341,7 @@ namespace tann {
 
             int dimension;
             int threadPoolSize;
-            ObjectSpace::ObjectType objectType;
+            VectorSpace::ObjectType objectType;
             DistanceType distanceType;
             IndexType indexType;
             DatabaseType databaseType;
@@ -636,9 +637,9 @@ namespace tann {
 
         virtual void search(tann::SearchQuery &sc) { getIndex().search(sc); }
 
-        virtual void search(tann::SearchContainer &sc, ObjectDistances &seeds) { getIndex().search(sc, seeds); }
+        virtual void search(tann::SearchContainer &sc, VectorDistances &seeds) { getIndex().search(sc, seeds); }
 
-        virtual void getSeeds(tann::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
+        virtual void getSeeds(tann::SearchContainer &sc, VectorDistances &seeds, size_t n) {
             getIndex().getSeeds(sc, seeds, n);
         }
 
@@ -652,7 +653,7 @@ namespace tann {
             return getIndex().verify(status, info, mode);
         }
 
-        virtual ObjectSpace &getObjectSpace() { return getIndex().getObjectSpace(); }
+        virtual VectorSpace &getObjectSpace() { return getIndex().getObjectSpace(); }
 
         virtual size_t getSharedMemorySize(std::ostream &os,
                                            SharedMemoryAllocator::GetMemorySizeType t = SharedMemoryAllocator::GetTotalMemorySize) {
@@ -671,7 +672,7 @@ namespace tann {
         void searchUsingOnlyGraph(tann::SearchContainer &sc) {
             sc.distanceComputationCount = 0;
             sc.visitCount = 0;
-            ObjectDistances seeds;
+            VectorDistances seeds;
             getIndex().search(sc, seeds);
         }
 
@@ -709,7 +710,7 @@ namespace tann {
         }
 
         static inline void version(std::ostream &os) {
-            os<<"1";
+            os << "1";
         }
 
         static inline std::string getVersion() {
@@ -787,21 +788,21 @@ namespace tann {
             if (objectSpace == 0) {
                 return;
             }
-            if (property.objectType == tann::ObjectSpace::ObjectType::Float) {
-                ObjectSpaceRepository<float, double> *os = (ObjectSpaceRepository<float, double> *) objectSpace;
+            if (property.objectType == tann::VectorSpace::ObjectType::Float) {
+                VectorSpaceRepository<float, double> *os = (VectorSpaceRepository<float, double> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
 #endif
                 delete os;
-            } else if (property.objectType == tann::ObjectSpace::ObjectType::Uint8) {
-                ObjectSpaceRepository<unsigned char, int> *os = (ObjectSpaceRepository<unsigned char, int> *) objectSpace;
+            } else if (property.objectType == tann::VectorSpace::ObjectType::Uint8) {
+                VectorSpaceRepository<unsigned char, int> *os = (VectorSpaceRepository<unsigned char, int> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
 #endif
                 delete os;
 #ifdef TANN_ENABLE_HALF_FLOAT
-            } else if (property.objectType == tann::ObjectSpace::ObjectType::Float16) {
-                ObjectSpaceRepository<float16, float> *os = (ObjectSpaceRepository<float16, float> *) objectSpace;
+            } else if (property.objectType == tann::VectorSpace::ObjectType::Float16) {
+                VectorSpaceRepository<float16, float> *os = (VectorSpaceRepository<float16, float> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
 #endif
@@ -888,7 +889,7 @@ namespace tann {
             if (objectSpace != 0) {
                 objectSpace->serialize(ofile + "/obj");
             } else {
-                std::cerr << "saveIndex::Warning! ObjectSpace is null. continue saving..." << std::endl;
+                std::cerr << "saveIndex::Warning! VectorSpace is null. continue saving..." << std::endl;
             }
 #endif
         }
@@ -947,9 +948,9 @@ namespace tann {
         }
 
         void linearSearch(tann::SearchContainer &sc) {
-            ObjectSpace::ResultSet results;
+            VectorSpace::ResultSet results;
             objectSpace->linearSearch(sc.object, sc.radius, sc.size, results);
-            ObjectDistances &qresults = sc.getResult();
+            VectorDistances &qresults = sc.getResult();
             qresults.moveFrom(results);
         }
 
@@ -957,9 +958,9 @@ namespace tann {
             Object *query = Index::allocateObject(searchQuery.getQuery(), searchQuery.getQueryType());
             try {
                 tann::SearchContainer sc(searchQuery, *query);
-                ObjectSpace::ResultSet results;
+                VectorSpace::ResultSet results;
                 objectSpace->linearSearch(sc.object, sc.radius, sc.size, results);
-                ObjectDistances &qresults = sc.getResult();
+                VectorDistances &qresults = sc.getResult();
                 qresults.moveFrom(results);
             } catch (Exception &err) {
                 deleteObject(query);
@@ -972,7 +973,7 @@ namespace tann {
         virtual void search(tann::SearchContainer &sc) {
             sc.distanceComputationCount = 0;
             sc.visitCount = 0;
-            ObjectDistances seeds;
+            VectorDistances seeds;
             search(sc, seeds);
         }
 
@@ -982,7 +983,7 @@ namespace tann {
                 tann::SearchContainer sc(searchQuery, *query);
                 sc.distanceComputationCount = 0;
                 sc.visitCount = 0;
-                ObjectDistances seeds;
+                VectorDistances seeds;
                 search(sc, seeds);
             } catch (Exception &err) {
                 deleteObject(query);
@@ -991,7 +992,7 @@ namespace tann {
             deleteObject(query);
         }
 
-        void getSeeds(tann::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
+        void getSeeds(tann::SearchContainer &sc, VectorDistances &seeds, size_t n) {
             getRandomSeeds(repository, seeds, n);
             setupDistances(sc, seeds);
             std::sort(seeds.begin(), seeds.end());
@@ -1002,9 +1003,9 @@ namespace tann {
 
         // get randomly nodes as seeds.
         template<class REPOSITORY>
-        void getRandomSeeds(REPOSITORY &repo, ObjectDistances &seeds, size_t seedSize) {
+        void getRandomSeeds(REPOSITORY &repo, VectorDistances &seeds, size_t seedSize) {
             // clear all distances to find the same object as a randomized object.
-            for (ObjectDistances::iterator i = seeds.begin(); i != seeds.end(); i++) {
+            for (VectorDistances::iterator i = seeds.begin(); i != seeds.end(); i++) {
                 (*i).distance = 0.0;
             }
             size_t repositorySize = repo.size();
@@ -1022,7 +1023,7 @@ namespace tann {
                     }
                     continue;
                 }
-                ObjectDistance obj(idx, 0.0);
+                VectorDistance obj(idx, 0.0);
                 if (find(seeds.begin(), seeds.end(), obj) != seeds.end()) {
                     continue;
                 }
@@ -1043,7 +1044,7 @@ namespace tann {
             }
         }
 
-        virtual void searchForNNGInsertion(Object &po, ObjectDistances &result) {
+        virtual void searchForNNGInsertion(Object &po, VectorDistances &result) {
             tann::SearchContainer sc(po);
             sc.setResults(&result);
             sc.size = NeighborhoodGraph::property.edgeSizeForCreation;
@@ -1067,13 +1068,13 @@ namespace tann {
             }
         }
 
-        void searchForKNNGInsertion(Object &po, ObjectID id, ObjectDistances &result) {
+        void searchForKNNGInsertion(Object &po, ObjectID id, VectorDistances &result) {
             double radius = FLT_MAX;
             size_t size = NeighborhoodGraph::property.edgeSizeForCreation;
             if (id > 0) {
                 size = NeighborhoodGraph::property.edgeSizeForCreation + 1;
             }
-            ObjectSpace::ResultSet rs;
+            VectorSpace::ResultSet rs;
             objectSpace->linearSearch(po, radius, size, rs);
             result.moveFrom(rs, id);
             if ((size_t) NeighborhoodGraph::property.edgeSizeForCreation != result.size()) {
@@ -1090,7 +1091,7 @@ namespace tann {
         virtual void insert(
                 ObjectID id
         ) {
-            ObjectRepository &fr = objectSpace->getRepository();
+            VectorRepository &fr = objectSpace->getRepository();
             if (fr[id] == 0) {
                 std::cerr << "NGTIndex::insert empty " << id << std::endl;
                 return;
@@ -1100,7 +1101,7 @@ namespace tann {
 #else
             Object &po = *fr[id];
 #endif
-            ObjectDistances rs;
+            VectorDistances rs;
             if (NeighborhoodGraph::property.graphType == NeighborhoodGraph::GraphTypeANNG) {
                 searchForNNGInsertion(po, rs);
             } else {
@@ -1118,7 +1119,7 @@ namespace tann {
 
         void checkGraph() {
             GraphRepository &repo = repository;
-            ObjectRepository &fr = objectSpace->getRepository();
+            VectorRepository &fr = objectSpace->getRepository();
             for (size_t id = 0; id < fr.size(); id++) {
                 if (repo[id] == 0) {
                     std::cerr << id << " empty" << std::endl;
@@ -1134,7 +1135,7 @@ namespace tann {
 #endif
                 GraphNode *objects = getNode(id);
 
-                ObjectDistances rs;
+                VectorDistances rs;
                 NeighborhoodGraph::property.edgeSizeForCreation = objects->size() + 1;
                 searchForNNGInsertion(po, rs);
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
@@ -1146,7 +1147,7 @@ namespace tann {
                               << objects->size() << std::endl;
                 }
                 size_t count = 0;
-                ObjectDistances::iterator rsi = rs.begin();
+                VectorDistances::iterator rsi = rs.begin();
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
                 for (GraphNode::iterator ri = objects->begin(repo.allocator);
                      ri != objects->end(repo.allocator) && rsi != rs.end();) {
@@ -1175,7 +1176,7 @@ namespace tann {
             bool valid = true;
             std::cerr << "Started verifying graph and objects" << std::endl;
             GraphRepository &repo = repository;
-            ObjectRepository &fr = objectSpace->getRepository();
+            VectorRepository &fr = objectSpace->getRepository();
             if (repo.size() != fr.size()) {
                 if (info) {
                     std::cerr << "Warning! # of nodes is different from # of objects. " << repo.size() << ":"
@@ -1298,7 +1299,7 @@ namespace tann {
         size_t getNumberOfObjects() { return objectSpace->getRepository().count(); }
 
         size_t getNumberOfIndexedObjects() {
-            ObjectRepository &repo = objectSpace->getRepository();
+            VectorRepository &repo = objectSpace->getRepository();
             GraphRepository &graphRepo = repository;
             size_t count = 0;
             for (tann::ObjectID id = 1; id < repo.size() && id < graphRepo.size(); id++) {
@@ -1345,7 +1346,7 @@ namespace tann {
             return objectSpace->deleteObject(po);
         }
 
-        ObjectSpace &getObjectSpace() { return *objectSpace; }
+        VectorSpace &getObjectSpace() { return *objectSpace; }
 
         void setupPrefetch(tann::Property &prop);
 
@@ -1383,7 +1384,7 @@ namespace tann {
         bool getReadOnly() { return readOnly; }
 
         template<class REPOSITORY>
-        void getSeedsFromGraph(REPOSITORY &repo, ObjectDistances &seeds) {
+        void getSeedsFromGraph(REPOSITORY &repo, VectorDistances &seeds) {
             if (repo.size() != 0) {
                 size_t seedSize = repo.size() - 1 < (size_t) NeighborhoodGraph::property.seedSize ?
                                   repo.size() - 1 : (size_t) NeighborhoodGraph::property.seedSize;
@@ -1393,11 +1394,11 @@ namespace tann {
                 } else if (NeighborhoodGraph::property.seedType == NeighborhoodGraph::SeedTypeFixedNodes) {
                     // To check speed using fixed seeds.
                     for (size_t i = 1; i <= seedSize; i++) {
-                        ObjectDistance obj(i, 0.0);
+                        VectorDistance obj(i, 0.0);
                         seeds.push_back(obj);
                     }
                 } else if (NeighborhoodGraph::property.seedType == NeighborhoodGraph::SeedTypeFirstNode) {
-                    ObjectDistance obj(1, 0.0);
+                    VectorDistance obj(1, 0.0);
                     seeds.push_back(obj);
                 } else {
                     getRandomSeeds(repo, seeds, seedSize);
@@ -1408,7 +1409,7 @@ namespace tann {
     protected:
 
         // GraphIndex
-        virtual void search(tann::SearchContainer &sc, ObjectDistances &seeds) {
+        virtual void search(tann::SearchContainer &sc, VectorDistances &seeds) {
             if (sc.size == 0) {
                 while (!sc.workingResult.empty()) sc.workingResult.pop();
                 return;
@@ -1454,7 +1455,7 @@ namespace tann {
         bool readOnly;
 #ifdef NGT_GRAPH_READ_ONLY_GRAPH
 
-        void (*searchUnupdatableGraph)(tann::NeighborhoodGraph &, tann::SearchContainer &, tann::ObjectDistances &);
+        void (*searchUnupdatableGraph)(tann::NeighborhoodGraph &, tann::SearchContainer &, tann::VectorDistances &);
 
 #endif
 
@@ -1496,15 +1497,15 @@ namespace tann {
 #else
 
         void alignObjects() {
-            tann::ObjectSpace &space = getObjectSpace();
-            tann::ObjectRepository &repo = space.getRepository();
+            tann::VectorSpace &space = getObjectSpace();
+            tann::VectorRepository &repo = space.getRepository();
             Object **object = repo.getPtr();
             std::vector<bool> exist(repo.size(), false);
             std::vector<tann::Node::ID> leafNodeIDs;
             DVPTree::getAllLeafNodeIDs(leafNodeIDs);
             size_t objectCount = 0;
             for (size_t i = 0; i < leafNodeIDs.size(); i++) {
-                ObjectDistances objects;
+                VectorDistances objects;
                 DVPTree::getObjectIDsFromLeaf(leafNodeIDs[i], objects);
                 for (size_t j = 0; j < objects.size(); j++) {
                     exist[objects[j].id] = true;
@@ -1536,7 +1537,7 @@ namespace tann {
             objectCount = 1;
             std::vector<std::pair<uint32_t, uint32_t> > order;
             for (size_t i = 0; i < leafNodeIDs.size(); i++) {
-                ObjectDistances objects;
+                VectorDistances objects;
                 DVPTree::getObjectIDsFromLeaf(leafNodeIDs[i], objects);
                 for (size_t j = 0; j < objects.size(); j++) {
                     order.push_back(std::pair<uint32_t, uint32_t>(objects[j].id, objectCount));
@@ -1699,14 +1700,14 @@ namespace tann {
                 return;
             }
             tann::SearchContainer so(*obj);
-            ObjectDistances results;
+            VectorDistances results;
             so.setResults(&results);
             so.id = 0;
             so.size = 2;
             so.radius = 0.0;
             so.explorationCoefficient = 1.1;
-            ObjectDistances seeds;
-            seeds.push_back(ObjectDistance(id, 0.0));
+            VectorDistances seeds;
+            seeds.push_back(VectorDistance(id, 0.0));
             GraphIndex::search(so, seeds);
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
             GraphIndex::objectSpace->deleteObject(obj);
@@ -1732,7 +1733,7 @@ namespace tann {
             GraphIndex::remove(id, force);
         }
 
-        void searchForNNGInsertion(Object &po, ObjectDistances &result) {
+        void searchForNNGInsertion(Object &po, VectorDistances &result) {
             tann::SearchContainer sc(po);
             sc.setResults(&result);
             sc.size = NeighborhoodGraph::property.edgeSizeForCreation;
@@ -1757,7 +1758,7 @@ namespace tann {
         }
 
         void insert(ObjectID id) {
-            ObjectRepository &fr = GraphIndex::objectSpace->getRepository();
+            VectorRepository &fr = GraphIndex::objectSpace->getRepository();
             if (fr[id] == 0) {
                 std::cerr << "GraphAndTreeIndex::insert empty " << id << std::endl;
                 return;
@@ -1767,7 +1768,7 @@ namespace tann {
 #else
             Object &po = *fr[id];
 #endif
-            ObjectDistances rs;
+            VectorDistances rs;
             if (NeighborhoodGraph::property.graphType == NeighborhoodGraph::GraphTypeANNG) {
                 searchForNNGInsertion(po, rs);
             } else {
@@ -1799,7 +1800,7 @@ namespace tann {
 
         void createTreeIndex();
 
-        void getSeeds(tann::SearchContainer &sc, ObjectDistances &seeds, size_t n) {
+        void getSeeds(tann::SearchContainer &sc, VectorDistances &seeds, size_t n) {
             DVPTree::SearchContainer tso(sc.object);
             tso.mode = DVPTree::SearchContainer::SearchLeaf;
             tso.radius = 0.0;
@@ -1833,7 +1834,7 @@ namespace tann {
         }
 
         // GraphAndTreeIndex
-        void getSeedsFromTree(tann::SearchContainer &sc, ObjectDistances &seeds) {
+        void getSeedsFromTree(tann::SearchContainer &sc, VectorDistances &seeds) {
             DVPTree::SearchContainer tso(sc.object);
             tso.mode = DVPTree::SearchContainer::SearchLeaf;
             tso.radius = 0.0;
@@ -1884,7 +1885,7 @@ namespace tann {
         void search(tann::SearchContainer &sc) {
             sc.distanceComputationCount = 0;
             sc.visitCount = 0;
-            ObjectDistances seeds;
+            VectorDistances seeds;
             getSeedsFromTree(sc, seeds);
             sc.visitCount = sc.distanceComputationCount;
             GraphIndex::search(sc, seeds);
@@ -1896,7 +1897,7 @@ namespace tann {
                 tann::SearchContainer sc(searchQuery, *query);
                 sc.distanceComputationCount = 0;
                 sc.visitCount = 0;
-                ObjectDistances seeds;
+                VectorDistances seeds;
                 getSeedsFromTree(sc, seeds);
                 GraphIndex::search(sc, seeds);
             } catch (Exception &err) {
