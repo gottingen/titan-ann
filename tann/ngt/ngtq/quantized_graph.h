@@ -536,7 +536,7 @@ namespace NGTQG {
             property.globalRange = 0;
             property.localRange = 0;
             property.dataType = NGTQ::DataTypeFloat;
-            property.distanceType = NGTQ::DistanceType::DistanceTypeL2;
+            property.distanceType = NGTQ::MetricType::MetricTypeL2;
             property.singleLocalCodebook = false;
             property.batchSize = 1000;
             property.centroidCreationMode = NGTQ::CentroidCreationModeStatic;

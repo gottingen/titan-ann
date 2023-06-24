@@ -860,8 +860,8 @@ namespace QBG {
 
       tann::Property prop;
       prop.dimension = objectSpace.getDimension();
-      prop.objectType = tann::Index::Property::ObjectType::Float;
-      prop.distanceType = tann::Property::DistanceType::DistanceTypeL2;
+      prop.objectType = tann::DataType::Float;
+      prop.distanceType = tann::MetricType::MetricTypeL2;
       prop.edgeSizeForCreation = 10;
       prop.edgeSizeForSearch = 40;
 

@@ -17,7 +17,7 @@
 #define TANN_INDEX_DISTANCE_H_
 
 #include "turbo/platform/port.h"
-#include "tann/index/metric.h"
+#include "tann/index/option.h"
 #include <cstddef>
 
 namespace tann {

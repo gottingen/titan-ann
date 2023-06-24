@@ -301,72 +301,72 @@ namespace tann {
         class Search {
         public:
             static void
-            (*getMethod(tann::VectorSpace::DistanceType dtype, tann::VectorSpace::ObjectType otype, size_t size))(
+            (*getMethod(tann::MetricType dtype, tann::DataType otype, size_t size))(
                     tann::NeighborhoodGraph &, tann::SearchContainer &, tann::VectorDistances &) {
                 if (size < 5000000) {
                     switch (otype) {
-                        case tann::VectorSpace::Float:
+                        case tann::DataType::Float:
                             switch (dtype) {
-                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
+                                case tann::MetricType::MetricTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloat;
-                                case tann::VectorSpace::DistanceTypeCosine :
+                                case tann::MetricType::MetricTypeCosine :
                                     return cosineSimilarityFloat;
-                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
+                                case tann::MetricType::MetricTypeNormalizedAngle :
                                     return normalizedAngleFloat;
-                                case tann::VectorSpace::DistanceTypeAngle :
+                                case tann::MetricType::MetricTypeAngle :
                                     return angleFloat;
-                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
+                                case tann::MetricType::MetricTypeNormalizedL2 :
                                     return normalizedL2Float;
-                                case tann::VectorSpace::DistanceTypeL2 :
+                                case tann::MetricType::MetricTypeL2 :
                                     return l2Float;
-                                case tann::VectorSpace::DistanceTypeL1 :
+                                case tann::MetricType::MetricTypeL1 :
                                     return l1Float;
-                                case tann::VectorSpace::DistanceTypeSparseJaccard :
+                                case tann::MetricType::MetricTypeSparseJaccard :
                                     return sparseJaccardFloat;
-                                case tann::VectorSpace::DistanceTypePoincare :
+                                case tann::MetricType::MetricTypePoincare :
                                     return poincareFloat;  // added by Nyapicom
-                                case tann::VectorSpace::DistanceTypeLorentz :
+                                case tann::MetricType::MetricTypeLorentz :
                                     return lorentzFloat;  // added by Nyapicom
                                 default:
                                     return l2Float;
                             }
                             break;
-                        case tann::VectorSpace::Uint8:
+                        case tann::DataType::Uint8:
                             switch (dtype) {
-                                case tann::VectorSpace::DistanceTypeHamming :
+                                case tann::MetricType::MetricTypeHamming :
                                     return hammingUint8;
-                                case tann::VectorSpace::DistanceTypeJaccard :
+                                case tann::MetricType::MetricTypeJaccard :
                                     return jaccardUint8;
-                                case tann::VectorSpace::DistanceTypeL2 :
+                                case tann::MetricType::MetricTypeL2 :
                                     return l2Uint8;
-                                case tann::VectorSpace::DistanceTypeL1 :
+                                case tann::MetricType::MetricTypeL1 :
                                     return l1Uint8;
                                 default :
                                     return l2Uint8;
                             }
                             break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                        case tann::VectorSpace::Float16:
+                        case tann::DataType::Float16:
                             switch (dtype) {
-                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
+                                case tann::MetricType::MetricTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloat16;
-                                case tann::VectorSpace::DistanceTypeCosine :
+                                case tann::MetricType::MetricTypeCosine :
                                     return cosineSimilarityFloat16;
-                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
+                                case tann::MetricType::MetricTypeNormalizedAngle :
                                     return normalizedAngleFloat16;
-                                case tann::VectorSpace::DistanceTypeAngle :
+                                case tann::MetricType::MetricTypeAngle :
                                     return angleFloat16;
-                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
+                                case tann::MetricType::MetricTypeNormalizedL2 :
                                     return normalizedL2Float16;
-                                case tann::VectorSpace::DistanceTypeL2 :
+                                case tann::MetricType::MetricTypeL2 :
                                     return l2Float16;
-                                case tann::VectorSpace::DistanceTypeL1 :
+                                case tann::MetricType::MetricTypeL1 :
                                     return l1Float16;
-                                case tann::VectorSpace::DistanceTypeSparseJaccard :
+                                case tann::MetricType::MetricTypeSparseJaccard :
                                     return sparseJaccardFloat16;
-                                case tann::VectorSpace::DistanceTypePoincare :
+                                case tann::MetricType::MetricTypePoincare :
                                     return poincareFloat16;  // added by Nyapicom
-                                case tann::VectorSpace::DistanceTypeLorentz :
+                                case tann::MetricType::MetricTypeLorentz :
                                     return lorentzFloat16;  // added by Nyapicom
                                 default:
                                     return l2Float16;
@@ -380,68 +380,68 @@ namespace tann {
                     return l1Uint8;
                 } else {
                     switch (otype) {
-                        case tann::VectorSpace::Float:
+                        case tann::DataType::Float:
                             switch (dtype) {
-                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
+                                case tann::MetricType::MetricTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeCosine :
+                                case tann::MetricType::MetricTypeCosine :
                                     return cosineSimilarityFloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
+                                case tann::MetricType::MetricTypeNormalizedAngle :
                                     return normalizedAngleFloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeAngle :
+                                case tann::MetricType::MetricTypeAngle :
                                     return angleFloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
+                                case tann::MetricType::MetricTypeNormalizedL2 :
                                     return normalizedL2FloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeL2 :
+                                case tann::MetricType::MetricTypeL2 :
                                     return l2FloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeL1 :
+                                case tann::MetricType::MetricTypeL1 :
                                     return l1FloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeSparseJaccard :
+                                case tann::MetricType::MetricTypeSparseJaccard :
                                     return sparseJaccardFloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypePoincare :
+                                case tann::MetricType::MetricTypePoincare :
                                     return poincareFloatForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeLorentz :
+                                case tann::MetricType::MetricTypeLorentz :
                                     return lorentzFloatForLargeDataset;
                                 default:
                                     return l2FloatForLargeDataset;
                             }
                             break;
-                        case tann::VectorSpace::Uint8:
+                        case tann::DataType::Uint8:
                             switch (dtype) {
-                                case tann::VectorSpace::DistanceTypeHamming :
+                                case tann::MetricType::MetricTypeHamming :
                                     return hammingUint8ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeJaccard :
+                                case tann::MetricType::MetricTypeJaccard :
                                     return jaccardUint8ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeL2 :
+                                case tann::MetricType::MetricTypeL2 :
                                     return l2Uint8ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeL1 :
+                                case tann::MetricType::MetricTypeL1 :
                                     return l1Uint8ForLargeDataset;
                                 default :
                                     return l2Uint8ForLargeDataset;
                             }
                             break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                        case tann::VectorSpace::Float16:
+                        case tann::DataType::Float16:
                             switch (dtype) {
-                                case tann::VectorSpace::DistanceTypeNormalizedCosine :
+                                case tann::MetricType::MetricTypeNormalizedCosine :
                                     return normalizedCosineSimilarityFloat16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeCosine :
+                                case tann::MetricType::MetricTypeCosine :
                                     return cosineSimilarityFloat16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeNormalizedAngle :
+                                case tann::MetricType::MetricTypeNormalizedAngle :
                                     return normalizedAngleFloat16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeAngle :
+                                case tann::MetricType::MetricTypeAngle :
                                     return angleFloat16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeNormalizedL2 :
+                                case tann::MetricType::MetricTypeNormalizedL2 :
                                     return normalizedL2Float16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeL2 :
+                                case tann::MetricType::MetricTypeL2 :
                                     return l2Float16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeL1 :
+                                case tann::MetricType::MetricTypeL1 :
                                     return l1Float16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeSparseJaccard :
+                                case tann::MetricType::MetricTypeSparseJaccard :
                                     return sparseJaccardFloat16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypePoincare :
+                                case tann::MetricType::MetricTypePoincare :
                                     return poincareFloat16ForLargeDataset;
-                                case tann::VectorSpace::DistanceTypeLorentz :
+                                case tann::MetricType::MetricTypeLorentz :
                                     return lorentzFloat16ForLargeDataset;
                                 default:
                                     return l2Float16ForLargeDataset;

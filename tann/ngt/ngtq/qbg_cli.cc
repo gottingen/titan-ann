@@ -107,11 +107,11 @@ public:
     }
 
     switch (distanceType) {
-    case '2': creation.distanceType = NGTQ::DistanceType::DistanceTypeL2; break;
-    case '1': creation.distanceType = NGTQ::DistanceType::DistanceTypeL1; break;
-    case 'a': creation.distanceType = NGTQ::DistanceType::DistanceTypeAngle; break;
-    case 'C': creation.distanceType = NGTQ::DistanceType::DistanceTypeNormalizedCosine; break;
-    case 'E': creation.distanceType = NGTQ::DistanceType::DistanceTypeL2; break;
+    case '2': creation.distanceType = NGTQ::MetricType::MetricTypeL2; break;
+    case '1': creation.distanceType = NGTQ::MetricType::MetricTypeL1; break;
+    case 'a': creation.distanceType = NGTQ::MetricType::MetricTypeAngle; break;
+    case 'C': creation.distanceType = NGTQ::MetricType::MetricTypeNormalizedCosine; break;
+    case 'E': creation.distanceType = NGTQ::MetricType::MetricTypeL2; break;
     default:
       std::stringstream msg;
       msg << "Command::CreateParameters: Error: Invalid distance type. " << distanceType;

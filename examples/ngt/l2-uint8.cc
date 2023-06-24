@@ -12,8 +12,8 @@ main(int argc, char **argv) {
     try {
         tann::Property property;
         property.dimension = 128;
-        property.objectType = tann::VectorSpace::ObjectType::Uint8;
-        property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+        property.objectType = tann::DataType::Uint8;
+        property.distanceType = tann::MetricType::MetricTypeL2;
         tann::Index::create(indexPath, property);
         tann::Index index(indexPath);
         ifstream is(objectFile);

@@ -16,9 +16,67 @@
 
 #include <string>
 #include <cstddef>
-#include "tann/index/metric.h"
+#include <type_traits>
 
 namespace tann {
+
+    enum class MetricType {
+        MetricTypeNone = -1,
+        /// d = 1.0 - sum(Ai*Bi)
+        MetricTypeL1 = 0,
+        /// d = sum((Ai-Bi)^2)
+        MetricTypeL2 = 1,
+        MetricTypeHamming = 2,
+        MetricTypeAngle = 3,
+        /// d = 1.0 - sum(Ai*Bi) / sqrt(sum(Ai*Ai) * sum(Bi*Bi))
+        MetricTypeCosine = 4,
+        MetricTypeNormalizedAngle = 5,
+        /// as the data is normalized
+        /// dot product is ok.
+        MetricTypeNormalizedCosine = 6,
+        MetricTypeJaccard = 7,
+        MetricTypeSparseJaccard = 8,
+        MetricTypeNormalizedL2 = 9,
+        MetricTypePoincare = 100,  // added by Nyapicom
+        MetricTypeLorentz = 101  // added by Nyapicom
+    };
+
+    template<typename T>
+    typename std::enable_if<std::is_integral_v<T>, bool>::type
+    operator==(MetricType lhs, T rhs) {
+        return  static_cast<T>(lhs) == rhs;
+    }
+
+    template<typename T>
+    typename std::enable_if<std::is_integral_v<T>, bool>::type
+    operator==(T lhs, MetricType rhs) {
+        return  static_cast<T>(rhs) == lhs;
+    }
+
+
+    enum class DataType {
+        TypeNone = 0,
+        Uint8 = 1,
+        Float = 2
+#ifdef TANN_ENABLE_HALF_FLOAT
+        ,
+            Float16 = 3
+#endif
+    };
+
+
+    template<typename T>
+    typename std::enable_if<std::is_integral_v<T>, bool>::type
+    operator==(DataType lhs, T rhs) {
+        return  static_cast<T>(lhs) == rhs;
+    }
+
+    template<typename T>
+    typename std::enable_if<std::is_integral_v<T>, bool>::type
+    operator==(T lhs, DataType rhs) {
+        return  static_cast<T>(rhs) == lhs;
+    }
+
 
     struct IndexOption {
         struct HnswOption {

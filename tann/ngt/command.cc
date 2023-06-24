@@ -104,14 +104,14 @@ using namespace std;
 
     switch (objectType) {
     case 'f': 
-      property.objectType = tann::Index::Property::ObjectType::Float;
+      property.objectType = tann::DataType::Float;
       break;
     case 'c':
-      property.objectType = tann::Index::Property::ObjectType::Uint8;
+      property.objectType = tann::DataType::Uint8;
       break;
 #ifdef TANN_ENABLE_HALF_FLOAT
     case 'h':
-      property.objectType = tann::Index::Property::ObjectType::Float16;
+      property.objectType = tann::DataType::Float16;
       break;
 #endif
     default:
@@ -122,41 +122,41 @@ using namespace std;
 
     switch (distanceType) {
     case '1': 
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL1;
+      property.distanceType = tann::MetricType::MetricTypeL1;
       break;
     case '2':
     case 'e':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+      property.distanceType = tann::MetricType::MetricTypeL2;
       break;
     case 'a':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeAngle;
+      property.distanceType = tann::MetricType::MetricTypeAngle;
       break;
     case 'A':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedAngle;
+      property.distanceType = tann::MetricType::MetricTypeNormalizedAngle;
       break;
     case 'h':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeHamming;
+      property.distanceType = tann::MetricType::MetricTypeHamming;
       break;
     case 'j':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeJaccard;
+      property.distanceType = tann::MetricType::MetricTypeJaccard;
       break;
     case 'J':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeSparseJaccard;
+      property.distanceType = tann::MetricType::MetricTypeSparseJaccard;
       break;
     case 'c':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeCosine;
+      property.distanceType = tann::MetricType::MetricTypeCosine;
       break;
     case 'C':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedCosine;
+      property.distanceType = tann::MetricType::MetricTypeNormalizedCosine;
       break;
     case 'E':
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedL2;
+      property.distanceType = tann::MetricType::MetricTypeNormalizedL2;
       break;
     case 'p':  // added by Nyapicom
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypePoincare;
+      property.distanceType = tann::MetricType::MetricTypePoincare;
       break;
     case 'l':  // added by Nyapicom
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeLorentz;
+      property.distanceType = tann::MetricType::MetricTypeLorentz;
       break;
     default:
       std::stringstream msg;

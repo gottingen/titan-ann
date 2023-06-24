@@ -44,7 +44,7 @@ namespace QBG {
       creation.genuineDataType		= ObjectFile::DataTypeFloat;
 #endif
       creation.dataType			= NGTQ::DataTypeFloat;
-      creation.distanceType		= NGTQ::DistanceType::DistanceTypeL2;
+      creation.distanceType		= NGTQ::MetricType::MetricTypeL2;
       creation.singleLocalCodebook	= false;
       creation.localDivisionNo		= 0;
       creation.batchSize		= 1000;
@@ -142,7 +142,7 @@ namespace QBG {
       ObjectFile::DataType	genuineDataType;
 #endif
       NGTQ::DataType		dataType;
-      NGTQ::DistanceType	distanceType;
+      NGTQ::MetricType	distanceType;
       bool			singleLocalCodebook;
       size_t			localDivisionNo;
       size_t			batchSize;

@@ -1046,7 +1046,7 @@ namespace tann {
 
         void outputObject(std::ostream &os, std::vector<float> &v, tann::Property &prop) {
             switch (prop.objectType) {
-                case tann::VectorSpace::ObjectType::Uint8: {
+                case tann::DataType::Uint8: {
                     for (auto i = v.begin(); i != v.end(); ++i) {
                         int d = *i;
                         os << d;
@@ -1059,9 +1059,9 @@ namespace tann {
                     break;
                 default:
 #ifdef TANN_ENABLE_HALF_FLOAT
-                case tann::VectorSpace::ObjectType::Float16:
+                case tann::DataType::Float16:
 #endif
-                case tann::VectorSpace::ObjectType::Float: {
+                case tann::DataType::Float: {
                     for (auto i = v.begin(); i != v.end(); ++i) {
                         os << *i;
                         if (i + 1 != v.end()) {
@@ -1086,7 +1086,7 @@ namespace tann {
         std::vector<float> extractObject(size_t id, tann::Property &prop) {
             std::vector<float> v;
             switch (prop.objectType) {
-                case tann::VectorSpace::ObjectType::Uint8: {
+                case tann::DataType::Uint8: {
                     auto *obj = static_cast<uint8_t *>(index.getObjectSpace().getObject(id));
                     for (int i = 0; i < prop.dimension; i++) {
                         int d = *obj++;
@@ -1095,7 +1095,7 @@ namespace tann {
                 }
                     break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                case tann::VectorSpace::ObjectType::Float16: {
+                case tann::DataType::Float16: {
                     auto *obj = static_cast<tann::float16 *>(index.getObjectSpace().getObject(id));
                     for (int i = 0; i < prop.dimension; i++) {
                         float d = *obj++;
@@ -1105,7 +1105,7 @@ namespace tann {
                     break;
 #endif
                 default:
-                case tann::VectorSpace::ObjectType::Float: {
+                case tann::DataType::Float: {
                     auto *obj = static_cast<float *>(index.getObjectSpace().getObject(id));
                     for (int i = 0; i < prop.dimension; i++) {
                         float d = *obj++;
@@ -1120,7 +1120,7 @@ namespace tann {
         std::vector<float> meanObject(size_t id1, size_t id2, tann::Property &prop) {
             std::vector<float> v;
             switch (prop.objectType) {
-                case tann::VectorSpace::ObjectType::Uint8: {
+                case tann::DataType::Uint8: {
                     auto *obj1 = static_cast<uint8_t *>(index.getObjectSpace().getObject(id1));
                     auto *obj2 = static_cast<uint8_t *>(index.getObjectSpace().getObject(id2));
                     for (int i = 0; i < prop.dimension; i++) {
@@ -1130,7 +1130,7 @@ namespace tann {
                 }
                     break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                case tann::VectorSpace::ObjectType::Float16: {
+                case tann::DataType::Float16: {
                     auto *obj1 = static_cast<tann::float16 *>(index.getObjectSpace().getObject(id1));
                     auto *obj2 = static_cast<tann::float16 *>(index.getObjectSpace().getObject(id2));
                     for (int i = 0; i < prop.dimension; i++) {
@@ -1141,7 +1141,7 @@ namespace tann {
                     break;
 #endif
                 default:
-                case tann::VectorSpace::ObjectType::Float: {
+                case tann::DataType::Float: {
                     auto *obj1 = static_cast<float *>(index.getObjectSpace().getObject(id1));
                     auto *obj2 = static_cast<float *>(index.getObjectSpace().getObject(id2));
                     for (int i = 0; i < prop.dimension; i++) {

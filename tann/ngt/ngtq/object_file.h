@@ -83,7 +83,7 @@ public:
         return true;
     }
 
-    bool open(const std::string &file, DataType datat, tann::Index::Property::DistanceType distt, size_t pseudoDim) {
+    bool open(const std::string &file, DataType datat, tann::MetricType distt, size_t pseudoDim) {
         dataType = datat;
         fileName = file;
         distanceType = distt;
@@ -209,7 +209,7 @@ public:
     size_t pseudoDimension;
     size_t genuineDimension;
     DataType dataType;
-    tann::VectorSpace::DistanceType distanceType;
+    tann::MetricType distanceType;
     tann::VectorSpace *objectSpace;
     std::vector<ObjectFile *> objectFiles;
 };

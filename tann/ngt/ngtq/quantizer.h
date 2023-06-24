@@ -230,7 +230,7 @@ class QuantizationCodebook : public std::vector<T> {
     }
     tann::Property property;
     property.dimension = dimension;
-    property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+    property.distanceType = tann::MetricType::MetricTypeL2;
 #ifdef NGTQ_SHARED_INVERTED_INDEX
     index = new tann::Index("dummy", property);
     std::cerr << "Not implemented" << std::endl;
@@ -498,7 +498,7 @@ public:
 #endif
  };
 
- typedef tann::VectorSpace::DistanceType		DistanceType;
+ typedef tann::MetricType		MetricType;
 
  enum CentroidCreationMode {
    CentroidCreationModeDynamic		= 0,
@@ -538,7 +538,7 @@ public:
 #endif
     dataSize		= 0;
     dataType		= DataTypeFloat;
-    distanceType	= DistanceType::DistanceTypeNone;
+    distanceType	= MetricType::MetricTypeNone;
     singleLocalCodebook = false;
     localDivisionNo	= 8;
     batchSize		= 1000;
@@ -567,7 +567,7 @@ public:
 #endif
     prop.set("DataSize", 	(long)dataSize);
     prop.set("DataType", 	(long)dataType);
-    prop.set("DistanceType",	(long)distanceType);
+    prop.set("MetricType",	(long)distanceType);
     prop.set("SingleLocalCodebook", (long)singleLocalCodebook);
     prop.set("LocalDivisionNo", (long)localDivisionNo);
     prop.set("BatchSize", 	(long)batchSize);
@@ -621,7 +621,7 @@ public:
 #endif
     dataSize		= prop.getl("DataSize", dataSize);
     dataType		= (DataType)prop.getl("DataType", dataType);
-    distanceType	= (DistanceType)prop.getl("DistanceType", distanceType);
+    distanceType	= (MetricType)prop.getl("MetricType", static_cast<long>(distanceType));
     singleLocalCodebook	= prop.getl("SingleLocalCodebook", singleLocalCodebook);
     localDivisionNo	= prop.getl("LocalDivisionNo", localDivisionNo);
     batchSize		= prop.getl("BatchSize", batchSize);
@@ -688,7 +688,7 @@ public:
 #endif
   size_t	dataSize;
   DataType	dataType;
-  DistanceType	distanceType;
+  MetricType	distanceType;
   bool		singleLocalCodebook;
   size_t	localDivisionNo;
   size_t	batchSize;
@@ -2112,7 +2112,7 @@ public:
   void setGlobalCentroidLimit(size_t s) { property.globalCentroidLimit = s; }
   void setLocalCentroidLimit(size_t s) { property.localCentroidLimit = s; }
   void setDimension(size_t s) { property.dimension = s; }
-  void setDistanceType(DistanceType t) { property.distanceType = t; }
+  void setDistanceType(MetricType t) { property.distanceType = t; }
 
   tann::Index &getLocalCodebook(size_t idx) { return localCodebookIndexes[idx]; }
   size_t getLocalCodebookSize(size_t size) { return localCodebookIndexes[size].getObjectRepositorySize(); }
@@ -2138,7 +2138,7 @@ public:
   size_t	distanceComputationCount;
 
   size_t	localIDByteSize;
-  tann::VectorSpace::ObjectType objectType;
+  tann::DataType objectType;
   size_t	divisionNo;
 
   std::vector<tann::Index>	localCodebookIndexes;
@@ -2567,8 +2567,8 @@ public:
     globalCodebookIndex.getProperty(globalProperty);
     size_t sizeoftype = 0;
 #ifdef TANN_ENABLE_HALF_FLOAT
-    if (globalProperty.objectType == tann::Property::ObjectType::Float ||
-	globalProperty.objectType == tann::Property::ObjectType::Float16) {
+    if (globalProperty.objectType == tann::DataType::Float ||
+	globalProperty.objectType == tann::DataType::Float16) {
 #else
     if (globalProperty.objectType == tann::Property::ObjectType::Float) {
 #endif
@@ -2586,7 +2586,7 @@ public:
       }
       generateResidualObject = new GenerateResidualObjectFloat;
       sizeoftype = sizeof(float);
-    } else if (globalProperty.objectType == tann::Property::ObjectType::Uint8) {
+    } else if (globalProperty.objectType == tann::DataType::Uint8) {
       if (property.localIDByteSize == 4) {
 	quantizedObjectDistance = new QuantizedObjectDistanceUint8<uint32_t>;
       } else if (property.localIDByteSize == 2) {
@@ -2597,7 +2597,7 @@ public:
       generateResidualObject = new GenerateResidualObjectUint8;
       sizeoftype = sizeof(uint8_t);
     } else {
-      cerr << "NGTQ::open: Fatal Inner Error: invalid object type. " << globalProperty.objectType << endl;
+      cerr << "NGTQ::open: Fatal Inner Error: invalid object type. " << static_cast<int>(globalProperty.objectType) << endl;
       cerr << "   check NGT version consistency between the caller and the library." << endl;
       abort();
     }
@@ -3302,7 +3302,7 @@ public:
     tann::Property property;
     
     property.dimension = globalCodebookIndex.getObjectSpace().getDimension() + 1;
-    property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+    property.distanceType = tann::MetricType::MetricTypeL2;
 #ifdef NGTQ_SHARED_INVERTED_INDEX
     tann::Index *index = new tann::Index("dummy", property);
     std::cerr << "Not implemented" << std::endl;
@@ -3646,7 +3646,7 @@ public:
     gp.edgeSizeForSearch = 40;	
     lp.edgeSizeForSearch = 40;	
 
-    lp.objectType = tann::Index::Property::ObjectType::Float;
+    lp.objectType = tann::DataType::Float;
     gp.dimension = property.dimension;
     if (gp.dimension == 0) {
       stringstream msg;
@@ -3666,13 +3666,13 @@ public:
 
     switch (property.dataType) {
     case DataTypeFloat:
-      gp.objectType = tann::Index::Property::ObjectType::Float;
+      gp.objectType = tann::DataType::Float;
       break;
     case DataTypeFloat16:
-      gp.objectType = tann::Index::Property::ObjectType::Float16;
+      gp.objectType = tann::DataType::Float16;
       break;
     case DataTypeUint8:
-      gp.objectType = tann::Index::Property::ObjectType::Uint8;
+      gp.objectType = tann::DataType::Uint8;
       break;
     default:
       {
@@ -3683,11 +3683,11 @@ public:
     }
 
     switch (property.distanceType) {
-    case DistanceType::DistanceTypeL1:
-      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL1;
-      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL1;
+    case MetricType::MetricTypeL1:
+      gp.distanceType = tann::MetricType::MetricTypeL1;
+      lp.distanceType = tann::MetricType::MetricTypeL1;
       break;
-    case DistanceType::DistanceTypeL2:
+    case MetricType::MetricTypeL2:
 #ifdef NGTQ_DISTANCE_ANGLE
       {
 	stringstream msg;
@@ -3695,14 +3695,14 @@ public:
 	TANN_THROW(msg);
       }
 #endif
-      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
-      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+      gp.distanceType = tann::MetricType::MetricTypeL2;
+      lp.distanceType = tann::MetricType::MetricTypeL2;
       break;
-    case DistanceType::DistanceTypeHamming:
-      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeHamming;
-      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeHamming;
+    case MetricType::MetricTypeHamming:
+      gp.distanceType = tann::MetricType::MetricTypeHamming;
+      lp.distanceType = tann::MetricType::MetricTypeHamming;
       break;
-    case DistanceType::DistanceTypeAngle:
+    case MetricType::MetricTypeAngle:
 #ifndef NGTQ_DISTANCE_ANGLE
       {
 	stringstream msg;
@@ -3710,20 +3710,20 @@ public:
 	TANN_THROW(msg);
       }
 #endif
-      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeAngle;
-      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeAngle;
+      gp.distanceType = tann::MetricType::MetricTypeAngle;
+      lp.distanceType = tann::MetricType::MetricTypeAngle;
       break;
-    case DistanceType::DistanceTypeNormalizedCosine:
-      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedCosine;
-      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+    case MetricType::MetricTypeNormalizedCosine:
+      gp.distanceType = tann::MetricType::MetricTypeNormalizedCosine;
+      lp.distanceType = tann::MetricType::MetricTypeL2;
       break;
-    case DistanceType::DistanceTypeCosine:
-      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeCosine;
-      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+    case MetricType::MetricTypeCosine:
+      gp.distanceType = tann::MetricType::MetricTypeCosine;
+      lp.distanceType = tann::MetricType::MetricTypeL2;
       break;
-    case DistanceType::DistanceTypeNormalizedL2:
-      gp.distanceType = tann::Index::Property::DistanceType::DistanceTypeNormalizedL2;
-      lp.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+    case MetricType::MetricTypeNormalizedL2:
+      gp.distanceType = tann::MetricType::MetricTypeNormalizedL2;
+      lp.distanceType = tann::MetricType::MetricTypeL2;
       break;
     default:
       {

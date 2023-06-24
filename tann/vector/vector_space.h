@@ -18,6 +18,7 @@
 
 #include "tann/vector/primitive_comparator.h"
 #include "tann/vector/vector_distance.h"
+#include "tann/index/option.h"
 
 class VectorSpace;
 
@@ -26,6 +27,7 @@ namespace tann {
     class PersistentVectorDistances;
 
     class VectorSpace;
+
     class VectorDistances : public std::vector<VectorDistance> {
     public:
         VectorDistances(tann::VectorSpace *os = 0) {}
@@ -126,20 +128,21 @@ namespace tann {
             virtual ~Comparator() {}
         };
 
-        enum DistanceType {
-            DistanceTypeNone = -1,
-            DistanceTypeL1 = 0,
-            DistanceTypeL2 = 1,
-            DistanceTypeHamming = 2,
-            DistanceTypeAngle = 3,
-            DistanceTypeCosine = 4,
-            DistanceTypeNormalizedAngle = 5,
-            DistanceTypeNormalizedCosine = 6,
-            DistanceTypeJaccard = 7,
-            DistanceTypeSparseJaccard = 8,
-            DistanceTypeNormalizedL2 = 9,
-            DistanceTypePoincare = 100,  // added by Nyapicom
-            DistanceTypeLorentz = 101  // added by Nyapicom
+        /*
+        enum MetricType {
+            MetricTypeNone = -1,
+            MetricTypeL1 = 0,
+            MetricTypeL2 = 1,
+            MetricTypeHamming = 2,
+            MetricTypeAngle = 3,
+            MetricTypeCosine = 4,
+            MetricTypeNormalizedAngle = 5,
+            MetricTypeNormalizedCosine = 6,
+            MetricTypeJaccard = 7,
+            MetricTypeSparseJaccard = 8,
+            MetricTypeNormalizedL2 = 9,
+            MetricTypePoincare = 100,  // added by Nyapicom
+            MetricTypeLorentz = 101  // added by Nyapicom
         };
 
         enum ObjectType {
@@ -151,11 +154,12 @@ namespace tann {
             Float16 = 3
 #endif
         };
-
+*/
 
         typedef std::priority_queue<VectorDistance, std::vector<VectorDistance>, std::less<VectorDistance> > ResultSet;
 
-        VectorSpace(size_t d) : dimension(d), distanceType(DistanceTypeNone), comparator(0), normalization(false),
+        VectorSpace(size_t d) : dimension(d), distanceType(MetricType::MetricTypeNone), comparator(0),
+                                normalization(false),
                                 prefetchOffset(-1), prefetchSize(-1) {}
 
         virtual ~VectorSpace() { if (comparator != 0) { delete comparator; }}
@@ -217,7 +221,7 @@ namespace tann {
 
         virtual VectorRepository &getRepository() = 0;
 
-        virtual void setDistanceType(DistanceType t) = 0;
+        virtual void setDistanceType(MetricType t) = 0;
 
         virtual void *getObject(size_t idx) = 0;
 
@@ -227,7 +231,7 @@ namespace tann {
 
         virtual void getObjects(const std::vector<size_t> &idxs, std::vector<std::vector<float>> &vs) = 0;
 
-        DistanceType getDistanceType() { return distanceType; }
+        MetricType getDistanceType() { return distanceType; }
 
         size_t getDimension() { return dimension; }
 
@@ -277,7 +281,7 @@ namespace tann {
 
     protected:
         const size_t dimension;
-        DistanceType distanceType;
+        MetricType distanceType;
         Comparator *comparator;
         bool normalization;
         int32_t prefetchOffset;

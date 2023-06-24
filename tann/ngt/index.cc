@@ -296,7 +296,7 @@ tann::Index::exportIndex(const string &database, const string &file) {
 std::vector<float>
 tann::Index::makeSparseObject(std::vector<uint32_t> &object) {
     if (static_cast<tann::GraphIndex &>(getIndex()).getProperty().distanceType !=
-        tann::VectorSpace::DistanceType::DistanceTypeSparseJaccard) {
+        tann::MetricType::MetricTypeSparseJaccard) {
         TANN_THROW("tann::Index::makeSparseObject: Not sparse jaccard.");
     }
     size_t dimension = getObjectSpace().getDimension();
@@ -316,8 +316,8 @@ void
 tann::Index::Property::set(tann::Property &prop) {
     if (prop.dimension != -1) dimension = prop.dimension;
     if (prop.threadPoolSize != -1) threadPoolSize = prop.threadPoolSize;
-    if (prop.objectType != VectorSpace::ObjectTypeNone) objectType = prop.objectType;
-    if (prop.distanceType != DistanceType::DistanceTypeNone) distanceType = prop.distanceType;
+    if (prop.objectType != DataType::TypeNone) objectType = prop.objectType;
+    if (prop.distanceType != MetricType::MetricTypeNone) distanceType = prop.distanceType;
     if (prop.indexType != IndexTypeNone) indexType = prop.indexType;
     if (prop.databaseType != DatabaseTypeNone) databaseType = prop.databaseType;
     if (prop.objectAlignment != ObjectAlignmentNone) objectAlignment = prop.objectAlignment;
@@ -487,26 +487,24 @@ void
 tann::GraphIndex::constructObjectSpace(tann::Property &prop) {
     assert(prop.dimension != 0);
     size_t dimension = prop.dimension;
-    if (prop.distanceType == tann::VectorSpace::DistanceType::DistanceTypeSparseJaccard) {
+    if (prop.distanceType == tann::MetricType::MetricTypeSparseJaccard) {
         dimension++;
     }
 
     switch (prop.objectType) {
-        case tann::VectorSpace::ObjectType::Float :
+        case tann::DataType::Float :
             objectSpace = new VectorSpaceRepository<float, double>(dimension, typeid(float), prop.distanceType);
             break;
-        case tann::VectorSpace::ObjectType::Uint8 :
+        case tann::DataType::Uint8 :
             objectSpace = new VectorSpaceRepository<unsigned char, int>(dimension, typeid(uint8_t), prop.distanceType);
             break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-        case tann::VectorSpace::ObjectType::Float16 :
+        case tann::DataType::Float16 :
             objectSpace = new VectorSpaceRepository<float16, float>(dimension, typeid(float16), prop.distanceType);
             break;
 #endif
         default:
-            stringstream msg;
-            msg << "Invalid Object Type in the property. " << prop.objectType;
-            TANN_THROW(msg);
+            TANN_THROW(turbo::Format("Invalid Object Type in the property. {}", static_cast<int>(prop.objectType)));
     }
 }
 

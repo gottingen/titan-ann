@@ -784,8 +784,8 @@ namespace tann {
       tann::Property property;
       property.dimension = dim;
       property.graphType = tann::Property::GraphType::GraphTypeANNG;
-      property.objectType = tann::Index::Property::ObjectType::Float;
-      property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+      property.objectType = tann::DataType::Float;
+      property.distanceType = tann::MetricType::MetricTypeL2;
 
       float *data = new float[vectors.size() * dim];
       float *ptr = data;

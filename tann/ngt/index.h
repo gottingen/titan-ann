@@ -45,8 +45,6 @@ namespace tann {
 
         class Property {
         public:
-            typedef VectorSpace::ObjectType ObjectType;
-            typedef VectorSpace::DistanceType DistanceType;
             typedef NeighborhoodGraph::SeedType SeedType;
             typedef NeighborhoodGraph::GraphType GraphType;
             enum ObjectAlignment {
@@ -70,8 +68,8 @@ namespace tann {
             void setDefault() {
                 dimension = 0;
                 threadPoolSize = 32;
-                objectType = VectorSpace::ObjectType::Float;
-                distanceType = DistanceType::DistanceTypeL2;
+                objectType = DataType::Float;
+                distanceType = MetricType::MetricTypeL2;
                 indexType = IndexType::GraphAndTree;
                 objectAlignment = ObjectAlignment::ObjectAlignmentFalse;
                 pathAdjustmentInterval = 0;
@@ -93,8 +91,8 @@ namespace tann {
             void clear() {
                 dimension = -1;
                 threadPoolSize = -1;
-                objectType = VectorSpace::ObjectTypeNone;
-                distanceType = DistanceType::DistanceTypeNone;
+                objectType = DataType::TypeNone;
+                distanceType = MetricType::MetricTypeNone;
                 indexType = IndexTypeNone;
                 databaseType = DatabaseTypeNone;
                 objectAlignment = ObjectAlignment::ObjectAlignmentNone;
@@ -113,63 +111,63 @@ namespace tann {
                 p.set("Dimension", dimension);
                 p.set("ThreadPoolSize", threadPoolSize);
                 switch (objectType) {
-                    case VectorSpace::ObjectType::Uint8:
+                    case DataType::Uint8:
                         p.set("ObjectType", "Integer-1");
                         break;
-                    case VectorSpace::ObjectType::Float:
+                    case DataType::Float:
                         p.set("ObjectType", "Float-4");
                         break;
 #ifdef TANN_ENABLE_HALF_FLOAT
-                    case VectorSpace::ObjectType::Float16:
+                    case DataType::Float16:
                         p.set("ObjectType", "Float-2");
                         break;
 #endif
                     default :
-                        std::cerr << "Fatal error. Invalid object type. " << objectType << std::endl;
+                        std::cerr << "Fatal error. Invalid object type. " << static_cast<int>(objectType) << std::endl;
                         abort();
                 }
                 switch (distanceType) {
-                    case DistanceType::DistanceTypeNone:
-                        p.set("DistanceType", "None");
+                    case MetricType::MetricTypeNone:
+                        p.set("MetricType", "None");
                         break;
-                    case DistanceType::DistanceTypeL1:
-                        p.set("DistanceType", "L1");
+                    case MetricType::MetricTypeL1:
+                        p.set("MetricType", "L1");
                         break;
-                    case DistanceType::DistanceTypeL2:
-                        p.set("DistanceType", "L2");
+                    case MetricType::MetricTypeL2:
+                        p.set("MetricType", "L2");
                         break;
-                    case DistanceType::DistanceTypeHamming:
-                        p.set("DistanceType", "Hamming");
+                    case MetricType::MetricTypeHamming:
+                        p.set("MetricType", "Hamming");
                         break;
-                    case DistanceType::DistanceTypeJaccard:
-                        p.set("DistanceType", "Jaccard");
+                    case MetricType::MetricTypeJaccard:
+                        p.set("MetricType", "Jaccard");
                         break;
-                    case DistanceType::DistanceTypeSparseJaccard:
-                        p.set("DistanceType", "SparseJaccard");
+                    case MetricType::MetricTypeSparseJaccard:
+                        p.set("MetricType", "SparseJaccard");
                         break;
-                    case DistanceType::DistanceTypeAngle:
-                        p.set("DistanceType", "Angle");
+                    case MetricType::MetricTypeAngle:
+                        p.set("MetricType", "Angle");
                         break;
-                    case DistanceType::DistanceTypeCosine:
-                        p.set("DistanceType", "Cosine");
+                    case MetricType::MetricTypeCosine:
+                        p.set("MetricType", "Cosine");
                         break;
-                    case DistanceType::DistanceTypeNormalizedAngle:
-                        p.set("DistanceType", "NormalizedAngle");
+                    case MetricType::MetricTypeNormalizedAngle:
+                        p.set("MetricType", "NormalizedAngle");
                         break;
-                    case DistanceType::DistanceTypeNormalizedCosine:
-                        p.set("DistanceType", "NormalizedCosine");
+                    case MetricType::MetricTypeNormalizedCosine:
+                        p.set("MetricType", "NormalizedCosine");
                         break;
-                    case DistanceType::DistanceTypeNormalizedL2:
-                        p.set("DistanceType", "NormalizedL2");
+                    case MetricType::MetricTypeNormalizedL2:
+                        p.set("MetricType", "NormalizedL2");
                         break;
-                    case DistanceType::DistanceTypePoincare:
-                        p.set("DistanceType", "Poincare");
+                    case MetricType::MetricTypePoincare:
+                        p.set("MetricType", "Poincare");
                         break;  // added by Nyapicom
-                    case DistanceType::DistanceTypeLorentz:
-                        p.set("DistanceType", "Lorentz");
+                    case MetricType::MetricTypeLorentz:
+                        p.set("MetricType", "Lorentz");
                         break;  // added by Nyapicom
                     default :
-                        std::cerr << "Fatal error. Invalid distance type. " << distanceType << std::endl;
+                        std::cerr << "Fatal error. Invalid distance type. " << static_cast<int>(distanceType) << std::endl;
                         abort();
                 }
                 switch (indexType) {
@@ -226,12 +224,12 @@ namespace tann {
                 PropertySet::iterator it = p.find("ObjectType");
                 if (it != p.end()) {
                     if (it->second == "Float-4") {
-                        objectType = VectorSpace::ObjectType::Float;
+                        objectType = DataType::Float;
                     } else if (it->second == "Integer-1") {
-                        objectType = VectorSpace::ObjectType::Uint8;
+                        objectType = DataType::Uint8;
 #ifdef TANN_ENABLE_HALF_FLOAT
                     } else if (it->second == "Float-2") {
-                        objectType = VectorSpace::ObjectType::Float16;
+                        objectType = DataType::Float16;
 #endif
                     } else {
                         std::cerr << "Invalid Object Type in the property. " << it->first << ":" << it->second
@@ -240,40 +238,40 @@ namespace tann {
                 } else {
                     std::cerr << "Not found \"ObjectType\"" << std::endl;
                 }
-                it = p.find("DistanceType");
+                it = p.find("MetricType");
                 if (it != p.end()) {
                     if (it->second == "None") {
-                        distanceType = DistanceType::DistanceTypeNone;
+                        distanceType = MetricType::MetricTypeNone;
                     } else if (it->second == "L1") {
-                        distanceType = DistanceType::DistanceTypeL1;
+                        distanceType = MetricType::MetricTypeL1;
                     } else if (it->second == "L2") {
-                        distanceType = DistanceType::DistanceTypeL2;
+                        distanceType = MetricType::MetricTypeL2;
                     } else if (it->second == "Hamming") {
-                        distanceType = DistanceType::DistanceTypeHamming;
+                        distanceType = MetricType::MetricTypeHamming;
                     } else if (it->second == "Jaccard") {
-                        distanceType = DistanceType::DistanceTypeJaccard;
+                        distanceType = MetricType::MetricTypeJaccard;
                     } else if (it->second == "SparseJaccard") {
-                        distanceType = DistanceType::DistanceTypeSparseJaccard;
+                        distanceType = MetricType::MetricTypeSparseJaccard;
                     } else if (it->second == "Angle") {
-                        distanceType = DistanceType::DistanceTypeAngle;
+                        distanceType = MetricType::MetricTypeAngle;
                     } else if (it->second == "Cosine") {
-                        distanceType = DistanceType::DistanceTypeCosine;
+                        distanceType = MetricType::MetricTypeCosine;
                     } else if (it->second == "Poincare") {  // added by Nyapicom
-                        distanceType = DistanceType::DistanceTypePoincare;
+                        distanceType = MetricType::MetricTypePoincare;
                     } else if (it->second == "Lorentz") {  // added by Nyapicom
-                        distanceType = DistanceType::DistanceTypeLorentz;
+                        distanceType = MetricType::MetricTypeLorentz;
                     } else if (it->second == "NormalizedAngle") {
-                        distanceType = DistanceType::DistanceTypeNormalizedAngle;
+                        distanceType = MetricType::MetricTypeNormalizedAngle;
                     } else if (it->second == "NormalizedCosine") {
-                        distanceType = DistanceType::DistanceTypeNormalizedCosine;
+                        distanceType = MetricType::MetricTypeNormalizedCosine;
                     } else if (it->second == "NormalizedL2") {
-                        distanceType = DistanceType::DistanceTypeNormalizedL2;
+                        distanceType = MetricType::MetricTypeNormalizedL2;
                     } else {
                         std::cerr << "Invalid Distance Type in the property. " << it->first << ":" << it->second
                                   << std::endl;
                     }
                 } else {
-                    std::cerr << "Not found \"DistanceType\"" << std::endl;
+                    std::cerr << "Not found \"MetricType\"" << std::endl;
                 }
                 it = p.find("IndexType");
                 if (it != p.end()) {
@@ -341,8 +339,8 @@ namespace tann {
 
             int dimension;
             int threadPoolSize;
-            VectorSpace::ObjectType objectType;
-            DistanceType distanceType;
+            DataType objectType;
+            MetricType distanceType;
             IndexType indexType;
             DatabaseType databaseType;
             ObjectAlignment objectAlignment;
@@ -788,20 +786,20 @@ namespace tann {
             if (objectSpace == 0) {
                 return;
             }
-            if (property.objectType == tann::VectorSpace::ObjectType::Float) {
+            if (property.objectType == tann::DataType::Float) {
                 VectorSpaceRepository<float, double> *os = (VectorSpaceRepository<float, double> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
 #endif
                 delete os;
-            } else if (property.objectType == tann::VectorSpace::ObjectType::Uint8) {
+            } else if (property.objectType == tann::DataType::Uint8) {
                 VectorSpaceRepository<unsigned char, int> *os = (VectorSpaceRepository<unsigned char, int> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
 #endif
                 delete os;
 #ifdef TANN_ENABLE_HALF_FLOAT
-            } else if (property.objectType == tann::VectorSpace::ObjectType::Float16) {
+            } else if (property.objectType == tann::DataType::Float16) {
                 VectorSpaceRepository<float16, float> *os = (VectorSpaceRepository<float16, float> *) objectSpace;
 #ifndef NGT_SHARED_MEMORY_ALLOCATOR
                 os->deleteAll();
@@ -809,7 +807,7 @@ namespace tann {
                 delete os;
 #endif
             } else {
-                std::cerr << "Cannot find Object Type in the property. " << property.objectType << std::endl;
+                std::cerr << "Cannot find Object Type in the property. " << static_cast<int>(property.objectType) << std::endl;
                 return;
             }
             objectSpace = 0;

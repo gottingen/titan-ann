@@ -160,8 +160,8 @@ namespace QBG {
             }
 
             tann::Property property;
-            property.objectType = tann::Index::Property::ObjectType::Float;
-            property.distanceType = tann::Index::Property::DistanceType::DistanceTypeL2;
+            property.objectType = tann::DataType::Float;
+            property.distanceType = tann::MetricType::MetricTypeL2;
             if (globalCentroid[0].size() != vectors[0].size()) {
                 std::cerr << "optimizer: Warning. The dimension is inconsistency. " << globalCentroid[0].size() << ":"
                           << vectors[0].size() << std::endl;

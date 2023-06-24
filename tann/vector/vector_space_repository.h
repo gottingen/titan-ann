@@ -290,7 +290,7 @@ namespace tann {
 #endif
         };
 
-        VectorSpaceRepository(size_t d, const std::type_info &ot, DistanceType t) : VectorSpace(d),
+        VectorSpaceRepository(size_t d, const std::type_info &ot, MetricType t) : VectorSpace(d),
                                                                                     VectorRepository(d, ot) {
             size_t objectSize = 0;
             if (ot == typeid(uint8_t)) {
@@ -363,7 +363,7 @@ namespace tann {
             objecta.copy(objectb, getByteSizeOfObject());
         }
 
-        void setDistanceType(DistanceType t) {
+        void setDistanceType(MetricType t) {
             if (comparator != 0) {
                 delete comparator;
             }
@@ -371,91 +371,91 @@ namespace tann {
             distanceType = t;
             switch (distanceType) {
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-                case DistanceTypeL1:
+                case MetricTypeL1:
               comparator = new VectorSpaceRepository::ComparatorL1(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypeL2:
+                case MetricTypeL2:
               comparator = new VectorSpaceRepository::ComparatorL2(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypeNormalizedL2:
+                case MetricTypeNormalizedL2:
               comparator = new VectorSpaceRepository::ComparatorNormalizedL2(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               normalization = true;
               break;
-                case DistanceTypeHamming:
+                case MetricTypeHamming:
               comparator = new VectorSpaceRepository::ComparatorHammingDistance(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypeJaccard:
+                case MetricTypeJaccard:
               comparator = new VectorSpaceRepository::ComparatorJaccardDistance(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypeSparseJaccard:
+                case MetricTypeSparseJaccard:
               comparator = new VectorSpaceRepository::ComparatorSparseJaccardDistance(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               setSparse();
               break;
-                case DistanceTypeAngle:
+                case MetricTypeAngle:
               comparator = new VectorSpaceRepository::ComparatorAngleDistance(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypeCosine:
+                case MetricTypeCosine:
               comparator = new VectorSpaceRepository::ComparatorCosineSimilarity(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypePoincare:  // added by Nyapicom
+                case MetricTypePoincare:  // added by Nyapicom
               comparator = new VectorSpaceRepository::ComparatorPoincareDistance(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypeLorentz:  // added by Nyapicom
+                case MetricTypeLorentz:  // added by Nyapicom
               comparator = new VectorSpaceRepository::ComparatorLorentzDistance(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               break;
-                case DistanceTypeNormalizedAngle:
+                case MetricTypeNormalizedAngle:
               comparator = new VectorSpaceRepository::ComparatorNormalizedAngleDistance(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               normalization = true;
               break;
-                case DistanceTypeNormalizedCosine:
+                case MetricTypeNormalizedCosine:
               comparator = new VectorSpaceRepository::ComparatorNormalizedCosineSimilarity(VectorSpace::getPaddedDimension(), VectorRepository::allocator);
               normalization = true;
               break;
 #else
-                case DistanceTypeL1:
+                case MetricType::MetricTypeL1:
                     comparator = new VectorSpaceRepository::ComparatorL1(VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypeL2:
+                case MetricType::MetricTypeL2:
                     comparator = new VectorSpaceRepository::ComparatorL2(VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypeNormalizedL2:
+                case MetricType::MetricTypeNormalizedL2:
                     comparator = new VectorSpaceRepository::ComparatorNormalizedL2(VectorSpace::getPaddedDimension());
                     normalization = true;
                     break;
-                case DistanceTypeHamming:
+                case MetricType::MetricTypeHamming:
                     comparator = new VectorSpaceRepository::ComparatorHammingDistance(
                             VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypeJaccard:
+                case MetricType::MetricTypeJaccard:
                     comparator = new VectorSpaceRepository::ComparatorJaccardDistance(
                             VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypeSparseJaccard:
+                case MetricType::MetricTypeSparseJaccard:
                     comparator = new VectorSpaceRepository::ComparatorSparseJaccardDistance(
                             VectorSpace::getPaddedDimension());
                     setSparse();
                     break;
-                case DistanceTypeAngle:
+                case MetricType::MetricTypeAngle:
                     comparator = new VectorSpaceRepository::ComparatorAngleDistance(VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypeCosine:
+                case MetricType::MetricTypeCosine:
                     comparator = new VectorSpaceRepository::ComparatorCosineSimilarity(
                             VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypePoincare:  // added by Nyapicom
+                case MetricType::MetricTypePoincare:  // added by Nyapicom
                     comparator = new VectorSpaceRepository::ComparatorPoincareDistance(
                             VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypeLorentz:  // added by Nyapicom
+                case MetricType::MetricTypeLorentz:  // added by Nyapicom
                     comparator = new VectorSpaceRepository::ComparatorLorentzDistance(
                             VectorSpace::getPaddedDimension());
                     break;
-                case DistanceTypeNormalizedAngle:
+                case MetricType::MetricTypeNormalizedAngle:
                     comparator = new VectorSpaceRepository::ComparatorNormalizedAngleDistance(
                             VectorSpace::getPaddedDimension());
                     normalization = true;
                     break;
-                case DistanceTypeNormalizedCosine:
+                case MetricType::MetricTypeNormalizedCosine:
                     comparator = new VectorSpaceRepository::ComparatorNormalizedCosineSimilarity(
                             VectorSpace::getPaddedDimension());
                     normalization = true;
@@ -463,7 +463,7 @@ namespace tann {
 #endif
                 default:
                     std::cerr << "Distance type is not specified" << std::endl;
-                    assert(distanceType != DistanceTypeNone);
+                    assert(distanceType != MetricType::MetricTypeNone);
                     abort();
             }
         }
