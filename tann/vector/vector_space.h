@@ -128,33 +128,6 @@ namespace tann {
             virtual ~Comparator() {}
         };
 
-        /*
-        enum MetricType {
-            MetricTypeNone = -1,
-            MetricTypeL1 = 0,
-            MetricTypeL2 = 1,
-            MetricTypeHamming = 2,
-            MetricTypeAngle = 3,
-            MetricTypeCosine = 4,
-            MetricTypeNormalizedAngle = 5,
-            MetricTypeNormalizedCosine = 6,
-            MetricTypeJaccard = 7,
-            MetricTypeSparseJaccard = 8,
-            MetricTypeNormalizedL2 = 9,
-            MetricTypePoincare = 100,  // added by Nyapicom
-            MetricTypeLorentz = 101  // added by Nyapicom
-        };
-
-        enum ObjectType {
-            ObjectTypeNone = 0,
-            Uint8 = 1,
-            Float = 2
-#ifdef TANN_ENABLE_HALF_FLOAT
-            ,
-            Float16 = 3
-#endif
-        };
-*/
 
         typedef std::priority_queue<VectorDistance, std::vector<VectorDistance>, std::less<VectorDistance> > ResultSet;
 

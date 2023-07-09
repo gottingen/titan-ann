@@ -19,7 +19,7 @@
 #include "command.h"
 #include "turbo/strings/str_split.h"
 #include "turbo/strings/numbers.h"
-#include "turbo/format/str_format.h"
+#include "turbo/format/format.h"
 
 #define NGT_LOG_BASED_OPTIMIZATION
 

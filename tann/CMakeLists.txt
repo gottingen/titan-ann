@@ -17,6 +17,8 @@
 file(GLOB_RECURSE NGT_SRC "ngt/*.cc")
 file(GLOB_RECURSE INDEX_SRC "index/*.cc")
 file(GLOB_RECURSE COMMON_SRC "common/*.cc")
+file(GLOB_RECURSE STORE_SRC "store/*.cc")
+file(GLOB_RECURSE DISTANCE_SRC "distance/*.cc")
 carbin_cc_library(
         NAMESPACE tann
         NAME ngt
@@ -24,6 +26,8 @@ carbin_cc_library(
         ${NGT_SRC}
         ${INDEX_SRC}
         ${COMMON_SRC}
+        ${DISTANCE_SRC}
+        ${STORE_SRC}
         COPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS

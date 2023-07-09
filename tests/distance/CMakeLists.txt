@@ -14,5 +14,17 @@
 # limitations under the License.
 #
 
-add_subdirectory(fuzz)
-add_subdirectory(distance)
+message(STATUS ${CARBIN_SIMD_FLAGS})
+carbin_cc_test(
+        NAME
+        distance_test
+        SOURCES
+        distance_test.cc
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        "-Wno-unused-but-set-variable"
+        "-Wno-unused-variable"
+        DEPS
+        ${CARBIN_DEPS_LINK}
+        turbo
+)
