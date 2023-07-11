@@ -66,7 +66,7 @@ namespace tann {
 
         void setResults(VectorDistances *r) { result = r; }
 
-        void setRadius(Distance r) { radius = r; }
+        void setRadius(distance_type r) { radius = r; }
 
         void setEpsilon(float e) { explorationCoefficient = e + 1.0; }
 
@@ -87,7 +87,7 @@ namespace tann {
 
 
         size_t size;
-        Distance radius;
+        distance_type radius;
         float explorationCoefficient;
         int edgeSize;
         size_t distanceComputationCount;

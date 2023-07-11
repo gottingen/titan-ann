@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "tann/vector/primitive_comparator.h"
+#include "tann/comparator/primitive_comparator.h"
 #include "tann/vector/vector_distance.h"
 #include "tann/index/option.h"
 

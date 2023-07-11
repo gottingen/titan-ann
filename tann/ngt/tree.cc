@@ -50,9 +50,9 @@ DVPTree::insert(InsertContainer &iobj,  LeafNode *leafNode)
   if (fsize != 0) {
     tann::VectorSpace::Comparator &comparator = objectSpace->getComparator();
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-    Distance d = comparator(iobj.object, leaf.getPivot(*objectSpace));
+      distance_type d = comparator(iobj.object, leaf.getPivot(*objectSpace));
 #else
-    Distance d = comparator(iobj.object, leaf.getPivot());
+      distance_type d = comparator(iobj.object, leaf.getPivot());
 #endif
 
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -63,7 +63,7 @@ DVPTree::insert(InsertContainer &iobj,  LeafNode *leafNode)
 
     for (size_t i = 0; i < fsize; i++) {
       if (objects[i].distance == d) {
-	Distance idd = 0.0;
+          distance_type idd = 0.0;
 	ObjectID loid;
         try {
 	  loid = objects[i].id;
@@ -190,7 +190,7 @@ DVPTree::recombineNodes(InsertContainer &ic, Node::Objects &fs, LeafNode &leaf)
       if (clusterID > maxClusterID) {
 	maxClusterID = clusterID;
       }
-      Distance ld;
+        distance_type ld;
       if (fs[i].leafDistance == Node::Object::Pivot) {
         // pivot
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -288,9 +288,9 @@ DVPTree::insertObject(InsertContainer &ic, LeafNode &leaf) {
 #endif
   } else {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-    Distance d = objectSpace->getComparator()(ic.object, leaf.getPivot(*objectSpace));
+      distance_type d = objectSpace->getComparator()(ic.object, leaf.getPivot(*objectSpace));
 #else
-    Distance d = objectSpace->getComparator()(ic.object, leaf.getPivot());
+      distance_type d = objectSpace->getComparator()(ic.object, leaf.getPivot());
 #endif
 
 #ifdef NGT_NODE_USE_VECTOR
@@ -400,9 +400,9 @@ void
 DVPTree::search(SearchContainer &sc, InternalNode &node, UncheckedNode &uncheckedNode)
 {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-  Distance d = objectSpace->getComparator()(sc.object, node.getPivot(*objectSpace));
+    distance_type d = objectSpace->getComparator()(sc.object, node.getPivot(*objectSpace));
 #else
-  Distance d = objectSpace->getComparator()(sc.object, node.getPivot());
+    distance_type d = objectSpace->getComparator()(sc.object, node.getPivot());
 #endif
 #ifdef NGT_DISTANCE_COMPUTATION_COUNT
   sc.distanceComputationCount++;
@@ -415,9 +415,9 @@ DVPTree::search(SearchContainer &sc, InternalNode &node, UncheckedNode &unchecke
 
   VectorDistance child;
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-  Distance *borders = node.getBorders(internalNodes.allocator);
+    distance_type *borders = node.getBorders(internalNodes.allocator);
 #else
-  Distance *borders = node.getBorders();
+    distance_type *borders = node.getBorders();
 #endif
   int mid;
   for (mid = 0; mid < bsize; mid++) {
@@ -487,9 +487,9 @@ DVPTree::search(SearchContainer &so, LeafNode &node, UncheckedNode &uncheckedNod
     return;
   }
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-  Distance pq = objectSpace->getComparator()(q.object, node.getPivot(*objectSpace));
+    distance_type pq = objectSpace->getComparator()(q.object, node.getPivot(*objectSpace));
 #else
-  Distance pq = objectSpace->getComparator()(q.object, node.getPivot());
+    distance_type pq = objectSpace->getComparator()(q.object, node.getPivot());
 #endif
 #ifdef NGT_DISTANCE_COMPUTATION_COUNT
   so.distanceComputationCount++;
@@ -505,7 +505,7 @@ DVPTree::search(SearchContainer &so, LeafNode &node, UncheckedNode &uncheckedNod
   for (size_t i = 0; i < node.getObjectSize(); i++) {
     if ((objects[i].distance <= pq + q.radius) &&
         (objects[i].distance >= pq - q.radius)) {
-      Distance d = 0;
+        distance_type d = 0;
       try {
 	d = objectSpace->getComparator()(q.object, *q.vptree->getObjectRepository().get(objects[i].id));
 #ifdef NGT_DISTANCE_COMPUTATION_COUNT

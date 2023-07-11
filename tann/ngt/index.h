@@ -360,11 +360,11 @@ namespace tann {
         public:
             InsertionResult() : id(0), identical(false), distance(0.0) {}
 
-            InsertionResult(size_t i, bool tf, Distance d) : id(i), identical(tf), distance(d) {}
+            InsertionResult(size_t i, bool tf, distance_type d) : id(i), identical(tf), distance(d) {}
 
             size_t id;
             bool identical;
-            Distance distance; // the distance between the centroid and the inserted object.
+            distance_type distance; // the distance between the centroid and the inserted object.
         };
 
         class AccuracyTable {

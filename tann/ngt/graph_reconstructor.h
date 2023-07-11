@@ -172,7 +172,7 @@ namespace tann {
         }
 
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
-        static void insert(tann::GraphNode &node, size_t edgeID, tann::Distance edgeDistance, tann::GraphIndex &graph) {
+        static void insert(tann::GraphNode &node, size_t edgeID, tann::distance_type edgeDistance, tann::GraphIndex &graph) {
           tann::VectorDistance edge(edgeID, edgeDistance);
           GraphNode::iterator ni = std::lower_bound(node.begin(graph.repository.allocator), node.end(graph.repository.allocator), edge, edgeComp);
           node.insert(ni, edge, graph.repository.allocator);
@@ -186,7 +186,7 @@ namespace tann {
         }
 #else
 
-        static void insert(tann::GraphNode &node, size_t edgeID, tann::Distance edgeDistance) {
+        static void insert(tann::GraphNode &node, size_t edgeID, tann::distance_type edgeDistance) {
             tann::VectorDistance edge(edgeID, edgeDistance);
             GraphNode::iterator ni = std::lower_bound(node.begin(), node.end(), edge, edgeComp);
             node.insert(ni, edge);
@@ -515,7 +515,7 @@ namespace tann {
                         rsize = node.size();
                     }
                     for (size_t i = 0; i < rsize; ++i) {
-                        tann::Distance distance = node[i].distance;
+                        tann::distance_type distance = node[i].distance;
                         size_t nodeID = node[i].id;
                         try {
                             tann::GraphNode &n = *outGraph.getNode(nodeID);
@@ -723,7 +723,7 @@ namespace tann {
                             case 'c':
                                 break;
                         }
-                        tann::Distance distance = node[rank].distance;
+                        tann::distance_type distance = node[rank].distance;
                         size_t nodeID = node[rank].id;
                         outGraph.addEdge(id, nodeID, distance, false);
                     }
@@ -776,10 +776,10 @@ namespace tann {
                 try {
                     tann::VectorDistances &node = graph[id - 1];
                     tann::GraphNode &n = *outGraph.getNode(id);
-                    tann::Distance prevDistance = 0.0;
+                    tann::distance_type prevDistance = 0.0;
                     assert(n.size() == 0);
                     for (size_t i = 0; i < node.size(); ++i) {
-                        tann::Distance distance = node[i].distance;
+                        tann::distance_type distance = node[i].distance;
                         if (prevDistance > distance) {
                             TANN_THROW("Edge distance order is invalid");
                         }

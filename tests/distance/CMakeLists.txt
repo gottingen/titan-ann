@@ -27,4 +27,5 @@ carbin_cc_test(
         DEPS
         ${CARBIN_DEPS_LINK}
         turbo
+        tann::ngt
 )

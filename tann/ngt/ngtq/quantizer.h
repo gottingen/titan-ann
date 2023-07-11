@@ -2069,7 +2069,7 @@ public:
   virtual void eraseInvertedIndexObject(size_t id) = 0;
   virtual void eraseInvertedIndexObject() = 0;
 
-  virtual tann::Distance getApproximateDistance(tann::Object &query, uint32_t globalID, uint16_t *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
+  virtual tann::distance_type getApproximateDistance(tann::Object &query, uint32_t globalID, uint16_t *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
     std::cerr << "getApproximateDistance() is not implemented." << std::endl;
     abort();
   }
@@ -3786,7 +3786,7 @@ public:
 	{
 	  tann::Object *o = globalCodebookIndex.getObjectSpace().getRepository().allocateObject();
 	  objectList.get(invertedIndexEntry.id, *o, &globalCodebookIndex.getObjectSpace());
-	  tann::Distance distance = globalCodebookIndex.getObjectSpace().getComparator()(*gcentroidFromList, *o);
+	  tann::distance_type distance = globalCodebookIndex.getObjectSpace().getComparator()(*gcentroidFromList, *o);
 	  cerr << ":distance=" << distance;
 	}
 	cerr << ":local codebook IDs=";
@@ -4016,7 +4016,7 @@ public:
     }
   }
 
-  inline tann::Distance getApproximateDistance(tann::Object &query, uint32_t globalID, LOCAL_ID_TYPE *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
+  inline tann::distance_type getApproximateDistance(tann::Object &query, uint32_t globalID, LOCAL_ID_TYPE *localID, QuantizedObjectDistance::DistanceLookupTable &distanceLUT) {
     double distance;
       distance = (*quantizedObjectDistance)(query, globalID, localID, distanceLUT);
 
@@ -4217,7 +4217,7 @@ public:
 #endif
 	  distance += d;
 	  count++;
-	  tann::Distance gd = globalCodebookIndex.getObjectSpace().getComparator()(object, gcentroid);
+	  tann::distance_type gd = globalCodebookIndex.getObjectSpace().getComparator()(object, gcentroid);
 	  globalDistance += gd;
 	}
       }

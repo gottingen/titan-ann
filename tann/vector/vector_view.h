@@ -15,7 +15,7 @@
 #define TANN_VECTOR_VECTOR_VIEW_H_
 
 #include "tann/common/config.h"
-#include "tann/vector/primitive_comparator.h"
+#include "tann/comparator/primitive_comparator.h"
 #include "tann/vector/vector_space.h"
 #include "tann/vector/serializer.h"
 #include "turbo/log/logging.h"

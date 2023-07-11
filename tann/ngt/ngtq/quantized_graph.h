@@ -274,7 +274,7 @@ namespace NGTQG {
             graph.setupDistances(sc, seeds, tann::PrimitiveComparator::L2Float::compare);
             graph.setupSeeds(sc, seeds, results, unchecked, distanceChecked);
             auto specifiedRadius = sc.radius;
-            tann::Distance explorationRadius = sc.explorationCoefficient * sc.radius;
+            tann::distance_type explorationRadius = sc.explorationCoefficient * sc.radius;
             tann::VectorDistance result;
             tann::VectorDistance target;
 
@@ -305,7 +305,7 @@ namespace NGTQG {
                 quantizedObjectDistance(quantizedGraph.get(target.id), ds, neighborSize, cache[1]);
 #endif
                 for (size_t idx = 0; idx < neighborSize; idx++) {
-                    tann::Distance distance = ds[idx];
+                    tann::distance_type distance = ds[idx];
                     auto objid = neighborIDs[idx];
                     if (distance <= explorationRadius) {
                         bool checked = distanceChecked[objid];

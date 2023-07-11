@@ -17,7 +17,8 @@
 #pragma once
 
 #include "tann/common/defines.h"
-
+#include "tann/common/exception.h"
+#include "tann/common/config.h"
 #if defined(NGT_NO_AVX)
 #warning "*** SIMD is *NOT* available! ***"
 #else

@@ -1102,7 +1102,7 @@ namespace tann {
 
     protected:
         void
-        addBKNNGEdge(ObjectID target, ObjectID addID, Distance addDistance) {
+        addBKNNGEdge(ObjectID target, ObjectID addID, distance_type addDistance) {
             if (repository.isEmpty(target)) {
                 VectorDistances objs;
                 objs.push_back(VectorDistance(addID, addDistance));
@@ -1113,7 +1113,7 @@ namespace tann {
         }
 
     public:
-        void addEdge(GraphNode &node, ObjectID addID, Distance addDistance, bool identityCheck = true) {
+        void addEdge(GraphNode &node, ObjectID addID, distance_type addDistance, bool identityCheck = true) {
             VectorDistance obj(addID, addDistance);
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
             GraphNode::iterator ni = std::lower_bound(node.begin(repository.allocator), node.end(repository.allocator), obj);
@@ -1145,7 +1145,7 @@ namespace tann {
 
         // identityCheck is checking whether the same edge has already added to the node.
         // return whether truncation is needed that means the node has too many edges.
-        bool addEdge(ObjectID target, ObjectID addID, Distance addDistance, bool identityCheck = true) {
+        bool addEdge(ObjectID target, ObjectID addID, distance_type addDistance, bool identityCheck = true) {
             size_t minsize = 0;
             GraphNode &node = property.truncationThreshold == 0 ? *getNode(target) : *getNode(target, minsize);
             try {
@@ -1163,7 +1163,7 @@ namespace tann {
         }
 
         void
-        addEdgeDeletingExcessEdges(ObjectID target, ObjectID addID, Distance addDistance, bool identityCheck = true) {
+        addEdgeDeletingExcessEdges(ObjectID target, ObjectID addID, distance_type addDistance, bool identityCheck = true) {
             GraphNode &node = *getNode(target);
             size_t kEdge = property.edgeSizeForCreation - 1;
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR

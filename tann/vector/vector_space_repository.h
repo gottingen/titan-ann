@@ -20,7 +20,7 @@
 //#include    "common.h"
 #include "tann/vector/vector_space.h"
 #include "tann/vector/vector_repository.h"
-#include "tann/vector/primitive_comparator.h"
+#include "tann/comparator/primitive_comparator.h"
 #include "tann/vector/vector_view.h"
 
 class VectorSpace;
@@ -67,43 +67,16 @@ namespace tann {
 
         class ComparatorHammingDistance : public Comparator {
         public:
-#ifdef NGT_SHARED_MEMORY_ALLOCATOR
-            ComparatorHammingDistance(size_t d, SharedMemoryAllocator &a) : Comparator(d, a) {}
-        double operator()(Object &objecta, Object &objectb) {
-          return PrimitiveComparator::compareHammingDistance((OBJECT_TYPE*)&objecta[0], (OBJECT_TYPE*)&objectb[0], dimension);
-        }
-        double operator()(Object &objecta, PersistentObject &objectb) {
-          return PrimitiveComparator::compareHammingDistance((OBJECT_TYPE*)&objecta[0], (OBJECT_TYPE*)&objectb.at(0, allocator), dimension);
-        }
-        double operator()(PersistentObject &objecta, PersistentObject &objectb) {
-          return PrimitiveComparator::compareHammingDistance((OBJECT_TYPE*)&objecta.at(0, allocator), (OBJECT_TYPE*)&objectb.at(0, allocator), dimension);
-        }
-#else
-
             ComparatorHammingDistance(size_t d) : Comparator(d) {}
 
             double operator()(Object &objecta, Object &objectb) {
                 return PrimitiveComparator::compareHammingDistance((OBJECT_TYPE *) &objecta[0],
                                                                    (OBJECT_TYPE *) &objectb[0], dimension);
             }
-
-#endif
         };
 
         class ComparatorJaccardDistance : public Comparator {
         public:
-#ifdef NGT_SHARED_MEMORY_ALLOCATOR
-            ComparatorJaccardDistance(size_t d, SharedMemoryAllocator &a) : Comparator(d, a) {}
-            double operator()(Object &objecta, Object &objectb) {
-          return PrimitiveComparator::compareJaccardDistance((OBJECT_TYPE*)&objecta[0], (OBJECT_TYPE*)&objectb[0], dimension);
-        }
-        double operator()(Object &objecta, PersistentObject &objectb) {
-          return PrimitiveComparator::compareJaccardDistance((OBJECT_TYPE*)&objecta[0], (OBJECT_TYPE*)&objectb.at(0, allocator), dimension);
-        }
-        double operator()(PersistentObject &objecta, PersistentObject &objectb) {
-          return PrimitiveComparator::compareJaccardDistance((OBJECT_TYPE*)&objecta.at(0, allocator), (OBJECT_TYPE*)&objectb.at(0, allocator), dimension);
-        }
-#else
 
             ComparatorJaccardDistance(size_t d) : Comparator(d) {}
 
@@ -111,8 +84,6 @@ namespace tann {
                 return PrimitiveComparator::compareJaccardDistance((OBJECT_TYPE *) &objecta[0],
                                                                    (OBJECT_TYPE *) &objectb[0], dimension);
             }
-
-#endif
         };
 
         class ComparatorSparseJaccardDistance : public Comparator {
@@ -142,27 +113,12 @@ namespace tann {
 
         class ComparatorAngleDistance : public Comparator {
         public:
-#ifdef NGT_SHARED_MEMORY_ALLOCATOR
-            ComparatorAngleDistance(size_t d, SharedMemoryAllocator &a) : Comparator(d, a) {}
-        double operator()(Object &objecta, Object &objectb) {
-          return PrimitiveComparator::compareAngleDistance((OBJECT_TYPE*)&objecta[0], (OBJECT_TYPE*)&objectb[0], dimension);
-        }
-        double operator()(Object &objecta, PersistentObject &objectb) {
-          return PrimitiveComparator::compareAngleDistance((OBJECT_TYPE*)&objecta[0], (OBJECT_TYPE*)&objectb.at(0, allocator), dimension);
-        }
-        double operator()(PersistentObject &objecta, PersistentObject &objectb) {
-          return PrimitiveComparator::compareAngleDistance((OBJECT_TYPE*)&objecta.at(0, allocator), (OBJECT_TYPE*)&objectb.at(0, allocator), dimension);
-        }
-#else
-
             ComparatorAngleDistance(size_t d) : Comparator(d) {}
 
             double operator()(Object &objecta, Object &objectb) {
                 return PrimitiveComparator::compareAngleDistance((OBJECT_TYPE *) &objecta[0],
                                                                  (OBJECT_TYPE *) &objectb[0], dimension);
             }
-
-#endif
         };
 
         class ComparatorNormalizedAngleDistance : public Comparator {
@@ -524,9 +480,9 @@ namespace tann {
                     continue;
                 }
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-                Distance d = (*comparator)((Object&)query, (PersistentObject&)*rep[idx]);
+                distance_type d = (*comparator)((Object&)query, (PersistentObject&)*rep[idx]);
 #else
-                Distance d = (*comparator)((Object &) query, (Object &) *rep[idx]);
+                distance_type d = (*comparator)((Object &) query, (Object &) *rep[idx]);
 #endif
                 if (radius < 0.0 || d <= radius) {
                     tann::VectorDistance obj(idx, d);

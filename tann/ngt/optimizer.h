@@ -1497,7 +1497,7 @@ namespace tann {
                     queryObjects.push_back(index.allocateObject(*i));
                 }
                 int identityCount = 0;
-                std::vector<tann::Distance> lastDistances(nOfQueries);
+                std::vector<tann::distance_type> lastDistances(nOfQueries);
                 double time = 0.0;
                 double step = 0.02;
                 for (float e = 0.0; e < 10.0; e += step) {
@@ -1518,7 +1518,7 @@ namespace tann {
                             msg << "generatePseudoGroundTruth: Cannot get any search result.";
                             TANN_THROW(msg);
                         }
-                        tann::Distance d = results.back().distance;
+                        tann::distance_type d = results.back().distance;
                         if (d != lastDistances[idx]) {
                             identity = false;
                         }

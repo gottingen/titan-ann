@@ -22,7 +22,7 @@ namespace tann {
 
     enum class MetricType {
         MetricTypeNone = -1,
-        /// d = 1.0 - sum(Ai*Bi)
+        /// d = sum(|Ai - Bi|)
         MetricTypeL1 = 0,
         /// d = sum((Ai-Bi)^2)
         MetricTypeL2 = 1,

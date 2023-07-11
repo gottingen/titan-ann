@@ -91,8 +91,8 @@ namespace tann {
             static const double Pivot;
             ObjectID id;
             PersistentObject *object;
-            Distance distance;
-            Distance leafDistance;
+            distance_type distance;
+            distance_type leafDistance;
             int clusterID;
         };
 
@@ -224,9 +224,9 @@ namespace tann {
 #endif
             }
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
-            borders = allocator.getOffset(new(allocator) Distance[childrenSize - 1]);
+            borders = allocator.getOffset(new(allocator) distance_type[childrenSize - 1]);
 #else
-            borders = new Distance[childrenSize - 1];
+            borders = new distance_type[childrenSize - 1];
 #endif
             for (size_t i = 0; i < childrenSize - 1; i++) {
 #if defined(NGT_SHARED_MEMORY_ALLOCATOR)
@@ -247,12 +247,12 @@ namespace tann {
 
 #ifdef NGT_SHARED_MEMORY_ALLOCATOR
         ID *getChildren(SharedMemoryAllocator &allocator) { return (ID*)allocator.getAddr(children); }
-        Distance *getBorders(SharedMemoryAllocator &allocator) { return (Distance*)allocator.getAddr(borders); }
+        distance_type *getBorders(SharedMemoryAllocator &allocator) { return (distance_type*)allocator.getAddr(borders); }
 #else // NGT_SHARED_MEMORY_ALLOCATOR
 
         ID *getChildren() { return children; }
 
-        Distance *getBorders() { return borders; }
+        distance_type *getBorders() { return borders; }
 
 #endif // NGT_SHARED_MEMORY_ALLOCATOR
 
@@ -431,7 +431,7 @@ namespace tann {
         off_t		borders;
 #else
         ID *children;
-        Distance *borders;
+        distance_type *borders;
 #endif
     };
 

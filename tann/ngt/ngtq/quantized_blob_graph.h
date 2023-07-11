@@ -495,7 +495,7 @@ namespace QBG {
       graph.search(sc);
     }
 
-    tann::Distance getDistance(void *objects, std::vector<float> &distances, size_t noOfObjects, NGTQ::QuantizedObjectDistance::DistanceLookupTableUint8 &lut
+    tann::distance_type getDistance(void *objects, std::vector<float> &distances, size_t noOfObjects, NGTQ::QuantizedObjectDistance::DistanceLookupTableUint8 &lut
 			      ) {
       auto &quantizedObjectDistance = getQuantizer().getQuantizedObjectDistance();
 #ifdef NGTQBG_MIN
@@ -508,8 +508,8 @@ namespace QBG {
 #endif
     }
 
-    std::tuple<tann::Distance, tann::Distance>
-      judge(NGTQG::QuantizedNode &ivi, size_t k, tann::Distance radius,
+    std::tuple<tann::distance_type, tann::distance_type>
+      judge(NGTQG::QuantizedNode &ivi, size_t k, tann::distance_type radius,
 	    NGTQ::QuantizedObjectDistance::DistanceLookupTableUint8 &lut,
 	    tann::NeighborhoodGraph::ResultSet &result, size_t &foundCount
 	    ) {
@@ -585,8 +585,8 @@ namespace QBG {
       size_t foundCount = 0;
 
       size_t k = searchContainer.size;
-      tann::Distance radius = FLT_MAX;
-      tann::Distance distance;
+      tann::distance_type radius = FLT_MAX;
+      tann::distance_type distance;
       tann::NeighborhoodGraph::ResultSet result;
 #ifdef NGTQG_ZERO_GLOBAL
       std::tie(distance, radius) = judge(quantizedBlobGraph[seedBlobID], k, radius, lut, result, foundCount);
@@ -682,8 +682,8 @@ namespace QBG {
       size_t foundCount = 0;
 
       size_t k = searchContainer.size;
-      tann::Distance radius = FLT_MAX;
-      tann::Distance distance;
+      tann::distance_type radius = FLT_MAX;
+      tann::distance_type distance;
       tann::NeighborhoodGraph::ResultSet result;
 
       for (size_t idx = 0; idx < blobs.size(); idx++) {
@@ -765,7 +765,7 @@ namespace QBG {
 #endif
     std::sort(seeds.begin(), seeds.end());
     tann::VectorDistance currentNearestBlob = seeds.front();
-    tann::Distance explorationRadius = searchContainer.blobExplorationCoefficient * currentNearestBlob.distance;
+    tann::distance_type explorationRadius = searchContainer.blobExplorationCoefficient * currentNearestBlob.distance;
     std::priority_queue<tann::VectorDistance, std::vector<tann::VectorDistance>, std::greater<tann::VectorDistance>> discardedObjects;
     untracedNodes.push(seeds.front());
     distanceChecked.insert(seeds.front().id);
@@ -791,7 +791,7 @@ namespace QBG {
       std::cerr << "Fatal inner error! Invalid object type." << std::endl;
     }
     quantizedObjectDistance.rotation->mul(rotatedQuery.data());
-    tann::Distance radius = searchContainer.radius;
+    tann::distance_type radius = searchContainer.radius;
     if (requestedSize >= std::numeric_limits<int32_t>::max()) {
       radius *= searchContainer.explorationCoefficient;
     }
@@ -818,7 +818,7 @@ namespace QBG {
 	  quantizedObjectDistance.initialize((*luti).second);
 	  quantizedObjectDistance.createDistanceLookup(rotatedQuery.data(), subspaceID, (*luti).second);
 	}
-	tann::Distance blobDistance;
+	tann::distance_type blobDistance;
 	size_t foundCount;
 	std::tie(blobDistance, radius) = judge(quantizedBlobGraph[blobID], requestedSize, 
 					       radius, (*luti).second, results, foundCount);
@@ -884,7 +884,7 @@ namespace QBG {
 #ifdef NGT_DISTANCE_COMPUTATION_COUNT
 	searchContainer.distanceComputationCount++;
 #endif
-	tann::Distance distance = 0.0;
+	tann::distance_type distance = 0.0;
 	if (objectSpace.getObjectType() == typeid(float)) {
 	  distance = tann::PrimitiveComparator::L2Float::compare(searchContainer.object.getPointer(),
 							        neighborptr->second->getPointer(), dimension);

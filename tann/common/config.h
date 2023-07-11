@@ -23,7 +23,7 @@
 
 namespace tann {
     typedef unsigned int ObjectID;
-    typedef float Distance;
+    typedef float distance_type;
 #ifdef TANN_ENABLE_HALF_FLOAT
     typedef half_float::half float16;
 #endif
