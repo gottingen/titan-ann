@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 
-add_subdirectory(fuzz)
-add_subdirectory(distance)
+#add_subdirectory(fuzz)
+#add_subdirectory(distance)

@@ -1,0 +1,56 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#ifndef TANN_GRAPH_K_NEAREST_NEIGHBORHOOD_GRAPH_H_
+#define TANN_GRAPH_K_NEAREST_NEIGHBORHOOD_GRAPH_H_
+
+#include "tann/graph/neighborhood_graph.h"
+
+namespace tann {
+    namespace COMMON {
+        class KNearestNeighborhoodGraph : public NeighborhoodGraph {
+        public:
+            KNearestNeighborhoodGraph() { m_pNeighborhoodGraph.SetName("NNG"); }
+
+            void
+            RebuildNeighbors(VectorIndex *index, const SizeType node, SizeType *nodes, const BasicResult *queryResults,
+                             const int numResults) {
+                DimensionType count = 0;
+                for (int j = 0; j < numResults && count < m_iNeighborhoodSize; j++) {
+                    const BasicResult &item = queryResults[j];
+                    if (item.VID < 0) break;
+                    IF_DEBUG(if (item.VID >= index->GetNumSamples())
+                                 throw std::out_of_range("VID: "s + std::string(item->VID) + ", Samples: "s +
+                                                         std::string(index->GetNumSamples()));)
+                    if (item.VID == node) continue;
+                    nodes[count++] = item.VID;
+                }
+                for (DimensionType j = count; j < m_iNeighborhoodSize; j++) nodes[j] = -1;
+            }
+
+            void InsertNeighbors(VectorIndex *index, const SizeType node, SizeType insertNode, float insertDist) {
+                std::lock_guard<std::mutex> lock(m_dataUpdateLock[node]);
+
+                SizeType *nodes = m_pNeighborhoodGraph[node];
+                SizeType tmpNode;
+                float tmpDist;
+                for (DimensionType k = 0; k < m_iNeighborhoodSize; k++) {
+                    tmpNode = nodes[k];
+                    if (tmpNode < -1) break;
+
+                    if (tmpNode < 0 ||
+                        (tmpDist = index->ComputeDistance(index->GetSample(node), index->GetSample(tmpNode))) >
+                        insertDist
+                        || (insertDist == tmpDist && insertNode < tmpNode)) {
+                        nodes[k] = insertNode;
+                        while (tmpNode >= 0 && ++k < m_iNeighborhoodSize && nodes[k] >= -1) {
+                            std::swap(tmpNode, nodes[k]);
+                        }
+                        break;
+                    }
+                }
+            }
+        };
+    }
+}
+#endif  // TANN_GRAPH_K_NEAREST_NEIGHBORHOOD_GRAPH_H_

@@ -14,3 +14,6 @@ facebookresearch/faiss@v1.7.3 -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -
 ###############
 # doctest
 doctest/doctest@v2.4.11 -DDOCTEST_WITH_TESTS=OFF -DDOCTEST_WITH_MAIN_IN_STATIC_LIB=OFF
+###################
+# facebook/zstd
+facebook/zstd@v1.5.5 --cmake build/cmake

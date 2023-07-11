@@ -14,22 +14,32 @@
 # limitations under the License.
 #
 
-file(GLOB_RECURSE NGT_SRC "ngt/*.cc")
-file(GLOB_RECURSE INDEX_SRC "index/*.cc")
-file(GLOB_RECURSE COMMON_SRC "common/*.cc")
-file(GLOB_RECURSE STORE_SRC "store/*.cc")
+file(GLOB_RECURSE CORE_SRC "core/*.cc")
+file(GLOB_RECURSE UTILITY_SRC "utility/*.cc")
+file(GLOB_RECURSE IO_SRC "io/*.cc")
+file(GLOB_RECURSE QUANTIZER_SRC "quantizer/*.cc")
+file(GLOB_RECURSE VECTOR_SRC "vector/*.cc")
+file(GLOB_RECURSE GRAPH_SRC "graph/*.cc")
 file(GLOB_RECURSE DISTANCE_SRC "distance/*.cc")
+set(LIB_SRC
+        ${CORE_SRC}
+        ${UTILITY_SRC}
+        ${IO_SRC}
+        ${QUANTIZER_SRC}
+        ${VECTOR_SRC}
+        ${GRAPH_SRC}
+        ${DISTANCE_SRC}
+        )
 carbin_cc_library(
         NAMESPACE tann
-        NAME ngt
+        NAME tann
         SOURCES
-        ${NGT_SRC}
-        ${INDEX_SRC}
-        ${COMMON_SRC}
-        ${DISTANCE_SRC}
-        ${STORE_SRC}
+        ${LIB_SRC}
         COPTS
         ${CARBIN_CXX_OPTIONS}
+        "-Wno-pessimizing-move"
+        "-Wno-delete-non-virtual-dtor"
+        "-Wno-reorder"
         DEPS
         ${CARBIN_DEPS_LINK}
         turbo
