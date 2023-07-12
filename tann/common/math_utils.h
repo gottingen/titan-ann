@@ -3,8 +3,7 @@
 
 #pragma once
 
-#include "tann/vamana/common_includes.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/common_includes.h"
 
 namespace math_utils {
 

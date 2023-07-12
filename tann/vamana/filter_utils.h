@@ -15,8 +15,8 @@
 #include <set>
 #include <tuple>
 #include <string>
-#include "tann/vamana/tsl/robin_map.h"
-#include "tann/vamana/tsl/robin_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/tsl/robin_set.h"
 
 #ifdef __APPLE__
 #else
@@ -41,10 +41,10 @@ typedef int FileHandle;
 
 #endif
 
-#include "tann/vamana/cached_io.h"
-#include "tann/vamana/common_includes.h"
-#include "tann/vamana/memory_mapper.h"
-#include "tann/vamana/utils.h"
+#include "tann/io/cached_io.h"
+#include "tann/common/common_includes.h"
+#include "tann/io/memory_mapper.h"
+#include "tann/common/utils.h"
 #include "turbo/platform/port.h"
 
 // custom types (for readability)

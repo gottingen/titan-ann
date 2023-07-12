@@ -8,9 +8,9 @@
 #include <limits>
 #include <vector>
 
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "tann/vamana/disk_utils.h"
-#include "tann/vamana/cached_io.h"
+#include "tann/io/cached_io.h"
 #include "tann_cli.h"
 
 namespace detail {

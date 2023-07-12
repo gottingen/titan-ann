@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include <errno.h>
+#include <cerrno>
 
-#include "tann/vamana/common_includes.h"
+#include "tann/common/common_includes.h"
 
 #ifdef __APPLE__
 #else
@@ -24,13 +24,12 @@ typedef HANDLE FileHandle;
 typedef int FileHandle;
 #endif
 
-#include "tann/vamana/distance.h"
-#include "logger.h"
-#include "tann/vamana/cached_io.h"
-#include "tann/vamana/ann_exception.h"
+#include "tann/common/logger.h"
+#include "tann/io/cached_io.h"
+#include "tann/common/ann_exception.h"
 #include "turbo/platform/port.h"
-#include "tann/vamana/tsl/robin_set.h"
-#include "tann/vamana/types.h"
+#include "tann/tsl/robin_set.h"
+#include "tann/common/types.h"
 
 #ifdef EXEC_ENV_OLS
 #include "content_buf.h"
@@ -886,24 +885,6 @@ namespace tann {
     TURBO_DLL void normalize_data_file(const std::string &inFileName, const std::string &outFileName);
 
 }; // namespace tann
-
-struct PivotContainer {
-    PivotContainer() = default;
-
-    PivotContainer(size_t pivo_id, float pivo_dist) : piv_id{pivo_id}, piv_dist{pivo_dist} {
-    }
-
-    bool operator<(const PivotContainer &p) const {
-        return p.piv_dist < piv_dist;
-    }
-
-    bool operator>(const PivotContainer &p) const {
-        return p.piv_dist > piv_dist;
-    }
-
-    size_t piv_id;
-    float piv_dist;
-};
 
 inline bool validate_index_file_size(std::ifstream &in) {
     if (!in.is_open())

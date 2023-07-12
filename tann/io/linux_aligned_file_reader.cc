@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/linux_aligned_file_reader.h"
+#include "tann/io/linux_aligned_file_reader.h"
 
 #include <cassert>
 #include <cstdio>
 #include <iostream>
-#include "tsl/robin_map.h"
-#include "tann/vamana/utils.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/common/utils.h"
 
 #define MAX_EVENTS 1024
 

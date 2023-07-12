@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #include <iostream>
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "tann_cli.h"
 namespace detail {
     void block_convert(std::ifstream &reader, std::ofstream &writer, float *read_buf, uint8_t *write_buf, size_t npts,

@@ -8,8 +8,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "logger.h"
-#include "tann/vamana/ann_exception.h"
+#include "tann/common/logger.h"
+#include "tann/common/ann_exception.h"
 
 namespace tann {
 // sequential cached reads

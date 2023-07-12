@@ -2,9 +2,8 @@
 // Licensed under the MIT license.
 
 #include <memory>
-#include "tann/vamana/in_mem_data_store.h"
-
-#include "tann/vamana/utils.h"
+#include "tann/store/in_mem_data_store.h"
+#include "tann/common/utils.h"
 
 namespace tann {
 

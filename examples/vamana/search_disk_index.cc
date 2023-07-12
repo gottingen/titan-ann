@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/common_includes.h"
+#include "tann/common/common_includes.h"
 
 #include "tann/vamana/index.h"
 #include "tann/vamana/disk_utils.h"
-#include "tann/vamana/math_utils.h"
-#include "tann/vamana/memory_mapper.h"
+#include "tann/common/math_utils.h"
+#include "tann/io/memory_mapper.h"
 #include "tann/vamana/partition.h"
 #include "tann/vamana/pq_flash_index.h"
 #include "tann/vamana/timer.h"
@@ -18,7 +18,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "tann/vamana/linux_aligned_file_reader.h"
+#include "tann/io/linux_aligned_file_reader.h"
 
 #else
 #ifdef USE_BING_INFRA

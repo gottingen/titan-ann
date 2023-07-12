@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 #include <stdio.h>
 
 #ifdef EXEC_ENV_OLS
-#include "aligned_file_reader.h"
+#include "tann/io/aligned_file_reader.h"
 #endif
 
 const uint32_t MAX_REQUEST_SIZE = 1024 * 1024 * 1024; // 64MB

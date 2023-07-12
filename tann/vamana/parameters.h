@@ -7,7 +7,7 @@
 #include <typeinfo>
 #include <unordered_map>
 
-#include "defaults.h"
+#include "tann/vamana/defaults.h"
 
 namespace tann {
 

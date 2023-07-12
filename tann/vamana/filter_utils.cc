@@ -12,7 +12,7 @@
 #include "tann/vamana/filter_utils.h"
 #include "tann/vamana/index.h"
 #include "tann/vamana/parameters.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 namespace tann {
     /*

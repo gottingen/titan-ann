@@ -8,18 +8,18 @@
 #include <string>
 
 #include <omp.h>
-#include "tsl/robin_map.h"
-#include "tann/vamana/tsl/robin_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/tsl/robin_set.h"
 
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && defined(TANN_BUILD)
 #include "gperftools/malloc_extension.h"
 #endif
 
-#include "tann/vamana/utils.h"
-#include "tann/vamana/math_utils.h"
+#include "tann/common/utils.h"
+#include "tann/common/math_utils.h"
 #include "tann/vamana/index.h"
 #include "tann/vamana/parameters.h"
-#include "tann/vamana/memory_mapper.h"
+#include "tann/io/memory_mapper.h"
 #include "tann/vamana/partition.h"
 
 #ifdef _WINDOWS

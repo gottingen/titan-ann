@@ -12,7 +12,7 @@
 #include "tann/vamana/neighbor.h"
 #include "tann/vamana/parameters.h"
 #include "turbo/container/flat_hash_set.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 #include "turbo/platform/port.h"
 

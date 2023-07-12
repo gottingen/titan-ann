@@ -3,9 +3,9 @@
 
 #include <omp.h>
 
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "tann/vamana/disk_utils.h"
-#include "tann/vamana/math_utils.h"
+#include "tann/common/math_utils.h"
 #include "tann/vamana/index.h"
 #include "tann/vamana/partition.h"
 #include "turbo/flags/flags.h"

@@ -9,7 +9,7 @@
 #include "tann/vamana/timer.h"
 #include <future>
 #include "turbo/flags/flags.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 #ifndef _WINDOWS
 
@@ -19,7 +19,7 @@
 
 #endif
 
-#include "tann/vamana/memory_mapper.h"
+#include "tann/io/memory_mapper.h"
 
 // load_aligned_bin modified to read pieces of the file, but using ifstream
 // instead of cached_ifstream.

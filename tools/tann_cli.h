@@ -15,7 +15,8 @@
 #include "turbo/flags/flags.h"
 #include "turbo/format/print.h"
 #include "tann/vamana/filter_utils.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
+#include "tann/distance/distance.h"
 
 #ifndef TANN_TOOLS_TANN_CLI_H_
 #define TANN_TOOLS_TANN_CLI_H_

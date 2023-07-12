@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "abstract_data_store.h"
+#include "tann/store/abstract_data_store.h"
 
 namespace tann {
 

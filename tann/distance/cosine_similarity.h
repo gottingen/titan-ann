@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "simd_utils.h"
+#include "tann/distance/simd_utils.h"
 
 extern bool Avx2SupportedCPU;
 

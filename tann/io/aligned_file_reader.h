@@ -69,8 +69,8 @@ struct IOContext
 #include <cstdio>
 #include <mutex>
 #include <thread>
-#include "tsl/robin_map.h"
-#include "tann/vamana/utils.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/common/utils.h"
 
 // NOTE :: all 3 fields must be 512-aligned
 struct AlignedRead {

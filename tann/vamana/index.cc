@@ -4,11 +4,11 @@
 #include <type_traits>
 #include <omp.h>
 
-#include "tann/vamana/tsl/robin_set.h"
-#include "tsl/robin_map.h"
-#include "tann/vamana/dynamic_bitset.h"
+#include "tann/tsl/robin_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/common/dynamic_bitset.h"
 
-#include "tann/vamana/memory_mapper.h"
+#include "tann/io/memory_mapper.h"
 #include "tann/vamana/timer.h"
 #include "turbo/platform/port.h"
 

@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "logger.h"
-#include "tann/vamana/memory_mapper.h"
+#include "tann/common/logger.h"
+#include "tann/io/memory_mapper.h"
 #include <iostream>
 #include <sstream>
 

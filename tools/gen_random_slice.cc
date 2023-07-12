@@ -13,7 +13,7 @@
 #include <sstream>
 #include <string>
 #include "tann/vamana/partition.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "tann_cli.h"
 
 #include <fcntl.h>

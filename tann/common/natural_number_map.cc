@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#include "tann/vamana/natural_number_map.h"
+#include "tann/common/natural_number_map.h"
 
 namespace tann
 {

@@ -31,11 +31,10 @@ typedef HANDLE FileHandle;
 typedef int FileHandle;
 #endif
 
-#include "tann/vamana/cached_io.h"
-#include "tann/vamana/common_includes.h"
-
-#include "tann/vamana/utils.h"
+#include "tann/io/cached_io.h"
+#include "tann/common/common_includes.h"
 #include "turbo/platform/port.h"
+#include "tann/distance/distance.h"
 
 namespace tann {
     const size_t MAX_SAMPLE_POINTS_FOR_WARMUP = 100000;

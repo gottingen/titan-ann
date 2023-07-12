@@ -7,7 +7,7 @@
 #include <cmath>
 #include "turbo/flags/flags.h"
 #include "tann_cli.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 namespace detail {
     int block_write_float(std::ofstream &writer, size_t ndims, size_t npts, float norm) {

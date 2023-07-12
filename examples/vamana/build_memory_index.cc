@@ -4,7 +4,7 @@
 #include <omp.h>
 #include <cstring>
 #include "tann/vamana/index.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 #ifndef _WINDOWS
 
@@ -15,8 +15,8 @@
 #include <Windows.h>
 #endif
 
-#include "tann/vamana/memory_mapper.h"
-#include "tann/vamana/ann_exception.h"
+#include "tann/io/memory_mapper.h"
+#include "tann/common/ann_exception.h"
 #include "turbo/flags/flags.h"
 
 template<typename T, typename TagT = uint32_t, typename LabelT = uint32_t>

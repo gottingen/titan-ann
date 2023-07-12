@@ -1,17 +1,17 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/common_includes.h"
+#include "tann/common/common_includes.h"
 
 #include "tann/vamana/timer.h"
 #include "tann/vamana/pq_flash_index.h"
-#include "cosine_similarity.h"
+#include "tann/distance/cosine_similarity.h"
 
 #ifdef _WINDOWS
 #include "windows_aligned_file_reader.h"
 #else
 
-#include "tann/vamana/linux_aligned_file_reader.h"
+#include "tann/io/linux_aligned_file_reader.h"
 
 #endif
 

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/math_utils.h"
+#include "tann/common/math_utils.h"
 #include "tann/vamana/pq.h"
 #include "tann/vamana/partition.h"
 #include "tann_cli.h"

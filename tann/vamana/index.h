@@ -3,22 +3,22 @@
 
 #pragma once
 
-#include "tann/vamana/common_includes.h"
+#include "tann/common/common_includes.h"
 
 #ifdef EXEC_ENV_OLS
-#include "aligned_file_reader.h"
+#include "tann/io/aligned_file_reader.h"
 #endif
 
-#include "tann/vamana/distance.h"
-#include "tann/vamana/locking.h"
-#include "tann/vamana/natural_number_map.h"
-#include "tann/vamana/natural_number_set.h"
+#include "tann/distance/distance.h"
+#include "tann/common/locking.h"
+#include "tann/common/natural_number_map.h"
+#include "tann/common/natural_number_set.h"
 #include "tann/vamana/neighbor.h"
 #include "tann/vamana/parameters.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "turbo/platform/port.h"
 #include "tann/vamana/scratch.h"
-#include "tann/vamana/in_mem_data_store.h"
+#include "tann/store/in_mem_data_store.h"
 
 #define OVERHEAD_FACTOR 1.1
 #define EXPAND_IF_FULL 0

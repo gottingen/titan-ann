@@ -18,7 +18,7 @@
 #include <typeinfo>
 
 #include "tann/vamana/partition.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "tann_cli.h"
 
 namespace detail {

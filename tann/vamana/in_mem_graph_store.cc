@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #include "in_mem_graph_store.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 namespace tann {
 

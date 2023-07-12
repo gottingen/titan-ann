@@ -18,9 +18,9 @@
 
 #endif
 
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "tann/vamana/index.h"
-#include "tann/vamana/memory_mapper.h"
+#include "tann/io/memory_mapper.h"
 #include "tann_cli.h"
 
 namespace detail {

@@ -5,8 +5,8 @@
 
 #include "tann/vamana/pq.h"
 #include "tann/vamana/partition.h"
-#include "tann/vamana/math_utils.h"
-#include "tsl/robin_map.h"
+#include "tann/common/math_utils.h"
+#include "tann/tsl/robin_map.h"
 
 // block size for reading/processing large files and matrices in blocks
 #define BLOCK_SIZE 5000000

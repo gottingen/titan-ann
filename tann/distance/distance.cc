@@ -10,14 +10,14 @@
 #include <immintrin.h>
 #endif
 
-#include "simd_utils.h"
-#include "tann/vamana/cosine_similarity.h"
+#include "tann/distance/simd_utils.h"
+#include "tann/distance/cosine_similarity.h"
 #include <iostream>
 
-#include "tann/vamana/distance.h"
-#include "tann/vamana/utils.h"
-#include "logger.h"
-#include "tann/vamana/ann_exception.h"
+#include "tann/distance/distance.h"
+#include "tann/common/utils.h"
+#include "tann/common/logger.h"
+#include "tann/common/ann_exception.h"
 
 namespace tann
 {

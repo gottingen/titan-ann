@@ -17,8 +17,8 @@
 #include <omp.h>
 #include <mkl/mkl.h>
 #include <unordered_map>
-#include "tann/vamana/tsl/robin_map.h"
-#include "tann/vamana/tsl/robin_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/tsl/robin_set.h"
 #include "tann_cli.h"
 
 #ifdef _WINDOWS
@@ -30,7 +30,7 @@
 #endif
 
 #include "tann/vamana/filter_utils.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 // WORKS FOR UPTO 2 BILLION POINTS (as we use INT INSTEAD OF UNSIGNED)
 

@@ -15,7 +15,7 @@
 #include <iomanip>
 #include <set>
 #include "tann_cli.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 #ifndef _WINDOWS
 

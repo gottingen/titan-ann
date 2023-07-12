@@ -4,15 +4,15 @@
 #pragma once
 
 #include <vector>
-#include "tann/vamana/dynamic_bitset.h"
-#include "tann/vamana/tsl/robin_set.h"
-#include "tsl/robin_map.h"
-#include "tsl/sparse_map.h"
+#include "tann/common/dynamic_bitset.h"
+#include "tann/tsl/robin_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/tsl/sparse_map.h"
 
 #include "tann/vamana/neighbor.h"
-#include "concurrent_queue.h"
+#include "tann/common/concurrent_queue.h"
 #include "tann/vamana/pq.h"
-#include "aligned_file_reader.h"
+#include "tann/io/aligned_file_reader.h"
 
 // In-mem index related limits
 #define GRAPH_SLACK_FACTOR 1.3

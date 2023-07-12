@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/common_includes.h"
+#include "tann/common/common_includes.h"
 
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && defined(TANN_BUILD)
 #include "gperftools/malloc_extension.h"
 #endif
 
-#include "logger.h"
+#include "tann/common/logger.h"
 #include "tann/vamana/disk_utils.h"
-#include "tann/vamana/cached_io.h"
+#include "tann/io/cached_io.h"
 #include "tann/vamana/index.h"
 #include "mkl/mkl.h"
 #include "omp.h"
@@ -17,7 +17,7 @@
 #include "tann/vamana/partition.h"
 #include "tann/vamana/pq_flash_index.h"
 #include "tann/vamana/timer.h"
-#include "tann/vamana/tsl/robin_set.h"
+#include "tann/tsl/robin_set.h"
 
 namespace tann {
 

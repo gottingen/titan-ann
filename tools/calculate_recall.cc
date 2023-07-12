@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "tann/vamana/disk_utils.h"
 #include "tann_cli.h"
 

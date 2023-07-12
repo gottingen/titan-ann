@@ -4,7 +4,7 @@
 #include <mutex>
 
 #ifdef _WINDOWS
-#include "windows_slim_lock.h"
+#include "tann/common/windows_slim_lock.h"
 #endif
 
 namespace tann {

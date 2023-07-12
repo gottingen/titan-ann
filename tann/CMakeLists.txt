@@ -18,6 +18,17 @@
 ###########################################################################
 ###carbin_example
 file(GLOB_RECURSE VAM_SRC vamana/*.cc)
+file(GLOB_RECURSE COMMON_SRC common/*.cc)
+file(GLOB_RECURSE STORE_SRC store/*.cc)
+file(GLOB_RECURSE IO_SRC io/*.cc)
+file(GLOB_RECURSE DISTANCE_SRC distance/*.cc)
+set(TANN_LIB_SRC
+        ${COMMON_SRC}
+        ${VAM_SRC}
+        ${STORE_SRC}
+        ${IO_SRC}
+        ${DISTANCE_SRC}
+        )
 add_definitions(
         -DUSE_AVX2
 )
@@ -25,7 +36,7 @@ carbin_cc_library(
         NAMESPACE tann
         NAME tann
         SOURCES
-        ${VAM_SRC}
+        ${TANN_LIB_SRC}
         COPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS

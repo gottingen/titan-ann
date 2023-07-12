@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/dynamic_bitset.h"
+#include "tann/common/dynamic_bitset.h"
 
-#include "tann/vamana/ann_exception.h"
-#include "tann/vamana/natural_number_set.h"
+#include "tann/common/ann_exception.h"
+#include "tann/common/natural_number_set.h"
 
 namespace tann
 {

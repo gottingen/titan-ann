@@ -3,12 +3,30 @@
 
 #include <limits>
 #include <malloc.h>
-#include "tann/vamana/math_utils.h"
+#include "tann/common/math_utils.h"
 #include <mkl/mkl.h>
-#include "tann/vamana/logger.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/logger.h"
 
 namespace math_utils {
+
+    struct PivotContainer {
+        PivotContainer() = default;
+
+        PivotContainer(size_t pivo_id, float pivo_dist) : piv_id{pivo_id}, piv_dist{pivo_dist} {
+        }
+
+        bool operator<(const PivotContainer &p) const {
+            return p.piv_dist < piv_dist;
+        }
+
+        bool operator>(const PivotContainer &p) const {
+            return p.piv_dist > piv_dist;
+        }
+
+        size_t piv_id;
+        float piv_dist;
+    };
+
 
     float calc_distance(float *vec_1, float *vec_2, size_t dim) {
         float dist = 0;
@@ -45,16 +63,16 @@ namespace math_utils {
         tann::cout << "done." << std::endl;
     }
 
-// calculate k closest centers to data of num_points * dim (row major)
-// centers is num_centers * dim (row major)
-// data_l2sq has pre-computed squared norms of data
-// centers_l2sq has pre-computed squared norms of centers
-// pre-allocated center_index will contain id of nearest center
-// pre-allocated dist_matrix shound be num_points * num_centers and contain
-// squared distances
-// Default value of k is 1
+    // calculate k closest centers to data of num_points * dim (row major)
+    // centers is num_centers * dim (row major)
+    // data_l2sq has pre-computed squared norms of data
+    // centers_l2sq has pre-computed squared norms of centers
+    // pre-allocated center_index will contain id of nearest center
+    // pre-allocated dist_matrix shound be num_points * num_centers and contain
+    // squared distances
+    // Default value of k is 1
 
-// Ideally used only by compute_closest_centers
+    // Ideally used only by compute_closest_centers
     void compute_closest_centers_in_block(const float *const data, const size_t num_points, const size_t dim,
                                           const float *const centers, const size_t num_centers,
                                           const float *const docs_l2sq, const float *const centers_l2sq,

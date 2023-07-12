@@ -3,7 +3,8 @@
 
 #pragma once
 
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
+#include "tann/distance/distance.h"
 
 #define NUM_PQ_BITS 8
 #define NUM_PQ_CENTROIDS (1 << NUM_PQ_BITS)

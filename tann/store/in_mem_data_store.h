@@ -4,16 +4,13 @@
 #include <shared_mutex>
 #include <memory>
 
-#include "tsl/robin_map.h"
-#include "tann/vamana/tsl/robin_set.h"
-#include "tsl/sparse_map.h"
-// #include "boost/dynamic_bitset.hpp"
-
-#include "abstract_data_store.h"
-
-#include "tann/vamana/distance.h"
-#include "tann/vamana/natural_number_map.h"
-#include "tann/vamana/natural_number_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/tsl/robin_set.h"
+#include "tann/tsl/sparse_map.h"
+#include "tann/store/abstract_data_store.h"
+#include "tann/distance/distance.h"
+#include "tann/common/natural_number_map.h"
+#include "tann/common/natural_number_set.h"
 
 namespace tann {
     template<typename data_t>

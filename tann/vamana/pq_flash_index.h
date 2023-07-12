@@ -3,19 +3,19 @@
 
 #pragma once
 
-#include "tann/vamana/common_includes.h"
+#include "tann/common/common_includes.h"
 
-#include "aligned_file_reader.h"
-#include "concurrent_queue.h"
+#include "tann/io/aligned_file_reader.h"
+#include "tann/common/concurrent_queue.h"
 #include "tann/vamana/neighbor.h"
 #include "tann/vamana/parameters.h"
 #include "tann/vamana/percentile_stats.h"
 #include "tann/vamana/pq.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 #include "turbo/platform/port.h"
 #include "tann/vamana/scratch.h"
-#include "tsl/robin_map.h"
-#include "tann/vamana/tsl/robin_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/tsl/robin_set.h"
 
 #define FULL_PRECISION_REORDER_MULTIPLIER 3
 

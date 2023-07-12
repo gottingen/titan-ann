@@ -19,8 +19,8 @@
 #endif
 
 #include "tann/vamana/index.h"
-#include "tann/vamana/memory_mapper.h"
-#include "tann/vamana/utils.h"
+#include "tann/io/memory_mapper.h"
+#include "tann/common/utils.h"
 #include "turbo/flags/flags.h"
 
 template<typename T, typename LabelT = uint32_t>

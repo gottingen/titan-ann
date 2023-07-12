@@ -30,8 +30,8 @@
 #include <omp.h>
 #include <mkl/mkl.h>
 #include <unordered_map>
-#include "tann/vamana/tsl/robin_map.h"
-#include "tann/vamana/tsl/robin_set.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/tsl/robin_set.h"
 #include "tann_cli.h"
 
 

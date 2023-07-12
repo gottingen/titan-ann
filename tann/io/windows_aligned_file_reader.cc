@@ -3,9 +3,9 @@
 
 #ifdef _WINDOWS
 #ifndef USE_BING_INFRA
-#include "windows_aligned_file_reader.h"
+#include "tann/io/windows_aligned_file_reader.h"
 #include <iostream>
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 #define SECTOR_LEN 4096
 

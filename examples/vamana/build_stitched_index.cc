@@ -18,9 +18,9 @@
 
 #include "turbo/flags/flags.h"
 #include "tann/vamana/index.h"
-#include "tann/vamana/memory_mapper.h"
+#include "tann/io/memory_mapper.h"
 #include "tann/vamana/parameters.h"
-#include "tann/vamana/utils.h"
+#include "tann/common/utils.h"
 
 typedef std::tuple<std::vector<std::vector<uint32_t>>, uint64_t> stitch_indices_return_values;
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "tann/vamana/types.h"
+#include "tann/common/types.h"
 
 namespace tann {
 

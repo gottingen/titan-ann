@@ -12,9 +12,9 @@
 #include <cstdio>
 #include <mutex>
 #include <thread>
-#include "aligned_file_reader.h"
-#include "tsl/robin_map.h"
-#include "tann/vamana/utils.h"
+#include "tann/io/aligned_file_reader.h"
+#include "tann/tsl/robin_map.h"
+#include "tann/common/utils.h"
 #include "turbo/platform/port.h"
 
 class WindowsAlignedFileReader : public AlignedFileReader

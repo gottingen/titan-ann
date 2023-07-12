@@ -6,8 +6,8 @@
 #include <sstream>
 #include <mutex>
 
-#include "tann/vamana/ann_exception.h"
-#include "logger.h"
+#include "tann/common/ann_exception.h"
+#include "tann/common/logger.h"
 
 namespace tann {
     class ANNStreamBuf : public std::basic_streambuf<char> {
