@@ -87,7 +87,7 @@ int search_disk_index(tann::Metric &metric, const std::string &index_path_prefix
     reader.reset(new tann::BingAlignedFileReader());
 #endif
 #else
-    reader.reset(new LinuxAlignedFileReader());
+    reader.reset(new tann::LinuxAlignedFileReader());
 #endif
 
     std::unique_ptr<tann::PQFlashIndex<T, LabelT>> _pFlashIndex(

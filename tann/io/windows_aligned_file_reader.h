@@ -17,6 +17,7 @@
 #include "tann/common/utils.h"
 #include "turbo/platform/port.h"
 
+namespace tann {
 class WindowsAlignedFileReader : public AlignedFileReader
 {
   private:
@@ -53,5 +54,6 @@ class WindowsAlignedFileReader : public AlignedFileReader
     // NOTE :: blocking call for the calling thread, but can thread-safe
     TURBO_DLL virtual void read(std::vector<AlignedRead> &read_reqs, IOContext &ctx, bool async) override;
 };
+}
 #endif // USE_BING_INFRA
 #endif //_WINDOWS
