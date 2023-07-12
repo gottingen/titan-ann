@@ -10,31 +10,45 @@
 #include <string>
 #include <vector>
 
-#include "tann/disk_utils.h"
-#include "tann/cached_io.h"
-#include "tann/utils.h"
+#include "tann/vamana/disk_utils.h"
+#include "tann/vamana/cached_io.h"
+#include "tann/vamana/utils.h"
+#include "tann_cli.h"
 
-int main(int argc, char **argv) {
-    if (argc != 9) {
-        std::cout << argv[0]
-                  << " vamana_index_prefix[1] vamana_index_suffix[2] "
-                     "idmaps_prefix[3] "
-                     "idmaps_suffix[4] n_shards[5] max_degree[6] "
-                     "output_vamana_path[7] "
-                     "output_medoids_path[8]"
-                  << std::endl;
-        exit(-1);
+namespace detail {
+
+    static std::string vamana_prefix;
+    static std::string vamana_suffix;
+    static std::string idmaps_prefix;
+    static std::string idmaps_suffix;
+    static uint64_t nshards;
+    static uint32_t max_degree;
+
+    static std::string output_index;
+    static std::string output_medoids;
+
+
+}
+namespace tann {
+    void set_merge_shards(turbo::App &app) {
+        auto *sub = app.add_subcommand("merge_shards", "merge_shards");
+        sub->add_option("-p, --vamana_prefix", detail::vamana_prefix, "input data path")->required();
+        sub->add_option("-s, --vamana_suffix", detail::vamana_suffix, "path to output")->required();
+        sub->add_option("-i, --idmaps_prefix", detail::idmaps_prefix, "path to output")->required();
+        sub->add_option("-I, --idmaps_suffix", detail::idmaps_suffix, "path to output")->required();
+        sub->add_option("-n, --nshards", detail::nshards, "path to output")->required();
+        sub->add_option("-m, --max_degree", detail::max_degree, "path to output")->required();
+        sub->add_option("-o, --output_medoids", detail::output_medoids, "path to output")->required();
+        sub->add_option("-x, --output_index", detail::output_index, "path to output")->required();
+        sub->callback([]() {
+            merge_shards();
+        });
     }
 
-    std::string vamana_prefix(argv[1]);
-    std::string vamana_suffix(argv[2]);
-    std::string idmaps_prefix(argv[3]);
-    std::string idmaps_suffix(argv[4]);
-    uint64_t nshards = (uint64_t) std::atoi(argv[5]);
-    uint32_t max_degree = (uint64_t) std::atoi(argv[6]);
-    std::string output_index(argv[7]);
-    std::string output_medoids(argv[8]);
+    void merge_shards() {
 
-    return tann::merge_shards(vamana_prefix, vamana_suffix, idmaps_prefix, idmaps_suffix, nshards, max_degree,
-                              output_index, output_medoids);
-}
+        tann::merge_shards(detail::vamana_prefix, detail::vamana_suffix, detail::idmaps_prefix, detail::idmaps_suffix,
+                           detail::nshards, detail::max_degree,
+                           detail::output_index, detail::output_medoids);
+    }
+}  // namespace tann

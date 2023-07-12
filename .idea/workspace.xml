@@ -11,39 +11,16 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
-      <config projectName="tann" targetName="gen_random_slice" />
+      <config projectName="tann" targetName="search_memory_index" />
+      <config projectName="tann" targetName="tann" />
+      <config projectName="tann" targetName="search_disk_index" />
       <config projectName="tann" targetName="test_insert_deletes_consolidate" />
       <config projectName="tann" targetName="test_streaming_scenario" />
       <config projectName="tann" targetName="build_memory_index" />
-      <config projectName="tann" targetName="float_bin_to_int8" />
-      <config projectName="tann" targetName="partition_with_ram_budget" />
-      <config projectName="tann" targetName="count_bfs_levels" />
-      <config projectName="tann" targetName="uint32_to_uint8" />
-      <config projectName="tann" targetName="generate_synthetic_labels" />
-      <config projectName="tann" targetName="uint8_to_float" />
-      <config projectName="tann" targetName="generate_pq" />
-      <config projectName="tann" targetName="bin_to_tsv" />
-      <config projectName="tann" targetName="calculate_recall" />
-      <config projectName="tann" targetName="tsv_to_bin" />
-      <config projectName="tann" targetName="stats_label_data" />
-      <config projectName="tann" targetName="ivecs_to_bin" />
-      <config projectName="tann" targetName="search_disk_index" />
-      <config projectName="tann" targetName="simulate_aggregate_recall" />
-      <config projectName="tann" targetName="compute_groundtruth" />
-      <config projectName="tann" targetName="int8_to_float_scale" />
-      <config projectName="tann" targetName="vector_analysis" />
+      <config projectName="tann" targetName="tann_STATIC" />
       <config projectName="tann" targetName="build_stitched_index" />
-      <config projectName="tann" targetName="int8_to_float" />
-      <config projectName="tann" targetName="tann" />
-      <config projectName="tann" targetName="range_search_disk_index" />
-      <config projectName="tann" targetName="rand_data_gen" />
-      <config projectName="tann" targetName="search_memory_index" />
-      <config projectName="tann" targetName="create_disk_layout" />
-      <config projectName="tann" targetName="fvecs_to_bin" />
-      <config projectName="tann" targetName="fvecs_to_bvecs" />
-      <config projectName="tann" targetName="partition_data" />
-      <config projectName="tann" targetName="merge_shards" />
       <config projectName="tann" targetName="build_disk_index" />
+      <config projectName="tann" targetName="range_search_disk_index" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -59,8 +36,312 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/benchmark/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/carbin.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/benchmark/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/carbin_arch.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/carbin_module.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/carbin_option.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_cc_benchmark.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_check_function_keywords.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_check_lfs.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/recipes/require_doctest.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_deps.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/foo.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/foo.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/main.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/object.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/object.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/shared.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/changeme/shared.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/cmake/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/cmake/user_deps.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/conda/bld.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/conda/conda_build_config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/conda/environment_linux.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/conda/environment_osx.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/conda/meta.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/conda/run.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/examples/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/examples/foo_ex.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/tests/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/tests/foo_doctest.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/tests/foo_test.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin/carbin/cmake/master.tar.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/arch/carbin_arm.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/arch/carbin_avx.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/arch/carbin_sse.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/carbin_arch.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/carbin_module.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/carbin_option.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/copts/carbin_generated_copts.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/copts/configure_copts.bzl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/copts/copts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/copts/generate_copts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_cc_benchmark.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_cc_binary.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_cc_library.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_cc_test.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_check.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_check_function_keywords.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_check_lfs.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_color.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_compile_proto.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_config_cxx_opts.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_include.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_install_dirs.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_outof_source.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_package_generator.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_package_rpm.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_pkg_dump.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_platform.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_print.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/modules/carbin_variable.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/package/carbin_config.cmake.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/package/pkg_dump_template.pc.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/package/preinst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/package/prerm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/recipes/require_benchmark.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/recipes/require_doctest.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/recipes/require_leveldb.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/recipes/require_openssl.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/recipes/require_rocksdb.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_cmake/recipes/require_turbo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carbin_deps.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake/user_cxx_config.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake/user_deps.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/conda/environment_osx.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/conda/run.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/vamana/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/vamana/dynamic_index.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/vamana/filtered_in_memory.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/vamana/filtered_ssd_index.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/vamana/dynamic_bitset.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/main.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/tann_cli.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/tann_cli.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BUILD.bazel" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bWORKSPACE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/carbin_cxx_config.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/cmake/user_cxx_config.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/carbin_deps.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/carbin_module.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/carbin_option.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/carbin_simd.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/CompileProto.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_compile_proto.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_cc_benchmark.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_cc_binary.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_cc_binary.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_cc_library.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_cc_library.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_cc_test.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_cc_test.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_check.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_check.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_color.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_color.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_config_cxx_opts.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_config_cxx_opts.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_include.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_include.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_install_dirs.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_install_dirs.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_outof_source.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_outof_source.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_package_generator.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_package_generator.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_package_rpm.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_package_rpm.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_pkg_dump.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_pkg_dump.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_platform.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_platform.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_print.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_print.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_print_list.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/modules/carbin_variable.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/modules/carbin_variable.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/package/carbin_config.cmake.in" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/package/carbin_config.cmake.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/package/pkg_dump_template.pc.in" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/package/pkg_dump_template.pc.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/package/postinst" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/package/postinst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/package/postrm" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/package/postrm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/package/preinst" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/package/preinst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/package/prerm" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/package/prerm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/FindAIO.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin_cmake/recipes/FindAIO.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/FindCUDA.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/FindJemalloc.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/FindMKL.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin_cmake/recipes/FindMKL.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findbenchmark.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findboost.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findc-ares.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findgflags.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findglog.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findgmock.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findgperftools.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findgtest.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findleveldb.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findprotobuf.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/Findsnappy.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_benchmark.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/recipes/require_benchmark.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_gflags.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_gmock.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_gtest.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_leveldb.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/recipes/require_leveldb.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_openssl.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_pcre.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_rocksdb.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/recipes/require_rocksdb.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/recipes/require_turbo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/recipes/require_turbo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/simd/FindArm.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/arch/carbin_arm.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/simd/FindAvx.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/arch/carbin_avx.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/simd/FindSSE.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/arch/carbin_sse.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/bld-py.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/bld.sh" beforeDir="false" afterPath="$PROJECT_DIR$/conda/bld.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/conda_build_config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/conda_build_config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/environment_linux.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/environment_linux.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conda/meta.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conda/meta.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/GENERATED_TurboCopts.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/GENERATED_copts.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/carbin_cmake/copts/carbin_generated_copts.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/TurboConfigureCopts.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/carbin_generated_copts.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/copts/carbin_generated_copts.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/carbin_generated_copts.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/copts/carbin_generated_copts.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/configure_copts.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/copts/configure_copts.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/copts.py" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/copts/copts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copts/generate_copts.py" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/copts/generate_copts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/in_memory_index.md" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/in_memory_index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ssd_index.md" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/ssd_index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/apps/cluster.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/apps/in-mem-dynamic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/apps/in-mem-static.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/apps/insert-in-clustered-order.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/apps/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/_builder.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/_builder.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/_common.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/_disk_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/_dynamic_memory_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/_static_memory_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/py.typed" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/conda/bld.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/tannpy/tann_bindings.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/BUILD.bazel" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tann/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/abstract_data_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/abstract_data_store.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/abstract_data_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/abstract_data_store.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/abstract_graph_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/abstract_graph_store.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/aligned_file_reader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/ann_exception.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/ann_exception.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/ann_exception.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/ann_exception.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/boost_dynamic_bitset_fwd.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/boost_dynamic_bitset_fwd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/cached_io.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/cached_io.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/common_includes.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/common_includes.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/concurrent_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/concurrent_queue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/cosine_similarity.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/cosine_similarity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/defaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/defaults.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/disk_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/disk_utils.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/disk_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/disk_utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/distance.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/distance.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/distance.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/distance.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/exceptions.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/exceptions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/filter_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/filter_utils.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/filter_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/filter_utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_data_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/in_mem_data_store.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_data_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/in_mem_data_store.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_graph_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/in_mem_graph_store.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/in_mem_graph_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/in_mem_graph_store.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/index.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/index.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/linux_aligned_file_reader.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/linux_aligned_file_reader.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/linux_aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/linux_aligned_file_reader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/locking.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/locking.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/logger.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/logger.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/logger.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/logger.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/logger_impl.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/logger_impl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/math_utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/math_utils.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/math_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/math_utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/memory_mapper.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/memory_mapper.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/memory_mapper.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/memory_mapper.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/natural_number_map.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/natural_number_map.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/natural_number_map.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/natural_number_map.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/natural_number_set.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/natural_number_set.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/natural_number_set.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/natural_number_set.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/neighbor.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/neighbor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/parameters.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/parameters.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/partition.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/partition.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/partition.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/partition.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/percentile_stats.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/percentile_stats.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/pq.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/pq.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/pq.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/pq.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/pq_flash_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/pq_flash_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/pq_flash_index.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/pq_flash_index.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/scratch.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/scratch.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/scratch.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/scratch.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/simd_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/simd_utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/timer.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/timer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/.clang-format" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/.clang-format" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/robin_growth_policy.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/robin_growth_policy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/robin_hash.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/robin_hash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/robin_map.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/robin_map.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/robin_set.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/robin_set.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/sparse_growth_policy.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/sparse_growth_policy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/sparse_hash.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/sparse_hash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/sparse_map.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/sparse_map.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/tsl/sparse_set.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/tsl/sparse_set.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/types.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/utils.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/utils.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/windows_aligned_file_reader.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/windows_aligned_file_reader.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/windows_aligned_file_reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/windows_aligned_file_reader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/windows_slim_lock.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/windows_slim_lock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/BUILD.bazel" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/carbin_cmake/package/postinst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/build_disk_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build_memory_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/build_memory_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build_stitched_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/build_stitched_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/carbin_cmake/package/postrm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/fixtures/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/fixtures/build_memory_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/fixtures/create_test_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/fixtures/recall.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/test_builder.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/test_disk_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/test_dynamic_memory_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/python/test_static_memory_index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/range_search_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/range_search_disk_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/search_disk_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/search_disk_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/search_memory_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/search_memory_index.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_insert_deletes_consolidate.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/test_insert_deletes_consolidate.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_streaming_scenario.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/test_streaming_scenario.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/boost/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thirdparty/mkl/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/carbin/carbin/cmake/carbin-template-master/carbin_cmake/recipes/require_openssl.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tools/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/bin_to_tsv.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/bin_to_tsv.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/calculate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/calculate_recall.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/compute_groundtruth.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/compute_groundtruth_for_filters.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/compute_groundtruth_for_filters.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/count_bfs_levels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/count_bfs_levels.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/create_disk_layout.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/create_disk_layout.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/float_bin_to_int8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/float_bin_to_int8.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/fvecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/fvecs_to_bin.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/fvecs_to_bvecs.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/fvecs_to_bvecs.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/gen_random_slice.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/gen_random_slice.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/generate_pq.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/generate_pq.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/generate_synthetic_labels.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/generate_synthetic_labels.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/int8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/int8_to_float.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/int8_to_float_scale.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/int8_to_float_scale.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/ivecs_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/ivecs_to_bin.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/merge_shards.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/merge_shards.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/partition_data.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/partition_with_ram_budget.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/rand_data_gen.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/rand_data_gen.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/simulate_aggregate_recall.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/simulate_aggregate_recall.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/stats_label_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/stats_label_data.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/tsv_to_bin.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/tsv_to_bin.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/uint32_to_uint8.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/uint32_to_uint8.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/uint8_to_float.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/uint8_to_float.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/vector_analysis.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tools/vector_analysis.cc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +387,7 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/ubuntu/github/gottingen/titan-ann/python",
+    "last_opened_file_path": "/home/jeff/github/gottingen/titan-ann/examples/vamana",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -118,19 +399,19 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/python" />
-      <recent name="$PROJECT_DIR$/conda" />
+      <recent name="$PROJECT_DIR$/examples/vamana" />
+      <recent name="$PROJECT_DIR$/carbin_cmake/recipes" />
       <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/tests/utils" />
-      <recent name="$PROJECT_DIR$/tests" />
+      <recent name="$PROJECT_DIR$/tann/vamana" />
+      <recent name="$PROJECT_DIR$/python" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tools" />
       <recent name="$PROJECT_DIR$/tests" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.tann">
-    <configuration name="bin_to_tsv" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="bin_to_tsv" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="bin_to_tsv">
+  <component name="RunManager" selected="CMake Application.tann_STATIC">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -150,91 +431,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="calculate_recall" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="calculate_recall" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="calculate_recall">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="compute_groundtruth" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="compute_groundtruth" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="compute_groundtruth">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="count_bfs_levels" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="count_bfs_levels" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="count_bfs_levels">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="create_disk_layout" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="create_disk_layout" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="create_disk_layout">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="float_bin_to_int8" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="float_bin_to_int8" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="float_bin_to_int8">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="fvecs_to_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="fvecs_to_bin" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="fvecs_to_bin">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="fvecs_to_bvecs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="fvecs_to_bvecs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="fvecs_to_bvecs">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="gen_random_slice" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="gen_random_slice" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="gen_random_slice">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="generate_pq" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="generate_pq" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="generate_pq">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="generate_synthetic_labels" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="generate_synthetic_labels" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="generate_synthetic_labels">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="int8_to_float" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="int8_to_float" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="int8_to_float">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="int8_to_float_scale" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="int8_to_float_scale" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="int8_to_float_scale">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ivecs_to_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="ivecs_to_bin" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="ivecs_to_bin">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="merge_shards" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="merge_shards" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="merge_shards">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="partition_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="partition_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="partition_data">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="partition_with_ram_budget" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="partition_with_ram_budget" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="partition_with_ram_budget">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="rand_data_gen" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="rand_data_gen" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="rand_data_gen">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="range_search_disk_index" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="range_search_disk_index" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="range_search_disk_index">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -250,17 +446,12 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="simulate_aggregate_recall" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="simulate_aggregate_recall" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="simulate_aggregate_recall">
+    <configuration name="tann" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="tann" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="tann">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="stats_label_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="stats_label_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="stats_label_data">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="tann" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="tann" CONFIG_NAME="Debug">
+    <configuration name="tann_STATIC" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="tann_STATIC" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -275,60 +466,17 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="tsv_to_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="tsv_to_bin" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="tsv_to_bin">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="uint32_to_uint8" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="uint32_to_uint8" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="uint32_to_uint8">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="uint8_to_float" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="uint8_to_float" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="uint8_to_float">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="vector_analysis" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="vector_analysis" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="vector_analysis">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <list>
-      <item itemvalue="CMake Application.tann" />
-      <item itemvalue="CMake Application.bin_to_tsv" />
       <item itemvalue="CMake Application.build_disk_index" />
       <item itemvalue="CMake Application.build_memory_index" />
       <item itemvalue="CMake Application.build_stitched_index" />
-      <item itemvalue="CMake Application.calculate_recall" />
-      <item itemvalue="CMake Application.compute_groundtruth" />
-      <item itemvalue="CMake Application.count_bfs_levels" />
-      <item itemvalue="CMake Application.create_disk_layout" />
-      <item itemvalue="CMake Application.float_bin_to_int8" />
-      <item itemvalue="CMake Application.fvecs_to_bin" />
-      <item itemvalue="CMake Application.fvecs_to_bvecs" />
-      <item itemvalue="CMake Application.gen_random_slice" />
-      <item itemvalue="CMake Application.generate_pq" />
-      <item itemvalue="CMake Application.generate_synthetic_labels" />
-      <item itemvalue="CMake Application.int8_to_float" />
-      <item itemvalue="CMake Application.int8_to_float_scale" />
-      <item itemvalue="CMake Application.ivecs_to_bin" />
-      <item itemvalue="CMake Application.merge_shards" />
-      <item itemvalue="CMake Application.partition_data" />
-      <item itemvalue="CMake Application.partition_with_ram_budget" />
-      <item itemvalue="CMake Application.rand_data_gen" />
       <item itemvalue="CMake Application.range_search_disk_index" />
       <item itemvalue="CMake Application.search_disk_index" />
       <item itemvalue="CMake Application.search_memory_index" />
-      <item itemvalue="CMake Application.simulate_aggregate_recall" />
-      <item itemvalue="CMake Application.stats_label_data" />
       <item itemvalue="CMake Application.test_insert_deletes_consolidate" />
       <item itemvalue="CMake Application.test_streaming_scenario" />
-      <item itemvalue="CMake Application.tsv_to_bin" />
-      <item itemvalue="CMake Application.uint32_to_uint8" />
-      <item itemvalue="CMake Application.uint8_to_float" />
-      <item itemvalue="CMake Application.vector_analysis" />
+      <item itemvalue="CMake Application.tann_STATIC" />
+      <item itemvalue="CMake Application.tann" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

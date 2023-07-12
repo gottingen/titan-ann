@@ -1,11 +1,11 @@
 #
-# Copyright 2023 The Turbo Authors.
+# Copyright 2023 The titan-search Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      https://www.apache.org/licenses/LICENSE-2.0
+#    https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,21 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-file(GLOB TANN_SRC "*.cc")
-
-
+###########################################################################
+# below are examples, after initialization, modify it to your own.
+###########################################################################
+###carbin_example
+file(GLOB_RECURSE VAM_SRC vamana/*.cc)
+add_definitions(
+        -DUSE_AVX2
+)
 carbin_cc_library(
         NAMESPACE tann
         NAME tann
         SOURCES
-        ${TANN_SRC}
+        ${VAM_SRC}
         COPTS
-        ${CARBIN_DEFAULT_COPTS}
-        ${OpenMP_CXX_FLAGS}
-        ${USER_FLAGS}
+        ${CARBIN_CXX_OPTIONS}
         DEPS
         ${CARBIN_DEPS_LINK}
         PUBLIC
 )
-

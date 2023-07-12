@@ -2,20 +2,31 @@
 // Licensed under the MIT license.
 
 #include <iostream>
-#include "tann/utils.h"
+#include "tann/vamana/utils.h"
+#include "tann_cli.h"
+namespace detail {
 
-int main(int argc, char **argv) {
-    if (argc != 3) {
-        std::cout << argv[0] << " input_int8_bin output_float_bin" << std::endl;
-        exit(-1);
+    static std::string input;
+    static std::string output;
+}  // namespace detail
+
+namespace tann {
+    void set_int8_to_float(turbo::App &app) {
+        auto *sub = app.add_subcommand("int8_to_float", "int8_to_float");
+        sub->add_option("-i, --input", detail::input, "input data path")->required();
+        sub->add_option("-o, --output", detail::output, "path to output")->required();
+        sub->callback([]() {
+            int8_to_float();
+        });
     }
-
-    int8_t *input;
-    size_t npts, nd;
-    tann::load_bin<int8_t>(argv[1], input, npts, nd);
-    float *output = new float[npts * nd];
-    tann::convert_types<int8_t, float>(input, output, npts, nd);
-    tann::save_bin<float>(argv[2], output, npts, nd);
-    delete[] output;
-    delete[] input;
+    void int8_to_float() {
+        int8_t *input;
+        size_t npts, nd;
+        tann::load_bin<int8_t>(detail::input, input, npts, nd);
+        float *output = new float[npts * nd];
+        tann::convert_types<int8_t, float>(input, output, npts, nd);
+        tann::save_bin<float>(detail::output, output, npts, nd);
+        delete[] output;
+        delete[] input;
+    }
 }
