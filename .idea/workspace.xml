@@ -35,11 +35,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/examples/vamana/build_memory_index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vamana/build_memory_index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/vamana/boost_dynamic_bitset_fwd.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/vamana/natural_number_set.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/natural_number_set.h" afterDir="false" />
-    </list>
+    <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
