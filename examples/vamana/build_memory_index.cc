@@ -90,6 +90,10 @@ int main(int argc, char **argv) {
                    "Set true for OPQ compression while using PQ "
                    "distance comparisons for "
                    "building the index, and false for PQ compression")->default_val(false);
+    app.add_option("--use_pq_build", use_pq_build,
+                   "Set true for PQ compression while using PQ "
+                   "distance comparisons for "
+                   "building the index, and false for PQ compression")->default_val(false);
     app.add_option("-l, --label_file", label_file,
                    "Input label file in txt format for Filtered Index search. "
                    "The file should contain comma separated filters for each node "

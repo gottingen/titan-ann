@@ -6,8 +6,6 @@
 #include <memory>
 #include <type_traits>
 
-#include "boost_dynamic_bitset_fwd.h"
-
 namespace tann {
     // A set of natural numbers (from 0 onwards). Made for scenario where the
     // pool of numbers is consecutive from zero to some max value and very
