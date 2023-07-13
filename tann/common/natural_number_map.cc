@@ -7,11 +7,11 @@
 
 namespace tann
 {
-static constexpr auto invalid_position = sul::dynamic_bitset<>::npos;
+static constexpr auto invalid_position = turbo::dynamic_bitset<>::npos;
 
 template <typename Key, typename Value>
 natural_number_map<Key, Value>::natural_number_map()
-    : _size(0), _values_bitset(std::make_unique<sul::dynamic_bitset<>>())
+    : _size(0), _values_bitset(std::make_unique<turbo::dynamic_bitset<>>())
 {
 }
 

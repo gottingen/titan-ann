@@ -5,10 +5,12 @@
 
 namespace tann {
     enum Metric {
-        L2 = 0,
-        INNER_PRODUCT = 1,
-        COSINE = 2,
-        FAST_L2 = 3
+        UN_DEFINE = 0,
+        L1,
+        L2,
+        INNER_PRODUCT ,
+        COSINE,
+        FAST_L2
     };
 
     template<typename T>

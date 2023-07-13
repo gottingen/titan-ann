@@ -4,7 +4,7 @@
 #pragma once
 
 #include <vector>
-#include "tann/common/dynamic_bitset.h"
+#include "turbo/container/dynamic_bitset.h"
 #include "tann/tsl/robin_set.h"
 #include "tann/tsl/robin_map.h"
 #include "tann/tsl/sparse_map.h"
@@ -78,7 +78,7 @@ namespace tann {
             return _inserted_into_pool_rs;
         }
 
-        inline sul::dynamic_bitset<> &inserted_into_pool_bs() {
+        inline turbo::dynamic_bitset<> &inserted_into_pool_bs() {
             return *_inserted_into_pool_bs;
         }
 
@@ -131,7 +131,7 @@ namespace tann {
         // Use a pointer here to allow for forward declaration of dynamic_bitset
         // in public headers to avoid making boost a dependency for clients
         // of Tann.
-        sul::dynamic_bitset<> *_inserted_into_pool_bs;
+        turbo::dynamic_bitset<> *_inserted_into_pool_bs;
 
         // _id_scratch.size() must be > R*GRAPH_SLACK_FACTOR for iterate_to_fp
         std::vector<uint32_t> _id_scratch;

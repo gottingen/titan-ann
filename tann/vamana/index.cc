@@ -5,8 +5,7 @@
 #include <omp.h>
 
 #include "tann/tsl/robin_set.h"
-#include "tann/tsl/robin_map.h"
-#include "tann/common/dynamic_bitset.h"
+#include "turbo/container/dynamic_bitset.h"
 
 #include "tann/io/memory_mapper.h"
 #include "tann/vamana/timer.h"
@@ -772,7 +771,7 @@ namespace tann {
         NeighborPriorityQueue &best_L_nodes = scratch->best_l_nodes();
         best_L_nodes.reserve(Lsize);
         tsl::robin_set<uint32_t> &inserted_into_pool_rs = scratch->inserted_into_pool_rs();
-        sul::dynamic_bitset<> &inserted_into_pool_bs = scratch->inserted_into_pool_bs();
+        turbo::dynamic_bitset<> &inserted_into_pool_bs = scratch->inserted_into_pool_bs();
         std::vector<uint32_t> &id_scratch = scratch->id_scratch();
         std::vector<float> &dist_scratch = scratch->dist_scratch();
         assert(id_scratch.size() == 0);
@@ -2589,7 +2588,7 @@ namespace tann {
     void Index<T, TagT, LabelT>::count_nodes_at_bfs_levels() {
         std::unique_lock<std::shared_timed_mutex> ul(_update_lock);
 
-        sul::dynamic_bitset<> visited(_max_points + _num_frozen_pts);
+        turbo::dynamic_bitset<> visited(_max_points + _num_frozen_pts);
 
         size_t MAX_BFS_LEVELS = 32;
         auto bfs_sets = new tsl::robin_set<uint32_t>[MAX_BFS_LEVELS];
@@ -2675,7 +2674,7 @@ namespace tann {
         NeighborPriorityQueue retset(L);
         std::vector<uint32_t> init_ids(L);
 
-        sul::dynamic_bitset<> flags{_nd, 0};
+        turbo::dynamic_bitset<> flags{_nd, 0};
         uint32_t tmp_l = 0;
         uint32_t *neighbors = (uint32_t *) (_opt_graph + _node_size * _start + _data_len);
         uint32_t MaxM_ep = *neighbors;

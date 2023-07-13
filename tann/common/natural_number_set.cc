@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/common/dynamic_bitset.h"
+#include "turbo/container/dynamic_bitset.h"
 
 #include "tann/common/ann_exception.h"
 #include "tann/common/natural_number_set.h"
@@ -9,7 +9,7 @@
 namespace tann
 {
 template <typename T>
-natural_number_set<T>::natural_number_set() : _values_bitset(std::make_unique<sul::dynamic_bitset<>>())
+natural_number_set<T>::natural_number_set() : _values_bitset(std::make_unique<turbo::dynamic_bitset<>>())
 {
 }
 
