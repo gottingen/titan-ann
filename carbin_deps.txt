@@ -31,7 +31,7 @@ gottingen/bluebird@v0.3.1 -DCARBIN_BUILD_TEST=OFF -DCARBIN_BUILD_BENCHMARK=OFF -
 #########################################################################
 #
 # doctest for testing
-#doctest/doctest@v2.4.11 -DDOCTEST_WITH_MAIN_IN_STATIC_LIB=OFF -DDOCTEST_WITH_TESTS=OFF
+doctest/doctest@v2.4.11 -DDOCTEST_WITH_MAIN_IN_STATIC_LIB=OFF -DDOCTEST_WITH_TESTS=OFF
 ##########################################################################
 # json
 #nlohmann/json@v3.11.2 -DJSON_BuildTests=OFF
