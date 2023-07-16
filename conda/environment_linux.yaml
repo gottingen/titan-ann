@@ -1,4 +1,4 @@
-name: tann-dev
+name: changeme-dev
 channels:
   - conda-forge
   - defaults
@@ -7,9 +7,6 @@ dependencies:
   - gcc =8.5 # [linux]
   - gxx =8.5 # [linux]
   - sysroot_linux-64=2.17 # [linux]
-  - turbo
   - gtest
-  - boost
-  - libaio
   - gmock
-  - mkl-devel  # [x86_64]
+  - benchmark

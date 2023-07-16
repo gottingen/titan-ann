@@ -8,7 +8,6 @@
 #include <omp.h>
 #include <set>
 #include <string.h>
-#include <boost/program_options.hpp>
 
 #ifndef _WINDOWS
 
@@ -19,59 +18,54 @@
 
 #endif
 
-#include "tann/utils.h"
-#include "tann/index.h"
-#include "tann/memory_mapper.h"
+#include "tann/common/utils.h"
+#include "tann/vamana/index.h"
+#include "tann/io/memory_mapper.h"
+#include "tann_cli.h"
 
-namespace po = boost::program_options;
+namespace detail {
+    template<typename T>
+    void bfs_count(const std::string &index_path, uint32_t data_dims) {
+        using TagT = uint32_t;
+        using LabelT = uint32_t;
+        tann::Index<T, TagT, LabelT> index(tann::Metric::L2, data_dims, 0, false, false);
+        std::cout << "Index class instantiated" << std::endl;
+        index.load(index_path.c_str(), 1, 100);
+        std::cout << "Index loaded" << std::endl;
+        index.count_nodes_at_bfs_levels();
+    }
 
-template<typename T>
-void bfs_count(const std::string &index_path, uint32_t data_dims) {
-    using TagT = uint32_t;
-    using LabelT = uint32_t;
-    tann::Index<T, TagT, LabelT> index(tann::Metric::L2, data_dims, 0, false, false);
-    std::cout << "Index class instantiated" << std::endl;
-    index.load(index_path.c_str(), 1, 100);
-    std::cout << "Index loaded" << std::endl;
-    index.count_nodes_at_bfs_levels();
-}
+    static std::string data_type;
+    static std::string index_path_prefix;
+    static std::uint32_t data_dims;
+}  // namespace detail
 
-int main(int argc, char **argv) {
-    std::string data_type, index_path_prefix;
-    uint32_t data_dims;
+namespace tann {
 
-    po::options_description desc{"Arguments"};
-    try {
-        desc.add_options()("help,h", "Print information on arguments");
-        desc.add_options()("data_type", po::value<std::string>(&data_type)->required(), "data type <int8/uint8/float>");
-        desc.add_options()("index_path_prefix", po::value<std::string>(&index_path_prefix)->required(),
-                           "Path prefix to the index");
-        desc.add_options()("data_dims", po::value<uint32_t>(&data_dims)->required(), "Dimensionality of the data");
+    void set_count_bfs_level(turbo::App &app) {
+        auto *sub = app.add_subcommand("count_bfs_level", "count bfs level");
+        sub->add_option("-t, data_type", detail::data_type, "data type <int8/uint8/float>")->required();
+        sub->add_option("-p, --index_path_prefix", detail::index_path_prefix,
+                        "Path prefix to the index")->required();
+        sub->add_option("-d, --data_dims", detail::data_dims, "Dimensionality of the data")->required();
+        sub->callback([]() {
+            count_bfs_level();
+        });
+    }
 
-        po::variables_map vm;
-        po::store(po::parse_command_line(argc, argv, desc), vm);
-        if (vm.count("help")) {
-            std::cout << desc;
-            return 0;
+    void count_bfs_level() {
+        try {
+            if (detail::data_type == std::string("int8"))
+                detail::bfs_count<int8_t>(detail::index_path_prefix, detail::data_dims);
+            else if (detail::data_type == std::string("uint8"))
+                detail::bfs_count<uint8_t>(detail::index_path_prefix, detail::data_dims);
+            if (detail::data_type == std::string("float"))
+                detail::bfs_count<float>(detail::index_path_prefix, detail::data_dims);
         }
-        po::notify(vm);
+        catch (std::exception &e) {
+            std::cout << std::string(e.what()) << std::endl;
+            tann::cerr << "Index BFS failed." << std::endl;
+            return ;
+        }
     }
-    catch (const std::exception &ex) {
-        std::cerr << ex.what() << '\n';
-        return -1;
-    }
-
-    try {
-        if (data_type == std::string("int8"))
-            bfs_count<int8_t>(index_path_prefix, data_dims);
-        else if (data_type == std::string("uint8"))
-            bfs_count<uint8_t>(index_path_prefix, data_dims);
-        if (data_type == std::string("float"))
-            bfs_count<float>(index_path_prefix, data_dims);
-    }
-    catch (std::exception &e) {
-        std::cout << std::string(e.what()) << std::endl;
-        tann::cerr << "Index BFS failed." << std::endl;
-        return -1;
-    }
-}
+}  // namespace tann

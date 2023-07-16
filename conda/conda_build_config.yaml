@@ -7,9 +7,9 @@ MACOSX_SDK_VERSION:  # [osx and x86_64]
 MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64]
   - "10.15"  # [osx and x86_64]
 python:
+  - 3.6
+  - 3.7
   - 3.8
-  - 3.9
-  - 3.10
 channel_sources:
   - titan-search
   - conda-forge
