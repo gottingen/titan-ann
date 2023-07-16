@@ -121,10 +121,34 @@ namespace tann {
         }
     }
 
+    inline void l2_norm(const turbo::array_view<float> &arr, turbo::array_view<float> &dst) {
+        auto norm = get_l2_norm(arr);
+        using b_type = turbo::simd::batch<float, turbo::simd::default_arch>;
+        std::size_t inc = b_type::size;
+        std::size_t size = arr.size();
+        // size for which the vectorization is possible
+        std::size_t vec_size = size - size % inc;
+        for (std::size_t i = 0; i < vec_size; i += inc) {
+            b_type avec = b_type::load(&arr[i], turbo::simd::aligned_mode());
+            avec /=  norm;
+            avec.store(&dst[i], turbo::simd::aligned_mode());
+        }
+        for (std::size_t i = vec_size; i < size; ++i) {
+            dst[i] = arr[i]/norm;
+        }
+    }
+
     inline void l2_norm(turbo::array_view<float16> &arr) {
         auto norm = get_l2_norm(arr);
         for (std::size_t i = 0; i < arr.size(); ++i) {
             arr[i] = arr[i] / norm;
+        }
+    }
+
+    inline void l2_norm(const turbo::array_view<float16> &arr, turbo::array_view<float16> &dst) {
+        auto norm = get_l2_norm(arr);
+        for (std::size_t i = 0; i < arr.size(); ++i) {
+            dst[i] = arr[i] / norm;
         }
     }
 
