@@ -23,9 +23,9 @@
 
 namespace tann {
 
-//
-// Base Class Implementatons
-//
+        //
+        // Base Class Implementatons
+        //
     template<typename T>
     float Distance<T>::compare(const T *a, const T *b, const float normA, const float normB, uint32_t length) const {
         throw std::logic_error("This function is not implemented.");

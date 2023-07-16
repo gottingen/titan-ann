@@ -11,6 +11,7 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
+      <config projectName="tann" targetName="utility_test" />
       <config projectName="tann" targetName="search_memory_index" />
       <config projectName="tann" targetName="tann" />
       <config projectName="tann" targetName="search_disk_index" />
@@ -36,18 +37,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/tann/common/config.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/common/half.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/distance/primitive_comparator.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/distance/primitive_distance.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/distance/primitive_distance.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tann/distance/utility.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/distance/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/distance/test_util.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbin_deps.txt" beforeDir="false" afterPath="$PROJECT_DIR$/carbin_deps.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/common/dynamic_bitset.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/common/natural_number_map.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/common/natural_number_map.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/common/natural_number_map.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/common/natural_number_map.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/common/natural_number_set.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/common/natural_number_set.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/common/natural_number_set.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/common/natural_number_set.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/user_cxx_config.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/user_cxx_config.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tann/distance/distance.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance/distance.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/distance/distance.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance/distance.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/vamana/index.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/index.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/vamana/scratch.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/scratch.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/vamana/scratch.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/vamana/scratch.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/distance/simd_test.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/distance/utility_test.cc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,14 +58,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ClangdSettings">
+    <option name="clangTidyViaClangd" value="false" />
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="CMakeLists.txt" />
         <option value="Python Script" />
+        <option value="CMakeLists.txt" />
       </list>
     </option>
   </component>
@@ -91,9 +95,11 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.advertisement.text.has.clang-format&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/jeff/github/gottingen/titan-ann/examples/vamana&quot;,
+    &quot;ctest.advertisement.all.test.configuration.is.created&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/jeff/github/gottingen/titan-ann/tann/common&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -105,11 +111,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tann/common" />
       <recent name="$PROJECT_DIR$/examples/vamana" />
       <recent name="$PROJECT_DIR$/carbin_cmake/recipes" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/tann/vamana" />
-      <recent name="$PROJECT_DIR$/python" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tann/common" />
@@ -170,6 +176,17 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="utility_test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="tann" TARGET_NAME="utility_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="tann" RUN_TARGET_NAME="utility_test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All CTest" type="CTestRunConfiguration" factoryName="CTestRun" PROGRAM_PARAMS="--extra-verbose" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$CMakeCurrentLocalGenerationDir$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_PATH="$CTestCurrentExecutableName$" EXPLICIT_BUILD_TARGET_NAME="all" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="CMake Application.build_disk_index" />
       <item itemvalue="CMake Application.build_memory_index" />
@@ -180,7 +197,9 @@
       <item itemvalue="CMake Application.test_insert_deletes_consolidate" />
       <item itemvalue="CMake Application.test_streaming_scenario" />
       <item itemvalue="CMake Application.tann_STATIC" />
+      <item itemvalue="CMake Application.utility_test" />
       <item itemvalue="CMake Application.tann" />
+      <item itemvalue="CTest Application.All CTest" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -201,6 +220,16 @@
       <workItem from="1689194844008" duration="83000" />
       <workItem from="1689197782912" duration="6000" />
       <workItem from="1689199109782" duration="1083000" />
+      <workItem from="1689200693011" duration="5166000" />
+      <workItem from="1689261660561" duration="55000" />
+      <workItem from="1689291501320" duration="210000" />
+      <workItem from="1689340160858" duration="5236000" />
+      <workItem from="1689369073678" duration="9729000" />
+      <workItem from="1689415391188" duration="495000" />
+      <workItem from="1689415947103" duration="266000" />
+      <workItem from="1689416605977" duration="2433000" />
+      <workItem from="1689422102649" duration="5459000" />
+      <workItem from="1689444163580" duration="28088000" />
     </task>
     <servers />
   </component>

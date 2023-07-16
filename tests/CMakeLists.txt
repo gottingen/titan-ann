@@ -35,3 +35,4 @@ carbin_cc_test(
         COPTS ${USER_CXX_FLAGS}
 )
 ]]
+add_subdirectory(distance)

@@ -42,6 +42,6 @@ set(CARBIN_CXX_OPTIONS ${CARBIN_DEFAULT_COPTS} ${CARBIN_ARCH_OPTION} ${CARBIN_RA
 #
 # define you options here
 # eg.
-list(APPEND CARBIN_CXX_OPTIONS "-fopenmp")
+list(APPEND CARBIN_CXX_OPTIONS "-fopenmp" "-mf16c")
 list(REMOVE_DUPLICATES CARBIN_CXX_OPTIONS)
 carbin_print_list_label("CXX_OPTIONS:" CARBIN_CXX_OPTIONS)
