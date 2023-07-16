@@ -224,8 +224,8 @@ TEST_CASE_TEMPLATE("normalized cosine distance", T, TEST_NORM_TYPES) {
     tann::PrimDistanceCosine<T> pdc;
     auto n2 = pdc.compare(ax, bx);
     tann::PrimDistanceNormalizedCosine<T> pdnc;
-    pdnc.preprocess_base_points(ax);
-    pdnc.preprocess_base_points(bx);
+    pdnc.preprocess_base_points(ax, 128);
+    pdnc.preprocess_base_points(bx, 128);
     auto n1 = pdnc.compare(ax, bx);
     turbo::Println("nor cosine :{} {}", n1, n2);
     CHECK_LT(fabs(n1 - n2), 0.001);
@@ -249,8 +249,8 @@ TEST_CASE_TEMPLATE("normalized angle distance", T, TEST_NORM_TYPES) {
     tann::PrimDistanceAngle<T> pda;
     auto n2 = pda.compare(ax, bx);
     tann::PrimDistanceNormalizedAngle<T> pdna;
-    pdna.preprocess_base_points(ax);
-    pdna.preprocess_base_points(bx);
+    pdna.preprocess_base_points(ax, 128);
+    pdna.preprocess_base_points(bx,128);
     auto n1 = pdna.compare(ax, bx);
     turbo::Println("nor angle :{} {}", n1, n2);
     CHECK_LT(fabs(n1 - n2), 0.001);

@@ -81,8 +81,6 @@ namespace tann {
         // have to copy data back and forth.
         std::shared_ptr<Distance<data_t>> _distance_fn;
 
-        // in case we need to save vector norms for optimization
-        std::shared_ptr<float[]> _pre_computed_norms;
     };
 
 } // namespace tann

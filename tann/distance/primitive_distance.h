@@ -84,7 +84,7 @@ namespace tann {
         //
         //  TODO: This does not take into account the case for SSD inner product
         //  where the dimensions change after normalization.
-        TURBO_DLL virtual void preprocess_base_points(turbo::array_view<T> &original_data) {
+        TURBO_DLL virtual void preprocess_base_points(turbo::array_view<T> &original_data, size_t dim) {
 
         }
 
@@ -232,8 +232,12 @@ namespace tann {
         //
         //  TODO: This does not take into account the case for SSD inner product
         //  where the dimensions change after normalization.
-        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr) override {
-            l2_norm(arr);
+        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr, size_t dim) override {
+            size_t nvec = arr.size() / dim;
+            for(size_t i = 0; i< nvec; ++i) {
+                turbo::array_view<T> one_v(arr.data() + i * dim, dim, false);
+                l2_norm(one_v);
+            }
         }
 
         // Invokes normalization for a single vector during search. The scratch space
@@ -267,8 +271,12 @@ namespace tann {
             return true;
         }
 
-        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr) override {
-            l2_norm(arr);
+        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr, size_t dim) override {
+            size_t nvec = arr.size() / dim;
+            for(size_t i = 0; i< nvec; ++i) {
+                turbo::array_view<T> one_v(arr.data() + i * dim, dim, false);
+                l2_norm(one_v);
+            }
         }
 
         TURBO_DLL virtual void
@@ -298,8 +306,12 @@ namespace tann {
             return true;
         }
 
-        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr) override {
-            l2_norm(arr);
+        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr, size_t dim) override {
+            size_t nvec = arr.size() / dim;
+            for(size_t i = 0; i< nvec; ++i) {
+                turbo::array_view<T> one_v(arr.data() + i * dim, dim, false);
+                l2_norm(one_v);
+            }
         }
 
         TURBO_DLL virtual void
