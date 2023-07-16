@@ -257,6 +257,35 @@ TEST_CASE_TEMPLATE("normalized angle distance", T, TEST_NORM_TYPES) {
 
 }
 
+TEST_CASE_TEMPLATE("poincare distance", T, TEST_NORM_TYPES) {
+    constexpr std::size_t al = tann::PrimDistanceAngle<T>::alignment_bytes;
+    turbo::Println("al:{}", al);
+    std::vector<T, turbo::simd::aligned_allocator<T, al>> a;
+    std::vector<T, turbo::simd::aligned_allocator<T, al>> b;
+    a.reserve(128);
+    b.reserve(128);
+    for(int i = 0; i< 128; i++) {
+        a.emplace_back(i%20);
+        b.emplace_back((128-i)%10);
+    }
+
+    turbo::array_view<T> ax(a.data(), a.size(), false);
+    turbo::array_view<T> bx(b.data(), a.size(), false);
+    auto an = tann::get_l2_norm(ax);
+    auto bn = tann::get_l2_norm(ax);
+    // make norm < 1
+    for(int i = 0; i< 128; i++) {
+        a[i] /= an * 1.2;
+        b[i] /= bn * 1.1;
+    }
+    tann::PrimDistancePoincare<T> pdp;
+    auto n2 = pdp.compare(ax, bx);
+    auto n1 = tann::PrimComparator::simple_compare_poincare(ax, bx);
+    turbo::Println("poincare :{} {}", n1, n2);
+    CHECK_LT(fabs(n1 - n2), 0.001);
+
+}
+
 TEST_CASE_TEMPLATE("lorentz distance", T, TEST_NORM_TYPES) {
     constexpr std::size_t al = tann::PrimDistanceAngle<T>::alignment_bytes;
     turbo::Println("al:{}", al);

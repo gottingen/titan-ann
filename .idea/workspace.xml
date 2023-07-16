@@ -37,20 +37,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tann/common/config.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/common/half.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/distance/primitive_comparator.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/distance/primitive_distance.cc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/distance/primitive_distance.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tann/distance/utility.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/distance/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/distance/test_util.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbin_deps.txt" beforeDir="false" afterPath="$PROJECT_DIR$/carbin_deps.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake/user_cxx_config.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/user_cxx_config.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tann/distance/distance.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance/distance.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/distance/simd_test.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/distance/utility_test.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/distance/utility_test.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/distance/utility_test.cc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -229,7 +217,7 @@
       <workItem from="1689415947103" duration="266000" />
       <workItem from="1689416605977" duration="2433000" />
       <workItem from="1689422102649" duration="5459000" />
-      <workItem from="1689444163580" duration="28088000" />
+      <workItem from="1689444163580" duration="28397000" />
     </task>
     <servers />
   </component>
