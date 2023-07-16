@@ -37,8 +37,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2364ff41-cbf3-458c-bb36-09223523b48f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/distance/utility_test.cc" beforeDir="false" afterPath="$PROJECT_DIR$/tests/distance/utility_test.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tann/distance/primitive_distance.h" beforeDir="false" afterPath="$PROJECT_DIR$/tann/distance/primitive_distance.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

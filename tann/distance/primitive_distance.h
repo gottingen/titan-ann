@@ -28,6 +28,7 @@ namespace tann {
         METRIC_L2,
         METRIC_IP,
         METRIC_HAMMING,
+        METRIC_JACCARD,
         METRIC_COSINE,
         METRIC_ANGLE,
         METRIC_NORMALIZED_COSINE,
@@ -147,7 +148,7 @@ namespace tann {
     template<typename T>
     class PrimDistanceJaccard : public DistanceBase<T> {
     public:
-        PrimDistanceJaccard() : DistanceBase<T>(tann::MetricType::METRIC_HAMMING) {}
+        PrimDistanceJaccard() : DistanceBase<T>(tann::MetricType::METRIC_JACCARD) {}
         // distance comparison function
         TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
             return PrimComparator::compare_jaccard(a,b);
