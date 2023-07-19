@@ -14,12 +14,24 @@
 
 carbin_cc_test(
         NAME
-        primitive_comparator_test
+        simd_test
         SOURCES
-        primitive_comparator_test.cc
+        simd_test.cc
         COPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         tann::tann
         ${CARBIN_DEPS_LINK}
 )
+#[[
+carbin_cc_test(
+        NAME
+        vector_space_test
+        SOURCES
+        vector_space_test.cc
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        DEPS
+        tann::tann
+        ${CARBIN_DEPS_LINK}
+)]]

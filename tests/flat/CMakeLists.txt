@@ -14,9 +14,9 @@
 
 carbin_cc_test(
         NAME
-        primitive_comparator_test
+        flat_index_test
         SOURCES
-        primitive_comparator_test.cc
+        flat_index_test.cc
         COPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS

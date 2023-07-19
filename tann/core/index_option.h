@@ -11,20 +11,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+#ifndef TANN_CORE_INDEX_OPTION_H_
+#define TANN_CORE_INDEX_OPTION_H_
 
+#include "tann/core/types.h"
 
-#ifndef TANN_TEST_UTIL_H
-#define TANN_TEST_UTIL_H
-#include "tann/common/config.h"
+namespace tann {
 
-#define TEST_NORMAL_TYPES uint8_t, int32_t, int64_t, float
+    struct IndexOption {
+        // common option
+        DataType data_type{DataType::DT_NONE};
+        MetricType metric{MetricType::UNDEFINED};
+        std::size_t dimension{0};
+    };
+}  // namespace tann
 
-#define SIMD_TEST_TYPES uint8_t, uint16_t, uint32_t, uint64_t, float, double
-
-#define TEST_TYPES uint8_t, tann::float16, int32_t, int64_t, float
-
-#define TEST_HM_TYPES uint8_t, uint32_t, uint64_t
-
-#define TEST_NORM_TYPES tann::float16, float
-
-#endif //TANN_TEST_UTIL_H
+#endif  // TANN_CORE_INDEX_OPTION_H_

@@ -8,7 +8,7 @@
 #ifdef EXEC_ENV_OLS
 #include "tann/io/aligned_file_reader.h"
 #endif
-
+#include "tann/distance/distance_factory.h"
 #include "tann/distance/distance.h"
 #include "tann/common/locking.h"
 #include "tann/common/natural_number_map.h"

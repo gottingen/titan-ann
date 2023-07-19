@@ -14,9 +14,22 @@
 
 carbin_cc_test(
         NAME
-        primitive_comparator_test
+        vector_batch_test
         SOURCES
-        primitive_comparator_test.cc
+        vector_batch_test.cc
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        DEPS
+        tann::tann
+        ${CARBIN_DEPS_LINK}
+)
+
+
+carbin_cc_test(
+        NAME
+        vector_set_test
+        SOURCES
+        vector_set_test.cc
         COPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
