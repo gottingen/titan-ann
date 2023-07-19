@@ -17,7 +17,7 @@
 
 #include "tann/common/config.h"
 #include "turbo/simd/simd.h"
-#include "turbo/container/array_view.h"
+#include "turbo/meta/span.h"
 #include "turbo/log/logging.h"
 #include "turbo/base/bits.h"
 
@@ -35,7 +35,7 @@ namespace tann {
 
         // l1 comparators
         template<typename T, typename COMPARE_TYPE>
-        static double simple_compare_l1(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        static double simple_compare_l1(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             const T *last = a.data() + a.size();
             const T *lastgroup = last - 3;
             const T *pa = a.data();
@@ -59,20 +59,20 @@ namespace tann {
         }
 
         inline static double
-        simple_compare_l1(const turbo::array_view<uint8_t> &a, const turbo::array_view<uint8_t> &b) {
+        simple_compare_l1(const turbo::Span<uint8_t> &a, const turbo::Span<uint8_t> &b) {
             return simple_compare_l1<uint8_t, int>(a, b);
         }
 
-        inline static double simple_compare_l1(const turbo::array_view<float> &a, const turbo::array_view<float> &b) {
+        inline static double simple_compare_l1(const turbo::Span<float> &a, const turbo::Span<float> &b) {
             return simple_compare_l1<float, double>(a, b);
         }
 
-        inline static double simple_compare_l1(const turbo::array_view<float16> &a, turbo::array_view<float16> &b) {
+        inline static double simple_compare_l1(const turbo::Span<float16> &a, turbo::Span<float16> &b) {
             return simple_compare_l1<float16, double>(a, b);
         }
 
         template<typename T>
-        inline static double compare_l1(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_l1(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
             constexpr bool is_float_type = std::is_floating_point_v<T>;
             bool is_aligned = turbo::simd::is_aligned(static_cast<const T *>(a.data())) &&
@@ -100,7 +100,7 @@ namespace tann {
 
         // l2 comparators
         template<typename T, typename COMPARE_TYPE>
-        inline static double simple_compare_l2(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double simple_compare_l2(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             const T *pa = a.data();
             const T *pb = b.data();
             const T *last = pa + a.size();
@@ -124,21 +124,21 @@ namespace tann {
         }
 
         inline static double
-        simple_compare_l2(const turbo::array_view<uint8_t> &a, const turbo::array_view<uint8_t> &b) {
+        simple_compare_l2(const turbo::Span<uint8_t> &a, const turbo::Span<uint8_t> &b) {
             return simple_compare_l2<uint8_t, int>(a, b);
         }
 
-        inline static double simple_compare_l2(const turbo::array_view<float> &a, const turbo::array_view<float> &b) {
+        inline static double simple_compare_l2(const turbo::Span<float> &a, const turbo::Span<float> &b) {
             return simple_compare_l2<float, double>(a, b);
         }
 
         inline static double
-        simple_compare_l2(const turbo::array_view<float16> &a, const turbo::array_view<float16> &b) {
+        simple_compare_l2(const turbo::Span<float16> &a, const turbo::Span<float16> &b) {
             return simple_compare_l2<float16, double>(a, b);
         }
 
         template<typename T>
-        inline static double compare_l2(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_l2(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
             bool is_aligned = turbo::simd::is_aligned(static_cast<const T *>(a.data())) &&
                               turbo::simd::is_aligned(static_cast<const T *>(b.data()));
@@ -167,7 +167,7 @@ namespace tann {
         /// hamming distance
 
         template<typename T>
-        inline static double simple_compare_hamming(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double simple_compare_hamming(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             static_assert(std::is_integral_v<T>, "must be integer typer");
             auto *last = reinterpret_cast<const uint32_t *>(a.data() + a.size());
             auto *uinta = reinterpret_cast<const uint32_t *>(a.data());
@@ -187,7 +187,7 @@ namespace tann {
         }
 
         template<typename T>
-        inline static double compare_hamming(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_hamming(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
             using cb_type = turbo::simd::batch<uint64_t, turbo::simd::default_arch>;
             static_assert(std::is_integral_v<T>, "must be integer typer");
@@ -217,7 +217,7 @@ namespace tann {
         ////////////
         /// compare jaccard
         template<typename T>
-        inline static double simple_compare_jaccard(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double simple_compare_jaccard(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             auto *last = reinterpret_cast<const uint32_t *>(a.data() + a.size());
 
             auto *uinta = reinterpret_cast<const uint32_t *>(a.data());
@@ -234,7 +234,7 @@ namespace tann {
         }
 
         template<typename T>
-        inline static double compare_jaccard(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_jaccard(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
             using cb_type = turbo::simd::batch<uint64_t, turbo::simd::default_arch>;
             static_assert(std::is_integral_v<T>, "must be integer typer");
@@ -267,7 +267,7 @@ namespace tann {
         }
 
         template<typename T>
-        inline static double simple_compare_cosine(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double simple_compare_cosine(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double normA = 0.0;
             double normB = 0.0;
             double sum = 0.0;
@@ -288,7 +288,7 @@ namespace tann {
         /// When the type is less than 4 bytes, numerical overflow often occurs. In this case,
         /// use the general method to do norm, and the simd method is not applicable
         template<typename T>
-        inline static double compare_cosine(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_cosine(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
             bool is_aligned = turbo::simd::is_aligned(static_cast<const T *>(a.data())) &&
                               turbo::simd::is_aligned(static_cast<const T *>(b.data()));
@@ -326,7 +326,7 @@ namespace tann {
         //////////////////////////////
         /// angle distance
         template<typename T>
-        inline static double compare_angle(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_angle(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double cosine = compare_cosine(a, b);
             if (cosine >= 1.0) {
                 return 0.0;
@@ -339,7 +339,7 @@ namespace tann {
 
         template<typename T>
         inline static double
-        simple_compare_inner_product(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        simple_compare_inner_product(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double sum = 0.0;
             auto size = a.size();
             for (size_t loc = 0; loc < size; loc++) {
@@ -349,7 +349,7 @@ namespace tann {
         }
 
         template<typename T>
-        inline static double compare_inner_product(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_inner_product(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
             bool is_aligned = turbo::simd::is_aligned(static_cast<const T *>(a.data())) &&
                               turbo::simd::is_aligned(static_cast<const T *>(b.data()));
@@ -377,7 +377,7 @@ namespace tann {
         /// vector that should be normalized
         template<typename T>
         inline static double
-        compare_normalized_cosine(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        compare_normalized_cosine(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             // auto v = 1.0 - compare_inner_product(a, b);
             // return v < 0.0 ? -v : v;
             return compare_inner_product(a, b);
@@ -386,7 +386,7 @@ namespace tann {
         //////////////////////////////////////////////
         /// vector that should be normalized
         template<typename T>
-        inline static double compare_normalized_angle(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_normalized_angle(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double cosine = compare_inner_product(a, b);
             if (cosine >= 1.0) {
                 return 0.0;
@@ -400,7 +400,7 @@ namespace tann {
         //////////////////////////////////////////////
         /// vector that should be normalized
         template<typename T>
-        inline static double compare_normalized_l2(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_normalized_l2(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double v = 2.0 - 2.0 * compare_inner_product(a, b);
             if (v < 0.0) {
                 return 0.0;
@@ -413,7 +413,7 @@ namespace tann {
         /// Poincare distance
         /// for that norm(a) and norm(b) all < 1, so it must be float or float16
         template<typename T>
-        inline static double simple_compare_poincare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double simple_compare_poincare(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double sum_a = 0.0;
             double sum_b = 0.0;
             double c2 = simple_compare_l2(a, b);
@@ -425,7 +425,7 @@ namespace tann {
         }
 
         template<typename T>
-        inline static double compare_poincare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_poincare(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
             bool is_aligned = turbo::simd::is_aligned(static_cast<const T *>(a.data())) &&
                               turbo::simd::is_aligned(static_cast<const T *>(b.data()));
@@ -462,7 +462,7 @@ namespace tann {
         }
 
         template<typename T>
-        inline static double simple_compare_lorentz(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double simple_compare_lorentz(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double sum = static_cast<double>(a[0]) * static_cast<double>(b[0]);
             for (size_t i = 1; i < a.size(); i++) {
                 sum -= static_cast<double>(a[i]) * static_cast<double>(b[i]);
@@ -471,7 +471,7 @@ namespace tann {
         }
 
         template<typename T>
-        inline static double compare_lorentz(const turbo::array_view<T> &a, const turbo::array_view<T> &b) {
+        inline static double compare_lorentz(const turbo::Span<T> &a, const turbo::Span<T> &b) {
             double sum = static_cast<double>(a[0]) * static_cast<double>(b[0]);
             auto ip = compare_inner_product(a, b);
             sum = sum * 2 - ip;
@@ -484,7 +484,7 @@ namespace tann {
     /// l1 comparator
     template<>
     inline double
-    PrimComparator::compare_l1<float16>(const turbo::array_view<float16> &a, const turbo::array_view<float16> &b) {
+    PrimComparator::compare_l1<float16>(const turbo::Span<float16> &a, const turbo::Span<float16> &b) {
         __m256 sum = _mm256_setzero_ps();
         const float16 *last = a.data() + a.size();
         const float16 *pa = a.data();
@@ -510,8 +510,8 @@ namespace tann {
     }
 
     template<>
-    inline double PrimComparator::compare_l1<unsigned char>(const turbo::array_view<unsigned char> &a,
-                                                            const turbo::array_view<unsigned char> &b) {
+    inline double PrimComparator::compare_l1<unsigned char>(const turbo::Span<unsigned char> &a,
+                                                            const turbo::Span<unsigned char> &b) {
         __m128 sum = _mm_setzero_ps();
         const unsigned char *pa = a.data();
         const unsigned char *pb = b.data();
@@ -541,7 +541,7 @@ namespace tann {
     // l2 comparator
     template<>
     inline double
-    PrimComparator::compare_l2<float16>(const turbo::array_view<float16> &a, const turbo::array_view<float16> &b) {
+    PrimComparator::compare_l2<float16>(const turbo::Span<float16> &a, const turbo::Span<float16> &b) {
         const float16 *pa = a.data();
         const float16 *pb = b.data();
         const float16 *last = pa + a.size();
@@ -597,8 +597,8 @@ namespace tann {
     }
 
     template<>
-    inline double PrimComparator::compare_l2<unsigned char>(const turbo::array_view<unsigned char> &a,
-                                                            const turbo::array_view<unsigned char> &b) {
+    inline double PrimComparator::compare_l2<unsigned char>(const turbo::Span<unsigned char> &a,
+                                                            const turbo::Span<unsigned char> &b) {
         __m128 sum = _mm_setzero_ps();
         const unsigned char *pa = a.data();
         const unsigned char *pb = b.data();
@@ -647,8 +647,8 @@ namespace tann {
     /// comparator cosine for float16
 
     template<>
-    inline double PrimComparator::compare_cosine<float16>(const turbo::array_view<float16> &a,
-                                                          const turbo::array_view<float16> &b) {
+    inline double PrimComparator::compare_cosine<float16>(const turbo::Span<float16> &a,
+                                                          const turbo::Span<float16> &b) {
 
         const float16 *last = a.data() + a.size();
         const float16 *pa = a.data();
@@ -728,28 +728,28 @@ namespace tann {
     }
 
     template<>
-    inline double PrimComparator::compare_cosine<uint8_t>(const turbo::array_view<uint8_t> &a,
-                                                          const turbo::array_view<uint8_t> &b) {
+    inline double PrimComparator::compare_cosine<uint8_t>(const turbo::Span<uint8_t> &a,
+                                                          const turbo::Span<uint8_t> &b) {
         return simple_compare_cosine(a, b);
     }
 
     template<>
-    inline double PrimComparator::compare_cosine<int16_t>(const turbo::array_view<int16_t> &a,
-                                                          const turbo::array_view<int16_t> &b) {
+    inline double PrimComparator::compare_cosine<int16_t>(const turbo::Span<int16_t> &a,
+                                                          const turbo::Span<int16_t> &b) {
         return simple_compare_cosine(a, b);
     }
 
     template<>
-    inline double PrimComparator::compare_cosine<uint16_t>(const turbo::array_view<uint16_t> &a,
-                                                           const turbo::array_view<uint16_t> &b) {
+    inline double PrimComparator::compare_cosine<uint16_t>(const turbo::Span<uint16_t> &a,
+                                                           const turbo::Span<uint16_t> &b) {
         return simple_compare_cosine(a, b);
     }
 
     /////////////////////////////////
     /// inner product
     template<>
-    inline double PrimComparator::compare_inner_product<float16>(const turbo::array_view<float16> &a,
-                                                                 const turbo::array_view<float16> &b) {
+    inline double PrimComparator::compare_inner_product<float16>(const turbo::Span<float16> &a,
+                                                                 const turbo::Span<float16> &b) {
         const float16 *pa = a.data();
         const float16 *pb = b.data();
         const float16 *last = pa + a.size();
@@ -795,26 +795,26 @@ namespace tann {
     }
 
     template<>
-    inline double PrimComparator::compare_inner_product<uint8_t>(const turbo::array_view<uint8_t> &a,
-                                                                 const turbo::array_view<uint8_t> &b) {
+    inline double PrimComparator::compare_inner_product<uint8_t>(const turbo::Span<uint8_t> &a,
+                                                                 const turbo::Span<uint8_t> &b) {
         return simple_compare_inner_product(a, b);
     }
 
     template<>
-    inline double PrimComparator::compare_inner_product<uint16_t>(const turbo::array_view<uint16_t> &a,
-                                                                  const turbo::array_view<uint16_t> &b) {
+    inline double PrimComparator::compare_inner_product<uint16_t>(const turbo::Span<uint16_t> &a,
+                                                                  const turbo::Span<uint16_t> &b) {
         return simple_compare_inner_product(a, b);
     }
 
     template<>
-    inline double PrimComparator::compare_inner_product<int16_t>(const turbo::array_view<int16_t> &a,
-                                                                 const turbo::array_view<int16_t> &b) {
+    inline double PrimComparator::compare_inner_product<int16_t>(const turbo::Span<int16_t> &a,
+                                                                 const turbo::Span<int16_t> &b) {
         return simple_compare_inner_product(a, b);
     }
 
     template<>
-    inline double PrimComparator::compare_poincare<float16>(const turbo::array_view<float16> &a,
-                                                            const turbo::array_view<float16> &b) {
+    inline double PrimComparator::compare_poincare<float16>(const turbo::Span<float16> &a,
+                                                            const turbo::Span<float16> &b) {
         const float16 *last = a.data() + a.size();
         const float16 *pa = a.data();
         const float16 *pb = b.data();

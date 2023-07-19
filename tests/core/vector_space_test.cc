@@ -11,20 +11,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+#include "turbo/simd/simd.h"
 
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
-#ifndef TANN_TEST_UTIL_H
-#define TANN_TEST_UTIL_H
-#include "tann/common/config.h"
+#include "doctest/doctest.h"
+#include "turbo/format/print.h"
+#include "turbo/meta/reflect.h"
+#include "tann/core/vector_space.h"
 
-#define TEST_NORMAL_TYPES uint8_t, int32_t, int64_t, float
-
-#define SIMD_TEST_TYPES uint8_t, uint16_t, uint32_t, uint64_t, float, double
-
-#define TEST_TYPES uint8_t, tann::float16, int32_t, int64_t, float
-
-#define TEST_HM_TYPES uint8_t, uint32_t, uint64_t
-
-#define TEST_NORM_TYPES tann::float16, float
-
-#endif //TANN_TEST_UTIL_H
+TEST_CASE("alignment") {
+    tann::VectorSpace vs;
+    auto rs = vs.init(256, tann::METRIC_L2, tann::DataType::DT_FLOAT16);
+    CHECK(rs.ok());
+    CHECK_EQ(vs.alignment_bytes, 32);
+    CHECK_EQ(vs.alignment_dim, 16);
+    CHECK_EQ(vs.dimension, 256);
+    CHECK_EQ(vs.type_size, 2);
+    CHECK_EQ(vs.vector_byte_size, 512);
+}

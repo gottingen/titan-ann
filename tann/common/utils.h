@@ -29,7 +29,7 @@ typedef int FileHandle;
 #include "tann/common/ann_exception.h"
 #include "turbo/platform/port.h"
 #include "tann/tsl/robin_set.h"
-#include "tann/common/types.h"
+#include "tann/core/types.h"
 
 #ifdef EXEC_ENV_OLS
 #include "content_buf.h"

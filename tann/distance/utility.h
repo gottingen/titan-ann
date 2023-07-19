@@ -14,7 +14,7 @@
 #ifndef TANN_DISTANCE_UTILITY_H_
 #define TANN_DISTANCE_UTILITY_H_
 
-#include "turbo/container/array_view.h"
+#include "turbo/meta/span.h"
 #include "turbo/simd/simd.h"
 #include "tann/common/config.h"
 #include "turbo/format/print.h"
@@ -24,7 +24,7 @@ namespace tann {
     // When the type is less than 4 bytes, numerical overflow often occurs. In this case,
     // use the general method to do norm, and the simd method is not applicable
     template<typename T>
-    inline float get_l2_norm_simple(const turbo::array_view<T> &arr) {
+    inline float get_l2_norm_simple(turbo::Span<T> arr) {
         float sum = 0.0f;
         auto dim = arr.size();
         for (uint32_t i = 0; i < dim; i++) {
@@ -34,7 +34,7 @@ namespace tann {
     }
 
     template<typename T>
-    inline float get_l2_norm(const turbo::array_view<T> &arr) {
+    inline float get_l2_norm(turbo::Span<T> arr) {
         static_assert(sizeof(T) >= 4, "sizeof T > 4");
         using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
         std::size_t inc = b_type::size;
@@ -54,7 +54,7 @@ namespace tann {
     }
 
     template<>
-    inline float get_l2_norm<float16>(const turbo::array_view<float16> &arr) {
+    inline float get_l2_norm<float16>(turbo::Span<float16> arr) {
 
         const float16 *last = arr.data() + arr.size();
         const float16 *pa = arr.data();
@@ -85,26 +85,26 @@ namespace tann {
     }
 
     template<>
-    inline float get_l2_norm<int8_t>(const turbo::array_view<int8_t> &arr) {
+    inline float get_l2_norm<int8_t>(turbo::Span<int8_t> arr) {
         return get_l2_norm_simple(arr);
     }
 
     template<>
-    inline float get_l2_norm<uint8_t>(const turbo::array_view<uint8_t> &arr) {
+    inline float get_l2_norm<uint8_t>(turbo::Span<uint8_t> arr) {
         return get_l2_norm_simple(arr);
     }
 
     template<>
-    inline float get_l2_norm<uint16_t>(const turbo::array_view<uint16_t> &arr) {
+    inline float get_l2_norm<uint16_t>(turbo::Span<uint16_t> arr) {
         return get_l2_norm_simple(arr);
     }
 
     template<>
-    inline float get_l2_norm<int16_t>(const turbo::array_view<int16_t> &arr) {
+    inline float get_l2_norm<int16_t>(turbo::Span<int16_t> arr) {
         return get_l2_norm_simple(arr);
     }
 
-    inline void l2_norm(turbo::array_view<float> &arr) {
+    inline void l2_norm(turbo::Span<float> arr) {
         auto norm = get_l2_norm(arr);
         using b_type = turbo::simd::batch<float, turbo::simd::default_arch>;
         std::size_t inc = b_type::size;
@@ -121,7 +121,7 @@ namespace tann {
         }
     }
 
-    inline void l2_norm(const turbo::array_view<float> &arr, turbo::array_view<float> &dst) {
+    inline void l2_norm(turbo::Span<float> arr, turbo::Span<float> dst) {
         auto norm = get_l2_norm(arr);
         using b_type = turbo::simd::batch<float, turbo::simd::default_arch>;
         std::size_t inc = b_type::size;
@@ -138,14 +138,14 @@ namespace tann {
         }
     }
 
-    inline void l2_norm(turbo::array_view<float16> &arr) {
+    inline void l2_norm(turbo::Span<float16> arr) {
         auto norm = get_l2_norm(arr);
         for (std::size_t i = 0; i < arr.size(); ++i) {
             arr[i] = arr[i] / norm;
         }
     }
 
-    inline void l2_norm(const turbo::array_view<float16> &arr, turbo::array_view<float16> &dst) {
+    inline void l2_norm(turbo::Span<float16> arr, turbo::Span<float16> dst) {
         auto norm = get_l2_norm(arr);
         for (std::size_t i = 0; i < arr.size(); ++i) {
             dst[i] = arr[i] / norm;

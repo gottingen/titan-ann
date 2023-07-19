@@ -16,61 +16,35 @@
 
 #include "tann/distance/utility.h"
 #include "turbo/simd/arch/generic.h"
-#include "turbo/container/array_view.h"
+#include "turbo/meta/span.h"
 #include "turbo/log/logging.h"
 #include "tann/distance/primitive_comparator.h"
+#include "tann/core/allocator.h"
+#include "tann/core/types.h"
 
 namespace tann {
-
-    enum MetricType {
-        UNDEFINED = 0,
-        METRIC_L1,
-        METRIC_L2,
-        METRIC_IP,
-        METRIC_HAMMING,
-        METRIC_JACCARD,
-        METRIC_COSINE,
-        METRIC_ANGLE,
-        METRIC_NORMALIZED_COSINE,
-        METRIC_NORMALIZED_ANGLE,
-        METRIC_NORMALIZED_L2,
-        METRIC_POINCARE,
-        METRIC_LORENTZ,
-    };
-
-    template<typename T>
     class DistanceBase {
     public:
-        static constexpr std::size_t requires_alignment = turbo::simd::default_arch::requires_alignment();
-        // If an algorithm has a requirement that some data be aligned to a certain
-        // boundary it can use this function to indicate that requirement. Currently,
-        // we are setting it to  Arch::alignment() for bytes alignment, and the dim alignment is set
-        // to alignment_bytes/sizeof(T)
-        static constexpr std::size_t alignment_bytes = turbo::simd::default_arch::alignment();
-        static constexpr std::size_t alignment = alignment_bytes / sizeof(T);
-
-        static_assert(alignment_bytes % sizeof(T) == 0, "type T is not aligned with alignment_bytes");
-
-        TURBO_DLL DistanceBase(tann::MetricType dist_metric) : _distance_metric(dist_metric) {
+        TURBO_DLL explicit DistanceBase(tann::MetricType dist_metric) : _distance_metric(dist_metric) {
         }
 
         // distance comparison function
-        TURBO_DLL virtual float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const = 0;
+        TURBO_DLL [[nodiscard]] virtual double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const = 0;
 
         // For MIPS, normalization adds an extra dimension to the vectors.
         // This function lets callers know if the normalization process
         // changes the dimension.
-        TURBO_DLL virtual uint32_t post_normalization_dimension(uint32_t orig_dimension) const {
+        TURBO_DLL [[nodiscard]] virtual uint32_t post_normalization_dimension(uint32_t orig_dimension) const {
             return orig_dimension;
         }
 
-        TURBO_DLL virtual tann::MetricType get_metric() const {
+        TURBO_DLL [[nodiscard]] virtual tann::MetricType get_metric() const {
             return _distance_metric;
         }
 
         // This is for efficiency. If no normalization is required, the callers
         // can simply ignore the normalize_data_for_build() function.
-        TURBO_DLL virtual bool preprocessing_required() const {
+        TURBO_DLL [[nodiscard]] virtual bool preprocessing_required() const {
             return false;
         }
 
@@ -84,7 +58,7 @@ namespace tann {
         //
         //  TODO: This does not take into account the case for SSD inner product
         //  where the dimensions change after normalization.
-        TURBO_DLL virtual void preprocess_base_points(turbo::array_view<T> &original_data) {
+        TURBO_DLL virtual void preprocess_base_points(turbo::Span<uint8_t> original_data, size_t dim) {
 
         }
 
@@ -92,10 +66,10 @@ namespace tann {
         // has to be created by the caller keeping track of the fact that
         // normalization might change the dimension of the query vector.
         TURBO_DLL virtual void
-        preprocess_query(const turbo::array_view<T> &query_vec, turbo::array_view<T> &scratch_query) {
+        preprocess_query(turbo::Span<uint8_t> query_vec, turbo::Span<uint8_t> scratch_query) {
             TLOG_CHECK_LE(query_vec.size(), scratch_query.size(),
                           "input query vector size must little equal than des vector size.");
-            std::memcpy(scratch_query.data(), query_vec.data(), query_vec.size() * sizeof(T));
+            std::memcpy(scratch_query.data(), query_vec.data(), query_vec.size() * sizeof(uint8_t));
         }
 
         // Providing a default implementation for the virtual destructor because we
@@ -106,119 +80,248 @@ namespace tann {
         tann::MetricType _distance_metric;
     };
 
-    template<typename T>
-    class PrimDistanceL1 : public DistanceBase<T> {
+    class PrimDistanceL1Uint8 : public DistanceBase {
     public:
-        PrimDistanceL1() : DistanceBase<T>(tann::MetricType::METRIC_L1) {}
+        PrimDistanceL1Uint8() : DistanceBase(tann::MetricType::METRIC_L1) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
             return PrimComparator::compare_l1(a, b);
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceL1() = default;
+        TURBO_DLL ~PrimDistanceL1Uint8() override = default;
 
     };
 
-    template<typename T>
-    class PrimDistanceL2 : public DistanceBase<T> {
+    class PrimDistanceL1Float16 : public DistanceBase {
     public:
-        PrimDistanceL2() : DistanceBase<T>(tann::MetricType::METRIC_L2) {}
+        PrimDistanceL1Float16() : DistanceBase(tann::MetricType::METRIC_L1) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_l1(to_span<tann::float16>(a), to_span<float16>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceL1Float16() override = default;
+
+    };
+
+    class PrimDistanceL1Float : public DistanceBase {
+    public:
+        PrimDistanceL1Float() : DistanceBase(tann::MetricType::METRIC_L1) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_l1(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceL1Float() override = default;
+
+    };
+
+    class PrimDistanceL1Uint32 : public DistanceBase {
+    public:
+        PrimDistanceL1Uint32() : DistanceBase(tann::MetricType::METRIC_L1) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_l1(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceL1Uint32() override = default;
+
+    };
+
+    class PrimDistanceL2Uint8 : public DistanceBase {
+    public:
+        PrimDistanceL2Uint8() : DistanceBase(tann::MetricType::METRIC_L2) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
             return PrimComparator::compare_l2(a, b);
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceL2() = default;
-
+        TURBO_DLL ~PrimDistanceL2Uint8() override = default;
     };
 
-    template<typename T>
-    class PrimDistanceHamming : public DistanceBase<T> {
+    class PrimDistanceL2Float16 : public DistanceBase {
     public:
-        PrimDistanceHamming() : DistanceBase<T>(tann::MetricType::METRIC_HAMMING) {}
+        PrimDistanceL2Float16() : DistanceBase(tann::MetricType::METRIC_L2) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_l2(to_span<float16>(a), to_span<float16>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceL2Float16() override = default;
+    };
+
+    class PrimDistanceL2Float : public DistanceBase {
+    public:
+        PrimDistanceL2Float() : DistanceBase(tann::MetricType::METRIC_L2) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_l2(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceL2Float() override = default;
+    };
+
+    class PrimDistanceHammingUint8 : public DistanceBase {
+    public:
+        PrimDistanceHammingUint8() : DistanceBase(tann::MetricType::METRIC_HAMMING) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
             return PrimComparator::compare_hamming(a, b);
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceHamming() = default;
+        TURBO_DLL ~PrimDistanceHammingUint8() override = default;
 
     };
 
-    template<typename T>
-    class PrimDistanceJaccard : public DistanceBase<T> {
+    class PrimDistanceJaccardUint8 : public DistanceBase {
     public:
-        PrimDistanceJaccard() : DistanceBase<T>(tann::MetricType::METRIC_JACCARD) {}
+        PrimDistanceJaccardUint8() : DistanceBase(tann::MetricType::METRIC_JACCARD) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
             return PrimComparator::compare_jaccard(a, b);
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceJaccard() = default;
+        TURBO_DLL ~PrimDistanceJaccardUint8() override = default;
 
     };
 
-    template<typename T>
-    class PrimDistanceCosine : public DistanceBase<T> {
+    class PrimDistanceCosineUint8 : public DistanceBase {
     public:
-        PrimDistanceCosine() : DistanceBase<T>(tann::MetricType::METRIC_COSINE) {}
+        PrimDistanceCosineUint8() : DistanceBase(tann::MetricType::METRIC_COSINE) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
             return PrimComparator::compare_cosine(a, b);
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceCosine() = default;
+        TURBO_DLL ~PrimDistanceCosineUint8() override = default;
 
     };
 
-    template<typename T>
-    class PrimDistanceAngle : public DistanceBase<T> {
+    class PrimDistanceCosineFloat16 : public DistanceBase {
     public:
-        PrimDistanceAngle() : DistanceBase<T>(tann::MetricType::METRIC_ANGLE) {}
+        PrimDistanceCosineFloat16() : DistanceBase(tann::MetricType::METRIC_COSINE) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_cosine(to_span<float16>(a), to_span<float16>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceCosineFloat16() override = default;
+
+    };
+
+    class PrimDistanceCosineFloat : public DistanceBase {
+    public:
+        PrimDistanceCosineFloat() : DistanceBase(tann::MetricType::METRIC_COSINE) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_cosine(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceCosineFloat() override = default;
+
+    };
+
+    class PrimDistanceAngleUint8 : public DistanceBase {
+    public:
+        PrimDistanceAngleUint8() : DistanceBase(tann::MetricType::METRIC_ANGLE) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
             return PrimComparator::compare_angle(a, b);
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceAngle() = default;
-
+        TURBO_DLL ~PrimDistanceAngleUint8() override = default;
     };
 
-    template<typename T>
-    class PrimDistanceIP : public DistanceBase<T> {
+    class PrimDistanceAngleFloat16 : public DistanceBase {
     public:
-        PrimDistanceIP() : DistanceBase<T>(tann::MetricType::METRIC_IP) {}
+        PrimDistanceAngleFloat16() : DistanceBase(tann::MetricType::METRIC_ANGLE) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_angle(to_span<float16>(a), to_span<float16>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceAngleFloat16() override = default;
+    };
+
+    class PrimDistanceAngleFloat : public DistanceBase {
+    public:
+        PrimDistanceAngleFloat() : DistanceBase(tann::MetricType::METRIC_ANGLE) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_angle(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceAngleFloat() override = default;
+    };
+
+    class PrimDistanceIPUint8 : public DistanceBase {
+    public:
+        PrimDistanceIPUint8() : DistanceBase(tann::MetricType::METRIC_IP) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
             return PrimComparator::compare_inner_product(a, b);
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceIP() = default;
+        TURBO_DLL ~PrimDistanceIPUint8() override = default;
 
     };
 
-    template<typename T>
-    class PrimDistanceNormalizedCosine : public DistanceBase<T> {
+    class PrimDistanceIPFloat16 : public DistanceBase {
     public:
-        PrimDistanceNormalizedCosine() : DistanceBase<T>(tann::MetricType::METRIC_NORMALIZED_COSINE) {}
+        PrimDistanceIPFloat16() : DistanceBase(tann::MetricType::METRIC_IP) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
-            return PrimComparator::compare_normalized_cosine(a, b);
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_inner_product(to_span<float16>(a), to_span<float16>(b));
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceNormalizedCosine() = default;
+        TURBO_DLL ~PrimDistanceIPFloat16() override = default;
+
+    };
+
+    class PrimDistanceIPFloat : public DistanceBase {
+    public:
+        PrimDistanceIPFloat() : DistanceBase(tann::MetricType::METRIC_IP) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_inner_product(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceIPFloat() override = default;
+
+    };
+
+    class PrimDistanceNormalizedCosineFloat16 : public DistanceBase {
+    public:
+        PrimDistanceNormalizedCosineFloat16() : DistanceBase(tann::MetricType::METRIC_NORMALIZED_COSINE) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_normalized_cosine(to_span<float16>(a), to_span<float16>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceNormalizedCosineFloat16() override = default;
 
         // This is for efficiency. If no normalization is required, the callers
         // can simply ignore the normalize_data_for_build() function.
-        TURBO_DLL bool preprocessing_required() const override {
+        [[nodiscard]] TURBO_DLL bool preprocessing_required() const override {
             return true;
         }
 
@@ -232,109 +335,267 @@ namespace tann {
         //
         //  TODO: This does not take into account the case for SSD inner product
         //  where the dimensions change after normalization.
-        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr) override {
-            l2_norm(arr);
+        TURBO_DLL void preprocess_base_points(turbo::Span<uint8_t> arr, size_t dim) override {
+            size_t nvec = arr.size() / (dim * sizeof(float16));
+            for (size_t i = 0; i < nvec; ++i) {
+                auto one_v = to_span<float16>(arr);
+                l2_norm(one_v);
+            }
         }
 
         // Invokes normalization for a single vector during search. The scratch space
         // has to be created by the caller keeping track of the fact that
         // normalization might change the dimension of the query vector.
-        TURBO_DLL virtual void
-        preprocess_query(const turbo::array_view<T> &query_vec, turbo::array_view<T> &scratch_query) {
+        TURBO_DLL void
+        preprocess_query(turbo::Span<uint8_t> query_vec, turbo::Span<uint8_t> scratch_query) override {
             TLOG_CHECK_LE(query_vec.size(), scratch_query.size(),
                           "input query vector size must little equal than des vector size.");
-            l2_norm(query_vec, scratch_query);
+            l2_norm(to_span<float16>(query_vec), to_span<float16>(scratch_query));
         }
 
 
     };
 
-    template<typename T>
-    class PrimDistanceNormalizedAngle : public DistanceBase<T> {
+    class PrimDistanceNormalizedCosineFloat : public DistanceBase {
     public:
-        PrimDistanceNormalizedAngle() : DistanceBase<T>(tann::MetricType::METRIC_NORMALIZED_ANGLE) {}
+        PrimDistanceNormalizedCosineFloat() : DistanceBase(tann::MetricType::METRIC_NORMALIZED_COSINE) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
-            return PrimComparator::compare_normalized_angle(a, b);
+        TURBO_DLL [[nodiscard]] double compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_normalized_cosine(to_span<float>(a), to_span<float>(b));
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceNormalizedAngle() = default;
+        TURBO_DLL ~PrimDistanceNormalizedCosineFloat() override = default;
 
         // This is for efficiency. If no normalization is required, the callers
         // can simply ignore the normalize_data_for_build() function.
-        TURBO_DLL virtual bool preprocessing_required() const override {
+        [[nodiscard]] TURBO_DLL bool preprocessing_required() const override {
             return true;
         }
 
-        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr) override {
-            l2_norm(arr);
+        // Check the preprocessing_required() function before calling this.
+        // Clients can call the function like this:
+        //
+        //  if (metric->preprocessing_required()){
+        //     T* normalized_data_batch;
+        //      Split data into batches of batch_size and for each, call:
+        //       metric->preprocess_base_points(data_batch, batch_size);
+        //
+        //  TODO: This does not take into account the case for SSD inner product
+        //  where the dimensions change after normalization.
+        TURBO_DLL void preprocess_base_points(turbo::Span<uint8_t> arr, size_t dim) override {
+            size_t nvec = arr.size() / (dim * sizeof(float));
+            for (size_t i = 0; i < nvec; ++i) {
+                turbo::Span<float> one_v = to_span<float>(arr);
+                l2_norm(one_v);
+            }
         }
 
-        TURBO_DLL virtual void
-        preprocess_query(const turbo::array_view<T> &query_vec, turbo::array_view<T> &scratch_query) {
+        // Invokes normalization for a single vector during search. The scratch space
+        // has to be created by the caller keeping track of the fact that
+        // normalization might change the dimension of the query vector.
+        TURBO_DLL void
+        preprocess_query(turbo::Span<uint8_t> query_vec, turbo::Span<uint8_t> scratch_query) override {
             TLOG_CHECK_LE(query_vec.size(), scratch_query.size(),
                           "input query vector size must little equal than des vector size.");
-            l2_norm(query_vec, scratch_query);
+            auto ad = to_span<float>(scratch_query);
+            l2_norm(to_span<float>(query_vec), ad);
         }
+
 
     };
 
-    template<typename T>
-    class PrimDistanceNormalizedL2 : public DistanceBase<T> {
+    class PrimDistanceNormalizedAngleFloat16 : public DistanceBase {
     public:
-        PrimDistanceNormalizedL2() : DistanceBase<T>(tann::MetricType::METRIC_NORMALIZED_L2) {}
+        PrimDistanceNormalizedAngleFloat16() : DistanceBase(tann::MetricType::METRIC_NORMALIZED_ANGLE) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
-            return PrimComparator::compare_normalized_l2(a, b);
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_normalized_angle(to_span<float16>(a), to_span<float16>(b));
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceNormalizedL2() = default;
+        TURBO_DLL ~PrimDistanceNormalizedAngleFloat16() override = default;
 
         // This is for efficiency. If no normalization is required, the callers
         // can simply ignore the normalize_data_for_build() function.
-        TURBO_DLL virtual bool preprocessing_required() const override {
+        TURBO_DLL [[nodiscard]] bool preprocessing_required() const override {
             return true;
         }
 
-        TURBO_DLL void preprocess_base_points(turbo::array_view<T> &arr) override {
-            l2_norm(arr);
+        TURBO_DLL void preprocess_base_points(turbo::Span<uint8_t> arr, size_t dim) override {
+            size_t nvec = arr.size() / (dim * sizeof(float16));
+            for (size_t i = 0; i < nvec; ++i) {
+                auto one_v = to_span<float16>(arr);
+                l2_norm(one_v);
+            }
         }
 
-        TURBO_DLL virtual void
-        preprocess_query(const turbo::array_view<T> &query_vec, turbo::array_view<T> &scratch_query) {
+        TURBO_DLL void
+        preprocess_query(turbo::Span<uint8_t> query_vec, turbo::Span<uint8_t> scratch_query) override {
             TLOG_CHECK_LE(query_vec.size(), scratch_query.size(),
                           "input query vector size must little equal than des vector size.");
-            l2_norm(query_vec, scratch_query);
+            l2_norm(to_span<float16>(query_vec), to_span<float16>(scratch_query));
         }
 
     };
 
-    template<typename T>
-    class PrimDistancePoincare : public DistanceBase<T> {
+    class PrimDistanceNormalizedAngleFloat : public DistanceBase {
     public:
-        PrimDistancePoincare() : DistanceBase<T>(tann::MetricType::METRIC_POINCARE) {}
+        PrimDistanceNormalizedAngleFloat() : DistanceBase(tann::MetricType::METRIC_NORMALIZED_ANGLE) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
-            return PrimComparator::compare_poincare(a, b);
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_normalized_angle(to_span<float>(a), to_span<float>(b));
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistancePoincare() = default;
+        TURBO_DLL ~PrimDistanceNormalizedAngleFloat() override = default;
+
+        // This is for efficiency. If no normalization is required, the callers
+        // can simply ignore the normalize_data_for_build() function.
+        TURBO_DLL [[nodiscard]] bool preprocessing_required() const override {
+            return true;
+        }
+
+        TURBO_DLL void preprocess_base_points(turbo::Span<uint8_t> arr, size_t dim) override {
+            size_t nvec = arr.size() / (dim * sizeof(float));
+            for (size_t i = 0; i < nvec; ++i) {
+                auto one_v = to_span<float>(arr);
+                l2_norm(one_v);
+            }
+        }
+
+        TURBO_DLL void
+        preprocess_query(turbo::Span<uint8_t> query_vec, turbo::Span<uint8_t> scratch_query) override {
+            TLOG_CHECK_LE(query_vec.size(), scratch_query.size(),
+                          "input query vector size must little equal than des vector size.");
+            l2_norm(to_span<float>(query_vec), to_span<float>(scratch_query));
+        }
+
     };
 
-    template<typename T>
-    class PrimDistanceLorentz : public DistanceBase<T> {
+
+    class PrimDistanceNormalizedL2Float16 : public DistanceBase {
     public:
-        PrimDistanceLorentz() : DistanceBase<T>(tann::MetricType::METRIC_LORENTZ) {}
+        PrimDistanceNormalizedL2Float16() : DistanceBase(tann::MetricType::METRIC_NORMALIZED_L2) {}
         // distance comparison function
-        TURBO_DLL float compare(const turbo::array_view<T> &a, const turbo::array_view<T> &b) const override {
-            return PrimComparator::compare_lorentz(a, b);
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_normalized_l2(to_span<float16>(a), to_span<float16>(b));
         }
         // Providing a default implementation for the virtual destructor because we
         // don't expect most metric implementations to need it.
-        TURBO_DLL ~PrimDistanceLorentz() = default;
+        TURBO_DLL ~PrimDistanceNormalizedL2Float16() override = default;
+
+        // This is for efficiency. If no normalization is required, the callers
+        // can simply ignore the normalize_data_for_build() function.
+        TURBO_DLL [[nodiscard]] bool preprocessing_required() const override {
+            return true;
+        }
+
+        TURBO_DLL void preprocess_base_points(turbo::Span<uint8_t> arr, size_t dim) override {
+            size_t nvec = arr.size() / (dim * sizeof(float16));
+            for (size_t i = 0; i < nvec; ++i) {
+                auto one_v = to_span<float16>(arr);
+                l2_norm(one_v);
+            }
+        }
+
+        TURBO_DLL void
+        preprocess_query(turbo::Span<uint8_t> query_vec, turbo::Span<uint8_t> scratch_query) override {
+            TLOG_CHECK_LE(query_vec.size(), scratch_query.size(),
+                          "input query vector size must little equal than des vector size.");
+            l2_norm(to_span<float16>(query_vec), to_span<float16>(scratch_query));
+        }
+
+    };
+
+    class PrimDistanceNormalizedL2Float : public DistanceBase {
+    public:
+        PrimDistanceNormalizedL2Float() : DistanceBase(tann::MetricType::METRIC_NORMALIZED_L2) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_normalized_l2(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceNormalizedL2Float() override = default;
+
+        // This is for efficiency. If no normalization is required, the callers
+        // can simply ignore the normalize_data_for_build() function.
+        TURBO_DLL [[nodiscard]] bool preprocessing_required() const override {
+            return true;
+        }
+
+        TURBO_DLL void preprocess_base_points(turbo::Span<uint8_t> arr, size_t dim) override {
+            size_t nvec = arr.size() / (dim * sizeof(float));
+            for (size_t i = 0; i < nvec; ++i) {
+                auto one_v = to_span<float>(arr);
+                l2_norm(one_v);
+            }
+        }
+
+        TURBO_DLL void
+        preprocess_query(turbo::Span<uint8_t> query_vec, turbo::Span<uint8_t> scratch_query) override {
+            TLOG_CHECK_LE(query_vec.size(), scratch_query.size(),
+                          "input query vector size must little equal than des vector size.");
+            l2_norm(to_span<float>(query_vec), to_span<float>(scratch_query));
+        }
+
+    };
+
+    class PrimDistancePoincareFloat16 : public DistanceBase {
+    public:
+        PrimDistancePoincareFloat16() : DistanceBase(tann::MetricType::METRIC_POINCARE) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_poincare(to_span<float16>(a), to_span<float16>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistancePoincareFloat16() override = default;
+    };
+
+    class PrimDistancePoincareFloat : public DistanceBase {
+    public:
+        PrimDistancePoincareFloat() : DistanceBase(tann::MetricType::METRIC_POINCARE) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_poincare(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistancePoincareFloat() override = default;
+    };
+
+    class PrimDistanceLorentzFloat16 : public DistanceBase {
+    public:
+        PrimDistanceLorentzFloat16() : DistanceBase(tann::MetricType::METRIC_LORENTZ) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_lorentz(to_span<float16>(a), to_span<float16>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceLorentzFloat16() override = default;
+    };
+
+    class PrimDistanceLorentzFloat : public DistanceBase {
+    public:
+        PrimDistanceLorentzFloat() : DistanceBase(tann::MetricType::METRIC_LORENTZ) {}
+        // distance comparison function
+        TURBO_DLL [[nodiscard]] double
+        compare(turbo::Span<uint8_t> a, turbo::Span<uint8_t> b) const override {
+            return PrimComparator::compare_lorentz(to_span<float>(a), to_span<float>(b));
+        }
+        // Providing a default implementation for the virtual destructor because we
+        // don't expect most metric implementations to need it.
+        TURBO_DLL ~PrimDistanceLorentzFloat() override = default;
     };
 
 }

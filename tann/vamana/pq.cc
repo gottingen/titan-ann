@@ -161,7 +161,7 @@ namespace tann {
         }
     }
 
-// assumes pre-processed query
+    // assumes pre-processed query
     void FixedChunkPQTable::populate_chunk_distances(const float *query_vec, float *dist_vec) {
         memset(dist_vec, 0, 256 * n_chunks * sizeof(float));
         // chunk wise distance computation

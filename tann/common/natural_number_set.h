@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <type_traits>
+#include "turbo/container/dynamic_bitset.h"
 
 namespace tann {
     // A set of natural numbers (from 0 onwards). Made for scenario where the
