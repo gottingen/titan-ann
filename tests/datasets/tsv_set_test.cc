@@ -51,7 +51,9 @@ TEST_CASE_FIXTURE(BinSetTest, "write read") {
     std::vector<float> vmem;
     vmem.resize(op.dimension);
     auto vspan = tann::to_span<float>(vmem);
-    tann::random_vector_fill<float>(vspan, 0,1.0);
+    for (int i = 0; i < 128; i++) {
+        vspan[i] = static_cast<float>(i) / 20.8;
+    }
     auto span = tann::to_span<uint8_t>(vmem);
     CHECK_EQ(span.size(), 128 * sizeof(float));
     for (size_t i = 0; i < 100; i++) {
@@ -82,7 +84,11 @@ TEST_CASE_FIXTURE(BinSetTest, "write read") {
         s = reader.read_vector(&rspan);
         i++;
         CHECK(r.ok());
+        if(!r.ok()) {
+            turbo::Println(r.ToString());
+        }
     }
+    turbo::Println("{}", s.ToString());
     CHECK_EQ(reader.has_read(), 100);
     CHECK_EQ(i, 101);
     CHECK_EQ(turbo::IsReachFileEnd(s), true);

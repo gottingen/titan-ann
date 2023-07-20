@@ -89,9 +89,6 @@ namespace tann {
     }
 
     turbo::Status TsvVectorSetReader::read_vector(turbo::Span<uint8_t> *vector) {
-        if(_file->is_eof()) {
-            return turbo::ReachFileEnd("file reach eof");
-        }
         static constexpr size_t KTmpSize = 4096;
         std::string line;
         line.reserve(KTmpSize);
@@ -108,10 +105,9 @@ namespace tann {
                 if (!r.ok()) {
                     if(turbo::IsReachFileEnd(r.status())) {
                         feof = true;
-                        break;
+                    } else {
+                        return r.status();
                     }
-
-                    return r.status();
                 }
                 _cache_buf.append(temp);
             }
@@ -131,7 +127,6 @@ namespace tann {
         if(line.empty() && feof) {
             return turbo::ReachFileEnd("file reach eof");
         }
-        turbo::Println("line len {}", line.size());
         ++_has_read;
         if(_option->data_type == DataType::DT_UINT8) {
             return detail::convert_to_vector<uint8_t>(line, _ndims, vector);
