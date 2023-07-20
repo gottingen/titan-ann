@@ -25,14 +25,21 @@ namespace tann {
         return r;
     }
 
-    void FlatIndex::add_vector(turbo::Span<uint8_t> vec, const label_type &label) {
+    void FlatIndex::add_vector(turbo::Span<uint8_t> query, const label_type &label) {
+        turbo::Span<uint8_t> v = query;
+        if(_vs.distance_factor->preprocessing_required()) {
+            AlignedQuery<uint8_t> avec;
+            make_aligned_query(query, avec);
+            v = to_span<uint8_t>(avec);
+            _vs.distance_factor->preprocess_base_points(v, 1);
+        }
         std::unique_lock l(_mutex);
         auto it = _label_map.find(label);
         std::size_t idx;
         if (it != _label_map.end()) {
             // modify
             idx = it->second;
-            _data.set_vector(idx, vec);
+            _data.set_vector(idx, v);
             return;
         }
         idx = _data.prefer_add_vector();
@@ -41,7 +48,7 @@ namespace tann {
         }
         _label_map[label] = idx;
         _index_to_label[idx] = label;
-        _data.set_vector(idx, vec);
+        _data.set_vector(idx, v);
         // idx is the last one
     }
 
@@ -127,4 +134,11 @@ namespace tann {
         return turbo::OkStatus();
     }
 
+    turbo::Status FlatIndex::save_index(const std::string &path, const IOOption &option)  {
+        return turbo::OkStatus();
+    }
+
+    turbo::Status FlatIndex::load_index(const std::string &path, const IOOption &option) {
+        return turbo::OkStatus();
+    }
 }  // namespace tann

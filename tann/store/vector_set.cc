@@ -29,12 +29,17 @@ namespace tann {
         return _vs;
     }
 
-    [[nodiscard]] const std::vector<VectorBatch> &VectorSet::get_vector_batch() const {
+    const std::vector<VectorBatch> &VectorSet::vector_batch() const {
         TLOG_CHECK(_vs, "should init be using");
         return _data;
     }
 
-    [[nodiscard]] std::size_t VectorSet::get_batch_size() const {
+    std::vector<VectorBatch> &VectorSet::vector_batch() {
+        TLOG_CHECK(_vs, "should init be using");
+        return _data;
+    }
+
+    std::size_t VectorSet::get_batch_size() const {
         return _batch_size;
     }
 
@@ -110,8 +115,8 @@ namespace tann {
     std::size_t VectorSet::prefer_add_vector(std::size_t n) {
         TLOG_CHECK(_vs, "should init be using");
         auto idx = _size;
-        _size = _size + n;
-        resize(_size);
+        auto n_size = _size + n;
+        resize(n_size);
         return idx;
     }
 

@@ -32,8 +32,9 @@ namespace tann {
 
         [[nodiscard]] const VectorSpace *get_vector_space() const;
 
-        [[nodiscard]] const std::vector<VectorBatch> &get_vector_batch() const;
+        [[nodiscard]] const std::vector<VectorBatch> &vector_batch() const;
 
+        [[nodiscard]] std::vector<VectorBatch> &vector_batch();
         [[nodiscard]] std::size_t get_batch_size() const;
 
         void set_vector(std::size_t i, turbo::Span<uint8_t> vector);
@@ -54,6 +55,10 @@ namespace tann {
         void move_vector(std::size_t from, std::size_t to, std::size_t nvec);
 
         std::size_t add_vector(const turbo::Span<uint8_t> &vector);
+
+        // for data load, user do not use it , because it
+        // has some condition that use can not fit every time
+        std::size_t add_batch(VectorBatch &&vector);
 
         std::size_t prefer_add_vector(std::size_t n = 1);
 
