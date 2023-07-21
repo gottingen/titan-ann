@@ -7,8 +7,6 @@
 #include "turbo/container/dynamic_bitset.h"
 #include "turbo/container/flat_hash_set.h"
 #include "turbo/container/flat_hash_map.h"
-#include "turbo/container/flat_hash_map.h"
-
 #include "tann/vamana/neighbor.h"
 #include "tann/common/concurrent_queue.h"
 #include "tann/vamana/pq.h"
