@@ -4,9 +4,9 @@
 #include <shared_mutex>
 #include <memory>
 
-#include "tann/tsl/robin_map.h"
-#include "tann/tsl/robin_set.h"
-#include "tann/tsl/sparse_map.h"
+#include "turbo/container/flat_hash_map.h"
+#include "turbo/container/flat_hash_set.h"
+#include "turbo/container/flat_hash_map.h"
 #include "tann/store/abstract_data_store.h"
 #include "tann/distance/distance.h"
 #include "tann/common/natural_number_map.h"

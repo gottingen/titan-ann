@@ -67,7 +67,7 @@ namespace tann {
     template<typename data_t>
     location_t InMemDataStore<data_t>::load_impl(const std::string &filename) {
         size_t file_dim, file_num_points;
-        if (!file_exists(filename)) {
+        if (!turbo::filesystem::exists(filename)) {
             std::stringstream stream;
             stream << "ERROR: data file " << filename << " does not exist." << std::endl;
             tann::cerr << stream.str() << std::endl;

@@ -154,7 +154,7 @@ namespace tann {
 
     double calculate_recall(uint32_t num_queries, uint32_t *gold_std, float *gs_dist, uint32_t dim_gs,
                             uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,
-                            const tsl::robin_set<uint32_t> &active_tags) {
+                            const turbo::flat_hash_set<uint32_t> &active_tags) {
         double total_recall = 0;
         std::set<uint32_t> gt, res;
         bool printed = false;

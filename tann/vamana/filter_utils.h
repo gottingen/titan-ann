@@ -15,8 +15,8 @@
 #include <set>
 #include <tuple>
 #include <string>
-#include "tann/tsl/robin_map.h"
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_map.h"
+#include "turbo/container/flat_hash_set.h"
 
 #ifdef __APPLE__
 #else
@@ -48,11 +48,11 @@ typedef int FileHandle;
 #include "turbo/platform/port.h"
 
 // custom types (for readability)
-typedef tsl::robin_set<std::string> label_set;
+typedef turbo::flat_hash_set<std::string> label_set;
 typedef std::string path;
 
 // structs for returning multiple items from a function
-typedef std::tuple<std::vector<label_set>, tsl::robin_map<std::string, uint32_t>, tsl::robin_set<std::string>>
+typedef std::tuple<std::vector<label_set>, turbo::flat_hash_map<std::string, uint32_t>, turbo::flat_hash_set<std::string>>
         parse_label_file_return_values;
 typedef std::tuple<std::vector<std::vector<uint32_t>>, uint64_t> load_label_index_return_values;
 
@@ -67,8 +67,8 @@ namespace tann {
     TURBO_DLL parse_label_file_return_values parse_label_file(path label_data_path, std::string universal_label);
 
     template<typename T>
-    TURBO_DLL tsl::robin_map<std::string, std::vector<uint32_t>> generate_label_specific_vector_files_compat(
-            path input_data_path, tsl::robin_map<std::string, uint32_t> labels_to_number_of_points,
+    TURBO_DLL turbo::flat_hash_map<std::string, std::vector<uint32_t>> generate_label_specific_vector_files_compat(
+            path input_data_path, turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points,
             std::vector<label_set> point_ids_to_labels, label_set all_labels);
 
 /*
@@ -82,8 +82,8 @@ namespace tann {
  *    input_data_path + "_" + label
  */
     template<typename T>
-    inline tsl::robin_map<std::string, std::vector<uint32_t>> generate_label_specific_vector_files(
-            path input_data_path, tsl::robin_map<std::string, uint32_t> labels_to_number_of_points,
+    inline turbo::flat_hash_map<std::string, std::vector<uint32_t>> generate_label_specific_vector_files(
+            path input_data_path, turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points,
             std::vector<label_set> point_ids_to_labels, label_set all_labels) {
         auto file_writing_timer = std::chrono::high_resolution_clock::now();
         tann::MemoryMapper input_data(input_data_path);
@@ -99,9 +99,9 @@ namespace tann {
             throw;
         }
 
-        tsl::robin_map<std::string, iovec *> label_to_iovec_map;
-        tsl::robin_map<std::string, uint32_t> label_to_curr_iovec;
-        tsl::robin_map<std::string, std::vector<uint32_t>> label_id_to_orig_id;
+        turbo::flat_hash_map<std::string, iovec *> label_to_iovec_map;
+        turbo::flat_hash_map<std::string, uint32_t> label_to_curr_iovec;
+        turbo::flat_hash_map<std::string, std::vector<uint32_t>> label_id_to_orig_id;
 
         // setup iovec list for each label
         for (const auto &lbl: all_labels) {

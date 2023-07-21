@@ -82,7 +82,7 @@ int search_disk_index(tann::Metric &metric, const std::string &index_path_prefix
     }
 
     bool calc_recall_flag = false;
-    if (gt_file != std::string("null") && gt_file != std::string("NULL") && file_exists(gt_file)) {
+    if (gt_file != std::string("null") && gt_file != std::string("NULL") && turbo::filesystem::exists(gt_file)) {
         tann::load_truthset(gt_file, gt_ids, gt_dists, gt_num, gt_dim);
         if (gt_num != query_num) {
             tann::cout << "Error. Mismatch in number of queries and ground truth data" << std::endl;
@@ -127,7 +127,7 @@ int search_disk_index(tann::Metric &metric, const std::string &index_path_prefix
     T *warmup = nullptr;
 
     if (WARMUP) {
-        if (file_exists(warmup_query_file)) {
+        if (turbo::filesystem::exists(warmup_query_file)) {
             tann::load_aligned_bin<T>(warmup_query_file, warmup, warmup_num, warmup_dim, warmup_aligned_dim);
         } else {
             warmup_num = (std::min)((uint32_t) 150000, (uint32_t) 15000 * num_threads);

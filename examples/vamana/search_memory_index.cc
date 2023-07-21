@@ -38,7 +38,7 @@ int search_memory_index(tann::Metric &metric, const std::string &index_path, con
 
     // Check for ground truth
     bool calc_recall_flag = false;
-    if (truthset_file != std::string("null") && file_exists(truthset_file)) {
+    if (truthset_file != std::string("null") && turbo::filesystem::exists(truthset_file)) {
         tann::load_truthset(truthset_file, gt_ids, gt_dists, gt_num, gt_dim);
         if (gt_num != query_num) {
             std::cout << "Error. Mismatch in number of queries and ground truth data" << std::endl;

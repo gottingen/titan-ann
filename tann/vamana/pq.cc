@@ -6,7 +6,7 @@
 #include "tann/vamana/pq.h"
 #include "tann/vamana/partition.h"
 #include "tann/common/math_utils.h"
-#include "tann/tsl/robin_map.h"
+#include "turbo/container/flat_hash_map.h"
 
 // block size for reading/processing large files and matrices in blocks
 #define BLOCK_SIZE 5000000
@@ -120,7 +120,7 @@ namespace tann {
         tann::cout << "Loaded PQ Pivots: #ctrs: " << NUM_PQ_CENTROIDS << ", #dims: " << this->ndims
                    << ", #chunks: " << this->n_chunks << std::endl;
 
-        if (file_exists(rotmat_file)) {
+        if (turbo::filesystem::exists(rotmat_file)) {
 #ifdef EXEC_ENV_OLS
             tann::load_bin<float>(files, rotmat_file, (float *&)rotmat_tr, nr, nc);
 #else
@@ -307,7 +307,7 @@ namespace tann {
 
         std::unique_ptr<float[]> full_pivot_data;
 
-        if (file_exists(pq_pivots_path)) {
+        if (turbo::filesystem::exists(pq_pivots_path)) {
             size_t file_dim, file_num_centers;
             tann::load_bin<float>(pq_pivots_path, full_pivot_data, file_num_centers, file_dim, METADATA_SIZE);
             if (file_dim == dim && file_num_centers == num_centers) {
@@ -349,7 +349,7 @@ namespace tann {
         size_t cur_bin_threshold = high_val;
 
         std::vector<std::vector<uint32_t>> bin_to_dims(num_pq_chunks);
-        tsl::robin_map<uint32_t, uint32_t> dim_to_bin;
+        turbo::flat_hash_map<uint32_t, uint32_t> dim_to_bin;
         std::vector<float> bin_loads(num_pq_chunks, 0);
 
         // Process dimensions not inserted by previous loop
@@ -486,7 +486,7 @@ namespace tann {
         size_t cur_bin_threshold = high_val;
 
         std::vector<std::vector<uint32_t>> bin_to_dims(num_pq_chunks);
-        tsl::robin_map<uint32_t, uint32_t> dim_to_bin;
+        turbo::flat_hash_map<uint32_t, uint32_t> dim_to_bin;
         std::vector<float> bin_loads(num_pq_chunks, 0);
 
         // Process dimensions not inserted by previous loop
@@ -648,7 +648,7 @@ namespace tann {
 
         std::string inflated_pq_file = pq_compressed_vectors_path + "_inflated.bin";
 
-        if (!file_exists(pq_pivots_path)) {
+        if (!turbo::filesystem::exists(pq_pivots_path)) {
             std::cout << "ERROR: PQ k-means pivot file not found" << std::endl;
             throw tann::ANNException("PQ k-means pivot file not found", -1);
         } else {
@@ -860,7 +860,7 @@ namespace tann {
                                  const std::string &codebook_prefix) {
         size_t train_size, train_dim;
         float *train_data;
-        if (!file_exists(codebook_prefix)) {
+        if (!turbo::filesystem::exists(codebook_prefix)) {
             // instantiates train_data with random sample updates train_size
             gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size, train_dim);
             tann::cout << "Training data with " << train_size << " samples loaded." << std::endl;

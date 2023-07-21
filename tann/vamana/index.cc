@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <omp.h>
 
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_set.h"
 #include "turbo/container/dynamic_bitset.h"
 
 #include "tann/io/memory_mapper.h"
@@ -56,7 +56,7 @@ namespace tann {
               _dynamic_index(dynamic_index), _enable_tags(enable_tags), _indexingMaxC(DEFAULT_MAXC),
               _query_scratch(nullptr),
               _pq_dist(pq_dist_build), _use_opq(use_opq), _num_pq_chunks(num_pq_chunks),
-              _delete_set(new tsl::robin_set<uint32_t>), _conc_consolidate(concurrent_consolidate) {
+              _delete_set(new turbo::flat_hash_set<uint32_t>), _conc_consolidate(concurrent_consolidate) {
         if (dynamic_index && !enable_tags) {
             throw ANNException("ERROR: Dynamic Indexing must have tags enabled.", -1, __FUNCSIG__, __FILE__, __LINE__);
         }
@@ -307,13 +307,13 @@ namespace tann {
             // the files are deleted before save. Ideally, we should check
             // the error code for delete_file, but will ignore now because
             // delete should succeed if save will succeed.
-            delete_file(graph_file);
+            turbo::filesystem::remove(graph_file);
             save_graph(graph_file);
-            delete_file(data_file);
+            turbo::filesystem::remove(data_file);
             save_data(data_file);
-            delete_file(tags_file);
+            turbo::filesystem::remove(tags_file);
             save_tags(tags_file);
-            delete_file(delete_list_file);
+            turbo::filesystem::remove(delete_list_file);
             save_delete_list(delete_list_file);
         } else {
             tann::cout << "Save index in a single file currently not supported. "
@@ -336,7 +336,7 @@ namespace tann {
 
     template<typename T, typename TagT, typename LabelT>
     size_t Index<T, TagT, LabelT>::load_tags(const std::string tag_filename) {
-        if (_enable_tags && !file_exists(tag_filename)) {
+        if (_enable_tags && !turbo::filesystem::exists(tag_filename)) {
             tann::cerr << "Tag file provided does not exist!" << std::endl;
             throw tann::ANNException("Tag file provided does not exist!", -1, __FUNCSIG__, __FILE__, __LINE__);
         }
@@ -389,7 +389,7 @@ namespace tann {
 #ifdef EXEC_ENV_OLS
         tann::get_bin_metadata(reader, file_num_points, file_dim);
 #else
-        if (!file_exists(filename)) {
+        if (!turbo::filesystem::exists(filename)) {
             std::stringstream stream;
             stream << "ERROR: data file " << filename << " does not exist." << std::endl;
             tann::cerr << stream.str() << std::endl;
@@ -481,7 +481,7 @@ namespace tann {
             std::string delete_set_file = std::string(filename) + ".del";
             std::string graph_file = std::string(filename);
             data_file_num_pts = load_data(data_file);
-            if (file_exists(delete_set_file)) {
+            if (turbo::filesystem::exists(delete_set_file)) {
                 load_delete_set(delete_set_file);
             }
             if (_enable_tags) {
@@ -505,11 +505,11 @@ namespace tann {
             throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__, __LINE__);
         }
 
-        if (file_exists(labels_file)) {
+        if (turbo::filesystem::exists(labels_file)) {
             _label_map = load_label_map(labels_map_file);
             parse_label_file(labels_file, label_num_pts);
             assert(label_num_pts == data_file_num_pts);
-            if (file_exists(labels_to_medoids)) {
+            if (turbo::filesystem::exists(labels_to_medoids)) {
                 std::ifstream medoid_stream(labels_to_medoids);
                 std::string line, token;
                 uint32_t line_cnt = 0;
@@ -538,7 +538,7 @@ namespace tann {
 
             std::string universal_label_file(filename);
             universal_label_file += "_universal_label.txt";
-            if (file_exists(universal_label_file)) {
+            if (turbo::filesystem::exists(universal_label_file)) {
                 std::ifstream universal_label_reader(universal_label_file);
                 universal_label_reader >> _universal_label;
                 _use_universal_label = true;
@@ -770,7 +770,7 @@ namespace tann {
         std::vector<Neighbor> &expanded_nodes = scratch->pool();
         NeighborPriorityQueue &best_L_nodes = scratch->best_l_nodes();
         best_L_nodes.reserve(Lsize);
-        tsl::robin_set<uint32_t> &inserted_into_pool_rs = scratch->inserted_into_pool_rs();
+        turbo::flat_hash_set<uint32_t> &inserted_into_pool_rs = scratch->inserted_into_pool_rs();
         turbo::dynamic_bitset<> &inserted_into_pool_bs = scratch->inserted_into_pool_bs();
         std::vector<uint32_t> &id_scratch = scratch->id_scratch();
         std::vector<float> &dist_scratch = scratch->dist_scratch();
@@ -1019,7 +1019,7 @@ namespace tann {
     void Index<T, TagT, LabelT>::occlude_list(const uint32_t location, std::vector<Neighbor> &pool, const float alpha,
                                               const uint32_t degree, const uint32_t maxc, std::vector<uint32_t> &result,
                                               InMemQueryScratch<T> *scratch,
-                                              const tsl::robin_set<uint32_t> *const delete_set_ptr) {
+                                              const turbo::flat_hash_set<uint32_t> *const delete_set_ptr) {
         if (pool.size() == 0)
             return;
 
@@ -1169,7 +1169,7 @@ namespace tann {
             } // des lock is released by this point
 
             if (prune_needed) {
-                tsl::robin_set<uint32_t> dummy_visited(0);
+                turbo::flat_hash_set<uint32_t> dummy_visited(0);
                 std::vector<Neighbor> dummy_pool(0);
 
                 size_t reserveSize = (size_t) (std::ceil(1.05 * GRAPH_SLACK_FACTOR * range));
@@ -1217,7 +1217,7 @@ namespace tann {
         /* visit_order is a vector that is initialized to the entire graph */
         std::vector<uint32_t> visit_order;
         std::vector<tann::Neighbor> pool, tmp;
-        tsl::robin_set<uint32_t> visited;
+        turbo::flat_hash_set<uint32_t> visited;
         visit_order.reserve(_nd + _num_frozen_pts);
         for (uint32_t i = 0; i < (uint32_t) _nd; i++) {
             visit_order.emplace_back(i);
@@ -1279,7 +1279,7 @@ namespace tann {
                 ScratchStoreManager<InMemQueryScratch<T>> manager(_query_scratch);
                 auto scratch = manager.scratch_space();
 
-                tsl::robin_set<uint32_t> dummy_visited(0);
+                turbo::flat_hash_set<uint32_t> dummy_visited(0);
                 std::vector<Neighbor> dummy_pool(0);
                 std::vector<uint32_t> new_out_neighbors;
 
@@ -1315,7 +1315,7 @@ namespace tann {
         for (int64_t node = 0; node < (int64_t) (_max_points + _num_frozen_pts); node++) {
             if ((size_t) node < _nd || (size_t) node >= _max_points) {
                 if (_final_graph[node].size() > range) {
-                    tsl::robin_set<uint32_t> dummy_visited(0);
+                    turbo::flat_hash_set<uint32_t> dummy_visited(0);
                     std::vector<Neighbor> dummy_pool(0);
                     std::vector<uint32_t> new_out_neighbors;
 
@@ -1496,7 +1496,7 @@ namespace tann {
         if (num_points_to_load == 0)
             throw ANNException("Do not call build with 0 points", -1, __FUNCSIG__, __FILE__, __LINE__);
 
-        if (!file_exists(filename)) {
+        if (!turbo::filesystem::exists(filename)) {
             std::stringstream stream;
             stream << "ERROR: Data file " << filename << " does not exist." << std::endl;
             tann::cerr << stream.str() << std::endl;
@@ -1584,7 +1584,7 @@ namespace tann {
                 throw ANNException("Tag filename is null, while _enable_tags is set", -1, __FUNCSIG__, __FILE__,
                                    __LINE__);
             } else {
-                if (file_exists(tag_filename)) {
+                if (turbo::filesystem::exists(tag_filename)) {
                     tann::cout << "Loading tags from " << tag_filename << " for vamana index build" << std::endl;
                     TagT *tag_data = nullptr;
                     size_t npts, ndim;
@@ -1704,7 +1704,7 @@ namespace tann {
 
         std::unordered_map<LabelT, std::vector<uint32_t>> label_to_points;
 
-        for (typename tsl::robin_set<LabelT>::size_type lbl = 0; lbl < _labels.size(); lbl++) {
+        for (typename turbo::flat_hash_set<LabelT>::size_type lbl = 0; lbl < _labels.size(); lbl++) {
             auto itr = _labels.begin();
             std::advance(itr, lbl);
             auto &x = *itr;
@@ -1997,10 +1997,10 @@ namespace tann {
     }
 
     template<typename T, typename TagT, typename LabelT>
-    inline void Index<T, TagT, LabelT>::process_delete(const tsl::robin_set<uint32_t> &old_delete_set, size_t loc,
+    inline void Index<T, TagT, LabelT>::process_delete(const turbo::flat_hash_set<uint32_t> &old_delete_set, size_t loc,
                                                        const uint32_t range, const uint32_t maxc, const float alpha,
                                                        InMemQueryScratch<T> *scratch) {
-        tsl::robin_set<uint32_t> &expanded_nodes_set = scratch->expanded_nodes_set();
+        turbo::flat_hash_set<uint32_t> &expanded_nodes_set = scratch->expanded_nodes_set();
         std::vector<Neighbor> &expanded_nghrs_vec = scratch->expanded_nodes_vec();
 
         // If this condition were not true, deadlock could result
@@ -2094,7 +2094,7 @@ namespace tann {
 
         tann::cout << "Starting consolidate_deletes... ";
 
-        std::unique_ptr<tsl::robin_set<uint32_t>> old_delete_set(new tsl::robin_set<uint32_t>);
+        std::unique_ptr<turbo::flat_hash_set<uint32_t>> old_delete_set(new turbo::flat_hash_set<uint32_t>);
         {
             std::unique_lock<std::shared_timed_mutex> dl(_delete_lock);
             std::swap(_delete_set, old_delete_set);
@@ -2290,7 +2290,7 @@ namespace tann {
     }
 
     template<typename T, typename TagT, typename LabelT>
-    size_t Index<T, TagT, LabelT>::release_locations(const tsl::robin_set<uint32_t> &locations) {
+    size_t Index<T, TagT, LabelT>::release_locations(const turbo::flat_hash_set<uint32_t> &locations) {
         for (auto location: locations) {
             if (_empty_slots.is_in_set(location))
                 throw ANNException("Trying to release location, but location "
@@ -2557,7 +2557,7 @@ namespace tann {
     }
 
     template<typename T, typename TagT, typename LabelT>
-    void Index<T, TagT, LabelT>::get_active_tags(tsl::robin_set<TagT> &active_tags) {
+    void Index<T, TagT, LabelT>::get_active_tags(turbo::flat_hash_set<TagT> &active_tags) {
         active_tags.clear();
         std::shared_lock<std::shared_timed_mutex> tl(_tag_lock);
         for (auto iter: _tag_to_location) {
@@ -2591,7 +2591,7 @@ namespace tann {
         turbo::dynamic_bitset<> visited(_max_points + _num_frozen_pts);
 
         size_t MAX_BFS_LEVELS = 32;
-        auto bfs_sets = new tsl::robin_set<uint32_t>[MAX_BFS_LEVELS];
+        auto bfs_sets = new turbo::flat_hash_set<uint32_t>[MAX_BFS_LEVELS];
 
         bfs_sets[0].insert(_start);
         visited.set(_start);

@@ -5,9 +5,9 @@
 
 #include <vector>
 #include "turbo/container/dynamic_bitset.h"
-#include "tann/tsl/robin_set.h"
-#include "tann/tsl/robin_map.h"
-#include "tann/tsl/sparse_map.h"
+#include "turbo/container/flat_hash_set.h"
+#include "turbo/container/flat_hash_map.h"
+#include "turbo/container/flat_hash_map.h"
 
 #include "tann/vamana/neighbor.h"
 #include "tann/common/concurrent_queue.h"
@@ -74,7 +74,7 @@ namespace tann {
             return _occlude_factor;
         }
 
-        inline tsl::robin_set<uint32_t> &inserted_into_pool_rs() {
+        inline turbo::flat_hash_set<uint32_t> &inserted_into_pool_rs() {
             return _inserted_into_pool_rs;
         }
 
@@ -90,7 +90,7 @@ namespace tann {
             return _dist_scratch;
         }
 
-        inline tsl::robin_set<uint32_t> &expanded_nodes_set() {
+        inline turbo::flat_hash_set<uint32_t> &expanded_nodes_set() {
             return _expanded_nodes_set;
         }
 
@@ -126,7 +126,7 @@ namespace tann {
         std::vector<float> _occlude_factor;
 
         // Capacity initialized to 20L
-        tsl::robin_set<uint32_t> _inserted_into_pool_rs;
+        turbo::flat_hash_set<uint32_t> _inserted_into_pool_rs;
 
         // Use a pointer here to allow for forward declaration of dynamic_bitset
         // in public headers to avoid making boost a dependency for clients
@@ -141,7 +141,7 @@ namespace tann {
         std::vector<float> _dist_scratch;
 
         //  Buffers used in process delete, capacity increases as needed
-        tsl::robin_set<uint32_t> _expanded_nodes_set;
+        turbo::flat_hash_set<uint32_t> _expanded_nodes_set;
         std::vector<Neighbor> _expanded_nghrs_vec;
         std::vector<uint32_t> _occlude_list_output;
     };
@@ -163,7 +163,7 @@ namespace tann {
 
         PQScratch<T> *_pq_scratch;
 
-        tsl::robin_set<size_t> visited;
+        turbo::flat_hash_set<size_t> visited;
         NeighborPriorityQueue retset;
         std::vector<Neighbor> full_retset;
 

@@ -25,7 +25,7 @@
 #define ALIGNMENT 512
 
 namespace detail {
-    typedef tsl::robin_set<std::string> label_set;
+    typedef turbo::flat_hash_set<std::string> label_set;
     typedef std::string path;
 
     template<class T>

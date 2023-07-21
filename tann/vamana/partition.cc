@@ -8,8 +8,8 @@
 #include <string>
 
 #include <omp.h>
-#include "tann/tsl/robin_map.h"
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_map.h"
+#include "turbo/container/flat_hash_set.h"
 
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && defined(TANN_BUILD)
 #include "gperftools/malloc_extension.h"

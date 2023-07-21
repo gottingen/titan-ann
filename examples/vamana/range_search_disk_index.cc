@@ -67,7 +67,7 @@ int search_disk_index(tann::Metric &metric, const std::string &index_path_prefix
     tann::load_aligned_bin<T>(query_file, query, query_num, query_dim, query_aligned_dim);
 
     bool calc_recall_flag = false;
-    if (gt_file != std::string("null") && file_exists(gt_file)) {
+    if (gt_file != std::string("null") && turbo::filesystem::exists(gt_file)) {
         tann::load_range_truthset(gt_file, groundtruth_ids,
                                   gt_num); // use for range search type of truthset
         //    tann::prune_truthset_for_range(gt_file, search_range,
@@ -116,7 +116,7 @@ int search_disk_index(tann::Metric &metric, const std::string &index_path_prefix
     T *warmup = nullptr;
 
     if (WARMUP) {
-        if (file_exists(warmup_query_file)) {
+        if (turbo::filesystem::exists(warmup_query_file)) {
             tann::load_aligned_bin<T>(warmup_query_file, warmup, warmup_num, warmup_dim, warmup_aligned_dim);
         } else {
             warmup_num = (std::min)((uint32_t) 150000, (uint32_t) 15000 * num_threads);

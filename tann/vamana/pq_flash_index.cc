@@ -213,7 +213,7 @@ continue;
             tann::load_aligned_bin<T>(files, sample_bin, samples, sample_num, sample_dim, sample_aligned_dim);
         }
 #else
-        if (file_exists(sample_bin)) {
+        if (turbo::filesystem::exists(sample_bin)) {
             tann::load_aligned_bin<T>(sample_bin, samples, sample_num, sample_dim, sample_aligned_dim);
         }
 #endif
@@ -252,7 +252,7 @@ continue;
         std::random_device rng;
         std::mt19937 urng(rng());
 
-        tsl::robin_set<uint32_t> node_set;
+        turbo::flat_hash_set<uint32_t> node_set;
 
         // Do not cache more than 10% of the nodes in the index
         uint64_t tenp_nodes = (uint64_t) (std::round(this->num_points * 0.1));
@@ -268,9 +268,9 @@ continue;
         auto this_thread_data = manager.scratch_space();
         IOContext &ctx = this_thread_data->ctx;
 
-        std::unique_ptr<tsl::robin_set<uint32_t>> cur_level, prev_level;
-        cur_level = std::make_unique<tsl::robin_set<uint32_t>>();
-        prev_level = std::make_unique<tsl::robin_set<uint32_t>>();
+        std::unique_ptr<turbo::flat_hash_set<uint32_t>> cur_level, prev_level;
+        cur_level = std::make_unique<turbo::flat_hash_set<uint32_t>>();
+        prev_level = std::make_unique<turbo::flat_hash_set<uint32_t>>();
 
         for (uint64_t miter = 0; miter < num_medoids; miter++) {
             cur_level->insert(medoids[miter]);
@@ -639,11 +639,11 @@ continue;
 
         this->num_points = npts_u64;
         this->n_chunks = nchunks_u64;
-        if (file_exists(labels_file)) {
+        if (turbo::filesystem::exists(labels_file)) {
             parse_label_file(labels_file, num_pts_in_label_file);
             assert(num_pts_in_label_file == this->num_points);
             _label_map = load_label_map(labels_map_file);
-            if (file_exists(labels_to_medoids)) {
+            if (turbo::filesystem::exists(labels_to_medoids)) {
                 std::ifstream medoid_stream(labels_to_medoids);
                 assert(medoid_stream.is_open());
                 std::string line, token;
@@ -670,7 +670,7 @@ continue;
                 }
             }
             std::string univ_label_file = std::string(disk_index_file) + "_universal_label.txt";
-            if (file_exists(univ_label_file)) {
+            if (turbo::filesystem::exists(univ_label_file)) {
                 std::ifstream universal_label_reader(univ_label_file);
                 assert(universal_label_reader.is_open());
                 std::string univ_label;
@@ -679,7 +679,7 @@ continue;
                 LabelT label_as_num = (LabelT) std::stoul(univ_label);
                 set_universal_label(label_as_num);
             }
-            if (file_exists(dummy_map_file)) {
+            if (turbo::filesystem::exists(dummy_map_file)) {
                 std::ifstream dummy_map_stream(dummy_map_file);
                 assert(dummy_map_stream.is_open());
                 std::string line, token;
@@ -729,7 +729,7 @@ continue;
         }
 
         std::string disk_pq_pivots_path = this->disk_index_file + "_pq_pivots.bin";
-        if (file_exists(disk_pq_pivots_path)) {
+        if (turbo::filesystem::exists(disk_pq_pivots_path)) {
             use_disk_index_pq = true;
 #ifdef EXEC_ENV_OLS
             // giving 0 chunks to make the pq_table infer from the
@@ -845,7 +845,7 @@ continue;
             size_t tmp_dim;
             tann::load_bin<uint32_t>(files, medoids_file, medoids, num_medoids, tmp_dim);
 #else
-        if (file_exists(medoids_file)) {
+        if (turbo::filesystem::exists(medoids_file)) {
             size_t tmp_dim;
             tann::load_bin<uint32_t>(medoids_file, medoids, num_medoids, tmp_dim);
 #endif
@@ -861,7 +861,7 @@ continue;
             if (!files.fileExists(centroids_file))
             {
 #else
-            if (!file_exists(centroids_file)) {
+            if (!turbo::filesystem::exists(centroids_file)) {
 #endif
                 tann::cout << "Centroid data file not found. Using corresponding vectors "
                               "for the medoids "
@@ -895,7 +895,7 @@ continue;
 
         std::string norm_file = std::string(disk_index_file) + "_max_base_norm.bin";
 
-        if (file_exists(norm_file) && metric == tann::Metric::INNER_PRODUCT) {
+        if (turbo::filesystem::exists(norm_file) && metric == tann::Metric::INNER_PRODUCT) {
             uint64_t dumr, dumc;
             float *norm_val;
             tann::load_bin<float>(norm_file, norm_val, dumr, dumc);
@@ -1057,7 +1057,7 @@ continue;
         };
         Timer query_timer, io_timer, cpu_timer;
 
-        tsl::robin_set<uint64_t> &visited = query_scratch->visited;
+        turbo::flat_hash_set<uint64_t> &visited = query_scratch->visited;
         NeighborPriorityQueue &retset = query_scratch->retset;
         retset.reserve(l_search);
         std::vector<Neighbor> &full_retset = query_scratch->full_retset;

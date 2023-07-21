@@ -14,8 +14,8 @@
 #include "tann/common/utils.h"
 #include "turbo/platform/port.h"
 #include "tann/vamana/scratch.h"
-#include "tann/tsl/robin_map.h"
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_map.h"
+#include "turbo/container/flat_hash_set.h"
 
 #define FULL_PRECISION_REORDER_MULTIPLIER 3
 
@@ -178,11 +178,11 @@ namespace tann {
 
         // nhood_cache
         unsigned *nhood_cache_buf = nullptr;
-        tsl::robin_map<uint32_t, std::pair<uint32_t, uint32_t *>> nhood_cache;
+        turbo::flat_hash_map<uint32_t, std::pair<uint32_t, uint32_t *>> nhood_cache;
 
         // coord_cache
         T *coord_cache_buf = nullptr;
-        tsl::robin_map<uint32_t, T *> coord_cache;
+        turbo::flat_hash_map<uint32_t, T *> coord_cache;
 
         // thread-specific scratch
         ConcurrentQueue<SSDThreadData<T> *> thread_data;
@@ -195,15 +195,15 @@ namespace tann {
         // filter support
         uint32_t *_pts_to_label_offsets = nullptr;
         uint32_t *_pts_to_labels = nullptr;
-        tsl::robin_set<LabelT> _labels;
+        turbo::flat_hash_set<LabelT> _labels;
         std::unordered_map<LabelT, uint32_t> _filter_to_medoid_id;
         bool _use_universal_label;
         uint32_t _universal_filter_num;
         std::vector<LabelT> _filter_list;
-        tsl::robin_set<uint32_t> _dummy_pts;
-        tsl::robin_set<uint32_t> _has_dummy_pts;
-        tsl::robin_map<uint32_t, uint32_t> _dummy_to_real_map;
-        tsl::robin_map<uint32_t, std::vector<uint32_t>> _real_to_dummy_map;
+        turbo::flat_hash_set<uint32_t> _dummy_pts;
+        turbo::flat_hash_set<uint32_t> _has_dummy_pts;
+        turbo::flat_hash_map<uint32_t, uint32_t> _dummy_to_real_map;
+        turbo::flat_hash_map<uint32_t, std::vector<uint32_t>> _real_to_dummy_map;
         std::unordered_map<std::string, LabelT> _label_map;
 
 #ifdef EXEC_ENV_OLS
