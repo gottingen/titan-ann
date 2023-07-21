@@ -2624,10 +2624,8 @@ namespace tann {
         }
     }
 
-/*  Internals of the library */
-    template<typename T, typename TagT, typename LabelT> const float Index<T, TagT, LabelT>::INDEX_GROWTH_FACTOR = 1.5f;
 
-// EXPORTS
+    // EXPORTS
     template TURBO_DLL
     class Index<float, int32_t, uint32_t>;
 
@@ -2664,7 +2662,7 @@ namespace tann {
     template TURBO_DLL
     class Index<uint8_t, uint64_t, uint32_t>;
 
-// Label with short int 2 byte
+    // Label with short int 2 byte
     template TURBO_DLL
     class Index<float, int32_t, uint16_t>;
 

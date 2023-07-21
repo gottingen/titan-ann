@@ -408,6 +408,6 @@ namespace tann {
         // Per node lock, cardinality=_max_points
         std::vector<non_recursive_mutex> _locks;
 
-        static const float INDEX_GROWTH_FACTOR;
+        static constexpr float INDEX_GROWTH_FACTOR = 1.5f;
     };
 } // namespace tann
