@@ -24,6 +24,7 @@ file(GLOB_RECURSE IO_SRC io/*.cc)
 file(GLOB_RECURSE DISTANCE_SRC distance/*.cc)
 file(GLOB_RECURSE CORE_SRC core/*.cc)
 file(GLOB_RECURSE FLAT_SRC flat/*.cc)
+file(GLOB_RECURSE DS_SRC datasets/*.cc)
 set(TANN_LIB_SRC
         ${COMMON_SRC}
         ${VAM_SRC}
@@ -32,6 +33,7 @@ set(TANN_LIB_SRC
         ${DISTANCE_SRC}
         ${CORE_SRC}
         ${FLAT_SRC}
+        ${DS_SRC}
         )
 add_definitions(
         -DUSE_AVX2

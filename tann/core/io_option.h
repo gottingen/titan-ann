@@ -11,24 +11,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+#ifndef TANN_CORE_IO_OPTION_H_
+#define TANN_CORE_IO_OPTION_H_
 
-#ifndef TANN_COMMON_CONFIG_H_
-#define TANN_COMMON_CONFIG_H_
+#include "tann/core/types.h"
 
-#include "turbo/platform/port.h"
-#include "tann/common/half.hpp"
-#include "turbo/format/format.h"
 namespace tann {
-    typedef half_float::half float16;
-}
 
-namespace fmt {
-    template <> struct formatter<tann::float16>: formatter<float> {
-        // parse is inherited from formatter<float>.
+    struct IOOption {
 
-        auto format(tann::float16 c, format_context& ctx) const {
-            return formatter<float>::format(static_cast<float>(c), ctx);
-        }
     };
-}
-#endif  // TANN_COMMON_CONFIG_H_
+
+    struct ReadOption {
+        DataType data_type;
+        std::size_t n_vectors;
+        std::size_t dimension;
+    };
+
+    struct WriteOption {
+        DataType data_type;
+        std::size_t n_vectors;
+        std::size_t dimension;
+    };
+}  // namespace tann
+
+#endif  // TANN_CORE_IO_OPTION_H_

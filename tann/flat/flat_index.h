@@ -26,21 +26,43 @@
 #include "tann/common/natural_number_set.h"
 #include "tann/core/query_context.h"
 #include "tann/core/index_option.h"
+#include "tann/core/index_interface.h"
 
 namespace tann {
 
-    class FlatIndex {
+    class FlatIndex : public IndexInterface {
     public:
         FlatIndex() = default;
-        ~FlatIndex() = default;
 
-        turbo::Status init(IndexOption option);
+        ~FlatIndex() override = default;
 
-        void add_vector(turbo::Span<uint8_t> vec, const label_type &label);
+        [[nodiscard]] turbo::Status init(IndexOption option) override;
 
-        void remove_vector(const label_type &label);
+        void add_vector(turbo::Span<uint8_t> vec, const label_type &label) override;
 
-        [[nodiscard]] turbo::Status search_vector(QueryContext *qctx);
+        void remove_vector(const label_type &label) override;
+
+        [[nodiscard]] turbo::Status search_vector(QueryContext *qctx) override;
+
+        [[nodiscard]] turbo::Status save_index(const std::string &path, const IOOption &option) override;
+
+        [[nodiscard]] turbo::Status load_index(const std::string &path, const IOOption &option) override;
+
+        [[nodiscard]] std::size_t size() const override {
+            return _data.size();
+        }
+
+        [[nodiscard]] std::size_t dimension() const  override {
+            return _vs.dimension;
+        }
+
+        [[nodiscard]] bool dynamic() const override {
+            return true;
+        }
+
+        [[nodiscard]] bool need_model() const override {
+            return false;
+        }
 
     private:
         VectorSpace _vs;

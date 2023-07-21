@@ -6,7 +6,7 @@
 #include <cstddef>
 #include <mutex>
 #include <vector>
-#include "tann/common/utils.h"
+#include <cstring>
 
 namespace tann {
 

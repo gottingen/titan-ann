@@ -38,4 +38,5 @@ carbin_cc_test(
 add_subdirectory(distance)
 add_subdirectory(core)
 add_subdirectory(store)
+add_subdirectory(datasets)
 #add_subdirectory(flat)

@@ -23,6 +23,8 @@ namespace tann {
         DataType data_type{DataType::DT_NONE};
         MetricType metric{MetricType::UNDEFINED};
         std::size_t dimension{0};
+        std::size_t batch_size{256};
+        std::size_t max_elements{0};
     };
 }  // namespace tann
 

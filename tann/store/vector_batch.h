@@ -176,6 +176,9 @@ namespace tann {
             return _capacity;
         }
 
+        [[nodiscard]] turbo::Span<uint8_t> to_span() {
+            return turbo::Span<uint8_t>{_data, _vp->vector_byte_size * _ndim};
+        }
     private:
         /// no lint
         TURBO_NON_COPYABLE(VectorBatch);
