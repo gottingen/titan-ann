@@ -21,7 +21,7 @@ namespace tann {
         if(!r.ok()) {
             return r;
         }
-        r = _data.init(&_vs, 256);
+        r = _data.init(&_vs, option.batch_size);
         return r;
     }
 
