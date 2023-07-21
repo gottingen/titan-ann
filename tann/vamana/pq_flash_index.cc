@@ -62,11 +62,9 @@ namespace tann {
 
     template<typename T, typename LabelT>
     PQFlashIndex<T, LabelT>::~PQFlashIndex() {
-#ifndef EXEC_ENV_OLS
         if (data != nullptr) {
             delete[] data;
         }
-#endif
 
         if (centroid_data != nullptr)
             aligned_free(centroid_data);
@@ -180,14 +178,6 @@ continue;
         tann::cout << "..done." << std::endl;
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T, typename LabelT>
-    void PQFlashIndex<T, LabelT>::generate_cache_list_from_sample_queries(MemoryMappedFiles &files, std::string sample_bin,
-                                                                          uint64_t l_search, uint64_t beamwidth,
-                                                                          uint64_t num_nodes_to_cache, uint32_t nthreads,
-                                                                          std::vector<uint32_t> &node_list)
-    {
-#else
 
     template<typename T, typename LabelT>
     void PQFlashIndex<T, LabelT>::generate_cache_list_from_sample_queries(std::string sample_bin, uint64_t l_search,
@@ -195,7 +185,6 @@ continue;
                                                                           uint64_t num_nodes_to_cache,
                                                                           uint32_t nthreads,
                                                                           std::vector<uint32_t> &node_list) {
-#endif
         this->count_visited_nodes = true;
         this->node_visit_counter.clear();
         this->node_visit_counter.resize(this->num_points);
@@ -207,17 +196,9 @@ continue;
         uint64_t sample_num, sample_dim, sample_aligned_dim;
         T *samples;
 
-#ifdef EXEC_ENV_OLS
-        if (files.fileExists(sample_bin))
-        {
-            tann::load_aligned_bin<T>(files, sample_bin, samples, sample_num, sample_dim, sample_aligned_dim);
-        }
-#else
         if (turbo::filesystem::exists(sample_bin)) {
             tann::load_aligned_bin<T>(sample_bin, samples, sample_num, sample_dim, sample_aligned_dim);
-        }
-#endif
-        else {
+        } else {
             tann::cerr << "Sample bin file not found. Not generating cache." << std::endl;
             return;
         }
@@ -562,40 +543,20 @@ continue;
         }
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T, typename LabelT>
-    int PQFlashIndex<T, LabelT>::load(MemoryMappedFiles &files, uint32_t num_threads, const char *index_prefix)
-    {
-#else
 
     template<typename T, typename LabelT>
     int PQFlashIndex<T, LabelT>::load(uint32_t num_threads, const char *index_prefix) {
-#endif
         std::string pq_table_bin = std::string(index_prefix) + "_pq_pivots.bin";
         std::string pq_compressed_vectors = std::string(index_prefix) + "_pq_compressed.bin";
         std::string disk_index_file = std::string(index_prefix) + "_disk.index";
-#ifdef EXEC_ENV_OLS
-        return load_from_separate_paths(files, num_threads, disk_index_file.c_str(), pq_table_bin.c_str(),
-                                        pq_compressed_vectors.c_str());
-#else
         return load_from_separate_paths(num_threads, disk_index_file.c_str(), pq_table_bin.c_str(),
                                         pq_compressed_vectors.c_str());
-#endif
     }
-
-#ifdef EXEC_ENV_OLS
-    template <typename T, typename LabelT>
-    int PQFlashIndex<T, LabelT>::load_from_separate_paths(tann::MemoryMappedFiles &files, uint32_t num_threads,
-                                                          const char *index_filepath, const char *pivots_filepath,
-                                                          const char *compressed_filepath)
-    {
-#else
 
     template<typename T, typename LabelT>
     int PQFlashIndex<T, LabelT>::load_from_separate_paths(uint32_t num_threads, const char *index_filepath,
                                                           const char *pivots_filepath,
                                                           const char *compressed_filepath) {
-#endif
         std::string pq_table_bin = pivots_filepath;
         std::string pq_compressed_vectors = compressed_filepath;
         std::string disk_index_file = index_filepath;
@@ -609,11 +570,7 @@ continue;
         size_t num_pts_in_label_file = 0;
 
         size_t pq_file_dim, pq_file_num_centroids;
-#ifdef EXEC_ENV_OLS
-        get_bin_metadata(files, pq_table_bin, pq_file_num_centroids, pq_file_dim, METADATA_SIZE);
-#else
         get_bin_metadata(pq_table_bin, pq_file_num_centroids, pq_file_dim, METADATA_SIZE);
-#endif
 
         this->disk_index_file = disk_index_file;
 
@@ -631,11 +588,7 @@ continue;
         this->aligned_dim = ROUND_UP(pq_file_dim, 8);
 
         size_t npts_u64, nchunks_u64;
-#ifdef EXEC_ENV_OLS
-        tann::load_bin<uint8_t>(files, pq_compressed_vectors, this->data, npts_u64, nchunks_u64);
-#else
         tann::load_bin<uint8_t>(pq_compressed_vectors, this->data, npts_u64, nchunks_u64);
-#endif
 
         this->num_points = npts_u64;
         this->n_chunks = nchunks_u64;
@@ -710,11 +663,7 @@ continue;
             }
         }
 
-#ifdef EXEC_ENV_OLS
-        pq_table.load_pq_centroid_bin(files, pq_table_bin.c_str(), nchunks_u64);
-#else
         pq_table.load_pq_centroid_bin(pq_table_bin.c_str(), nchunks_u64);
-#endif
 
         tann::cout << "Loaded PQ centroids and in-memory compressed vectors. #points: " << num_points
                    << " #dim: " << data_dim << " #aligned_dim: " << aligned_dim << " #chunks: " << n_chunks
@@ -731,15 +680,9 @@ continue;
         std::string disk_pq_pivots_path = this->disk_index_file + "_pq_pivots.bin";
         if (turbo::filesystem::exists(disk_pq_pivots_path)) {
             use_disk_index_pq = true;
-#ifdef EXEC_ENV_OLS
-            // giving 0 chunks to make the pq_table infer from the
-            // chunk_offsets file the correct value
-            disk_pq_table.load_pq_centroid_bin(files, disk_pq_pivots_path.c_str(), 0);
-#else
             // giving 0 chunks to make the pq_table infer from the
             // chunk_offsets file the correct value
             disk_pq_table.load_pq_centroid_bin(disk_pq_pivots_path.c_str(), 0);
-#endif
             disk_pq_n_chunks = disk_pq_table.get_num_chunks();
             disk_bytes_per_point =
                     disk_pq_n_chunks * sizeof(uint8_t); // revising disk_bytes_per_point since DISK PQ is used.
@@ -747,23 +690,8 @@ continue;
                        << std::endl;
         }
 
-// read index metadata
-#ifdef EXEC_ENV_OLS
-        // This is a bit tricky. We have to read the header from the
-        // disk_index_file. But  this is now exclusively a preserve of the
-        // DiskPriorityIO class. So, we need to estimate how many
-        // bytes are needed to store the header and read in that many using our
-        // 'standard' aligned file reader approach.
-        reader->open(disk_index_file);
-        this->setup_thread_data(num_threads);
-        this->max_nthreads = num_threads;
-
-        char *bytes = getHeaderBytes();
-        ContentBuf buf(bytes, HEADER_SIZE);
-        std::basic_istream<char> index_metadata(&buf);
-#else
+        // read index metadata
         std::ifstream index_metadata(disk_index_file, std::ios::binary);
-#endif
 
         uint32_t nr, nc; // metadata itself is stored as bin format (nr is number of
         // metadata, nc should be 1)
@@ -823,32 +751,17 @@ continue;
         tann::cout << "# nodes per sector: " << nnodes_per_sector;
         tann::cout << ", max node len (bytes): " << max_node_len;
         tann::cout << ", max node degree: " << max_degree << std::endl;
-
-#ifdef EXEC_ENV_OLS
-        delete[] bytes;
-#else
         index_metadata.close();
-#endif
 
-#ifndef EXEC_ENV_OLS
         // open AlignedFileReader handle to index_file
         std::string index_fname(disk_index_file);
         reader->open(index_fname);
         this->setup_thread_data(num_threads);
         this->max_nthreads = num_threads;
 
-#endif
-
-#ifdef EXEC_ENV_OLS
-        if (files.fileExists(medoids_file))
-        {
-            size_t tmp_dim;
-            tann::load_bin<uint32_t>(files, medoids_file, medoids, num_medoids, tmp_dim);
-#else
         if (turbo::filesystem::exists(medoids_file)) {
             size_t tmp_dim;
             tann::load_bin<uint32_t>(medoids_file, medoids, num_medoids, tmp_dim);
-#endif
 
             if (tmp_dim != 1) {
                 std::stringstream stream;
@@ -857,24 +770,14 @@ continue;
                        << std::endl;
                 throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__, __LINE__);
             }
-#ifdef EXEC_ENV_OLS
-            if (!files.fileExists(centroids_file))
-            {
-#else
             if (!turbo::filesystem::exists(centroids_file)) {
-#endif
                 tann::cout << "Centroid data file not found. Using corresponding vectors "
                               "for the medoids "
                            << std::endl;
                 use_medoids_data_as_centroids();
             } else {
                 size_t num_centroids, aligned_tmp_dim;
-#ifdef EXEC_ENV_OLS
-                tann::load_aligned_bin<float>(files, centroids_file, centroid_data, num_centroids, tmp_dim,
-                                                 aligned_tmp_dim);
-#else
                 tann::load_aligned_bin<float>(centroids_file, centroid_data, num_centroids, tmp_dim, aligned_tmp_dim);
-#endif
                 if (aligned_tmp_dim != aligned_dim || num_centroids != num_medoids) {
                     std::stringstream stream;
                     stream << "Error loading centroids data file. Expected bin format "
@@ -1399,23 +1302,6 @@ continue;
         return this->metric;
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T, typename LabelT> char *PQFlashIndex<T, LabelT>::getHeaderBytes()
-    {
-        IOContext &ctx = reader->get_ctx();
-        AlignedRead readReq;
-        readReq.buf = new char[PQFlashIndex<T, LabelT>::HEADER_SIZE];
-        readReq.len = PQFlashIndex<T, LabelT>::HEADER_SIZE;
-        readReq.offset = 0;
-
-        std::vector<AlignedRead> readReqs;
-        readReqs.push_back(readReq);
-
-        reader->read(readReqs, ctx, false);
-
-        return (char *)readReq.buf;
-    }
-#endif
 
 // instantiations
     template

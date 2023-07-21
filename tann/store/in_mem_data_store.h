@@ -66,10 +66,6 @@ namespace tann {
 
         virtual location_t load_impl(const std::string &filename);
 
-#ifdef EXEC_ENV_OLS
-        virtual location_t load_impl(AlignedFileReader &reader);
-#endif
-
     private:
         data_t *_data = nullptr;
 

@@ -137,38 +137,6 @@ namespace tann {
         return warmup;
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    T *load_warmup(MemoryMappedFiles &files, const std::string &cache_warmup_file, uint64_t &warmup_num,
-                   uint64_t warmup_dim, uint64_t warmup_aligned_dim)
-    {
-        T *warmup = nullptr;
-        uint64_t file_dim, file_aligned_dim;
-
-        if (files.fileExists(cache_warmup_file))
-        {
-            tann::load_aligned_bin<T>(files, cache_warmup_file, warmup, warmup_num, file_dim, file_aligned_dim);
-            tann::cout << "In the warmup file: " << cache_warmup_file << " File dim: " << file_dim
-                          << " File aligned dim: " << file_aligned_dim << " Expected dim: " << warmup_dim
-                          << " Expected aligned dim: " << warmup_aligned_dim << std::endl;
-
-            if (file_dim != warmup_dim || file_aligned_dim != warmup_aligned_dim)
-            {
-                std::stringstream stream;
-                stream << "Mismatched dimensions in sample file. file_dim = " << file_dim
-                       << " file_aligned_dim: " << file_aligned_dim << " index_dim: " << warmup_dim
-                       << " index_aligned_dim: " << warmup_aligned_dim << std::endl;
-                tann::cerr << stream.str();
-                throw tann::ANNException(stream.str(), -1);
-            }
-        }
-        else
-        {
-            warmup = generateRandomWarmup<T>(warmup_num, warmup_dim, warmup_aligned_dim);
-        }
-        return warmup;
-    }
-#endif
 
     template<typename T>
     T *load_warmup(const std::string &cache_warmup_file, uint64_t &warmup_num, uint64_t warmup_dim,
@@ -1198,17 +1166,6 @@ namespace tann {
     template TURBO_DLL float *load_warmup<float>(const std::string &cache_warmup_file, uint64_t &warmup_num,
                                                  uint64_t warmup_dim, uint64_t warmup_aligned_dim);
 
-#ifdef EXEC_ENV_OLS
-    template TURBO_DLL int8_t *load_warmup<int8_t>(MemoryMappedFiles &files, const std::string &cache_warmup_file,
-                                                           uint64_t &warmup_num, uint64_t warmup_dim,
-                                                           uint64_t warmup_aligned_dim);
-    template TURBO_DLL uint8_t *load_warmup<uint8_t>(MemoryMappedFiles &files, const std::string &cache_warmup_file,
-                                                             uint64_t &warmup_num, uint64_t warmup_dim,
-                                                             uint64_t warmup_aligned_dim);
-    template TURBO_DLL float *load_warmup<float>(MemoryMappedFiles &files, const std::string &cache_warmup_file,
-                                                         uint64_t &warmup_num, uint64_t warmup_dim,
-                                                         uint64_t warmup_aligned_dim);
-#endif
 
     template TURBO_DLL uint32_t optimize_beamwidth<int8_t, uint32_t>(
             std::unique_ptr<tann::PQFlashIndex<int8_t, uint32_t>> &pFlashIndex, int8_t *tuning_sample,

@@ -32,11 +32,6 @@ typedef int FileHandle;
 #include "turbo/files/filesystem.h"
 #include "tann/core/types.h"
 
-#ifdef EXEC_ENV_OLS
-#include "content_buf.h"
-#include "memory_mapped_files.h"
-#endif
-
 // taken from
 // https://github.com/Microsoft/BLAS-on-flash/blob/master/include/utils.h
 // round up X to the nearest multiple of Y
@@ -101,9 +96,6 @@ inline void convert_labels_string_to_int(const std::string &inFileName, const st
     map_writer.close();
 }
 
-#ifdef EXEC_ENV_OLS
-class AlignedFileReader;
-#endif
 
 namespace tann {
     static const size_t MAX_SIZE_OF_STREAMBUF = 2LL * 1024 * 1024 * 1024;
@@ -199,24 +191,6 @@ namespace tann {
         ncols = ncols_32;
     }
 
-#ifdef EXEC_ENV_OLS
-    inline void get_bin_metadata(MemoryMappedFiles &files, const std::string &bin_file, size_t &nrows, size_t &ncols,
-                                 size_t offset = 0)
-    {
-        tann::cout << "Getting metadata for file: " << bin_file << std::endl;
-        auto fc = files.getContent(bin_file);
-        // auto                     cb = ContentBuf((char*) fc._content, fc._size);
-        // std::basic_istream<char> reader(&cb);
-        // get_bin_metadata_impl(reader, nrows, ncols, offset);
-
-        int nrows_32, ncols_32;
-        int32_t *metadata_ptr = (int32_t *)((char *)fc._content + offset);
-        nrows_32 = *metadata_ptr;
-        ncols_32 = *(metadata_ptr + 1);
-        nrows = nrows_32;
-        ncols = ncols_32;
-    }
-#endif
 
     inline void get_bin_metadata(const std::string &bin_file, size_t &nrows, size_t &ncols, size_t offset = 0) {
         std::ifstream reader(bin_file.c_str(), std::ios::binary);
@@ -254,42 +228,6 @@ namespace tann {
         reader.read((char *) data, npts * dim * sizeof(T));
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    inline void load_bin(MemoryMappedFiles &files, const std::string &bin_file, T *&data, size_t &npts, size_t &dim,
-                         size_t offset = 0)
-    {
-        tann::cout << "Reading bin file " << bin_file.c_str() << " at offset: " << offset << "..." << std::endl;
-        auto fc = files.getContent(bin_file);
-
-        uint32_t t_npts, t_dim;
-        uint32_t *contentAsIntPtr = (uint32_t *)((char *)fc._content + offset);
-        t_npts = *(contentAsIntPtr);
-        t_dim = *(contentAsIntPtr + 1);
-
-        npts = t_npts;
-        dim = t_dim;
-
-        data = (T *)((char *)fc._content + offset + 2 * sizeof(uint32_t)); // No need to copy!
-    }
-
-    TURBO_DLL void get_bin_metadata(AlignedFileReader &reader, size_t &npts, size_t &ndim, size_t offset = 0);
-    template <typename T>
-    TURBO_DLL void load_bin(AlignedFileReader &reader, T *&data, size_t &npts, size_t &ndim, size_t offset = 0);
-    template <typename T>
-    TURBO_DLL void load_bin(AlignedFileReader &reader, std::unique_ptr<T[]> &data, size_t &npts, size_t &ndim,
-                                    size_t offset = 0);
-
-    template <typename T>
-    TURBO_DLL void copy_aligned_data_from_file(AlignedFileReader &reader, T *&data, size_t &npts, size_t &dim,
-                                                       const size_t &rounded_dim, size_t offset = 0);
-
-    // Unlike load_bin, assumes that data is already allocated 'size' entries
-    template <typename T>
-    TURBO_DLL void read_array(AlignedFileReader &reader, T *data, size_t size, size_t offset = 0);
-
-    template <typename T> TURBO_DLL void read_value(AlignedFileReader &reader, T &value, size_t offset = 0);
-#endif
 
     template<typename T>
     inline void load_bin(const std::string &bin_file, T *&data, size_t &npts, size_t &dim, size_t offset = 0) {
@@ -471,16 +409,6 @@ namespace tann {
         }
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    inline void load_bin(MemoryMappedFiles &files, const std::string &bin_file, std::unique_ptr<T[]> &data, size_t &npts,
-                         size_t &dim, size_t offset = 0)
-    {
-        T *ptr;
-        load_bin<T>(files, bin_file, ptr, npts, dim, offset);
-        data.reset(ptr);
-    }
-#endif
 
     inline void copy_file(std::string in_file, std::string out_file) {
         std::ifstream source(in_file, std::ios::binary);
@@ -598,28 +526,6 @@ namespace tann {
         }
         tann::cout << " done." << std::endl;
     }
-
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    inline void load_aligned_bin(MemoryMappedFiles &files, const std::string &bin_file, T *&data, size_t &npts, size_t &dim,
-                                 size_t &rounded_dim)
-    {
-        try
-        {
-            tann::cout << "Opening bin file " << bin_file << " ..." << std::flush;
-            FileContent fc = files.getContent(bin_file);
-            ContentBuf buf((char *)fc._content, fc._size);
-            std::basic_istream<char> reader(&buf);
-
-            size_t actual_file_size = fc._size;
-            load_aligned_bin_impl(reader, actual_file_size, data, npts, dim, rounded_dim);
-        }
-        catch (std::system_error &e)
-        {
-            throw FileException(bin_file, e, __FUNCSIG__, __FILE__, __LINE__);
-        }
-    }
-#endif
 
     template<typename T>
     inline void

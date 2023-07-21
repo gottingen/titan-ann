@@ -4,10 +4,6 @@
 #pragma once
 
 #include "tann/common/common_includes.h"
-
-#ifdef EXEC_ENV_OLS
-#include "tann/io/aligned_file_reader.h"
-#endif
 #include "tann/distance/distance_factory.h"
 #include "tann/distance/distance.h"
 #include "tann/common/locking.h"
@@ -86,15 +82,10 @@ namespace tann {
         TURBO_DLL void save(const char *filename, bool compact_before_save = false);
 
         // Load functions
-#ifdef EXEC_ENV_OLS
-        TURBO_DLL void load(AlignedFileReader &reader, uint32_t num_threads, uint32_t search_l);
-#else
         // Reads the number of frozen points from graph's metadata file section.
         TURBO_DLL static size_t get_graph_num_frozen_points(const std::string &graph_file);
 
         TURBO_DLL void load(const char *index_file, uint32_t num_threads, uint32_t search_l);
-
-#endif
 
         // get some private variables
         TURBO_DLL size_t get_num_points();
@@ -305,12 +296,6 @@ namespace tann {
 
         TURBO_DLL size_t save_delete_list(const std::string &filename);
 
-#ifdef EXEC_ENV_OLS
-        TURBO_DLL size_t load_graph(AlignedFileReader &reader, size_t expected_num_points);
-        TURBO_DLL size_t load_data(AlignedFileReader &reader);
-        TURBO_DLL size_t load_tags(AlignedFileReader &reader);
-        TURBO_DLL size_t load_delete_set(AlignedFileReader &reader);
-#else
         TURBO_DLL size_t load_graph(const std::string filename, size_t expected_num_points);
 
         TURBO_DLL size_t load_data(std::string filename0);
@@ -318,8 +303,6 @@ namespace tann {
         TURBO_DLL size_t load_tags(const std::string tag_file_name);
 
         TURBO_DLL size_t load_delete_set(const std::string &filename);
-
-#endif
 
     private:
         // Distance functions

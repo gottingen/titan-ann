@@ -6,12 +6,6 @@
 #include <iostream>
 #include "turbo/platform/port.h"
 
-#ifdef EXEC_ENV_OLS
-#ifndef ENABLE_CUSTOM_LOGGER
-#define ENABLE_CUSTOM_LOGGER
-#endif // !ENABLE_CUSTOM_LOGGER
-#endif // EXEC_ENV_OLS
-
 namespace tann {
     TURBO_DLL extern std::basic_ostream<char> cout;
     TURBO_DLL extern std::basic_ostream<char> cerr;

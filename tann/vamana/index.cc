@@ -328,19 +328,12 @@ namespace tann {
         tann::cout << "Time taken for save: " << timer.elapsed() / 1000000.0 << "s." << std::endl;
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T, typename TagT, typename LabelT>
-    size_t Index<T, TagT, LabelT>::load_tags(AlignedFileReader &reader)
-    {
-#else
-
     template<typename T, typename TagT, typename LabelT>
     size_t Index<T, TagT, LabelT>::load_tags(const std::string tag_filename) {
         if (_enable_tags && !turbo::filesystem::exists(tag_filename)) {
             tann::cerr << "Tag file provided does not exist!" << std::endl;
             throw tann::ANNException("Tag file provided does not exist!", -1, __FUNCSIG__, __FILE__, __LINE__);
         }
-#endif
         if (!_enable_tags) {
             tann::cout << "Tags not loaded as tags not enabled." << std::endl;
             return 0;
@@ -348,11 +341,7 @@ namespace tann {
 
         size_t file_dim, file_num_points;
         TagT *tag_data;
-#ifdef EXEC_ENV_OLS
-        load_bin<TagT>(reader, tag_data, file_num_points, file_dim);
-#else
         load_bin<TagT>(std::string(tag_filename), tag_data, file_num_points, file_dim);
-#endif
 
         if (file_dim != 1) {
             std::stringstream stream;
@@ -379,16 +368,8 @@ namespace tann {
     }
 
     template<typename T, typename TagT, typename LabelT>
-#ifdef EXEC_ENV_OLS
-    size_t Index<T, TagT, LabelT>::load_data(AlignedFileReader &reader)
-    {
-#else
     size_t Index<T, TagT, LabelT>::load_data(std::string filename) {
-#endif
         size_t file_dim, file_num_points;
-#ifdef EXEC_ENV_OLS
-        tann::get_bin_metadata(reader, file_num_points, file_dim);
-#else
         if (!turbo::filesystem::exists(filename)) {
             std::stringstream stream;
             stream << "ERROR: data file " << filename << " does not exist." << std::endl;
@@ -396,7 +377,6 @@ namespace tann {
             throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__, __LINE__);
         }
         tann::get_bin_metadata(filename, file_num_points, file_dim);
-#endif
 
         // since we are loading a new dataset, _empty_slots must be cleared
         _empty_slots.clear();
@@ -414,34 +394,15 @@ namespace tann {
             resize(file_num_points - _num_frozen_pts);
         }
 
-#ifdef EXEC_ENV_OLS
-
-        // REFACTOR TODO: Must figure out how to support aligned reader in a clean
-        // manner.
-        copy_aligned_data_from_file<T>(reader, _data, file_num_points, file_dim, _aligned_dim);
-#else
         _data_store->load(filename); // offset == 0.
-#endif
         return file_num_points;
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T, typename TagT, typename LabelT>
-    size_t Index<T, TagT, LabelT>::load_delete_set(AlignedFileReader &reader)
-    {
-#else
-
     template<typename T, typename TagT, typename LabelT>
     size_t Index<T, TagT, LabelT>::load_delete_set(const std::string &filename) {
-#endif
         std::unique_ptr<uint32_t[]> delete_list;
         size_t npts, ndim;
-
-#ifdef EXEC_ENV_OLS
-        tann::load_bin<uint32_t>(reader, delete_list, npts, ndim);
-#else
         tann::load_bin<uint32_t>(filename, delete_list, npts, ndim);
-#endif
         assert(ndim == 1);
         for (uint32_t i = 0; i < npts; i++) {
             _delete_set->insert(delete_list[i]);
@@ -449,15 +410,10 @@ namespace tann {
         return npts;
     }
 
-// load the index from file and update the max_degree, cur (navigating
-// node loc), and _final_graph (adjacency list)
+    // load the index from file and update the max_degree, cur (navigating
+    // node loc), and _final_graph (adjacency list)
     template<typename T, typename TagT, typename LabelT>
-#ifdef EXEC_ENV_OLS
-    void Index<T, TagT, LabelT>::load(AlignedFileReader &reader, uint32_t num_threads, uint32_t search_l)
-    {
-#else
     void Index<T, TagT, LabelT>::load(const char *filename, uint32_t num_threads, uint32_t search_l) {
-#endif
         std::unique_lock<std::shared_timed_mutex> ul(_update_lock);
         std::unique_lock<std::shared_timed_mutex> cl(_consolidate_lock);
         std::unique_lock<std::shared_timed_mutex> tl(_tag_lock);
@@ -475,7 +431,6 @@ namespace tann {
         if (!_save_as_one_file) {
             // For DLVS Store, we will not support saving the index in multiple
             // files.
-#ifndef EXEC_ENV_OLS
             std::string data_file = std::string(filename) + ".data";
             std::string tags_file = std::string(filename) + ".tags";
             std::string delete_set_file = std::string(filename) + ".del";
@@ -488,7 +443,6 @@ namespace tann {
                 tags_file_num_pts = load_tags(tags_file);
             }
             graph_num_pts = load_graph(graph_file, data_file_num_pts);
-#endif
         } else {
             tann::cout << "Single index file saving/loading support not yet "
                           "enabled. Not loading the index."
@@ -570,7 +524,6 @@ namespace tann {
         }
     }
 
-#ifndef EXEC_ENV_OLS
 
     template<typename T, typename TagT, typename LabelT>
     size_t Index<T, TagT, LabelT>::get_graph_num_frozen_points(const std::string &graph_file) {
@@ -590,30 +543,11 @@ namespace tann {
         return file_frozen_pts;
     }
 
-#endif
-
-#ifdef EXEC_ENV_OLS
-    template <typename T, typename TagT, typename LabelT>
-    size_t Index<T, TagT, LabelT>::load_graph(AlignedFileReader &reader, size_t expected_num_points)
-    {
-#else
 
     template<typename T, typename TagT, typename LabelT>
     size_t Index<T, TagT, LabelT>::load_graph(std::string filename, size_t expected_num_points) {
-#endif
         size_t expected_file_size;
         size_t file_frozen_pts;
-
-#ifdef EXEC_ENV_OLS
-        int header_size = 2 * sizeof(size_t) + 2 * sizeof(uint32_t);
-        std::unique_ptr<char[]> header = std::make_unique<char[]>(header_size);
-        read_array(reader, header.get(), header_size);
-
-        expected_file_size = *((size_t *)header.get());
-        _max_observed_degree = *((uint32_t *)(header.get() + sizeof(size_t)));
-        _start = *((uint32_t *)(header.get() + sizeof(size_t) + sizeof(uint32_t)));
-        file_frozen_pts = *((size_t *)(header.get() + sizeof(size_t) + sizeof(uint32_t) + sizeof(uint32_t)));
-#else
 
         size_t file_offset = 0; // will need this for single file format support
         std::ifstream in;
@@ -626,7 +560,6 @@ namespace tann {
         in.read((char *) &file_frozen_pts, sizeof(size_t));
         size_t vamana_metadata_size = sizeof(size_t) + sizeof(uint32_t) + sizeof(uint32_t) + sizeof(size_t);
 
-#endif
         tann::cout << "From graph header, expected_file_size: " << expected_file_size
                    << ", _max_observed_degree: " << _max_observed_degree << ", _start: " << _start
                    << ", file_frozen_pts: " << file_frozen_pts << std::endl;
@@ -646,11 +579,7 @@ namespace tann {
             throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__, __LINE__);
         }
 
-#ifdef EXEC_ENV_OLS
-        tann::cout << "Loading vamana graph from reader..." << std::flush;
-#else
         tann::cout << "Loading vamana graph " << filename << "..." << std::flush;
-#endif
 
         const size_t expected_max_points = expected_num_points - file_frozen_pts;
 
@@ -663,32 +592,6 @@ namespace tann {
             _final_graph.resize(expected_max_points + _num_frozen_pts);
             _max_points = expected_max_points;
         }
-#ifdef EXEC_ENV_OLS
-        uint32_t nodes_read = 0;
-        size_t cc = 0;
-        size_t graph_offset = header_size;
-        while (nodes_read < expected_num_points)
-        {
-            uint32_t k;
-            read_value(reader, k, graph_offset);
-            graph_offset += sizeof(uint32_t);
-            std::vector<uint32_t> tmp(k);
-            tmp.reserve(k);
-            read_array(reader, tmp.data(), k, graph_offset);
-            graph_offset += k * sizeof(uint32_t);
-            cc += k;
-            _final_graph[nodes_read].swap(tmp);
-            nodes_read++;
-            if (nodes_read % 1000000 == 0)
-            {
-                tann::cout << "." << std::flush;
-            }
-            if (k > _max_range_of_loaded_graph)
-            {
-                _max_range_of_loaded_graph = k;
-            }
-        }
-#else
         size_t bytes_read = vamana_metadata_size;
         size_t cc = 0;
         uint32_t nodes_read = 0;
@@ -713,7 +616,6 @@ namespace tann {
                 _max_range_of_loaded_graph = k;
             }
         }
-#endif
 
         tann::cout << "done. Index has " << nodes_read << " nodes and " << cc << " out-edges, _start is set to "
                    << _start << std::endl;
@@ -1554,13 +1456,7 @@ namespace tann {
 
             copy_aligned_data_from_file<uint8_t>(pq_compressed_file.c_str(), _pq_data, file_num_points, _num_pq_chunks,
                                                  _num_pq_chunks);
-#ifdef EXEC_ENV_OLS
-            throw ANNException("load_pq_centroid_bin should not be called when "
-                               "EXEC_ENV_OLS is defined.",
-                               -1, __FUNCSIG__, __FILE__, __LINE__);
-#else
             _pq_table.load_pq_centroid_bin(pq_pivots_file.c_str(), _num_pq_chunks);
-#endif
         }
 
         _data_store->populate_data(filename, 0U);
@@ -1790,13 +1686,8 @@ namespace tann {
                 // and IDType will be uint32_t or uint64_t
                 indices[pos] = (IdType) best_L_nodes[i].id;
                 if (distances != nullptr) {
-#ifdef EXEC_ENV_OLS
-                    // DLVS expects negative distances
-                    distances[pos] = best_L_nodes[i].distance;
-#else
                     distances[pos] = _dist_metric == tann::Metric::INNER_PRODUCT ? -1 * best_L_nodes[i].distance
                                                                                  : best_L_nodes[i].distance;
-#endif
                 }
                 pos++;
             }
@@ -1859,13 +1750,8 @@ namespace tann {
                 // and IDType will be uint32_t or uint64_t
                 indices[pos] = (IdType) best_L_nodes[i].id;
                 if (distances != nullptr) {
-#ifdef EXEC_ENV_OLS
-                    // DLVS expects negative distances
-                    distances[pos] = best_L_nodes[i].distance;
-#else
                     distances[pos] = _dist_metric == tann::Metric::INNER_PRODUCT ? -1 * best_L_nodes[i].distance
                                                                                  : best_L_nodes[i].distance;
-#endif
                 }
                 pos++;
             }
@@ -1921,11 +1807,7 @@ namespace tann {
                 }
 
                 if (distances != nullptr) {
-#ifdef EXEC_ENV_OLS
-                    distances[pos] = node.distance; // DLVS expects negative distances
-#else
                     distances[pos] = _dist_metric == INNER_PRODUCT ? -1 * node.distance : node.distance;
-#endif
                 }
                 pos++;
                 // If res_vectors.size() < k, clip at the value.
