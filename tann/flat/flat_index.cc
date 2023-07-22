@@ -16,16 +16,17 @@
 
 namespace tann {
 
-    turbo::Status FlatIndex::init(IndexOption option) {
-        auto r= _vs.init(option.dimension, option.metric, option.data_type);
+    turbo::Status FlatIndex::initialize(std::unique_ptr<IndexOption> option) {
+        auto r= _vs.init(option->dimension, option->metric, option->data_type);
         if(!r.ok()) {
             return r;
         }
-        r = _data.init(&_vs, option.batch_size);
+        r = _data.init(&_vs, option->batch_size);
         return r;
     }
 
-    void FlatIndex::add_vector(turbo::Span<uint8_t> query, const label_type &label) {
+    turbo::Status FlatIndex::add_vector(const WriteOption &option, turbo::Span<uint8_t> query, const label_type &label) {
+        TURBO_UNUSED(option);
         turbo::Span<uint8_t> v = query;
         if(_vs.distance_factor->preprocessing_required()) {
             AlignedQuery<uint8_t> avec;
@@ -40,7 +41,7 @@ namespace tann {
             // modify
             idx = it->second;
             _data.set_vector(idx, v);
-            return;
+            return turbo::OkStatus();
         }
         idx = _data.prefer_add_vector();
         if (_index_to_label.size() <= idx) {
@@ -50,13 +51,14 @@ namespace tann {
         _index_to_label[idx] = label;
         _data.set_vector(idx, v);
         // idx is the last one
+        return turbo::OkStatus();
     }
 
-    void FlatIndex::remove_vector(const label_type &label) {
+    turbo::Status FlatIndex::remove_vector(const label_type &label) {
         std::unique_lock l(_mutex);
         auto it = _label_map.find(label);
         if (it == _label_map.end()) {
-            return;
+            return turbo::OkStatus();
         }
         auto idx = it->second;
         _label_map.erase(label);
@@ -66,6 +68,7 @@ namespace tann {
         _label_map[last_label] = idx;
         _data.pop_back();
         _index_to_label.resize(last_idx);
+        return turbo::OkStatus();
     }
 
     turbo::Status FlatIndex::search_vector(QueryContext *qctx) {
@@ -134,11 +137,11 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FlatIndex::save_index(const std::string &path, const IOOption &option)  {
+    turbo::Status FlatIndex::save_index(const std::string &path, const SerializeOption &option)  {
         return turbo::OkStatus();
     }
 
-    turbo::Status FlatIndex::load_index(const std::string &path, const IOOption &option) {
+    turbo::Status FlatIndex::load_index(const std::string &path, const SerializeOption &option) {
         return turbo::OkStatus();
     }
 }  // namespace tann

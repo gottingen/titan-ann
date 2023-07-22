@@ -25,7 +25,7 @@ namespace tann {
 
         ~BinaryVectorSetReader() override = default;
 
-        turbo::Status init(turbo::SequentialReadFile *file, ReadOption *option) override;
+        turbo::Status init(turbo::SequentialReadFile *file, SerializeOption option) override;
 
         turbo::Status load(VectorSet &dst) override;
 
@@ -39,7 +39,7 @@ namespace tann {
 
     private:
         turbo::SequentialReadFile *_file{nullptr};
-        ReadOption *_option{nullptr};
+        SerializeOption _option;
         size_t _nvecs{0};
         size_t _ndims{0};
         size_t _element_size{0};
@@ -53,7 +53,7 @@ namespace tann {
 
         ~BinaryVectorSetWriter() override = default;
 
-        turbo::Status init(turbo::SequentialWriteFile *file, WriteOption *option) override;
+        turbo::Status init(turbo::SequentialWriteFile *file, SerializeOption option) override;
 
         turbo::Status save(VectorSet &dst) override;
 
@@ -67,7 +67,7 @@ namespace tann {
 
     private:
         turbo::SequentialWriteFile *_file{nullptr};
-        WriteOption *_option{nullptr};
+        SerializeOption _option;
         size_t _nvecs{0};
         size_t _ndims{0};
         size_t _element_size{0};

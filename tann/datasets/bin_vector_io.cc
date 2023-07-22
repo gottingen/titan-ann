@@ -16,7 +16,7 @@
 
 namespace tann {
 
-    turbo::Status BinaryVectorSetReader::init(turbo::SequentialReadFile *file, ReadOption *option) {
+    turbo::Status BinaryVectorSetReader::init(turbo::SequentialReadFile *file, SerializeOption option) {
         _file = file;
         _option = option;
         uint32_t nvec;
@@ -31,7 +31,7 @@ namespace tann {
         }
         _nvecs = nvec;
         _ndims = dim;
-        _element_size = data_type_size(_option->data_type);
+        _element_size = data_type_size(_option.data_type);
         _vector_bytes = _ndims * _element_size;
         turbo::Println("{}", _vector_bytes);
         return turbo::OkStatus();
@@ -40,7 +40,7 @@ namespace tann {
     turbo::Status BinaryVectorSetReader::load(VectorSet &dst) {
         TLOG_CHECK(_vector_bytes == dst.get_vector_space()->vector_byte_size);
         TLOG_CHECK(_ndims == dst.get_vector_space()->dimension);
-        TLOG_CHECK(_option->data_type == dst.get_vector_space()->data_type);
+        TLOG_CHECK(_option.data_type == dst.get_vector_space()->data_type);
         dst.resize(_nvecs);
         auto &bs = dst.vector_batch();
         for(auto& b : bs) {
@@ -79,12 +79,12 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status BinaryVectorSetWriter::init(turbo::SequentialWriteFile *file, WriteOption *option) {
+    turbo::Status BinaryVectorSetWriter::init(turbo::SequentialWriteFile *file, SerializeOption option) {
         _file = file;
         _option = option;
-        _nvecs = _option->n_vectors;
-        _ndims = _option->dimension;
-        _element_size = data_type_size(_option->data_type);
+        _nvecs = _option.n_vectors;
+        _ndims = _option.dimension;
+        _element_size = data_type_size(_option.data_type);
         _vector_bytes = _ndims * _element_size;
         uint32_t nvec = _nvecs;
         uint32_t dim = _ndims;

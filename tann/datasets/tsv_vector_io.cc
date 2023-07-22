@@ -63,11 +63,11 @@ namespace tann {
         template turbo::Status convert_to_string<float16>(std::size_t ndim, turbo::Span<uint8_t> *vector, std::string *result);
         template turbo::Status convert_to_string<float>(std::size_t ndim, turbo::Span<uint8_t> *vector, std::string *result);
     }  // namespace detail
-    turbo::Status TsvVectorSetReader::init(turbo::SequentialReadFile *file, ReadOption *option) {
+    turbo::Status TsvVectorSetReader::init(turbo::SequentialReadFile *file, SerializeOption option) {
         _file = file;
         _option = option;
-        _ndims = _option->dimension;
-        _element_size = data_type_size(_option->data_type);
+        _ndims = _option.dimension;
+        _element_size = data_type_size(_option.data_type);
         _vector_bytes = _ndims * _element_size;
         return turbo::OkStatus();
     }
@@ -128,14 +128,14 @@ namespace tann {
             return turbo::ReachFileEnd("file reach eof");
         }
         ++_has_read;
-        if(_option->data_type == DataType::DT_UINT8) {
+        if(_option.data_type == DataType::DT_UINT8) {
             return detail::convert_to_vector<uint8_t>(line, _ndims, vector);
-        } else if(_option->data_type == DataType::DT_FLOAT16) {
+        } else if(_option.data_type == DataType::DT_FLOAT16) {
             return detail::convert_to_vector<float16>(line, _ndims, vector);
-        } else if(_option->data_type == DataType::DT_FLOAT) {
+        } else if(_option.data_type == DataType::DT_FLOAT) {
             return detail::convert_to_vector<float>(line, _ndims, vector);
         }
-        return turbo::InvalidArgumentError("data type parameter error {}", turbo::nameof_enum(_option->data_type));
+        return turbo::InvalidArgumentError("data type parameter error {}", turbo::nameof_enum(_option.data_type));
     }
 
     turbo::Status TsvVectorSetReader::read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) {
@@ -150,12 +150,12 @@ namespace tann {
     }
 
 
-    turbo::Status TsvVectorSetWriter::init(turbo::SequentialWriteFile *file, WriteOption *option){
+    turbo::Status TsvVectorSetWriter::init(turbo::SequentialWriteFile *file, SerializeOption option){
         _file = file;
         _option = option;
-        _nvecs = _option->n_vectors;
-        _ndims = _option->dimension;
-        _element_size = data_type_size(_option->data_type);
+        _nvecs = _option.n_vectors;
+        _ndims = _option.dimension;
+        _element_size = data_type_size(_option.data_type);
         _vector_bytes = _ndims * _element_size;
         return turbo::OkStatus();
     }
@@ -177,14 +177,14 @@ namespace tann {
     turbo::Status TsvVectorSetWriter::write_vector(turbo::Span<uint8_t> *vector) {
         turbo::Status r;
         std::string line;
-        if(_option->data_type == DataType::DT_UINT8) {
+        if(_option.data_type == DataType::DT_UINT8) {
             r = detail::convert_to_string<uint8_t>(_ndims, vector, &line);
-        } else if(_option->data_type == DataType::DT_FLOAT16) {
+        } else if(_option.data_type == DataType::DT_FLOAT16) {
             r = detail::convert_to_string<float16>(_ndims, vector, &line);
-        } else if(_option->data_type == DataType::DT_FLOAT) {
+        } else if(_option.data_type == DataType::DT_FLOAT) {
             r = detail::convert_to_string<float>(_ndims, vector, &line);
         } else {
-            return turbo::InvalidArgumentError("data type parameter error {}", turbo::nameof_enum(_option->data_type));
+            return turbo::InvalidArgumentError("data type parameter error {}", turbo::nameof_enum(_option.data_type));
         }
         if(!r.ok()) {
             return r;

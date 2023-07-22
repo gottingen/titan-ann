@@ -11,28 +11,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#ifndef TANN_CORE_IO_OPTION_H_
-#define TANN_CORE_IO_OPTION_H_
+#ifndef TANN_CORE_SERIALIZE_OPTION_H_
+#define TANN_CORE_SERIALIZE_OPTION_H_
 
 #include "tann/core/types.h"
 
 namespace tann {
 
-    struct IOOption {
-
-    };
-
-    struct ReadOption {
+    struct SerializeOption {
         DataType data_type;
         std::size_t n_vectors;
         std::size_t dimension;
     };
 
-    struct WriteOption {
-        DataType data_type;
-        std::size_t n_vectors;
-        std::size_t dimension;
-    };
 }  // namespace tann
 
-#endif  // TANN_CORE_IO_OPTION_H_
+#endif  // TANN_CORE_SERIALIZE_OPTION_H_

@@ -16,7 +16,9 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <queue>
 #include "turbo/log/logging.h"
+
 namespace tann {
     typedef uint32_t location_t;
     typedef size_t label_type;
@@ -74,6 +76,16 @@ namespace tann {
 
         virtual bool operator()(label_type id) { return true; }
     };
+
+    struct CompareByFirst {
+        constexpr bool operator()(std::pair<distance_type, location_t> const &a,
+                                  std::pair<distance_type, location_t> const &b) const noexcept {
+            return a.first < b.first;
+        }
+    };
+
+    typedef std::priority_queue<std::pair<distance_type, location_t>,
+            std::vector<std::pair<distance_type, location_t>>, CompareByFirst> links_priority_queue;
 
 } // namespace tann
 #endif  // TANN_CORE_TYPES_H_

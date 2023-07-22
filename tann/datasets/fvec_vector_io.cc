@@ -16,11 +16,11 @@
 
 namespace tann {
 
-    turbo::Status FvecVectorSetReader::init(turbo::SequentialReadFile *file, ReadOption *option) {
+    turbo::Status FvecVectorSetReader::init(turbo::SequentialReadFile *file, SerializeOption option) {
         _file = file;
         _option = option;
-        _nvecs = option->n_vectors;
-        _element_size = data_type_size(_option->data_type);
+        _nvecs = option.n_vectors;
+        _element_size = data_type_size(_option.data_type);
         uint32_t ndims_u32;
         auto r = _file->read(&ndims_u32, sizeof(ndims_u32));
         if (!r.ok()) {
@@ -77,12 +77,12 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FvecVectorSetWriter::init(turbo::SequentialWriteFile *file, WriteOption *option) {
+    turbo::Status FvecVectorSetWriter::init(turbo::SequentialWriteFile *file, SerializeOption option) {
         _file = file;
         _option = option;
-        _nvecs = _option->n_vectors;
-        _ndims = _option->dimension;
-        _element_size = data_type_size(_option->data_type);
+        _nvecs = _option.n_vectors;
+        _ndims = _option.dimension;
+        _element_size = data_type_size(_option.data_type);
         _vector_bytes = _ndims * _element_size;
         return turbo::OkStatus();
     }

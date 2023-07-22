@@ -22,38 +22,44 @@
 
 namespace tann {
 
-    inline void make_aligned_query(turbo::Span<uint8_t> q, AlignedQuery<uint8_t>&raw_mem) {
+    [[maybe_unused]] inline turbo::Span<uint8_t> make_aligned_query(turbo::Span<uint8_t> q, AlignedQuery<uint8_t>&raw_mem) {
         raw_mem.resize(q.size());
         std::memcpy(raw_mem.data(), q.data(), q.size());
+        return to_span<uint8_t>(raw_mem);
     }
 
-    inline void make_aligned_query(turbo::Span<float16> q, AlignedQuery<uint8_t>&raw_mem) {
+    [[maybe_unused]] inline turbo::Span<uint8_t> make_aligned_query(turbo::Span<float16> q, AlignedQuery<uint8_t>&raw_mem) {
         raw_mem.resize(raw_mem.size());
         auto rq = to_span<uint8_t, float16>(q);
         std::memcpy(raw_mem.data(), rq.data(), rq.size());
+        return to_span<uint8_t>(raw_mem);
     }
 
-    inline void make_aligned_query(turbo::Span<float> q, AlignedQuery<uint8_t>&raw_mem) {
+    [[maybe_unused]] inline turbo::Span<uint8_t> make_aligned_query(turbo::Span<float> q, AlignedQuery<uint8_t>&raw_mem) {
         raw_mem.resize(raw_mem.size());
         auto rq = to_span<uint8_t, float>(q);
         std::memcpy(raw_mem.data(), rq.data(), rq.size());
+        return to_span<uint8_t>(raw_mem);
     }
 
-    inline void make_aligned_query(const AlignedQuery<uint8_t> &q, AlignedQuery<uint8_t>&raw_mem) {
+    [[maybe_unused]] inline turbo::Span<uint8_t> make_aligned_query(const AlignedQuery<uint8_t> &q, AlignedQuery<uint8_t>&raw_mem) {
         raw_mem.resize(q.size());
         std::memcpy(raw_mem.data(), q.data(), q.size());
+        return to_span<uint8_t>(raw_mem);
     }
 
-    inline void make_aligned_query(const AlignedQuery<float16> &q, AlignedQuery<uint8_t>&raw_mem) {
+    [[maybe_unused]] inline turbo::Span<uint8_t> make_aligned_query(const AlignedQuery<float16> &q, AlignedQuery<uint8_t>&raw_mem) {
         raw_mem.resize(raw_mem.size());
         auto rq = to_span<uint8_t, float16>(q);
         std::memcpy(raw_mem.data(), rq.data(), rq.size());
+        return to_span<uint8_t>(raw_mem);
     }
 
-    inline void make_aligned_query(const AlignedQuery<float> &q, AlignedQuery<uint8_t>&raw_mem) {
+    [[maybe_unused]] inline turbo::Span<uint8_t> make_aligned_query(const AlignedQuery<float> &q, AlignedQuery<uint8_t>&raw_mem) {
         raw_mem.resize(raw_mem.size());
         auto rq = to_span<uint8_t, float>(q);
         std::memcpy(raw_mem.data(), rq.data(), rq.size());
+        return to_span<uint8_t>(raw_mem);
     }
 
 

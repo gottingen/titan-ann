@@ -36,17 +36,17 @@ namespace tann {
 
         ~FlatIndex() override = default;
 
-        [[nodiscard]] turbo::Status init(IndexOption option) override;
+        [[nodiscard]] turbo::Status initialize(std::unique_ptr<IndexOption> option) override;
 
-        void add_vector(turbo::Span<uint8_t> vec, const label_type &label) override;
+        turbo::Status add_vector(const WriteOption &option, turbo::Span<uint8_t> vec, const label_type &label) override;
 
-        void remove_vector(const label_type &label) override;
+        turbo::Status remove_vector(const label_type &label) override;
 
         [[nodiscard]] turbo::Status search_vector(QueryContext *qctx) override;
 
-        [[nodiscard]] turbo::Status save_index(const std::string &path, const IOOption &option) override;
+        [[nodiscard]] turbo::Status save_index(const std::string &path, const SerializeOption &option) override;
 
-        [[nodiscard]] turbo::Status load_index(const std::string &path, const IOOption &option) override;
+        [[nodiscard]] turbo::Status load_index(const std::string &path, const SerializeOption &option) override;
 
         [[nodiscard]] std::size_t size() const override {
             return _data.size();
