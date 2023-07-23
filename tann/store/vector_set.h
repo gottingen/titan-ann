@@ -17,8 +17,11 @@
 #define TANN_STORE_VECTOR_SET_H_
 
 #include <vector>
-
+#include <string_view>
+#include "tann/core/vector_space.h"
 #include "tann/store/vector_batch.h"
+#include "turbo/files/sequential_write_file.h"
+#include "turbo/files/sequential_read_file.h"
 
 namespace tann {
 
@@ -56,10 +59,6 @@ namespace tann {
 
         std::size_t add_vector(const turbo::Span<uint8_t> &vector);
 
-        // for data load, user do not use it , because it
-        // has some condition that use can not fit every time
-        std::size_t add_batch(VectorBatch &&vector);
-
         std::size_t prefer_add_vector(std::size_t n = 1);
 
         [[nodiscard]] std::size_t size() const;
@@ -76,6 +75,11 @@ namespace tann {
 
         void resize(std::size_t n);
 
+        turbo::Status load(std::string_view path);
+        turbo::Status save(std::string_view path);
+
+        turbo::Status load(turbo::SequentialReadFile *file);
+        turbo::Status save(turbo::SequentialWriteFile *file);
     private:
         void expend();
 

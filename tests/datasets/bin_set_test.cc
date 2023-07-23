@@ -51,7 +51,7 @@ TEST_CASE_FIXTURE(BinSetTest, "write read") {
     op.n_vectors = 100;
     op.dimension = 128;
     op.data_type = tann::DataType::DT_FLOAT;
-    r = writer.init(&file, op);
+    r = writer.initialize(&file, op);
     CHECK(r.ok());
     std::vector<float> vmem;
     vmem.resize(op.dimension);
@@ -79,7 +79,7 @@ TEST_CASE_FIXTURE(BinSetTest, "write read") {
     rop.dimension = 128;
     rop.data_type = tann::DataType::DT_FLOAT;
     tann::BinaryVectorSetReader reader;
-    r = reader.init(&rfile, rop);
+    r = reader.initialize(&rfile, rop);
     CHECK(r.ok());
     std::vector<float> vrmem;
     vrmem.resize(rop.dimension);

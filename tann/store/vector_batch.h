@@ -16,8 +16,9 @@
 #ifndef TANN_STORE_VECTOR_BATCH_H_
 #define TANN_STORE_VECTOR_BATCH_H_
 
-#include "tann/core/vector_space.h"
 #include "tann/core/allocator.h"
+#include "turbo/base/status.h"
+#include "turbo/log/logging.h"
 
 namespace tann {
 
@@ -27,41 +28,39 @@ namespace tann {
 
         ~VectorBatch() {
             if (_data) {
-                _vp->free_vector(_data, _capacity);
+                Allocator::alloc.deallocate(_data, _capacity * _vector_byte_size);
                 _data = nullptr;
             }
         }
         VectorBatch(VectorBatch&& rhs) noexcept{
-            _vp = rhs._vp;
             _ndim = rhs._ndim;
             _capacity = rhs._capacity;
             _data = rhs._data;
-            rhs._vp = nullptr;
+            _vector_byte_size = rhs._vector_byte_size;
             rhs._ndim = 0;
             rhs._data = nullptr;
             rhs._capacity = 0;
         }
         VectorBatch& operator=(VectorBatch&& rhs) noexcept {
-            _vp = rhs._vp;
             _ndim = rhs._ndim;
             _capacity = rhs._capacity;
             _data = rhs._data;
-            rhs._vp = nullptr;
+            _vector_byte_size = rhs._vector_byte_size;
             rhs._ndim = 0;
             rhs._data = nullptr;
             rhs._capacity = 0;
             return *this;
         }
 
-        [[nodiscard]] turbo::Status init(VectorSpace *vp, std::size_t n) {
-            _vp = vp;
+        [[nodiscard]] turbo::Status init(std::size_t vector_byte_size, std::size_t n) {
+            _ndim = 0;
+            _capacity = n;
+            _vector_byte_size = vector_byte_size;
             try {
-                _data = _vp->alloc_vector(n);
+                _data = Allocator::alloc.allocate(_capacity * _vector_byte_size);
             } catch (std::exception &e) {
                 return turbo::UnavailableError(e.what());
             }
-            _ndim = 0;
-            _capacity = n;
             return turbo::OkStatus();
         }
 
@@ -79,29 +78,29 @@ namespace tann {
 
         [[nodiscard]] turbo::Span<uint8_t> at(std::size_t i) const {
             TLOG_CHECK(i < _ndim, "overflow");
-            return turbo::Span<uint8_t>{_data + i * _vp->vector_byte_size, _vp->vector_byte_size};
+            return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
         [[nodiscard]] turbo::Span<uint8_t> at(std::size_t i) {
             TLOG_CHECK(i < _ndim, "overflow");
-            return turbo::Span<uint8_t>{_data + i * _vp->vector_byte_size, _vp->vector_byte_size};
+            return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
         [[nodiscard]] turbo::Span<uint8_t> operator[](std::size_t i) const {
             TLOG_CHECK(i < _ndim, "overflow");
-            return turbo::Span<uint8_t>{_data + i * _vp->vector_byte_size, _vp->vector_byte_size};
+            return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
         [[nodiscard]] turbo::Span<uint8_t> operator[](std::size_t i) {
             TLOG_CHECK(i < _ndim, "overflow");
-            return turbo::Span<uint8_t>{_data + i * _vp->vector_byte_size, _vp->vector_byte_size};
+            return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
         std::size_t add_vector(const turbo::Span<uint8_t> &vector) {
             auto i = _ndim++;
             TLOG_CHECK(_ndim < _capacity);
-            TLOG_CHECK(vector.size() == _vp->vector_byte_size);
-            std::memcpy(vector.data(), _data + i * _vp->vector_byte_size, vector.size());
+            TLOG_CHECK(vector.size() == _vector_byte_size);
+            std::memcpy(vector.data(), _data + i * _vector_byte_size, vector.size());
             return i;
         }
 
@@ -109,8 +108,8 @@ namespace tann {
             auto i = _ndim;
             _ndim += nvec;
             TLOG_CHECK(_ndim < _capacity);
-            TLOG_CHECK(vector.size() == _vp->vector_byte_size * nvec);
-            std::memcpy(vector.data(), _data + i * _vp->vector_byte_size, vector.size());
+            TLOG_CHECK(vector.size() == _vector_byte_size * nvec);
+            std::memcpy(vector.data(), _data + i * _vector_byte_size, vector.size());
             return i;
         }
 
@@ -118,7 +117,7 @@ namespace tann {
             auto i = _ndim;
             _ndim += nvec;
             TLOG_CHECK(_ndim < _capacity);
-            std::memcpy(vector, _data + i * _vp->vector_byte_size, nvec * _vp->vector_byte_size);
+            std::memcpy(vector, _data + i * _vector_byte_size, nvec * _vector_byte_size);
             return i;
         }
 
@@ -130,28 +129,28 @@ namespace tann {
 
         void set_vector(const std::size_t i, const turbo::Span<uint8_t> &vector) {
             TLOG_CHECK(i < _ndim);
-            TLOG_CHECK(vector.size() == _vp->vector_byte_size);
-            std::memcpy(vector.data(), _data + i * _vp->vector_byte_size, vector.size());
+            TLOG_CHECK(vector.size() == _vector_byte_size);
+            std::memcpy(vector.data(), _data + i * _vector_byte_size, vector.size());
         }
 
         void set_vector(std::size_t i, uint8_t *vector, std::size_t nvec) {
             TLOG_CHECK(i + nvec < _ndim);
-            std::memcpy(vector, _data + i * _vp->vector_byte_size, nvec * _vp->vector_byte_size);
+            std::memcpy(vector, _data + i * _vector_byte_size, nvec * _vector_byte_size);
         }
 
         void clear_vector(std::size_t i) {
             TLOG_CHECK(i < _ndim);
-            std::memset(_data + i * _vp->vector_byte_size, 0, _vp->vector_byte_size);
+            std::memset(_data + i * _vector_byte_size, 0, _vector_byte_size);
         }
 
         void clear_vector(std::size_t start, std::size_t end) {
             TLOG_CHECK(start < _ndim);
             TLOG_CHECK(end < _ndim);
-            std::memset(_data + start * _vp->vector_byte_size, 0, (end - start) * _vp->vector_byte_size);
+            std::memset(_data + start * _vector_byte_size, 0, (end - start) * _vector_byte_size);
         }
 
         void clear_vector() {
-            std::memset(_data, 0, _capacity * _vp->vector_byte_size);
+            std::memset(_data, 0, _capacity * _vector_byte_size);
         }
 
         void clear() {
@@ -177,14 +176,14 @@ namespace tann {
         }
 
         [[nodiscard]] turbo::Span<uint8_t> to_span() {
-            return turbo::Span<uint8_t>{_data, _vp->vector_byte_size * _ndim};
+            return turbo::Span<uint8_t>{_data, _vector_byte_size * _ndim};
         }
     private:
         /// no lint
         TURBO_NON_COPYABLE(VectorBatch);
 
     private:
-        VectorSpace *_vp{nullptr};
+        std::size_t _vector_byte_size;
         std::size_t _ndim{0};
         std::size_t _capacity{0};
         uint8_t *_data{nullptr};

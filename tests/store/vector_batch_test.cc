@@ -17,6 +17,7 @@
 #include "doctest/doctest.h"
 #include "tann/store/vector_batch.h"
 #include "turbo/format/print.h"
+#include "tann/core/vector_space.h"
 
 TEST_CASE("vector batch") {
     tann::VectorSpace vs;
@@ -25,7 +26,7 @@ TEST_CASE("vector batch") {
     turbo::Println("alloc size:{}", 256 * 256 * 2);
     //turbo::simd::aligned_allocator<uint8_t, tann::VectorSpace::alignment_bytes> alloc;
     //alloc.allocate(256 * 256 * 2);
-    auto  r = vb.init(&vs, 256);
+    auto  r = vb.init(vs.vector_byte_size, 256);
     CHECK(r.ok());
     CHECK_EQ(vb.size(), 0);
     CHECK_EQ(vb.is_empty(), true);

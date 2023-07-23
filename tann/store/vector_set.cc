@@ -15,6 +15,7 @@
 #include "tann/store/vector_set.h"
 #include "turbo/log/logging.h"
 #include "tann/common/ann_exception.h"
+#include "tann/datasets/bin_vector_io.h"
 
 namespace tann {
 
@@ -143,7 +144,7 @@ namespace tann {
     }
     void VectorSet::expend() {
         tann::VectorBatch vb;
-        auto r = vb.init(_vs, _batch_size);
+        auto r = vb.init(_vs->vector_byte_size, _batch_size);
         //auto r = _data.back().init(_vs, _batch_size);
         if(!r.ok()) {
             throw ANNException("no memory", -1);
@@ -196,5 +197,38 @@ namespace tann {
             }
         }
         _size = n;
+    }
+
+    turbo::Status VectorSet::load(std::string_view path) {
+        turbo::SequentialReadFile file;
+        auto r= file.open(path);
+        if(!r.ok()) {
+            return r;
+        }
+        return load(&file);
+    }
+    turbo::Status VectorSet::save(std::string_view path) {
+        turbo::SequentialWriteFile file;
+        auto r= file.open(path);
+        if(!r.ok()) {
+            return r;
+        }
+        return save(&file);
+    }
+
+    turbo::Status VectorSet::load(turbo::SequentialReadFile *file) {
+        tann::SerializeOption rop;
+        rop.n_vectors = 100;
+        rop.dimension = _vs->dimension;
+        rop.data_type = _vs->data_type;
+        tann::BinaryVectorSetReader reader;
+        auto r = reader.initialize(file, rop);
+        if(!r.ok()) {
+            return  r;
+        }
+        return turbo::OkStatus();
+    }
+    turbo::Status VectorSet::save(turbo::SequentialWriteFile *file) {
+        return turbo::OkStatus();
     }
 }  // namespace tann

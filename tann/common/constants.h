@@ -20,6 +20,7 @@
 namespace tann::constants {
 
     /// for common
+    static constexpr size_t kUnknownSize = std::numeric_limits<size_t>::max();
     static constexpr size_t kMaxElements = 100000;
     static constexpr size_t kBatchSize = 256;
     /// for hnsw

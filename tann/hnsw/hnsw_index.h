@@ -59,8 +59,14 @@ namespace tann {
         [[nodiscard]] turbo::Status load_index(const std::string &path, const SerializeOption &option) override;
 
         [[nodiscard]] std::size_t size() const override {
-            return _data.size();
+            return _cur_element_count;
         }
+
+        [[nodiscard]] std::size_t remove_size() const {
+            return _num_deleted;
+        }
+
+
 
         [[nodiscard]] std::size_t dimension() const override {
             return _vs.dimension;
@@ -139,8 +145,6 @@ namespace tann {
         std::default_random_engine _update_probability_generator;
 
         LeveledGraph _final_graph;
-        std::vector<int> _element_levels;  // keeps level of each element
-
         std::mutex _global_lock;
         std::vector<std::mutex> _link_list_locks;
 

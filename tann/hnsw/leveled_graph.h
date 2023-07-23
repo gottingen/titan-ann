@@ -93,7 +93,7 @@ namespace tann {
             return _nodes[n];
         }
 
-        turbo::Status set_location(location_t lid, int level) {
+        turbo::Status setup_location(location_t lid, int level) {
             TLOG_CHECK(lid < _nodes.size());
             _nodes[lid].level = level;
             if (level == 0) {

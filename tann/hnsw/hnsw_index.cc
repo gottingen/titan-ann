@@ -46,8 +46,7 @@ namespace tann {
         if(!r.ok()) {
             return r;
         }
-        _index_scratch.resize(_max_elements);
-        _final_graph.initialize(_max_elements, _maxM);
+
 
         _num_deleted = 0;
         _max_elements = _option->max_elements;
@@ -59,9 +58,14 @@ namespace tann {
 
         _M = _option->m;
         _maxM = _M;
+
+        _index_scratch.resize(_max_elements);
+        _final_graph.initialize(_max_elements, _maxM);
         _visited_list_pool = std::make_unique<VisitedListPool>(1, _max_elements);
         std::vector<std::mutex> temp(_max_elements);
         _link_list_locks = std::move(temp);
+        std::vector<std::mutex> temp1(MAX_LABEL_OPERATION_LOCKS);
+        _label_op_locks = std::move(temp1);
         // initializations for special treatment of the first node
         _enterpoint_node = -1;
         _max_level = -1;
@@ -246,7 +250,7 @@ namespace tann {
         std::unique_lock<std::mutex> lock_table(_label_lookup_lock);
         auto search = _label_lookup.find(label);
         if (search == _label_lookup.end()) {
-            return turbo::NotFoundError("Label not found");
+            return turbo::NotFoundError("Label not found label: {}", label);
         }
         location_t internalId = search->second;
         lock_table.unlock();
@@ -309,6 +313,7 @@ namespace tann {
             cur_c = _data.prefer_add_vector();
             _cur_element_count++;
             _label_lookup[label] = cur_c;
+            TLOG_DEBUG("add vector label: {} location: {}", label, cur_c);
         }
 
         std::unique_lock<std::mutex> lock_el(_link_list_locks[cur_c]);
@@ -316,15 +321,13 @@ namespace tann {
         if (level > 0)
             cur_level = level;
 
-        _element_levels[cur_c] = cur_level;
-
+        //_element_levels[cur_c] = cur_level;
         std::unique_lock<std::mutex> templock(_global_lock);
         int max_level_copy = _max_level;
         if (cur_level <= max_level_copy)
             templock.unlock();
         location_t currObj = _enterpoint_node;
         location_t enterpoint_copy = _enterpoint_node;
-
         // Initialisation of the data and label
         set_external_label(cur_c, label);
         // preprocess
@@ -335,7 +338,7 @@ namespace tann {
         }
         _data.set_vector(cur_c, vector_data);
 
-        auto r = _final_graph.set_location(cur_c, cur_level);
+        auto r = _final_graph.setup_location(cur_c, cur_level);
         if (!r.ok()) {
             return r;
         }
@@ -586,7 +589,7 @@ namespace tann {
         if (entryPointCopy == internalId && _cur_element_count == 1)
             return turbo::OkStatus();
 
-        int elemLevel = _element_levels[internalId];
+        int elemLevel = _final_graph.level(internalId);
         std::uniform_real_distribution<float> distribution(0.0, 1.0);
         for (int layer = 0; layer <= elemLevel; layer++) {
             std::unordered_set<location_t> sCand;
@@ -783,6 +786,14 @@ namespace tann {
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         double r = -log(distribution(_level_generator)) * reverse_size;
         return (int) r;
+    }
+
+    turbo::Status HnswIndex::save_index(const std::string &path, const SerializeOption &option) {
+        return turbo::OkStatus();
+    }
+
+    turbo::Status HnswIndex::load_index(const std::string &path, const SerializeOption &option) {
+        return turbo::OkStatus();
     }
 
     template links_priority_queue HnswIndex::search_base_layer_st<true, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;

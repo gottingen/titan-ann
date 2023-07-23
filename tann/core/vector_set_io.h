@@ -26,16 +26,32 @@ namespace tann {
     public:
 
         virtual ~VectorSetReader() = default;
-
-        virtual turbo::Status init(turbo::SequentialReadFile *file, SerializeOption option) = 0;
-
+        turbo::Status initialize(turbo::SequentialReadFile *file, SerializeOption option);
         virtual turbo::Status load(VectorSet &dst) = 0;
 
         virtual turbo::Status read_vector(turbo::Span<uint8_t> *vector)  = 0;
 
-        virtual turbo::Status read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size)  = 0;
+        virtual turbo::ResultStatus<std::size_t> read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size)  = 0;
 
-        virtual std::size_t has_read() const = 0;
+        std::size_t has_read() const {
+            return _has_read;
+        }
+
+        // number vectors read from file,
+        // if the format does contain that will be kUnknownSize
+        [[nodiscard]] std::size_t num_vectors() const {
+            return _nvecs;
+        }
+    protected:
+        virtual turbo::Status init() = 0;
+    protected:
+        turbo::SequentialReadFile *_file{nullptr};
+        SerializeOption _option;
+        size_t _nvecs{constants::kUnknownSize};
+        size_t _ndims{0};
+        size_t _element_size{0};
+        size_t _vector_bytes{0};
+        size_t _has_read{0};
     };
 
     class VectorSetWriter {
@@ -43,7 +59,7 @@ namespace tann {
 
         virtual ~VectorSetWriter() = default;
 
-        virtual turbo::Status init(turbo::SequentialWriteFile *file, SerializeOption option) = 0;
+        turbo::Status initialize(turbo::SequentialWriteFile *file, SerializeOption option);
 
         virtual turbo::Status save(VectorSet &dst) = 0;
 
@@ -51,7 +67,17 @@ namespace tann {
 
         virtual turbo::Status write_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size)  = 0;
 
-        virtual std::size_t has_write() const = 0;
+        [[nodiscard]] std::size_t has_write() const {
+            return _has_write;
+        }
+    protected:
+        virtual turbo::Status init() = 0;
+    protected:
+        turbo::SequentialWriteFile *_file{nullptr};
+        SerializeOption _option;
+        size_t _element_size{0};
+        size_t _vector_bytes{0};
+        size_t _has_write{0};
     };
 
 }  // namespace tann

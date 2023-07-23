@@ -11,24 +11,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#ifndef TANN_CORE_SERIALIZE_OPTION_H_
-#define TANN_CORE_SERIALIZE_OPTION_H_
 
-#include "tann/core/types.h"
-#include "tann/common/constants.h"
+#include "tann/core/vector_set_io.h"
 
 namespace tann {
 
-    ///////////////////////////////////////////////////
-    // data_type and dimension is must It must be filled
-    // in accurately, n_vectors is determined according
-    // to different formats and situations.
-    struct SerializeOption {
-        DataType data_type;
-        std::size_t n_vectors{constants::kUnknownSize};
-        std::size_t dimension;
-    };
+    turbo::Status VectorSetReader::initialize(turbo::SequentialReadFile *file, SerializeOption option) {
+        _file = file;
+        _option = option;
+        _element_size = data_type_size(_option.data_type);
+        _vector_bytes = option.dimension * _element_size;
+        return init();
+    }
 
+    turbo::Status VectorSetWriter::initialize(turbo::SequentialWriteFile *file, SerializeOption option) {
+        _file = file;
+        _option = option;
+        _element_size = data_type_size(_option.data_type);
+        _vector_bytes = _option.dimension * _element_size;
+        return init();
+    }
 }  // namespace tann
-
-#endif  // TANN_CORE_SERIALIZE_OPTION_H_
