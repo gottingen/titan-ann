@@ -12,11 +12,11 @@
 # limitations under the License.
 #
 
-carbin_cc_binary(
+carbin_cc_test(
         NAME
-        multi_thread_replace_test
+        add_remove_test
         SOURCES
-        multi_thread_replace_test.cc
+        add_remove_test.cc
         COPTS
         ${CARBIN_CXX_OPTIONS}
         "-ggdb3"
