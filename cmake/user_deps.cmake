@@ -42,6 +42,7 @@ set(CARBIN_DEPS_LINK
         ${AIO_LIBRARIES}
         OpenMP::OpenMP_CXX
         turbo
+        bits
         )
 list(REMOVE_DUPLICATES CARBIN_DEPS_LINK)
 carbin_print_list_label("Denpendcies:" CARBIN_DEPS_LINK)

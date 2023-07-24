@@ -31,7 +31,6 @@
 #include "tann/core/index_option.h"
 #include "tann/core/index_interface.h"
 #include "tann/hnsw/visited_list_pool.h"
-#include "tann/hnsw/scratch.h"
 #include "turbo/log/logging.h"
 
 namespace tann {
@@ -63,7 +62,7 @@ namespace tann {
         }
 
         [[nodiscard]] std::size_t remove_size() const {
-            return _num_deleted;
+            return _data.deleted_size();
         }
 
 
@@ -90,9 +89,6 @@ namespace tann {
         void set_external_label(location_t internal_id, label_type label);
 
         [[nodiscard]] turbo::Status unmark_deleted_internal(location_t internal_id);
-
-        [[nodiscard]] bool is_marked_deleted(location_t internal_id) const;
-        void set_marked_deleted(location_t internal_id, bool flag);
 
         turbo::ResultStatus<location_t> add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, label_type label, int level);
 
@@ -127,7 +123,7 @@ namespace tann {
         std::unique_ptr<HnswIndexOption> _option;
         VectorSpace _vs;
         VectorSet _data;
-        std::vector<HnswScratch> _index_scratch;
+        std::vector<label_type> _index_scratch;
         mutable std::mutex _label_lookup_lock;  // lock for label_lookup_
         std::unordered_map<label_type , location_t> _label_lookup;
 
@@ -151,7 +147,6 @@ namespace tann {
         location_t _enterpoint_node{0};
 
         mutable std::atomic<size_t> _cur_element_count{0};
-        mutable std::atomic<size_t> _num_deleted{0};
         std::unique_ptr<VisitedListPool> _visited_list_pool;
         // Locks operations with element by label value
         mutable std::vector<std::mutex> _label_op_locks;
@@ -171,21 +166,12 @@ namespace tann {
 
     inline label_type HnswIndex::get_external_label(location_t internal_id) const {
         TLOG_CHECK(internal_id < _index_scratch.size());
-        return _index_scratch[internal_id].label;
+        return _index_scratch[internal_id];
     }
 
     inline void HnswIndex::set_external_label(location_t internal_id, label_type label) {
         TLOG_CHECK(internal_id < _index_scratch.size());
-        _index_scratch[internal_id].label = label;
-    }
-    inline bool HnswIndex::is_marked_deleted(location_t internal_id) const {
-        TLOG_CHECK(internal_id < _index_scratch.size());
-        return _index_scratch[internal_id].is_deleted;
-    }
-
-    inline void HnswIndex::set_marked_deleted(location_t internal_id, bool flag) {
-        TLOG_CHECK(internal_id < _index_scratch.size());
-        _index_scratch[internal_id].is_deleted = flag;
+        _index_scratch[internal_id] = label;
     }
 
 }  // namespace tann

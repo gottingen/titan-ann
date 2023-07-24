@@ -46,7 +46,7 @@ namespace tann {
 
     void VectorSet::set_vector(const std::size_t i, turbo::Span<uint8_t> vector) {
         TLOG_CHECK(_vs, "should init be using");
-        TLOG_CHECK(i < _size, "vector set size {}, but set the vector {}, overflow!", _size, i);
+        TLOG_CHECK(i < _current_idx, "vector set size {}, but set the vector {}, overflow!", _current_idx, i);
         auto bi = i / _batch_size;
         auto si = i % _batch_size;
         _data[bi].set_vector(si, vector);
@@ -55,7 +55,7 @@ namespace tann {
 
     turbo::Span<uint8_t> VectorSet::get_vector(const std::size_t i) const {
         TLOG_CHECK(_vs, "should init be using");
-        TLOG_CHECK(i < _size, "vector set size {}, but get the vector {}, overflow!", _size, i);
+        TLOG_CHECK(i < _current_idx, "vector set size {}, but get the vector {}, overflow!", _current_idx, i);
         auto bi = i / _batch_size;
         auto si = i % _batch_size;
         return _data[bi].at(si);
@@ -103,27 +103,36 @@ namespace tann {
 
     std::size_t VectorSet::add_vector(const turbo::Span<uint8_t> &query) {
         TLOG_CHECK(_vs, "should init be using");
-        auto bi = _size / _batch_size;
-        if (_size >= capacity()) {
+        auto bi = _current_idx / _batch_size;
+        if (_current_idx >= capacity()) {
             expend();
         }
         _data[bi].add_vector(query);
-        auto index = _size;
-        ++_size;
+        auto index = _current_idx;
+        ++_current_idx;
         return index;
     }
 
     std::size_t VectorSet::prefer_add_vector(std::size_t n) {
         TLOG_CHECK(_vs, "should init be using");
-        auto idx = _size;
-        auto n_size = _size + n;
+        auto idx = _current_idx;
+        auto n_size = _current_idx + n;
         resize(n_size);
         return idx;
     }
 
     std::size_t VectorSet::size() const {
         TLOG_CHECK(_vs, "should init be using");
-        return _size;
+        return _current_idx - _deleted_size;
+    }
+
+    [[nodiscard]] std::size_t VectorSet::deleted_size() const {
+        return _deleted_size;
+    }
+
+    [[nodiscard]] std::size_t VectorSet::current_index() const {
+        TLOG_CHECK(_vs, "should init be using");
+        return _current_idx;
     }
 
     std::size_t VectorSet::capacity() const {
@@ -133,7 +142,7 @@ namespace tann {
 
     std::size_t VectorSet::available() const {
         TLOG_CHECK(_vs, "should init be using");
-        return _data.size() * _batch_size - _size;
+        return _data.size() * _batch_size - _current_idx;
     }
 
     void VectorSet::reserve(std::size_t n) {
@@ -160,18 +169,18 @@ namespace tann {
 
     void VectorSet::pop_back(std::size_t n) {
         TLOG_CHECK(_vs, "should init be using");
-        TLOG_CHECK(n < _size);
-        resize(_size - n);
+        TLOG_CHECK(n < _current_idx);
+        resize(_current_idx - n);
     }
 
     void VectorSet::resize(std::size_t n) {
         TLOG_CHECK(_vs, "should init be using");
-        if(n ==  _size) {
+        if(n ==  _current_idx) {
             return;
         }
-        if(n < _size) {
-            std::size_t need_to_pop = _size - n;
-            for(auto idx = _size/_batch_size; need_to_pop > 0; idx--) {
+        if(n < _current_idx) {
+            std::size_t need_to_pop = _current_idx - n;
+            for(auto idx = _current_idx/_batch_size; need_to_pop > 0; idx--) {
                 auto bs = _data[idx].size();
                 if(bs >= need_to_pop) {
                     _data[idx].resize(bs - need_to_pop);
@@ -183,8 +192,8 @@ namespace tann {
             }
         } else {
             reserve(n);
-            std::size_t need_to_expand = n - _size;
-            for(auto idx = _size/_batch_size; need_to_expand > 0; idx++) {
+            std::size_t need_to_expand = n - _current_idx;
+            for(auto idx = _current_idx/_batch_size; need_to_expand > 0; idx++) {
                 auto ba = _data[idx].available();
                 if(ba >= need_to_expand) {
                     auto nsize = _data[idx].size() + need_to_expand;
@@ -196,7 +205,7 @@ namespace tann {
                 }
             }
         }
-        _size = n;
+        _current_idx = n;
     }
 
     turbo::Status VectorSet::load(std::string_view path) {

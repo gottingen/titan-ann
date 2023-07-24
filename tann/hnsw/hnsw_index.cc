@@ -47,8 +47,6 @@ namespace tann {
             return r;
         }
 
-
-        _num_deleted = 0;
         _max_elements = _option->max_elements;
         _ef_construction = _option->ef_construction;
         _ef = _option->ef;
@@ -75,7 +73,24 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    // label of vector status                                        | operation     | new internal location
+    // ---------------------------------------------------------------------------------------------------
+    // 1. label exists                                               | update        | no
+    // 2. label exists mark delete                                   | update        | no
+    // 3. label not exits and not allow replace_deleted              | add new       | yes
+    // 4. label not exits and allow replace_deleted and no vacant    | add new       | yes
+    // 5. label not exits and allow replace_deleted and has vacant   | update        | no
+    // ---------------------------------------------------------------------------------------------------
+    //                                     |  |
+    //                                     |  |
+    //                                    \    /
+    //                                     \  /
+    //                                      \/
+    // ---------------------------------------------------------------------------------------------------
+    // label of vector status                                        | operation     | new internal location
+    // ---------------------------------------------------------------------------------------------------
+    //
     turbo::Status
     HnswIndex::add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, const label_type &label) {
         if (!_allow_replace_deleted && option.replace_deleted) {
@@ -156,7 +171,7 @@ namespace tann {
         }
 
         links_priority_queue top_candidates;
-        if (_num_deleted) {
+        if (_data.deleted_size()) {
             top_candidates = search_base_layer_st<true, true>(currObj, qctx, std::max(_ef, qctx->k));
         } else {
             top_candidates = search_base_layer_st<false, true>(currObj, qctx, std::max(_ef, qctx->k));
@@ -184,7 +199,7 @@ namespace tann {
 
         auto isIdAllowed = qctx->is_allowed;
         distance_type lowerBound;
-        if ((!has_deletions || !is_marked_deleted(ep_id)) &&
+        if ((!has_deletions || !_data.is_deleted(ep_id)) &&
             ((!isIdAllowed) || (*isIdAllowed)(get_external_label(ep_id)))) {
             auto data_point = to_span<uint8_t>(qctx->raw_query);
             distance_type dist = _data.get_distance(data_point, ep_id);
@@ -226,7 +241,7 @@ namespace tann {
                     if (top_candidates.size() < ef || lowerBound > dist) {
                         candidate_set.emplace(-dist, candidate_id);
 
-                        if ((!has_deletions || !is_marked_deleted(candidate_id)) &&
+                        if ((!has_deletions || !_data.is_deleted(candidate_id)) &&
                             ((!isIdAllowed) || (*isIdAllowed)(get_external_label(candidate_id))))
                             top_candidates.emplace(dist, candidate_id);
 
@@ -260,9 +275,8 @@ namespace tann {
 
     turbo::Status HnswIndex::mark_deleted_internal(location_t internalId) {
         assert(internalId < _cur_element_count);
-        if (!is_marked_deleted(internalId)) {
-            set_marked_deleted(internalId, true);
-            _num_deleted += 1;
+        if (!_data.is_deleted(internalId)) {
+            _data.mark_deleted(internalId);
             if (_allow_replace_deleted) {
                 std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
                 _deleted_elements.insert(internalId);
@@ -285,14 +299,14 @@ namespace tann {
             if (search != _label_lookup.end()) {
                 location_t existingInternalId = search->second;
                 if (_allow_replace_deleted) {
-                    if (is_marked_deleted(existingInternalId)) {
+                    if (_data.is_deleted(existingInternalId)) {
                         return turbo::UnavailableError(
                                 "Can't use addPoint to update deleted elements if replacement of deleted elements is enabled.");
                     }
                 }
                 lock_table.unlock();
 
-                if (is_marked_deleted(existingInternalId)) {
+                if (_data.is_deleted(existingInternalId)) {
                     auto r = unmark_deleted_internal(existingInternalId);
                     if (!r.ok()) {
                         return r;
@@ -369,7 +383,7 @@ namespace tann {
                 }
             }
 
-            bool epDeleted = is_marked_deleted(enterpoint_copy);
+            bool epDeleted = _data.is_deleted(enterpoint_copy);
             for (int l_level = std::min(cur_level, max_level_copy); l_level >= 0; l_level--) {
                 if (l_level > max_level_copy || l_level < 0)  // possible?
                     return turbo::OutOfRangeError("Level error");
@@ -409,7 +423,7 @@ namespace tann {
         links_priority_queue candidateSet;
 
         distance_type lowerBound;
-        if (!is_marked_deleted(ep_id)) {
+        if (!_data.is_deleted(ep_id)) {
             distance_type dist = _data.get_distance(loc, ep_id);
             top_candidates.emplace(dist, ep_id);
             lowerBound = dist;
@@ -445,7 +459,7 @@ namespace tann {
                 distance_type dist1 = _data.get_distance(loc, candidate_id);
                 if (top_candidates.size() < _ef_construction || lowerBound > dist1) {
                     candidateSet.emplace(-dist1, candidate_id);
-                    if (!is_marked_deleted(candidate_id))
+                    if (!_data.is_deleted(candidate_id))
                         top_candidates.emplace(dist1, candidate_id);
 
                     if (top_candidates.size() > _ef_construction)
@@ -701,7 +715,7 @@ namespace tann {
             // Since element_levels_ is being used to get `dataPointLevel`, there could be cases where `topCandidates` could just contains entry point itself.
             // To prevent self loops, the `topCandidates` is filtered and thus can be empty.
             if (!filteredTopCandidates.empty()) {
-                bool epDeleted = is_marked_deleted(entryPointInternalId);
+                bool epDeleted = _data.is_deleted(entryPointInternalId);
                 if (epDeleted) {
                     filteredTopCandidates.emplace(_data.get_distance(dataPointInternalId, entryPointInternalId),
                                                   entryPointInternalId);
@@ -769,9 +783,8 @@ namespace tann {
 
     turbo::Status HnswIndex::unmark_deleted_internal(location_t internalId) {
         assert(internalId < _cur_element_count);
-        if (is_marked_deleted(internalId)) {
-            set_marked_deleted(internalId, false);
-            _num_deleted -= 1;
+        if (_data.is_deleted(internalId)) {
+            _data.unmark_deleted(internalId);
             if (_allow_replace_deleted) {
                 std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
                 _deleted_elements.erase(internalId);
@@ -789,6 +802,12 @@ namespace tann {
     }
 
     turbo::Status HnswIndex::save_index(const std::string &path, const SerializeOption &option) {
+        turbo::SequentialWriteFile file;
+        auto r = file.open(path);
+        if(!r.ok()) {
+            return r;
+        }
+
         return turbo::OkStatus();
     }
 
