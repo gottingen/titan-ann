@@ -26,12 +26,14 @@ namespace tann {
     public:
 
         virtual ~VectorSetReader() = default;
-        turbo::Status initialize(turbo::SequentialReadFile *file, SerializeOption option);
+
+        turbo::Status initialize(turbo::SequentialReadFile *file, const SerializeOption &option);
+
         virtual turbo::Status load(VectorSet &dst) = 0;
 
-        virtual turbo::Status read_vector(turbo::Span<uint8_t> *vector)  = 0;
+        virtual turbo::Status read_vector(turbo::Span<uint8_t> &vector) = 0;
 
-        virtual turbo::ResultStatus<std::size_t> read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size)  = 0;
+        virtual turbo::ResultStatus<std::size_t> read_batch(turbo::Span<uint8_t> &vector, std::size_t batch_size) = 0;
 
         std::size_t has_read() const {
             return _has_read;
@@ -42,8 +44,10 @@ namespace tann {
         [[nodiscard]] std::size_t num_vectors() const {
             return _nvecs;
         }
+
     protected:
         virtual turbo::Status init() = 0;
+
     protected:
         turbo::SequentialReadFile *_file{nullptr};
         SerializeOption _option;
@@ -59,19 +63,21 @@ namespace tann {
 
         virtual ~VectorSetWriter() = default;
 
-        turbo::Status initialize(turbo::SequentialWriteFile *file, SerializeOption option);
+        turbo::Status initialize(turbo::SequentialWriteFile *file, const SerializeOption &option);
 
         virtual turbo::Status save(VectorSet &dst) = 0;
 
-        virtual turbo::Status write_vector(turbo::Span<uint8_t> *vector)  = 0;
+        virtual turbo::Status write_vector(turbo::Span<uint8_t> vector) = 0;
 
-        virtual turbo::Status write_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size)  = 0;
+        virtual turbo::Status write_batch(turbo::Span<uint8_t> vector, std::size_t batch_size) = 0;
 
         [[nodiscard]] std::size_t has_write() const {
             return _has_write;
         }
+
     protected:
         virtual turbo::Status init() = 0;
+
     protected:
         turbo::SequentialWriteFile *_file{nullptr};
         SerializeOption _option;

@@ -18,7 +18,7 @@
 namespace tann {
     turbo::Status HnswIndex::check_option() {
         // check options
-        if(_option.dimension == 0) {
+        if (_option.dimension == 0) {
             return turbo::InvalidArgumentError("invalid dimension : {}, please set dimension", _option.dimension);
         }
         return turbo::OkStatus();
@@ -26,22 +26,22 @@ namespace tann {
 
 
     turbo::Status HnswIndex::initialize(std::unique_ptr<IndexOption> option) {
-        auto *option_ptr = reinterpret_cast<HnswIndexOption*>(option.release());
+        auto *option_ptr = reinterpret_cast<HnswIndexOption *>(option.release());
         _option = *option_ptr;
 
         // check parameters
-        auto  r = check_option();
-        if(!r.ok()) {
+        auto r = check_option();
+        if (!r.ok()) {
             return r;
         }
 
         r = _vs.init(_option.dimension, _option.metric, _option.data_type);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
         r = _data.init(&_vs, _option.batch_size);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
@@ -86,10 +86,6 @@ namespace tann {
     //
     turbo::Status
     HnswIndex::add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, const label_type &label) {
-        if (!_option.allow_replace_deleted && option.replace_deleted) {
-            return turbo::InvalidArgumentError("Replacement of deleted elements is disabled in constructor");
-        }
-
         // lock all operations with element by label
         std::unique_lock<std::mutex> lock_label(get_label_op_mutex(label));
         if (!option.replace_deleted) {
@@ -97,15 +93,8 @@ namespace tann {
             return r.status();
         }
         // check if there is vacant place
-        location_t internal_id_replaced;
-        std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
-        bool is_vacant_place = !_deleted_elements.empty();
-        if (is_vacant_place) {
-            internal_id_replaced = *_deleted_elements.begin();
-            _deleted_elements.erase(internal_id_replaced);
-        }
-        lock_deleted_elements.unlock();
-
+        location_t internal_id_replaced ;
+        bool is_vacant_place = _data.get_vacant(internal_id_replaced);
         // if there is no vacant place then add or update point
         // else add point to vacant place
         if (!is_vacant_place) {
@@ -270,10 +259,6 @@ namespace tann {
         assert(internalId < _cur_element_count);
         if (!_data.is_deleted(internalId)) {
             _data.mark_deleted(internalId);
-            if (_option.allow_replace_deleted) {
-                std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
-                _deleted_elements.insert(internalId);
-            }
         } else {
             return turbo::AlreadyExistsError("The requested to delete element is already deleted");
         }
@@ -291,11 +276,9 @@ namespace tann {
             auto search = _label_lookup.find(label);
             if (search != _label_lookup.end()) {
                 location_t existingInternalId = search->second;
-                if (_option.allow_replace_deleted) {
-                    if (_data.is_deleted(existingInternalId)) {
-                        return turbo::UnavailableError(
-                                "Can't use addPoint to update deleted elements if replacement of deleted elements is enabled.");
-                    }
+                if (_data.is_deleted(existingInternalId)) {
+                    return turbo::UnavailableError(
+                            "Can't use addPoint to update deleted elements if replacement of deleted elements is enabled.");
                 }
                 lock_table.unlock();
 
@@ -581,7 +564,7 @@ namespace tann {
 
     turbo::Status
     HnswIndex::update_point(const WriteOption &option, turbo::Span<uint8_t> data_point, location_t internalId,
-                           float updateNeighborProbability) {
+                            float updateNeighborProbability) {
         // update the feature vector associated with existing point with new vector
         AlignedQuery<uint8_t> aligned_vector;
         auto vector_data = to_span<uint8_t>(data_point);
@@ -778,10 +761,6 @@ namespace tann {
         assert(internalId < _cur_element_count);
         if (_data.is_deleted(internalId)) {
             _data.unmark_deleted(internalId);
-            if (_option.allow_replace_deleted) {
-                std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
-                _deleted_elements.erase(internalId);
-            }
         } else {
             return turbo::UnavailableError("The requested to undelete element is not deleted");
         }
@@ -797,42 +776,42 @@ namespace tann {
     turbo::Status HnswIndex::save_index(const std::string &path, const SerializeOption &option) {
         turbo::SequentialWriteFile file;
         auto r = file.open(path);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
         r = write_binary_pod(file, kHnswMagic);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         /// write option
         r = write_binary_pod(file, _option);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         /// index status
         r = write_binary_pod(file, _enterpoint_node);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         r = write_binary_pod(file, _max_level);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
         r = write_binary_pod(file, _mult);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         /// save raw data
         r = _data.save(&file);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
         /// save graph
         r = _final_graph.save(file);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
@@ -842,83 +821,91 @@ namespace tann {
     turbo::Status HnswIndex::load_index(const std::string &path, const SerializeOption &option) {
         turbo::SequentialReadFile file;
         auto r = file.open(path);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         // read and check magic
         size_t magic;
         r = read_binary_pod(file, magic);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
-        if(magic != kHnswMagic) {
+        if (magic != kHnswMagic) {
             return turbo::UnavailableError("file format error, not hnsw index file");
         }
 
         /// read option
         HnswIndexOption op;
         r = read_binary_pod(file, op);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         // check option
         r = check_load_option(op);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
         /// index status
         r = read_binary_pod(file, _enterpoint_node);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         r = read_binary_pod(file, _max_level);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
 
         r = read_binary_pod(file, _mult);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         // raw data
         r = _data.load(&file);
-        if(!r.ok()) {
+        if (!r.ok()) {
             return r;
         }
         // graph
-        r= _final_graph.load(file);
-        if(!r.ok()) {
+        r = _final_graph.load(file);
+        if (!r.ok()) {
             return r;
         }
         return turbo::OkStatus();
     }
 
     turbo::Status HnswIndex::check_load_option(const HnswIndexOption &op) {
-        if(op.dimension != _option.dimension) {
-            return turbo::InvalidArgumentError("index option confict dimension: {}, read from index: {}", _option.dimension, op.dimension);
+        if (op.dimension != _option.dimension) {
+            return turbo::InvalidArgumentError("index option confict dimension: {}, read from index: {}",
+                                               _option.dimension, op.dimension);
         }
 
-        if(op.m != _option.m) {
+        if (op.m != _option.m) {
             return turbo::InvalidArgumentError("index option confict m: {}, read from index: {}", _option.m, op.m);
         }
-        if(op.batch_size != _option.batch_size) {
-            return turbo::InvalidArgumentError("index option confict batch_size: {}, read from index: {}", _option.batch_size, op.batch_size);
+        if (op.batch_size != _option.batch_size) {
+            return turbo::InvalidArgumentError("index option confict batch_size: {}, read from index: {}",
+                                               _option.batch_size, op.batch_size);
         }
-        if(op.metric != _option.metric) {
-            return turbo::InvalidArgumentError("index option confict metric: {}, read from index: {}", turbo::nameof_enum(_option.metric), turbo::nameof_enum(op.metric));
+        if (op.metric != _option.metric) {
+            return turbo::InvalidArgumentError("index option confict metric: {}, read from index: {}",
+                                               turbo::nameof_enum(_option.metric), turbo::nameof_enum(op.metric));
         }
 
-        if(op.data_type != _option.data_type) {
-            return turbo::InvalidArgumentError("index option confict data_type: {}, read from index: {}", turbo::nameof_enum(_option.data_type), turbo::nameof_enum(op.data_type));
+        if (op.data_type != _option.data_type) {
+            return turbo::InvalidArgumentError("index option confict data_type: {}, read from index: {}",
+                                               turbo::nameof_enum(_option.data_type), turbo::nameof_enum(op.data_type));
         }
-        if(op.max_elements != _option.max_elements) {
-            return turbo::InvalidArgumentError("index option confict max_elements: {}, read from index: {}", _option.max_elements, op.max_elements);
+        if (op.max_elements != _option.max_elements) {
+            return turbo::InvalidArgumentError("index option confict max_elements: {}, read from index: {}",
+                                               _option.max_elements, op.max_elements);
         }
 
         return turbo::OkStatus();
     }
 
-    template links_priority_queue HnswIndex::search_base_layer_st<true, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
-    template links_priority_queue HnswIndex::search_base_layer_st<false, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
+    template links_priority_queue
+    HnswIndex::search_base_layer_st<true, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
+
+    template links_priority_queue
+    HnswIndex::search_base_layer_st<false, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
 }  // namespace tann

@@ -15,7 +15,6 @@
 #define TANN_CORE_INDEX_OPTION_H_
 
 #include "tann/core/types.h"
-#include "tann/common/constants.h"
 
 namespace tann {
 
@@ -26,7 +25,6 @@ namespace tann {
         std::size_t dimension{0};
         std::size_t batch_size{constants::kBatchSize};
         std::size_t max_elements{constants::kMaxElements};
-        bool allow_replace_deleted{true};
     };
 
     struct HnswIndexOption : public IndexOption {

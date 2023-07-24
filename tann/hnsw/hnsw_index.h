@@ -147,8 +147,6 @@ namespace tann {
         std::unique_ptr<VisitedListPool> _visited_list_pool;
         // Locks operations with element by label value
         mutable std::vector<std::mutex> _label_op_locks;
-        std::mutex _deleted_elements_lock;
-        std::unordered_set<location_t> _deleted_elements;
 
         mutable std::atomic<size_t> metric_distance_computations{0};
         mutable std::atomic<size_t> metric_hops{0};

@@ -16,7 +16,7 @@
 
 namespace tann {
 
-    turbo::Status VectorSetReader::initialize(turbo::SequentialReadFile *file, SerializeOption option) {
+    turbo::Status VectorSetReader::initialize(turbo::SequentialReadFile *file, const SerializeOption &option) {
         _file = file;
         _option = option;
         _element_size = data_type_size(_option.data_type);
@@ -24,7 +24,7 @@ namespace tann {
         return init();
     }
 
-    turbo::Status VectorSetWriter::initialize(turbo::SequentialWriteFile *file, SerializeOption option) {
+    turbo::Status VectorSetWriter::initialize(turbo::SequentialWriteFile *file, const SerializeOption &option) {
         _file = file;
         _option = option;
         _element_size = data_type_size(_option.data_type);

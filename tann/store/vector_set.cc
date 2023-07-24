@@ -16,6 +16,7 @@
 #include "turbo/log/logging.h"
 #include "tann/common/ann_exception.h"
 #include "tann/datasets/bin_vector_io.h"
+#include "tann/io/utility.h"
 
 namespace tann {
 
@@ -226,18 +227,77 @@ namespace tann {
     }
 
     turbo::Status VectorSet::load(turbo::SequentialReadFile *file) {
+        auto r = read_binary_pod(*file, _current_idx);
+        if(!r.ok()) {
+            return r;
+        }
+        r = read_binary_pod(*file, _deleted_size);
+        if(!r.ok()) {
+            return r;
+        }
+        std::string  bs;
+        r = read_binary_string(*file, bs);
+        if(!r.ok()) {
+            return r;
+        }
+        _deleted_map = bluebird::Bitmap::read(bs.c_str());
+
         tann::SerializeOption rop;
-        rop.n_vectors = 100;
+        rop.n_vectors = _current_idx;
         rop.dimension = _vs->dimension;
         rop.data_type = _vs->data_type;
         tann::BinaryVectorSetReader reader;
-        auto r = reader.initialize(file, rop);
+        r = reader.initialize(file, rop);
         if(!r.ok()) {
             return  r;
+        }
+        resize(_current_idx);
+        for(size_t i = 0; i < _data.size(); ++i) {
+            auto span = _data[i].to_span();
+            auto rs = reader.read_batch(span, _data[i].size());
+            if(!rs.ok()) {
+                return  rs.status();
+            }
+            if(rs.value() != _data[i].size()) {
+                return turbo::DataLossError("vector loss");
+            }
         }
         return turbo::OkStatus();
     }
     turbo::Status VectorSet::save(turbo::SequentialWriteFile *file) {
+        auto r = write_binary_pod(*file, _current_idx);
+        if(!r.ok()) {
+            return r;
+        }
+        r = write_binary_pod(*file, _deleted_size);
+        if(!r.ok()) {
+            return r;
+        }
+        std::string  bs = _deleted_map.toString();
+        r = write_binary_string(*file, bs);
+        if(!r.ok()) {
+            return r;
+        }
+        tann::SerializeOption rop;
+        rop.n_vectors = _current_idx;
+        rop.dimension = _vs->dimension;
+        rop.data_type = _vs->data_type;
+        tann::BinaryVectorSetWriter writer;
+        r = writer.initialize(file, rop);
+        if(!r.ok()) {
+            return  r;
+        }
+        for(size_t i = 0; i < _data.size(); ++i) {
+            auto span = _data[i].to_span();
+           r = writer.write_batch(span, _data[i].size());
+            if(!r.ok()) {
+                return  r;
+            }
+        }
+        if(writer.has_write() != _current_idx) {
+            return turbo::InternalError("bad vector number");
+        }
+
         return turbo::OkStatus();
     }
 }  // namespace tann

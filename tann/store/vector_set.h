@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <string_view>
+#include <shared_mutex>
 #include "tann/core/vector_space.h"
 #include "tann/store/vector_batch.h"
 #include "turbo/files/sequential_write_file.h"
@@ -82,19 +83,45 @@ namespace tann {
         void resize(std::size_t n);
 
         [[nodiscard]] bool is_deleted(location_t loc) const {
+            std::shared_lock<std::shared_mutex> lock(_deleted_elements_lock);
             return _deleted_map.contains(loc);
         }
 
         [[nodiscard]] void mark_deleted(location_t loc) {
+            std::unique_lock<std::shared_mutex> lock(_deleted_elements_lock);
             if (_deleted_map.addChecked(loc)) {
                 ++_deleted_size;
             }
         }
 
         [[nodiscard]] void unmark_deleted(location_t loc) {
+            std::unique_lock<std::shared_mutex> lock(_deleted_elements_lock);
             if (_deleted_map.removeChecked(loc)) {
                 --_deleted_size;
             }
+        }
+
+        [[nodiscard]] bool get_vacant(location_t &loc) {
+            std::unique_lock<std::shared_mutex> lock(_deleted_elements_lock);
+            if(_deleted_map.isEmpty()) {
+                loc = constants::kUnknownLocation;
+                return false;
+            }
+            loc = _deleted_map.minimum();
+            _deleted_map.remove(loc);
+            --_deleted_size;
+            return true;
+        }
+
+        [[nodiscard]] location_t get_vacant() {
+            std::unique_lock<std::shared_mutex> lock(_deleted_elements_lock);
+            if(_deleted_map.isEmpty()) {
+                return constants::kUnknownLocation;
+            }
+            auto loc = _deleted_map.minimum();
+            _deleted_map.remove(loc);
+            --_deleted_size;
+            return loc;
         }
 
         turbo::Status load(std::string_view path);
@@ -112,6 +139,7 @@ namespace tann {
         std::size_t _batch_size{0};
         std::size_t _current_idx{0};
         std::size_t _deleted_size{0};
+        mutable std::shared_mutex _deleted_elements_lock;
         bluebird::Bitmap _deleted_map;
         std::vector<VectorBatch> _data;
     };

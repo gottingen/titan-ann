@@ -64,6 +64,35 @@ namespace tann {
         return turbo::OkStatus();
     }
 
+    [[nodiscard]] static inline turbo::Status write_binary_string(turbo::SequentialWriteFile &out, const std::string_view &str) {
+        size_t size = str.size();
+        auto r = write_binary_pod(out, size);
+        if(!r.ok()) {
+            return r;
+        }
+        r = out.write(str);
+        if(!r.ok()) {
+            return r;
+        }
+        return turbo::OkStatus();
+    }
+
+    [[nodiscard]] static inline  turbo::Status read_binary_string(turbo::SequentialReadFile &in,  std::string &str) {
+        size_t size;
+        auto r = read_binary_pod(in, size);
+        if(!r.ok()) {
+            return r;
+        }
+        auto rs = in.read(&str, size);
+        if(!rs.ok()) {
+            return rs.status();
+        }
+        if(rs.value() != size) {
+            return turbo::DataLossError("not enough data");
+        }
+        return turbo::OkStatus();
+    }
+
 }  // namespace tann
 
 #endif  // TANN_IO_UTILITY_H_
