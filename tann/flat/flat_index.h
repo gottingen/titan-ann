@@ -36,7 +36,7 @@ namespace tann {
 
         ~FlatIndex() override = default;
 
-        [[nodiscard]] turbo::Status initialize(std::unique_ptr<IndexOption> option) override;
+        [[nodiscard]] turbo::Status initialize(const IndexOption  *option) override;
 
         turbo::Status add_vector(const WriteOption &option, turbo::Span<uint8_t> vec, const label_type &label) override;
 

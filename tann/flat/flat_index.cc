@@ -16,7 +16,7 @@
 
 namespace tann {
 
-    turbo::Status FlatIndex::initialize(std::unique_ptr<IndexOption> option) {
+    turbo::Status FlatIndex::initialize(const IndexOption *option) {
         auto r= _vs.init(option->dimension, option->metric, option->data_type);
         if(!r.ok()) {
             return r;

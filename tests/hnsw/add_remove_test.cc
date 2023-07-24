@@ -45,7 +45,7 @@ public:
         wop.replace_deleted = false;
         wop1.replace_deleted = true;
 
-        auto rs = index->initialize(std::move(option));
+        auto rs = index->initialize(option.get());
         assert(rs.ok());
 
     }

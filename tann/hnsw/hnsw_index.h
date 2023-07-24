@@ -45,7 +45,7 @@ namespace tann {
         // Let the engine use lazy initialization and aggregate the initialization
         // parameters into the index configuration, which will be more convenient when
         // using the factory class method
-        [[nodiscard]] turbo::Status initialize(std::unique_ptr<IndexOption> option) override;
+        [[nodiscard]] turbo::Status initialize(const IndexOption *option) override;
 
         [[nodiscard]] turbo::Status add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, const label_type &label) override;
 

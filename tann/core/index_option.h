@@ -36,7 +36,7 @@ namespace tann {
 
     struct WriteOption {
         bool lazy_delete{false};
-        bool replace_deleted{false};
+        bool replace_deleted{true};
         bool is_normalized{false};
         bool is_aligned_memory{false};
     };

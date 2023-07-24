@@ -25,8 +25,8 @@ namespace tann {
     }
 
 
-    turbo::Status HnswIndex::initialize(std::unique_ptr<IndexOption> option) {
-        auto *option_ptr = reinterpret_cast<HnswIndexOption *>(option.release());
+    turbo::Status HnswIndex::initialize(const IndexOption * option) {
+        auto *option_ptr = reinterpret_cast<const HnswIndexOption *>(option);
         _option = *option_ptr;
 
         // check parameters

@@ -141,6 +141,7 @@ namespace tann {
         std::size_t _deleted_size{0};
         mutable std::shared_mutex _deleted_elements_lock;
         bluebird::Bitmap _deleted_map;
+        mutable std::shared_mutex _data_lock;
         std::vector<VectorBatch> _data;
     };
 }  // namespace tann
