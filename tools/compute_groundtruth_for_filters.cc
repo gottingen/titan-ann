@@ -17,8 +17,8 @@
 #include <omp.h>
 #include <mkl/mkl.h>
 #include <unordered_map>
-#include "tann/tsl/robin_map.h"
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_map.h"
+#include "turbo/container/flat_hash_set.h"
 #include "tann_cli.h"
 
 #ifdef _WINDOWS
@@ -410,8 +410,8 @@ namespace tann {
             }
         } else { // Each query has its own filter label
             // Split up data and query bins into label specific ones
-            tsl::robin_map<std::string, uint32_t> labels_to_number_of_points;
-            tsl::robin_map<std::string, uint32_t> labels_to_number_of_queries;
+            turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points;
+            turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_queries;
 
             label_set all_labels;
             for (size_t i = 0; i < filter_labels.size(); i++) {
@@ -447,8 +447,8 @@ namespace tann {
                 query_ids_to_labels[i].insert(filter_labels[i]);
             }
 
-            tsl::robin_map<std::string, std::vector<uint32_t>> label_id_to_orig_id;
-            tsl::robin_map<std::string, std::vector<uint32_t>> label_query_id_to_orig_id;
+            turbo::flat_hash_map<std::string, std::vector<uint32_t>> label_id_to_orig_id;
+            turbo::flat_hash_map<std::string, std::vector<uint32_t>> label_query_id_to_orig_id;
 
             if (detail::data_type == std::string("float")) {
                 label_id_to_orig_id = tann::generate_label_specific_vector_files_compat<float>(
@@ -546,7 +546,7 @@ namespace tann {
 
             // cleanup artifacts
             std::cout << "Cleaning up artifacts..." << std::endl;
-            tsl::robin_set<std::string> paths_to_clean{detail::gt_file, detail::base_file, detail::query_file};
+            turbo::flat_hash_set<std::string> paths_to_clean{detail::gt_file, detail::base_file, detail::query_file};
             clean_up_artifacts(paths_to_clean, all_labels);
         }
     }

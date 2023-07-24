@@ -38,36 +38,10 @@ namespace tann {
         return load_impl(filename);
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename data_t> location_t Index<data_t>::load_impl(AlignedFileReader &reader)
-    {
-        size_t file_dim, file_num_points;
-
-        tann::get_bin_metadata(reader, file_num_points, file_dim);
-
-        if (file_dim != _dim)
-        {
-            std::stringstream stream;
-            stream << "ERROR: Driver requests loading " << _dim << " dimension,"
-                   << "but file has " << file_dim << " dimension." << std::endl;
-            tann::cerr << stream.str() << std::endl;
-            aligned_free(_data);
-            throw tann::ANNException(stream.str(), -1, __FUNCSIG__, __FILE__, __LINE__);
-        }
-
-        if (file_num_points > _max_points + _num_frozen_pts)
-        {
-            resize(file_num_points - _num_frozen_pts);
-        }
-
-        return file_num_points;
-    }
-#endif
-
     template<typename data_t>
     location_t InMemDataStore<data_t>::load_impl(const std::string &filename) {
         size_t file_dim, file_num_points;
-        if (!file_exists(filename)) {
+        if (!turbo::filesystem::exists(filename)) {
             std::stringstream stream;
             stream << "ERROR: data file " << filename << " does not exist." << std::endl;
             tann::cerr << stream.str() << std::endl;

@@ -14,8 +14,6 @@
 
 #include <string>
 #include <vector>
-
-#include "tann/distance/distance.h"
 #include "tann/vamana/parameters.h"
 
 namespace tann {

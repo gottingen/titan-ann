@@ -4,10 +4,6 @@
 #pragma once
 
 #include "tann/common/common_includes.h"
-
-#ifdef EXEC_ENV_OLS
-#include "tann/io/aligned_file_reader.h"
-#endif
 #include "tann/distance/distance_factory.h"
 #include "tann/distance/distance.h"
 #include "tann/common/locking.h"
@@ -86,15 +82,10 @@ namespace tann {
         TURBO_DLL void save(const char *filename, bool compact_before_save = false);
 
         // Load functions
-#ifdef EXEC_ENV_OLS
-        TURBO_DLL void load(AlignedFileReader &reader, uint32_t num_threads, uint32_t search_l);
-#else
         // Reads the number of frozen points from graph's metadata file section.
         TURBO_DLL static size_t get_graph_num_frozen_points(const std::string &graph_file);
 
         TURBO_DLL void load(const char *index_file, uint32_t num_threads, uint32_t search_l);
-
-#endif
 
         // get some private variables
         TURBO_DLL size_t get_num_points();
@@ -188,7 +179,7 @@ namespace tann {
 
         // TURBO_DLL void save_index_as_one_file(bool flag);
 
-        TURBO_DLL void get_active_tags(tsl::robin_set<TagT> &active_tags);
+        TURBO_DLL void get_active_tags(turbo::flat_hash_set<TagT> &active_tags);
 
         // memory should be allocated for vec before calling this function
         TURBO_DLL int get_vector_by_tag(TagT &tag, T *vec);
@@ -254,7 +245,7 @@ namespace tann {
         void
         occlude_list(const uint32_t location, std::vector<Neighbor> &pool, const float alpha, const uint32_t degree,
                      const uint32_t maxc, std::vector<uint32_t> &result, InMemQueryScratch<T> *scratch,
-                     const tsl::robin_set<uint32_t> *const delete_set_ptr = nullptr);
+                     const turbo::flat_hash_set<uint32_t> *const delete_set_ptr = nullptr);
 
         // add reverse links from all the visited nodes to node n.
         void inter_insert(uint32_t n, std::vector<uint32_t> &pruned_list, const uint32_t range,
@@ -271,7 +262,7 @@ namespace tann {
         // Acquire exclusive _tag_lock before calling
         size_t release_location(int location);
 
-        size_t release_locations(const tsl::robin_set<uint32_t> &locations);
+        size_t release_locations(const turbo::flat_hash_set<uint32_t> &locations);
 
         // Resize the index when no slots are left for insertion.
         // Acquire exclusive _update_lock and _tag_lock before calling.
@@ -289,7 +280,7 @@ namespace tann {
         // Remove deleted nodes from adjacency list of node loc
         // Replace removed neighbors with second order neighbors.
         // Also acquires _locks[i] for i = loc and out-neighbors of loc.
-        void process_delete(const tsl::robin_set<uint32_t> &old_delete_set, size_t loc, const uint32_t range,
+        void process_delete(const turbo::flat_hash_set<uint32_t> &old_delete_set, size_t loc, const uint32_t range,
                             const uint32_t maxc, const float alpha, InMemQueryScratch<T> *scratch);
 
         void initialize_query_scratch(uint32_t num_threads, uint32_t search_l, uint32_t indexing_l, uint32_t r,
@@ -305,12 +296,6 @@ namespace tann {
 
         TURBO_DLL size_t save_delete_list(const std::string &filename);
 
-#ifdef EXEC_ENV_OLS
-        TURBO_DLL size_t load_graph(AlignedFileReader &reader, size_t expected_num_points);
-        TURBO_DLL size_t load_data(AlignedFileReader &reader);
-        TURBO_DLL size_t load_tags(AlignedFileReader &reader);
-        TURBO_DLL size_t load_delete_set(AlignedFileReader &reader);
-#else
         TURBO_DLL size_t load_graph(const std::string filename, size_t expected_num_points);
 
         TURBO_DLL size_t load_data(std::string filename0);
@@ -318,8 +303,6 @@ namespace tann {
         TURBO_DLL size_t load_tags(const std::string tag_file_name);
 
         TURBO_DLL size_t load_delete_set(const std::string &filename);
-
-#endif
 
     private:
         // Distance functions
@@ -366,7 +349,7 @@ namespace tann {
 
         bool _filtered_index = false;
         std::vector<std::vector<LabelT>> _pts_to_labels;
-        tsl::robin_set<LabelT> _labels;
+        turbo::flat_hash_set<LabelT> _labels;
         std::string _labels_file;
         std::unordered_map<LabelT, uint32_t> _label_to_medoid_id;
         std::unordered_map<uint32_t, uint32_t> _medoid_counts;
@@ -398,7 +381,7 @@ namespace tann {
 
         // lazy_delete removes entry from _location_to_tag and _tag_to_location. If
         // _location_to_tag does not resolve a location, infer that it was deleted.
-        tsl::sparse_map<TagT, uint32_t> _tag_to_location;
+        turbo::flat_hash_map<TagT, uint32_t> _tag_to_location;
         natural_number_map<uint32_t, TagT> _location_to_tag;
 
         // _empty_slots has unallocated slots and those freed by consolidate_delete.
@@ -406,7 +389,7 @@ namespace tann {
         // immediately available for insert. consolidate_delete will release these
         // slots to _empty_slots.
         natural_number_set<uint32_t> _empty_slots;
-        std::unique_ptr<tsl::robin_set<uint32_t>> _delete_set;
+        std::unique_ptr<turbo::flat_hash_set<uint32_t>> _delete_set;
 
         bool _data_compacted = true;    // true if data has been compacted
         bool _is_saved = false;         // Checking if the index is already saved.
@@ -425,6 +408,6 @@ namespace tann {
         // Per node lock, cardinality=_max_points
         std::vector<non_recursive_mutex> _locks;
 
-        static const float INDEX_GROWTH_FACTOR;
+        static constexpr float INDEX_GROWTH_FACTOR = 1.5f;
     };
 } // namespace tann

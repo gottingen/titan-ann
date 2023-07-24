@@ -14,8 +14,8 @@
 #include "tann/common/utils.h"
 #include "turbo/platform/port.h"
 #include "tann/vamana/scratch.h"
-#include "tann/tsl/robin_map.h"
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_map.h"
+#include "turbo/container/flat_hash_set.h"
 
 #define FULL_PRECISION_REORDER_MULTIPLIER 3
 
@@ -29,38 +29,20 @@ namespace tann {
 
         TURBO_DLL ~PQFlashIndex();
 
-#ifdef EXEC_ENV_OLS
-        TURBO_DLL int load(tann::MemoryMappedFiles &files, uint32_t num_threads, const char *index_prefix);
-#else
         // load compressed data, and obtains the handle to the disk-resident index
         TURBO_DLL int load(uint32_t num_threads, const char *index_prefix);
 
-#endif
-
-#ifdef EXEC_ENV_OLS
-        TURBO_DLL int load_from_separate_paths(tann::MemoryMappedFiles &files, uint32_t num_threads,
-                                                       const char *index_filepath, const char *pivots_filepath,
-                                                       const char *compressed_filepath);
-#else
         TURBO_DLL int load_from_separate_paths(uint32_t num_threads, const char *index_filepath,
                                                const char *pivots_filepath, const char *compressed_filepath);
 
-#endif
 
         TURBO_DLL void load_cache_list(std::vector<uint32_t> &node_list);
 
-#ifdef EXEC_ENV_OLS
-        TURBO_DLL void generate_cache_list_from_sample_queries(MemoryMappedFiles &files, std::string sample_bin,
-                                                                       uint64_t l_search, uint64_t beamwidth,
-                                                                       uint64_t num_nodes_to_cache, uint32_t nthreads,
-                                                                       std::vector<uint32_t> &node_list);
-#else
         TURBO_DLL void generate_cache_list_from_sample_queries(std::string sample_bin, uint64_t l_search,
                                                                uint64_t beamwidth, uint64_t num_nodes_to_cache,
                                                                uint32_t num_threads,
                                                                std::vector<uint32_t> &node_list);
 
-#endif
 
         TURBO_DLL void cache_bfs_levels(uint64_t num_nodes_to_cache, std::vector<uint32_t> &node_list,
                                         const bool shuffle = false);
@@ -178,11 +160,11 @@ namespace tann {
 
         // nhood_cache
         unsigned *nhood_cache_buf = nullptr;
-        tsl::robin_map<uint32_t, std::pair<uint32_t, uint32_t *>> nhood_cache;
+        turbo::flat_hash_map<uint32_t, std::pair<uint32_t, uint32_t *>> nhood_cache;
 
         // coord_cache
         T *coord_cache_buf = nullptr;
-        tsl::robin_map<uint32_t, T *> coord_cache;
+        turbo::flat_hash_map<uint32_t, T *> coord_cache;
 
         // thread-specific scratch
         ConcurrentQueue<SSDThreadData<T> *> thread_data;
@@ -195,23 +177,15 @@ namespace tann {
         // filter support
         uint32_t *_pts_to_label_offsets = nullptr;
         uint32_t *_pts_to_labels = nullptr;
-        tsl::robin_set<LabelT> _labels;
+        turbo::flat_hash_set<LabelT> _labels;
         std::unordered_map<LabelT, uint32_t> _filter_to_medoid_id;
         bool _use_universal_label;
         uint32_t _universal_filter_num;
         std::vector<LabelT> _filter_list;
-        tsl::robin_set<uint32_t> _dummy_pts;
-        tsl::robin_set<uint32_t> _has_dummy_pts;
-        tsl::robin_map<uint32_t, uint32_t> _dummy_to_real_map;
-        tsl::robin_map<uint32_t, std::vector<uint32_t>> _real_to_dummy_map;
+        turbo::flat_hash_set<uint32_t> _dummy_pts;
+        turbo::flat_hash_set<uint32_t> _has_dummy_pts;
+        turbo::flat_hash_map<uint32_t, uint32_t> _dummy_to_real_map;
+        turbo::flat_hash_map<uint32_t, std::vector<uint32_t>> _real_to_dummy_map;
         std::unordered_map<std::string, LabelT> _label_map;
-
-#ifdef EXEC_ENV_OLS
-        // Set to a larger value than the actual header to accommodate
-        // any additions we make to the header. This is an outer limit
-        // on how big the header can be.
-        static const int HEADER_SIZE = SECTOR_LEN;
-        char *getHeaderBytes();
-#endif
     };
 } // namespace tann

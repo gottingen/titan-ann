@@ -11,28 +11,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#ifndef TANN_CORE_IO_OPTION_H_
-#define TANN_CORE_IO_OPTION_H_
 
-#include "tann/core/types.h"
+#include "tann/core/vector_set_io.h"
 
 namespace tann {
 
-    struct IOOption {
+    turbo::Status VectorSetReader::initialize(turbo::SequentialReadFile *file, SerializeOption option) {
+        _file = file;
+        _option = option;
+        _element_size = data_type_size(_option.data_type);
+        _vector_bytes = option.dimension * _element_size;
+        return init();
+    }
 
-    };
-
-    struct ReadOption {
-        DataType data_type;
-        std::size_t n_vectors;
-        std::size_t dimension;
-    };
-
-    struct WriteOption {
-        DataType data_type;
-        std::size_t n_vectors;
-        std::size_t dimension;
-    };
+    turbo::Status VectorSetWriter::initialize(turbo::SequentialWriteFile *file, SerializeOption option) {
+        _file = file;
+        _option = option;
+        _element_size = data_type_size(_option.data_type);
+        _vector_bytes = _option.dimension * _element_size;
+        return init();
+    }
 }  // namespace tann
-
-#endif  // TANN_CORE_IO_OPTION_H_

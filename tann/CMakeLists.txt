@@ -19,12 +19,14 @@
 ###carbin_example
 file(GLOB_RECURSE VAM_SRC vamana/*.cc)
 file(GLOB_RECURSE COMMON_SRC common/*.cc)
+file(GLOB_RECURSE CORE_SRC core/*.cc)
 file(GLOB_RECURSE STORE_SRC store/*.cc)
 file(GLOB_RECURSE IO_SRC io/*.cc)
 file(GLOB_RECURSE DISTANCE_SRC distance/*.cc)
 file(GLOB_RECURSE CORE_SRC core/*.cc)
 file(GLOB_RECURSE FLAT_SRC flat/*.cc)
 file(GLOB_RECURSE DS_SRC datasets/*.cc)
+file(GLOB_RECURSE HNSW_SRC hnsw/*.cc)
 set(TANN_LIB_SRC
         ${COMMON_SRC}
         ${VAM_SRC}
@@ -34,6 +36,8 @@ set(TANN_LIB_SRC
         ${CORE_SRC}
         ${FLAT_SRC}
         ${DS_SRC}
+        ${CORE_SRC}
+        ${HNSW_SRC}
         )
 add_definitions(
         -DUSE_AVX2

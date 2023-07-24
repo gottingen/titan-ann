@@ -6,7 +6,7 @@
 #include "tann/vamana/pq.h"
 #include "tann/vamana/partition.h"
 #include "tann/common/math_utils.h"
-#include "tann/tsl/robin_map.h"
+#include "turbo/container/flat_hash_map.h"
 
 // block size for reading/processing large files and matrices in blocks
 #define BLOCK_SIZE 5000000
@@ -16,7 +16,6 @@ namespace tann {
     }
 
     FixedChunkPQTable::~FixedChunkPQTable() {
-#ifndef EXEC_ENV_OLS
         if (tables != nullptr)
             delete[] tables;
         if (tables_tr != nullptr)
@@ -27,28 +26,13 @@ namespace tann {
             delete[] centroid;
         if (rotmat_tr != nullptr)
             delete[] rotmat_tr;
-#endif
     }
 
-#ifdef EXEC_ENV_OLS
-    void FixedChunkPQTable::load_pq_centroid_bin(MemoryMappedFiles &files, const char *pq_table_file, size_t num_chunks)
-    {
-#else
-
     void FixedChunkPQTable::load_pq_centroid_bin(const char *pq_table_file, size_t num_chunks) {
-#endif
-
         uint64_t nr, nc;
         std::string rotmat_file = std::string(pq_table_file) + "_rotation_matrix.bin";
-
-#ifdef EXEC_ENV_OLS
-        size_t *file_offset_data; // since load_bin only sets the pointer, no need
-                                  // to delete.
-        tann::load_bin<size_t>(files, pq_table_file, file_offset_data, nr, nc);
-#else
         std::unique_ptr<size_t[]> file_offset_data;
         tann::load_bin<size_t>(pq_table_file, file_offset_data, nr, nc);
-#endif
 
         bool use_old_filetype = false;
 
@@ -71,12 +55,7 @@ namespace tann {
             throw tann::ANNException("Wrong number of offsets in pq_pivots", -1, __FUNCSIG__, __FILE__, __LINE__);
         }
 
-#ifdef EXEC_ENV_OLS
-
-        tann::load_bin<float>(files, pq_table_file, tables, nr, nc, file_offset_data[0]);
-#else
         tann::load_bin<float>(pq_table_file, tables, nr, nc, file_offset_data[0]);
-#endif
 
         if ((nr != NUM_PQ_CENTROIDS)) {
             tann::cout << "Error reading pq_pivots file " << pq_table_file << ". file_num_centers  = " << nr
@@ -86,12 +65,7 @@ namespace tann {
         }
 
         this->ndims = nc;
-
-#ifdef EXEC_ENV_OLS
-        tann::load_bin<float>(files, pq_table_file, centroid, nr, nc, file_offset_data[1]);
-#else
         tann::load_bin<float>(pq_table_file, centroid, nr, nc, file_offset_data[1]);
-#endif
 
         if ((nr != this->ndims) || (nc != 1)) {
             tann::cerr << "Error reading centroids from pq_pivots file " << pq_table_file << ". file_dim  = " << nr
@@ -104,11 +78,7 @@ namespace tann {
         if (use_old_filetype) {
             chunk_offsets_index = 3;
         }
-#ifdef EXEC_ENV_OLS
-        tann::load_bin<uint32_t>(files, pq_table_file, chunk_offsets, nr, nc, file_offset_data[chunk_offsets_index]);
-#else
         tann::load_bin<uint32_t>(pq_table_file, chunk_offsets, nr, nc, file_offset_data[chunk_offsets_index]);
-#endif
 
         if (nc != 1 || (nr != num_chunks + 1 && num_chunks != 0)) {
             tann::cerr << "Error loading chunk offsets file. numc: " << nc << " (should be 1). numr: " << nr
@@ -120,12 +90,8 @@ namespace tann {
         tann::cout << "Loaded PQ Pivots: #ctrs: " << NUM_PQ_CENTROIDS << ", #dims: " << this->ndims
                    << ", #chunks: " << this->n_chunks << std::endl;
 
-        if (file_exists(rotmat_file)) {
-#ifdef EXEC_ENV_OLS
-            tann::load_bin<float>(files, rotmat_file, (float *&)rotmat_tr, nr, nc);
-#else
+        if (turbo::filesystem::exists(rotmat_file)) {
             tann::load_bin<float>(rotmat_file, rotmat_tr, nr, nc);
-#endif
             if (nr != this->ndims || nc != this->ndims) {
                 tann::cerr << "Error loading rotation matrix file" << std::endl;
                 throw tann::ANNException("Error loading rotation matrix file", -1, __FUNCSIG__, __FILE__, __LINE__);
@@ -307,7 +273,7 @@ namespace tann {
 
         std::unique_ptr<float[]> full_pivot_data;
 
-        if (file_exists(pq_pivots_path)) {
+        if (turbo::filesystem::exists(pq_pivots_path)) {
             size_t file_dim, file_num_centers;
             tann::load_bin<float>(pq_pivots_path, full_pivot_data, file_num_centers, file_dim, METADATA_SIZE);
             if (file_dim == dim && file_num_centers == num_centers) {
@@ -349,7 +315,7 @@ namespace tann {
         size_t cur_bin_threshold = high_val;
 
         std::vector<std::vector<uint32_t>> bin_to_dims(num_pq_chunks);
-        tsl::robin_map<uint32_t, uint32_t> dim_to_bin;
+        turbo::flat_hash_map<uint32_t, uint32_t> dim_to_bin;
         std::vector<float> bin_loads(num_pq_chunks, 0);
 
         // Process dimensions not inserted by previous loop
@@ -486,7 +452,7 @@ namespace tann {
         size_t cur_bin_threshold = high_val;
 
         std::vector<std::vector<uint32_t>> bin_to_dims(num_pq_chunks);
-        tsl::robin_map<uint32_t, uint32_t> dim_to_bin;
+        turbo::flat_hash_map<uint32_t, uint32_t> dim_to_bin;
         std::vector<float> bin_loads(num_pq_chunks, 0);
 
         // Process dimensions not inserted by previous loop
@@ -648,7 +614,7 @@ namespace tann {
 
         std::string inflated_pq_file = pq_compressed_vectors_path + "_inflated.bin";
 
-        if (!file_exists(pq_pivots_path)) {
+        if (!turbo::filesystem::exists(pq_pivots_path)) {
             std::cout << "ERROR: PQ k-means pivot file not found" << std::endl;
             throw tann::ANNException("PQ k-means pivot file not found", -1);
         } else {
@@ -860,7 +826,7 @@ namespace tann {
                                  const std::string &codebook_prefix) {
         size_t train_size, train_dim;
         float *train_data;
-        if (!file_exists(codebook_prefix)) {
+        if (!turbo::filesystem::exists(codebook_prefix)) {
             // instantiates train_data with random sample updates train_size
             gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size, train_dim);
             tann::cout << "Training data with " << train_size << " samples loaded." << std::endl;

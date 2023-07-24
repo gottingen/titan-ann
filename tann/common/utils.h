@@ -28,13 +28,9 @@ typedef int FileHandle;
 #include "tann/io/cached_io.h"
 #include "tann/common/ann_exception.h"
 #include "turbo/platform/port.h"
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_set.h"
+#include "turbo/files/filesystem.h"
 #include "tann/core/types.h"
-
-#ifdef EXEC_ENV_OLS
-#include "content_buf.h"
-#include "memory_mapped_files.h"
-#endif
 
 // taken from
 // https://github.com/Microsoft/BLAS-on-flash/blob/master/include/utils.h
@@ -59,85 +55,6 @@ typedef int FileHandle;
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
 
-inline bool file_exists(const std::string &name, bool dirCheck = false) {
-    int val;
-#ifndef _WINDOWS
-    struct stat buffer;
-    val = stat(name.c_str(), &buffer);
-#else
-    // It is the 21st century but Windows API still thinks in 32-bit terms.
-    // Turns out calling stat() on a file > 4GB results in errno = 132
-    // (OVERFLOW). How silly is this!? So calling _stat64()
-    struct _stat64 buffer;
-    val = _stat64(name.c_str(), &buffer);
-#endif
-
-    if (val != 0) {
-        switch (errno) {
-            case EINVAL:
-                tann::cout << "Invalid argument passed to stat()" << std::endl;
-                break;
-            case ENOENT:
-                // file is not existing, not an issue, so we won't cout anything.
-                break;
-            default:
-                tann::cout << "Unexpected error in stat():" << errno << std::endl;
-                break;
-        }
-        return false;
-    } else {
-        // the file entry exists. If reqd, check if this is a directory.
-        return dirCheck ? buffer.st_mode & S_IFDIR : true;
-    }
-}
-
-inline void open_file_to_write(std::ofstream &writer, const std::string &filename) {
-    writer.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-    if (!file_exists(filename))
-        writer.open(filename, std::ios::binary | std::ios::out);
-    else
-        writer.open(filename, std::ios::binary | std::ios::in | std::ios::out);
-
-    if (writer.fail()) {
-        char buff[1024];
-#ifdef _WINDOWS
-        auto ret = std::to_string(strerror_s(buff, 1024, errno));
-#else
-        auto ret = std::string(strerror_r(errno, buff, 1024));
-#endif
-        auto message = std::string("Failed to open file") + filename + " for write because " + buff + ", ret=" + ret;
-        tann::cerr << message << std::endl;
-        throw tann::ANNException(message, -1);
-    }
-}
-
-inline size_t get_file_size(const std::string &fname) {
-    std::ifstream reader(fname, std::ios::binary | std::ios::ate);
-    if (!reader.fail() && reader.is_open()) {
-        size_t end_pos = reader.tellg();
-        reader.close();
-        return end_pos;
-    } else {
-        tann::cerr << "Could not open file: " << fname << std::endl;
-        return 0;
-    }
-}
-
-inline int delete_file(const std::string &fileName) {
-    if (file_exists(fileName)) {
-        auto rc = ::remove(fileName.c_str());
-        if (rc != 0) {
-            tann::cerr << "Could not delete file: " << fileName
-                       << " even though it exists. This might indicate a permissions "
-                          "issue. "
-                          "If you see this message, please contact the tann team."
-                       << std::endl;
-        }
-        return rc;
-    } else {
-        return 0;
-    }
-}
 
 inline void convert_labels_string_to_int(const std::string &inFileName, const std::string &outFileName,
                                          const std::string &mapFileName, const std::string &unv_label) {
@@ -179,9 +96,6 @@ inline void convert_labels_string_to_int(const std::string &inFileName, const st
     map_writer.close();
 }
 
-#ifdef EXEC_ENV_OLS
-class AlignedFileReader;
-#endif
 
 namespace tann {
     static const size_t MAX_SIZE_OF_STREAMBUF = 2LL * 1024 * 1024 * 1024;
@@ -277,24 +191,6 @@ namespace tann {
         ncols = ncols_32;
     }
 
-#ifdef EXEC_ENV_OLS
-    inline void get_bin_metadata(MemoryMappedFiles &files, const std::string &bin_file, size_t &nrows, size_t &ncols,
-                                 size_t offset = 0)
-    {
-        tann::cout << "Getting metadata for file: " << bin_file << std::endl;
-        auto fc = files.getContent(bin_file);
-        // auto                     cb = ContentBuf((char*) fc._content, fc._size);
-        // std::basic_istream<char> reader(&cb);
-        // get_bin_metadata_impl(reader, nrows, ncols, offset);
-
-        int nrows_32, ncols_32;
-        int32_t *metadata_ptr = (int32_t *)((char *)fc._content + offset);
-        nrows_32 = *metadata_ptr;
-        ncols_32 = *(metadata_ptr + 1);
-        nrows = nrows_32;
-        ncols = ncols_32;
-    }
-#endif
 
     inline void get_bin_metadata(const std::string &bin_file, size_t &nrows, size_t &ncols, size_t offset = 0) {
         std::ifstream reader(bin_file.c_str(), std::ios::binary);
@@ -332,42 +228,6 @@ namespace tann {
         reader.read((char *) data, npts * dim * sizeof(T));
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    inline void load_bin(MemoryMappedFiles &files, const std::string &bin_file, T *&data, size_t &npts, size_t &dim,
-                         size_t offset = 0)
-    {
-        tann::cout << "Reading bin file " << bin_file.c_str() << " at offset: " << offset << "..." << std::endl;
-        auto fc = files.getContent(bin_file);
-
-        uint32_t t_npts, t_dim;
-        uint32_t *contentAsIntPtr = (uint32_t *)((char *)fc._content + offset);
-        t_npts = *(contentAsIntPtr);
-        t_dim = *(contentAsIntPtr + 1);
-
-        npts = t_npts;
-        dim = t_dim;
-
-        data = (T *)((char *)fc._content + offset + 2 * sizeof(uint32_t)); // No need to copy!
-    }
-
-    TURBO_DLL void get_bin_metadata(AlignedFileReader &reader, size_t &npts, size_t &ndim, size_t offset = 0);
-    template <typename T>
-    TURBO_DLL void load_bin(AlignedFileReader &reader, T *&data, size_t &npts, size_t &ndim, size_t offset = 0);
-    template <typename T>
-    TURBO_DLL void load_bin(AlignedFileReader &reader, std::unique_ptr<T[]> &data, size_t &npts, size_t &ndim,
-                                    size_t offset = 0);
-
-    template <typename T>
-    TURBO_DLL void copy_aligned_data_from_file(AlignedFileReader &reader, T *&data, size_t &npts, size_t &dim,
-                                                       const size_t &rounded_dim, size_t offset = 0);
-
-    // Unlike load_bin, assumes that data is already allocated 'size' entries
-    template <typename T>
-    TURBO_DLL void read_array(AlignedFileReader &reader, T *data, size_t size, size_t offset = 0);
-
-    template <typename T> TURBO_DLL void read_value(AlignedFileReader &reader, T &value, size_t offset = 0);
-#endif
 
     template<typename T>
     inline void load_bin(const std::string &bin_file, T *&data, size_t &npts, size_t &dim, size_t offset = 0) {
@@ -549,16 +409,6 @@ namespace tann {
         }
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    inline void load_bin(MemoryMappedFiles &files, const std::string &bin_file, std::unique_ptr<T[]> &data, size_t &npts,
-                         size_t &dim, size_t offset = 0)
-    {
-        T *ptr;
-        load_bin<T>(files, bin_file, ptr, npts, dim, offset);
-        data.reset(ptr);
-    }
-#endif
 
     inline void copy_file(std::string in_file, std::string out_file) {
         std::ifstream source(in_file, std::ios::binary);
@@ -578,7 +428,7 @@ namespace tann {
 
     TURBO_DLL double calculate_recall(unsigned num_queries, unsigned *gold_std, float *gs_dist, unsigned dim_gs,
                                       unsigned *our_results, unsigned dim_or, unsigned recall_at,
-                                      const tsl::robin_set<unsigned> &active_tags);
+                                      const turbo::flat_hash_set<unsigned> &active_tags);
 
     TURBO_DLL double calculate_range_search_recall(unsigned num_queries,
                                                    std::vector<std::vector<uint32_t>> &groundtruth,
@@ -594,7 +444,7 @@ namespace tann {
 
     inline void open_file_to_write(std::ofstream &writer, const std::string &filename) {
         writer.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-        if (!file_exists(filename))
+        if (!turbo::filesystem::exists(filename))
             writer.open(filename, std::ios::binary | std::ios::out);
         else
             writer.open(filename, std::ios::binary | std::ios::in | std::ios::out);
@@ -676,28 +526,6 @@ namespace tann {
         }
         tann::cout << " done." << std::endl;
     }
-
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    inline void load_aligned_bin(MemoryMappedFiles &files, const std::string &bin_file, T *&data, size_t &npts, size_t &dim,
-                                 size_t &rounded_dim)
-    {
-        try
-        {
-            tann::cout << "Opening bin file " << bin_file << " ..." << std::flush;
-            FileContent fc = files.getContent(bin_file);
-            ContentBuf buf((char *)fc._content, fc._size);
-            std::basic_istream<char> reader(&buf);
-
-            size_t actual_file_size = fc._size;
-            load_aligned_bin_impl(reader, actual_file_size, data, npts, dim, rounded_dim);
-        }
-        catch (std::system_error &e)
-        {
-            throw FileException(bin_file, e, __FUNCSIG__, __FILE__, __LINE__);
-        }
-    }
-#endif
 
     template<typename T>
     inline void
@@ -956,7 +784,7 @@ inline std::vector<std::string> read_file_to_vector_of_strings(const std::string
     return result;
 }
 
-inline void clean_up_artifacts(tsl::robin_set<std::string> paths_to_clean, tsl::robin_set<std::string> path_suffixes) {
+inline void clean_up_artifacts(turbo::flat_hash_set<std::string> paths_to_clean, turbo::flat_hash_set<std::string> path_suffixes) {
     try {
         for (const auto &path: paths_to_clean) {
             for (const auto &suffix: path_suffixes) {

@@ -18,7 +18,7 @@
 #include "tann/core/vector_space.h"
 #include "tann/core/types.h"
 #include "tann/core/index_option.h"
-#include "tann/core/io_option.h"
+#include "tann/core/serialize_option.h"
 
 namespace tann {
 
@@ -26,17 +26,21 @@ namespace tann {
     public:
         virtual ~IndexInterface() = default;
 
-        [[nodiscard]] virtual turbo::Status init(IndexOption option) = 0;
+        //////////////////////////////////////////
+        // Let the engine use lazy initialization and aggregate the initialization
+        // parameters into the index configuration, which will be more convenient when
+        // using the factory class method
+        [[nodiscard]] virtual turbo::Status initialize(std::unique_ptr<IndexOption> option) = 0;
 
-        virtual  void add_vector(turbo::Span<uint8_t> vec, const label_type &label) = 0;
+        [[nodiscard]] virtual  turbo::Status add_vector(const WriteOption &option, turbo::Span<uint8_t> vec, const label_type &label) = 0;
 
-        virtual  void remove_vector(const label_type &label) = 0;
+        [[nodiscard]] virtual  turbo::Status remove_vector(const label_type &label) = 0;
 
         [[nodiscard]] virtual  turbo::Status search_vector(QueryContext *qctx) = 0;
 
-        [[nodiscard]] virtual turbo::Status save_index(const std::string &path, const IOOption &option) = 0;
+        [[nodiscard]] virtual turbo::Status save_index(const std::string &path, const SerializeOption &option) = 0;
 
-        [[nodiscard]] virtual turbo::Status load_index(const std::string &path, const IOOption &option) = 0;
+        [[nodiscard]] virtual turbo::Status load_index(const std::string &path, const SerializeOption &option) = 0;
 
         [[nodiscard]] virtual std::size_t size() const = 0;
 

@@ -17,7 +17,7 @@
 #include "tann/vamana/partition.h"
 #include "tann/vamana/pq_flash_index.h"
 #include "tann/vamana/timer.h"
-#include "tann/tsl/robin_set.h"
+#include "turbo/container/flat_hash_set.h"
 
 namespace tann {
 
@@ -33,7 +33,7 @@ namespace tann {
         size_t index_ending_offset = metadata[nr - 1];
         size_t read_blk_size = 64 * 1024 * 1024;
         cached_ofstream writer(index_file, read_blk_size);
-        size_t check_file_size = get_file_size(index_file);
+        size_t check_file_size = turbo::filesystem::file_size(index_file);
         if (check_file_size != index_ending_offset) {
             std::stringstream stream;
             stream << "Error, index file specified does not have correct metadata "
@@ -137,38 +137,6 @@ namespace tann {
         return warmup;
     }
 
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    T *load_warmup(MemoryMappedFiles &files, const std::string &cache_warmup_file, uint64_t &warmup_num,
-                   uint64_t warmup_dim, uint64_t warmup_aligned_dim)
-    {
-        T *warmup = nullptr;
-        uint64_t file_dim, file_aligned_dim;
-
-        if (files.fileExists(cache_warmup_file))
-        {
-            tann::load_aligned_bin<T>(files, cache_warmup_file, warmup, warmup_num, file_dim, file_aligned_dim);
-            tann::cout << "In the warmup file: " << cache_warmup_file << " File dim: " << file_dim
-                          << " File aligned dim: " << file_aligned_dim << " Expected dim: " << warmup_dim
-                          << " Expected aligned dim: " << warmup_aligned_dim << std::endl;
-
-            if (file_dim != warmup_dim || file_aligned_dim != warmup_aligned_dim)
-            {
-                std::stringstream stream;
-                stream << "Mismatched dimensions in sample file. file_dim = " << file_dim
-                       << " file_aligned_dim: " << file_aligned_dim << " index_dim: " << warmup_dim
-                       << " index_aligned_dim: " << warmup_aligned_dim << std::endl;
-                tann::cerr << stream.str();
-                throw tann::ANNException(stream.str(), -1);
-            }
-        }
-        else
-        {
-            warmup = generateRandomWarmup<T>(warmup_num, warmup_dim, warmup_aligned_dim);
-        }
-        return warmup;
-    }
-#endif
 
     template<typename T>
     T *load_warmup(const std::string &cache_warmup_file, uint64_t &warmup_num, uint64_t warmup_dim,
@@ -176,7 +144,7 @@ namespace tann {
         T *warmup = nullptr;
         uint64_t file_dim, file_aligned_dim;
 
-        if (file_exists(cache_warmup_file)) {
+        if (turbo::filesystem::exists(cache_warmup_file)) {
             tann::load_aligned_bin<T>(cache_warmup_file, warmup, warmup_num, file_dim, file_aligned_dim);
             if (file_dim != warmup_dim || file_aligned_dim != warmup_aligned_dim) {
                 std::stringstream stream;
@@ -197,7 +165,7 @@ namespace tann {
 
     void read_idmap(const std::string &fname, std::vector<uint32_t> &ivecs) {
         uint32_t npts32, dim;
-        size_t actual_file_size = get_file_size(fname);
+        size_t actual_file_size = turbo::filesystem::file_size(fname);
         std::ifstream reader(fname.c_str(), std::ios::binary);
         reader.read((char *) &npts32, sizeof(uint32_t));
         reader.read((char *) &dim, sizeof(uint32_t));
@@ -764,7 +732,7 @@ namespace tann {
         uint32_t npts_reorder_file = 0, ndims_reorder_file = 0;
         if (reorder_data_file != std::string("")) {
             append_reorder_data = true;
-            size_t reorder_data_file_size = get_file_size(reorder_data_file);
+            size_t reorder_data_file_size = turbo::filesystem::file_size(reorder_data_file);
             reorder_data_reader.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 
             try {
@@ -785,7 +753,7 @@ namespace tann {
         }
 
         // create cached reader + writer
-        size_t actual_file_size = get_file_size(mem_index_file);
+        size_t actual_file_size = turbo::filesystem::file_size(mem_index_file);
         tann::cout << "Vamana index file size=" << actual_file_size << std::endl;
         std::ifstream vamana_reader(mem_index_file, std::ios::binary);
         cached_ofstream tann_writer(output_file, write_blk_size);
@@ -1002,7 +970,7 @@ namespace tann {
         std::string index_prefix_path(indexFilePath);
         std::string labels_file_to_use = index_prefix_path + "_label_formatted.txt";
         std::string pq_pivots_path_base = codebook_prefix;
-        std::string pq_pivots_path = file_exists(pq_pivots_path_base) ? pq_pivots_path_base + "_pq_pivots.bin"
+        std::string pq_pivots_path = turbo::filesystem::exists(pq_pivots_path_base) ? pq_pivots_path_base + "_pq_pivots.bin"
                                                                       : index_prefix_path + "_pq_pivots.bin";
         std::string pq_compressed_vectors_path = index_prefix_path + "_pq_compressed.bin";
         std::string mem_index_path = index_prefix_path + "_mem.index";
@@ -1198,17 +1166,6 @@ namespace tann {
     template TURBO_DLL float *load_warmup<float>(const std::string &cache_warmup_file, uint64_t &warmup_num,
                                                  uint64_t warmup_dim, uint64_t warmup_aligned_dim);
 
-#ifdef EXEC_ENV_OLS
-    template TURBO_DLL int8_t *load_warmup<int8_t>(MemoryMappedFiles &files, const std::string &cache_warmup_file,
-                                                           uint64_t &warmup_num, uint64_t warmup_dim,
-                                                           uint64_t warmup_aligned_dim);
-    template TURBO_DLL uint8_t *load_warmup<uint8_t>(MemoryMappedFiles &files, const std::string &cache_warmup_file,
-                                                             uint64_t &warmup_num, uint64_t warmup_dim,
-                                                             uint64_t warmup_aligned_dim);
-    template TURBO_DLL float *load_warmup<float>(MemoryMappedFiles &files, const std::string &cache_warmup_file,
-                                                         uint64_t &warmup_num, uint64_t warmup_dim,
-                                                         uint64_t warmup_aligned_dim);
-#endif
 
     template TURBO_DLL uint32_t optimize_beamwidth<int8_t, uint32_t>(
             std::unique_ptr<tann::PQFlashIndex<int8_t, uint32_t>> &pFlashIndex, int8_t *tuning_sample,

@@ -25,26 +25,13 @@ namespace tann {
 
         ~BinaryVectorSetReader() override = default;
 
-        turbo::Status init(turbo::SequentialReadFile *file, ReadOption *option) override;
-
         turbo::Status load(VectorSet &dst) override;
 
         turbo::Status read_vector(turbo::Span<uint8_t> *vector) override;
 
-        turbo::Status read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) override;
-
-        std::size_t has_read() const override {
-            return _has_read;
-        }
-
+        turbo::ResultStatus<std::size_t> read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) override;
     private:
-        turbo::SequentialReadFile *_file{nullptr};
-        ReadOption *_option{nullptr};
-        size_t _nvecs{0};
-        size_t _ndims{0};
-        size_t _element_size{0};
-        size_t _vector_bytes{0};
-        size_t _has_read{0};
+        turbo::Status init() override;
     };
 
     class BinaryVectorSetWriter : public VectorSetWriter {
@@ -53,26 +40,13 @@ namespace tann {
 
         ~BinaryVectorSetWriter() override = default;
 
-        turbo::Status init(turbo::SequentialWriteFile *file, WriteOption *option) override;
-
         turbo::Status save(VectorSet &dst) override;
 
         turbo::Status write_vector(turbo::Span<uint8_t> *vector) override;
 
         turbo::Status write_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) override;
-
-        std::size_t has_write() const override {
-            return _has_write;
-        }
-
     private:
-        turbo::SequentialWriteFile *_file{nullptr};
-        WriteOption *_option{nullptr};
-        size_t _nvecs{0};
-        size_t _ndims{0};
-        size_t _element_size{0};
-        size_t _vector_bytes{0};
-        size_t _has_write{0};
+        turbo::Status init() override;
     };
 }  // namespace tann
 #endif  // TANN_DATASETS_BIN_VECTOR_IO_H_

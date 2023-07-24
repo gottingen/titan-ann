@@ -6,7 +6,7 @@
 #include <cassert>
 #include <cstdio>
 #include <iostream>
-#include "tann/tsl/robin_map.h"
+#include "turbo/container/flat_hash_map.h"
 #include "tann/common/utils.h"
 
 #define MAX_EVENTS 1024
@@ -155,7 +155,7 @@ namespace tann {
     void LinuxAlignedFileReader::deregister_all_threads() {
         std::unique_lock<std::mutex> lk(ctx_mut);
         for (auto x = ctx_map.begin(); x != ctx_map.end(); x++) {
-            io_context_t ctx = x.value();
+            io_context_t ctx = x->second;
             io_destroy(ctx);
             //  assert(ret == 0);
             //  lk.lock();

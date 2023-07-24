@@ -15,6 +15,7 @@
 #define TANN_CORE_INDEX_OPTION_H_
 
 #include "tann/core/types.h"
+#include "tann/common/constants.h"
 
 namespace tann {
 
@@ -23,9 +24,25 @@ namespace tann {
         DataType data_type{DataType::DT_NONE};
         MetricType metric{MetricType::UNDEFINED};
         std::size_t dimension{0};
-        std::size_t batch_size{256};
-        std::size_t max_elements{0};
+        std::size_t batch_size{constants::kBatchSize};
+        std::size_t max_elements{constants::kMaxElements};
+        bool allow_replace_deleted{true};
     };
+
+    struct HnswIndexOption : public IndexOption {
+        size_t m{constants::kHnswM};
+        size_t ef_construction{constants::kHnswEfConstruction};
+        size_t ef{constants::kHnswEf};
+        size_t random_seed{constants::kHnswRandomSeed};
+    };
+
+    struct WriteOption {
+        bool lazy_delete{false};
+        bool replace_deleted{false};
+        bool is_normalized{false};
+        bool is_aligned_memory{false};
+    };
+
 }  // namespace tann
 
 #endif  // TANN_CORE_INDEX_OPTION_H_

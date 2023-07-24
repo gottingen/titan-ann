@@ -16,18 +16,17 @@
 
 namespace tann {
 
-    turbo::Status FvecVectorSetReader::init(turbo::SequentialReadFile *file, ReadOption *option) {
-        _file = file;
-        _option = option;
-        _nvecs = option->n_vectors;
-        _element_size = data_type_size(_option->data_type);
+    turbo::Status FvecVectorSetReader::init() {
         uint32_t ndims_u32;
         auto r = _file->read(&ndims_u32, sizeof(ndims_u32));
         if (!r.ok()) {
             return r.status();
         }
         _ndims = ndims_u32;
-        _vector_bytes = _ndims * _element_size;
+        if (_ndims != _option.dimension) {
+            return turbo::UnavailableError("bad format, option dimension: {} dimension read form file {}, not the same",
+                                           _option.dimension, _ndims);
+        }
         return turbo::OkStatus();
     }
 
@@ -63,8 +62,9 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FvecVectorSetReader::read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) {
-        for (std::size_t i = 0; i < batch_size; i++) {
+    turbo::ResultStatus<std::size_t> FvecVectorSetReader::read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) {
+        std::size_t i = 0;
+        for (; i < batch_size; i++) {
             turbo::Span<uint8_t> v = turbo::Span<uint8_t>(vector->data() + i * _vector_bytes, _vector_bytes);
             auto r = read_vector(&v);
             if (!r.ok()) {
@@ -74,16 +74,10 @@ namespace tann {
                 return r;
             }
         }
-        return turbo::OkStatus();
+        return i;
     }
 
-    turbo::Status FvecVectorSetWriter::init(turbo::SequentialWriteFile *file, WriteOption *option) {
-        _file = file;
-        _option = option;
-        _nvecs = _option->n_vectors;
-        _ndims = _option->dimension;
-        _element_size = data_type_size(_option->data_type);
-        _vector_bytes = _ndims * _element_size;
+    turbo::Status FvecVectorSetWriter::init() {
         return turbo::OkStatus();
     }
 
@@ -103,7 +97,7 @@ namespace tann {
 
     turbo::Status FvecVectorSetWriter::write_vector(turbo::Span<uint8_t> *vector) {
         TLOG_CHECK(_vector_bytes <= vector->size(), "not enough space to read vector");
-        uint32_t ndims = _ndims;
+        uint32_t ndims = _option.dimension;
         auto r = _file->write(reinterpret_cast<const char *>(&ndims), sizeof(ndims));
         if (!r.ok()) {
             return r;

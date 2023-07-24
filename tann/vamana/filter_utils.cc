@@ -63,8 +63,8 @@ namespace tann {
 
 // for use on systems without writev (i.e. Windows)
     template<typename T>
-    tsl::robin_map<std::string, std::vector<uint32_t>> generate_label_specific_vector_files_compat(
-            path input_data_path, tsl::robin_map<std::string, uint32_t> labels_to_number_of_points,
+    turbo::flat_hash_map<std::string, std::vector<uint32_t>> generate_label_specific_vector_files_compat(
+            path input_data_path, turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points,
             std::vector<label_set> point_ids_to_labels, label_set all_labels) {
         auto file_writing_timer = std::chrono::high_resolution_clock::now();
         std::ifstream input_data_stream(input_data_path);
@@ -78,9 +78,9 @@ namespace tann {
             throw;
         }
 
-        tsl::robin_map<std::string, char *> labels_to_vectors;
-        tsl::robin_map<std::string, uint32_t> labels_to_curr_vector;
-        tsl::robin_map<std::string, std::vector<uint32_t>> label_id_to_orig_id;
+        turbo::flat_hash_map<std::string, char *> labels_to_vectors;
+        turbo::flat_hash_map<std::string, uint32_t> labels_to_curr_vector;
+        turbo::flat_hash_map<std::string, std::vector<uint32_t>> label_id_to_orig_id;
 
         for (const auto &lbl: all_labels) {
             uint32_t number_of_label_pts = labels_to_number_of_points[lbl];
@@ -188,7 +188,7 @@ namespace tann {
 
         // values to return
         std::vector<label_set> point_ids_to_labels(line_cnt);
-        tsl::robin_map<std::string, uint32_t> labels_to_number_of_points;
+        turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points;
         label_set all_labels;
 
         std::vector<uint32_t> points_with_universal_label;
@@ -252,21 +252,21 @@ namespace tann {
                                                            label_set all_labels, uint32_t R, uint32_t L,
                                                            float alpha, uint32_t num_threads);
 
-    template TURBO_DLL tsl::robin_map<std::string, std::vector<uint32_t>>
+    template TURBO_DLL turbo::flat_hash_map<std::string, std::vector<uint32_t>>
     generate_label_specific_vector_files_compat<float>(path input_data_path,
-                                                       tsl::robin_map<std::string, uint32_t> labels_to_number_of_points,
+                                                       turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points,
                                                        std::vector<label_set> point_ids_to_labels,
                                                        label_set all_labels);
 
-    template TURBO_DLL tsl::robin_map<std::string, std::vector<uint32_t>>
+    template TURBO_DLL turbo::flat_hash_map<std::string, std::vector<uint32_t>>
     generate_label_specific_vector_files_compat<uint8_t>(path input_data_path,
-                                                         tsl::robin_map<std::string, uint32_t> labels_to_number_of_points,
+                                                         turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points,
                                                          std::vector<label_set> point_ids_to_labels,
                                                          label_set all_labels);
 
-    template TURBO_DLL tsl::robin_map<std::string, std::vector<uint32_t>>
+    template TURBO_DLL turbo::flat_hash_map<std::string, std::vector<uint32_t>>
     generate_label_specific_vector_files_compat<int8_t>(path input_data_path,
-                                                        tsl::robin_map<std::string, uint32_t> labels_to_number_of_points,
+                                                        turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points,
                                                         std::vector<label_set> point_ids_to_labels,
                                                         label_set all_labels);
 

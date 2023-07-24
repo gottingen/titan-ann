@@ -58,17 +58,10 @@ namespace tann {
 
     TURBO_DLL void read_idmap(const std::string &fname, std::vector<uint32_t> &ivecs);
 
-#ifdef EXEC_ENV_OLS
-    template <typename T>
-    TURBO_DLL T *load_warmup(MemoryMappedFiles &files, const std::string &cache_warmup_file, uint64_t &warmup_num,
-                                     uint64_t warmup_dim, uint64_t warmup_aligned_dim);
-#else
 
     template<typename T>
     TURBO_DLL T *load_warmup(const std::string &cache_warmup_file, uint64_t &warmup_num, uint64_t warmup_dim,
                              uint64_t warmup_aligned_dim);
-
-#endif
 
     TURBO_DLL int merge_shards(const std::string &vamana_prefix, const std::string &vamana_suffix,
                                const std::string &idmaps_prefix, const std::string &idmaps_suffix,

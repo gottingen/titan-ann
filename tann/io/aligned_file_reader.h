@@ -69,7 +69,7 @@ struct IOContext
 #include <cstdio>
 #include <mutex>
 #include <thread>
-#include "tann/tsl/robin_map.h"
+#include "turbo/container/flat_hash_map.h"
 #include "tann/common/utils.h"
 
 // NOTE :: all 3 fields must be 512-aligned
@@ -91,7 +91,7 @@ struct AlignedRead {
 
 class AlignedFileReader {
 protected:
-    tsl::robin_map<std::thread::id, IOContext> ctx_map;
+    turbo::flat_hash_map<std::thread::id, IOContext> ctx_map;
     std::mutex ctx_mut;
 
 public:

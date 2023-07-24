@@ -17,8 +17,12 @@
 #define TANN_STORE_VECTOR_SET_H_
 
 #include <vector>
-
+#include <string_view>
+#include "tann/core/vector_space.h"
 #include "tann/store/vector_batch.h"
+#include "turbo/files/sequential_write_file.h"
+#include "turbo/files/sequential_read_file.h"
+#include "bluebird/bits/bitmap.h"
 
 namespace tann {
 
@@ -35,6 +39,7 @@ namespace tann {
         [[nodiscard]] const std::vector<VectorBatch> &vector_batch() const;
 
         [[nodiscard]] std::vector<VectorBatch> &vector_batch();
+
         [[nodiscard]] std::size_t get_batch_size() const;
 
         void set_vector(std::size_t i, turbo::Span<uint8_t> vector);
@@ -56,13 +61,13 @@ namespace tann {
 
         std::size_t add_vector(const turbo::Span<uint8_t> &vector);
 
-        // for data load, user do not use it , because it
-        // has some condition that use can not fit every time
-        std::size_t add_batch(VectorBatch &&vector);
-
         std::size_t prefer_add_vector(std::size_t n = 1);
 
         [[nodiscard]] std::size_t size() const;
+
+        [[nodiscard]] std::size_t deleted_size() const;
+
+        [[nodiscard]] std::size_t current_index() const;
 
         [[nodiscard]] std::size_t capacity() const;
 
@@ -76,12 +81,38 @@ namespace tann {
 
         void resize(std::size_t n);
 
+        [[nodiscard]] bool is_deleted(location_t loc) const {
+            return _deleted_map.contains(loc);
+        }
+
+        [[nodiscard]] void mark_deleted(location_t loc) {
+            if (_deleted_map.addChecked(loc)) {
+                ++_deleted_size;
+            }
+        }
+
+        [[nodiscard]] void unmark_deleted(location_t loc) {
+            if (_deleted_map.removeChecked(loc)) {
+                --_deleted_size;
+            }
+        }
+
+        turbo::Status load(std::string_view path);
+
+        turbo::Status save(std::string_view path);
+
+        turbo::Status load(turbo::SequentialReadFile *file);
+
+        turbo::Status save(turbo::SequentialWriteFile *file);
+
     private:
         void expend();
 
         VectorSpace *_vs{nullptr};
         std::size_t _batch_size{0};
-        std::size_t _size{0};
+        std::size_t _current_idx{0};
+        std::size_t _deleted_size{0};
+        bluebird::Bitmap _deleted_map;
         std::vector<VectorBatch> _data;
     };
 }  // namespace tann

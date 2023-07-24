@@ -92,7 +92,7 @@ int handle_args(int argc, char **argv, std::string &data_type, path &input_data_
  */
 void save_full_index(path final_index_path_prefix, path input_data_path, uint64_t final_index_size,
                      std::vector<std::vector<uint32_t>> stitched_graph,
-                     tsl::robin_map<std::string, uint32_t> entry_points, std::string universal_label,
+                     turbo::flat_hash_map<std::string, uint32_t> entry_points, std::string universal_label,
                      path label_data_path) {
     // aux. file 1
     auto saving_index_timer = std::chrono::high_resolution_clock::now();
@@ -187,9 +187,9 @@ void save_full_index(path final_index_path_prefix, path input_data_path, uint64_
 template<typename T>
 stitch_indices_return_values stitch_label_indices(
         path final_index_path_prefix, uint32_t total_number_of_points, label_set all_labels,
-        tsl::robin_map<std::string, uint32_t> labels_to_number_of_points,
-        tsl::robin_map<std::string, uint32_t> &label_entry_points,
-        tsl::robin_map<std::string, std::vector<uint32_t>> label_id_to_orig_id_map) {
+        turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points,
+        turbo::flat_hash_map<std::string, uint32_t> &label_entry_points,
+        turbo::flat_hash_map<std::string, std::vector<uint32_t>> label_id_to_orig_id_map) {
     size_t final_index_size = 0;
     std::vector<std::vector<uint32_t>> stitched_graph(total_number_of_points);
 
@@ -239,7 +239,7 @@ stitch_indices_return_values stitch_label_indices(
 template<typename T>
 void prune_and_save(path final_index_path_prefix, path full_index_path_prefix, path input_data_path,
                     std::vector<std::vector<uint32_t>> stitched_graph, uint32_t stitched_R,
-                    tsl::robin_map<std::string, uint32_t> label_entry_points, std::string universal_label,
+                    turbo::flat_hash_map<std::string, uint32_t> label_entry_points, std::string universal_label,
                     path label_data_path, uint32_t num_threads) {
     size_t dimension, number_of_label_points;
     auto tann_cout_buffer = tann::cout.rdbuf(nullptr);
@@ -305,14 +305,14 @@ int main(int argc, char **argv) {
 
     // 2. parse label file and create necessary data structures
     std::vector<label_set> point_ids_to_labels;
-    tsl::robin_map<std::string, uint32_t> labels_to_number_of_points;
+    turbo::flat_hash_map<std::string, uint32_t> labels_to_number_of_points;
     label_set all_labels;
 
     std::tie(point_ids_to_labels, labels_to_number_of_points, all_labels) =
             tann::parse_label_file(labels_file_to_use, universal_label);
 
     // 3. for each label, make a separate data file
-    tsl::robin_map<std::string, std::vector<uint32_t>> label_id_to_orig_id_map;
+    turbo::flat_hash_map<std::string, std::vector<uint32_t>> label_id_to_orig_id_map;
     uint32_t total_number_of_points = (uint32_t) point_ids_to_labels.size();
 
 #ifndef _WINDOWS
@@ -356,7 +356,7 @@ int main(int argc, char **argv) {
 
     // 5. "stitch" the indices together
     std::vector<std::vector<uint32_t>> stitched_graph;
-    tsl::robin_map<std::string, uint32_t> label_entry_points;
+    turbo::flat_hash_map<std::string, uint32_t> label_entry_points;
     uint64_t stitched_graph_size;
 
     if (data_type == "uint8")
