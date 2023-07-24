@@ -27,6 +27,9 @@ namespace tann {
             CHECK(r.ok());
             r = vector_set.init(&vs, 128);
             CHECK(r.ok());
+            if(turbo::filesystem::exists(vector_file_path)) {
+                turbo::filesystem::remove(vector_file_path);
+            }
         }
 
         ~VectorSetTestFixture() {
@@ -35,6 +38,7 @@ namespace tann {
 
         VectorSpace vs;
         VectorSet   vector_set;
+        std::string vector_file_path = "vset_test.bin";
     };
 
     TEST_CASE_FIXTURE(VectorSetTestFixture, "init") {
@@ -73,6 +77,44 @@ namespace tann {
         vector_set.shrink();
         CHECK_EQ(vector_set.capacity(),128);
 
+    }
+
+    TEST_CASE_FIXTURE(VectorSetTestFixture, "mark_delete") {
+        CHECK_EQ(vector_set.capacity(),0);
+        CHECK_EQ(vector_set.size(),0);
+        vector_set.resize(201);
+        vector_set.mark_deleted(128);
+        vector_set.mark_deleted(167);
+        CHECK_EQ(vector_set.deleted_size(), 2);
+        CHECK_EQ(true,vector_set.is_deleted(128));
+        CHECK_EQ(true,vector_set.is_deleted(167));
+        vector_set.unmark_deleted(128);
+        vector_set.unmark_deleted(167);
+        CHECK_EQ(false,vector_set.is_deleted(128));
+        CHECK_EQ(false,vector_set.is_deleted(167));
+    }
+
+    TEST_CASE_FIXTURE(VectorSetTestFixture, "save and load") {
+        CHECK_EQ(vector_set.capacity(),0);
+        CHECK_EQ(vector_set.size(),0);
+        vector_set.resize(201);
+        vector_set.mark_deleted(128);
+        vector_set.mark_deleted(167);
+        auto r= vector_set.save("vset_test.bin");
+        turbo::Println(r.ToString());
+        CHECK_EQ(r.ok(), true);
+        VectorSet lset;
+        r = lset.init(&vs, 128);
+        CHECK_EQ(r.ok(), true);
+        r= lset.load("vset_test.bin");
+        CHECK_EQ(r.ok(), true);
+        CHECK_EQ(lset.deleted_size(), 2);
+        CHECK_EQ(true,lset.is_deleted(128));
+        CHECK_EQ(true,lset.is_deleted(167));
+        lset.unmark_deleted(128);
+        lset.unmark_deleted(167);
+        CHECK_EQ(false,lset.is_deleted(128));
+        CHECK_EQ(false,lset.is_deleted(167));
     }
 
 }  // namespace tann

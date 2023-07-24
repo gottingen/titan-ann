@@ -17,6 +17,7 @@
 #include "tann/common/ann_exception.h"
 #include "tann/datasets/bin_vector_io.h"
 #include "tann/io/utility.h"
+#include "turbo/times/stop_watcher.h"
 
 namespace tann {
 
@@ -227,21 +228,25 @@ namespace tann {
     }
 
     turbo::Status VectorSet::load(turbo::SequentialReadFile *file) {
+        turbo::StopWatcher watcher("vector set deserialize");
+        TLOG_INFO("deserialize vector set start");
         auto r = read_binary_pod(*file, _current_idx);
         if(!r.ok()) {
             return r;
         }
+        TLOG_INFO("deserialize vector size: {}", _current_idx);
         r = read_binary_pod(*file, _deleted_size);
         if(!r.ok()) {
             return r;
         }
-        std::string  bs;
-        r = read_binary_string(*file, bs);
+        TLOG_INFO("deserialize vector deleted size: {}", _deleted_size);
+        std::vector<char>  bs;
+        r = read_binary_vector(*file, bs);
         if(!r.ok()) {
             return r;
         }
-        _deleted_map = bluebird::Bitmap::read(bs.c_str());
-
+        _deleted_map = bluebird::Bitmap::read(bs.data());
+        TLOG_INFO("deserialize vector deleted map, size: {}", bs.size());
         tann::SerializeOption rop;
         rop.n_vectors = _current_idx;
         rop.dimension = _vs->dimension;
@@ -251,6 +256,7 @@ namespace tann {
         if(!r.ok()) {
             return  r;
         }
+        TLOG_INFO("deserialize vector reader initialize ok");
         resize(_current_idx);
         for(size_t i = 0; i < _data.size(); ++i) {
             auto span = _data[i].to_span();
@@ -262,19 +268,27 @@ namespace tann {
                 return turbo::DataLossError("vector loss");
             }
         }
+        TLOG_INFO("deserialize done, cost: {}ms", turbo::ToDoubleMilliseconds(watcher.elapsed()));
         return turbo::OkStatus();
     }
     turbo::Status VectorSet::save(turbo::SequentialWriteFile *file) {
+        turbo::StopWatcher watcher("vector set serialize");
+        TLOG_INFO("serialize vector set start");
         auto r = write_binary_pod(*file, _current_idx);
         if(!r.ok()) {
             return r;
         }
+        TLOG_INFO("serialize current idx: {}", _current_idx);
         r = write_binary_pod(*file, _deleted_size);
         if(!r.ok()) {
             return r;
         }
-        std::string  bs = _deleted_map.toString();
-        r = write_binary_string(*file, bs);
+        TLOG_INFO("serialize deleted size: {}", _deleted_size);
+        size_t bm_size = _deleted_map.getSizeInBytes();
+        std::vector<char> buf(bm_size);
+        _deleted_map.write(buf.data());
+        TLOG_INFO("serialize deleted map size: {}", bm_size);
+        r = write_binary_vector(*file, buf);
         if(!r.ok()) {
             return r;
         }
@@ -287,6 +301,7 @@ namespace tann {
         if(!r.ok()) {
             return  r;
         }
+        TLOG_INFO("serialize datasets writer ok");
         for(size_t i = 0; i < _data.size(); ++i) {
             auto span = _data[i].to_span();
            r = writer.write_batch(span, _data[i].size());
@@ -297,7 +312,7 @@ namespace tann {
         if(writer.has_write() != _current_idx) {
             return turbo::InternalError("bad vector number");
         }
-
+        TLOG_INFO("serialize done, cost: {}ms", turbo::ToDoubleMilliseconds(watcher.elapsed()));
         return turbo::OkStatus();
     }
 }  // namespace tann

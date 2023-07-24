@@ -122,7 +122,7 @@ namespace tann {
     }
 
     turbo::Status BinaryVectorSetWriter::write_batch(turbo::Span<uint8_t> vector, std::size_t batch_size) {
-        if(_has_write + batch_size >= _option.n_vectors) {
+        if(_has_write + batch_size > _option.n_vectors) {
             return turbo::OutOfRangeError("read the max vector size");
         }
         TLOG_CHECK(_vector_bytes * batch_size <= vector.size(), "not enough space to read vector");
