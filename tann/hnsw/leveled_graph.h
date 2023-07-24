@@ -20,7 +20,8 @@
 #include "turbo/base/status.h"
 #include "tann/core/types.h"
 #include "turbo/meta/span.h"
-
+#include "turbo/files/sequential_write_file.h"
+#include "turbo/files/sequential_read_file.h"
 namespace tann {
 
     class LeveledGraph {
@@ -123,7 +124,9 @@ namespace tann {
             Node node(n.level, static_cast<turbo::Span<location_t>>(sp));
             return node;
         }
+        [[nodiscard]] turbo::Status save(turbo::SequentialWriteFile &file);
 
+        [[nodiscard]] turbo::Status load(turbo::SequentialReadFile &file);
     private:
         location_t _max_nbor{0};
         std::vector<LeveledNode> _nodes;

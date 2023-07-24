@@ -119,19 +119,16 @@ namespace tann {
 
         turbo::Status mark_deleted_internal(location_t internalId);
         turbo::Status check_option();
+        turbo::Status check_load_option(const HnswIndexOption &op);
     private:
-        std::unique_ptr<HnswIndexOption> _option;
+        static constexpr size_t kHnswMagic = 0x686e7377;
+        HnswIndexOption _option;
         VectorSpace _vs;
         VectorSet _data;
         std::vector<label_type> _index_scratch;
         mutable std::mutex _label_lookup_lock;  // lock for label_lookup_
         std::unordered_map<label_type , location_t> _label_lookup;
 
-        size_t _max_elements{0};
-        size_t _ef_construction{0};
-        size_t _ef{ 0 };
-
-        size_t _M{0};
         size_t _maxM{0};
 
         double _mult{0.0};
@@ -152,7 +149,6 @@ namespace tann {
         mutable std::vector<std::mutex> _label_op_locks;
         std::mutex _deleted_elements_lock;
         std::unordered_set<location_t> _deleted_elements;
-        bool _allow_replace_deleted{false};
 
         mutable std::atomic<size_t> metric_distance_computations{0};
         mutable std::atomic<size_t> metric_hops{0};
