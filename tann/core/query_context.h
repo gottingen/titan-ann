@@ -98,4 +98,14 @@ namespace tann {
     };
 }  // namespace
 
+namespace fmt {
+    template <> struct formatter<std::pair<tann::distance_type, tann::label_type>>: formatter<float> {
+        // parse is inherited from formatter<float>.
+
+        auto format(std::pair<tann::distance_type, tann::label_type> c, format_context& ctx) const {
+            format_to(ctx.out(), "dist:{} label:{}", c.first, c.second);
+            return ctx.out();
+        }
+    };
+}
 #endif  // TANN_CORE_QUERY_CONTEXT_H_

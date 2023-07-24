@@ -119,7 +119,6 @@ namespace tann {
     }
 
     [[nodiscard]] turbo::Status HnswIndex::search_vector(QueryContext *qctx) {
-        std::priority_queue<std::pair<distance_type, label_type >> result;
         if (_cur_element_count == 0) {
             return turbo::OkStatus();
         }
@@ -164,7 +163,7 @@ namespace tann {
         }
         while (!top_candidates.empty()) {
             std::pair<distance_type, location_t> rez = top_candidates.top();
-            result.emplace(std::pair<distance_type, location_t>(rez.first, get_external_label(rez.second)));
+            qctx->results.emplace_back(std::pair<distance_type, location_t>(rez.first, get_external_label(rez.second)));
             top_candidates.pop();
         }
         return turbo::OkStatus();

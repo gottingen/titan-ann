@@ -161,6 +161,7 @@ int main(int argc, char **argv) {
         auto rs = index->search_vector(&query);
         auto &result = query.results;
         for (int i = 0; i < result.size(); i++) {
+            turbo::Println("results: {}",turbo::FormatRange("{}", result, ", "));
             neighbors[row * k + i] = result[i].second;
         }
     });
@@ -172,3 +173,4 @@ int main(int argc, char **argv) {
     delete[] data;
     return 0;
 }
+
