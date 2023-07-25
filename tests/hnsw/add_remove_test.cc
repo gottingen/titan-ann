@@ -12,6 +12,7 @@
 // limitations under the License.
 //
 
+#include "hnsw_test_fixture.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "doctest/doctest.h"
@@ -20,52 +21,6 @@
 #include <thread>
 #include <chrono>
 
-
-class HnswIndexTestFixture {
-public:
-    HnswIndexTestFixture() {
-        rng.seed(47);
-        auto ptr = new tann::HnswIndexOption;
-        ptr->data_type = tann::DataType::DT_FLOAT;
-        ptr->dimension = 16;
-        ptr->metric = tann::METRIC_L2;
-        option.reset(ptr);
-
-        batch1.reset(new float[d * max_elements]);
-        for (int i = 0; i < d * max_elements; i++) {
-            batch1[i] = distrib_real(rng);
-        }
-
-        rand_labels.resize(max_elements);
-        for (int i = 0; i < max_elements; i++) {
-            rand_labels[i] = i;
-        }
-        std::shuffle(rand_labels.begin(), rand_labels.end(), rng);
-        index.reset(new tann::HnswIndex);
-        wop.replace_deleted = false;
-        wop1.replace_deleted = true;
-
-        auto rs = index->initialize(option.get());
-        assert(rs.ok());
-
-    }
-
-    ~HnswIndexTestFixture() {
-
-    }
-
-    int d = 16;
-    int num_elements = 1000;
-    int max_elements = 2 * num_elements;
-    std::mt19937 rng;
-    std::unique_ptr<tann::IndexOption> option;
-    std::uniform_real_distribution<> distrib_real;
-    std::unique_ptr<float[]> batch1;
-    std::vector<int> rand_labels;
-    std::unique_ptr<tann::HnswIndex> index;
-    tann::WriteOption wop;
-    tann::WriteOption wop1;
-};
 
 TEST_CASE_FIXTURE(HnswIndexTestFixture, "add and remove") {
     std::cout << "Running multithread load test" << std::endl;

@@ -134,7 +134,10 @@ namespace tann {
 
     private:
         void expend();
-
+        [[nodiscard]] std::size_t capacity_impl() const;
+        void resize_impl(std::size_t n);
+        void reserve_impl(std::size_t n);
+    private:
         VectorSpace *_vs{nullptr};
         std::size_t _batch_size{0};
         std::size_t _current_idx{0};

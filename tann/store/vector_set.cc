@@ -109,9 +109,11 @@ namespace tann {
     }
 
     void VectorSet::move_vector(std::size_t from, std::size_t to, std::size_t nvec) {
-        TLOG_CHECK(_vs, "should init be using");
+        std::shared_lock<std::shared_mutex> l(_data_lock);
         for (int i = 0; i < nvec; ++i) {
-            move_vector(from + i, to + i);
+            auto vf = get_vector(from + i);
+            auto vt = get_vector(to + i);
+            std::memcpy(vt.data(), vf.data(), vf.size());
         }
     }
 
@@ -119,7 +121,7 @@ namespace tann {
         std::unique_lock<std::shared_mutex> l(_data_lock);
         TLOG_CHECK(_vs, "should init be using");
         auto bi = _current_idx / _batch_size;
-        if (_current_idx >= capacity()) {
+        if (_current_idx >= capacity_impl()) {
             expend();
         }
         _data[bi].add_vector(query);
@@ -132,23 +134,7 @@ namespace tann {
         std::unique_lock<std::shared_mutex> l(_data_lock);
         auto ret = _current_idx;
         auto new_size = _current_idx + nvec;
-
-        while (_data.size() * _batch_size < new_size) {
-            expend();
-        }
-
-        std::size_t need_to_expand = nvec;
-        for (auto idx = _current_idx / _batch_size; need_to_expand > 0; idx++) {
-            auto ba = _data[idx].available();
-            if (ba >= need_to_expand) {
-                auto nsize = _data[idx].size() + need_to_expand;
-                _data[idx].resize(nsize);
-                need_to_expand = 0;
-            } else {
-                _data[idx].resize(_batch_size);
-                need_to_expand -= ba;
-            }
-        }
+        resize_impl(new_size);
         _current_idx = new_size;
         return ret;
     }
@@ -169,10 +155,12 @@ namespace tann {
 
     std::size_t VectorSet::capacity() const {
         std::shared_lock<std::shared_mutex> l(_data_lock);
-        TLOG_CHECK(_vs, "should init be using");
-        return _data.size() * _batch_size;
+        return capacity_impl();
     }
 
+    [[nodiscard]] std::size_t VectorSet::capacity_impl() const {
+        return _data.size() * _batch_size;
+    }
     std::size_t VectorSet::available() const {
         std::shared_lock<std::shared_mutex> l(_data_lock);
         TLOG_CHECK(_vs, "should init be using");
@@ -181,12 +169,13 @@ namespace tann {
 
     void VectorSet::reserve(std::size_t n) {
         std::unique_lock<std::shared_mutex> l(_data_lock);
-        TLOG_CHECK(_vs, "should init be using");
+        reserve_impl(n);
+    }
+    void VectorSet::reserve_impl(std::size_t n) {
         while (_data.size() * _batch_size < n) {
             expend();
         }
     }
-
     void VectorSet::expend() {
         tann::VectorBatch vb;
         auto r = vb.init(_vs->vector_byte_size, _batch_size);
@@ -209,11 +198,13 @@ namespace tann {
         std::unique_lock<std::shared_mutex> l(_data_lock);
         TLOG_CHECK(_vs, "should init be using");
         TLOG_CHECK(n < _current_idx);
-        resize(_current_idx - n);
+        resize_impl(_current_idx - n);
     }
-
     void VectorSet::resize(std::size_t n) {
         std::unique_lock<std::shared_mutex> l(_data_lock);
+        resize_impl(n);
+    }
+    void VectorSet::resize_impl(std::size_t n) {
         TLOG_CHECK(_vs, "should init be using");
         if (n == _current_idx) {
             return;
@@ -231,7 +222,7 @@ namespace tann {
                 }
             }
         } else {
-            reserve(n);
+            reserve_impl(n);
             std::size_t need_to_expand = n - _current_idx;
             for (auto idx = _current_idx / _batch_size; need_to_expand > 0; idx++) {
                 auto ba = _data[idx].available();
@@ -297,7 +288,7 @@ namespace tann {
             return r;
         }
         TLOG_INFO("deserialize vector reader initialize ok");
-        resize(_current_idx);
+        resize_impl(_current_idx);
         for (size_t i = 0; i < _data.size(); ++i) {
             auto span = _data[i].to_span();
             auto rs = reader.read_batch(span, _data[i].size());
