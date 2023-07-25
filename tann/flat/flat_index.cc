@@ -17,15 +17,26 @@
 namespace tann {
 
     turbo::Status FlatIndex::initialize(const IndexOption *option) {
+        _option = *option;
         auto r= _vs.init(option->dimension, option->metric, option->data_type);
         if(!r.ok()) {
             return r;
         }
         r = _data.init(&_vs, option->batch_size);
+        _index_to_label.resize(option->max_elements);
         return r;
     }
 
     turbo::Status FlatIndex::add_vector(const WriteOption &option, turbo::Span<uint8_t> query, const label_type &label) {
+        if(option.replace_deleted) {
+            if(_data.size() >= _option.max_elements) {
+                return turbo::ResourceExhaustedError("full");
+            }
+        } else {
+            if(_data.current_index()>= _option.max_elements) {
+                return turbo::ResourceExhaustedError("full");
+            }
+        }
         TURBO_UNUSED(option);
         turbo::Span<uint8_t> v = query;
         if(_vs.distance_factor->preprocessing_required()) {
@@ -36,16 +47,19 @@ namespace tann {
         }
         std::unique_lock l(_mutex);
         auto it = _label_map.find(label);
-        std::size_t idx;
+        location_t idx;
         if (it != _label_map.end()) {
-            // modify
+            // update
             idx = it->second;
             _data.set_vector(idx, v);
             return turbo::OkStatus();
         }
-        idx = _data.prefer_add_vector();
-        if (_index_to_label.size() <= idx) {
-            _index_to_label.resize(idx + 1);
+        bool has_vacant = false;
+        if(option.replace_deleted) {
+            has_vacant = _data.get_vacant(idx);
+        }
+        if(!has_vacant) {
+            idx = _data.prefer_add_vector();
         }
         _label_map[label] = idx;
         _index_to_label[idx] = label;
@@ -61,13 +75,8 @@ namespace tann {
             return turbo::OkStatus();
         }
         auto idx = it->second;
+        _data.mark_deleted(idx);
         _label_map.erase(label);
-        auto last_idx = _index_to_label.size() - 1;
-        auto &last_label = _index_to_label[last_idx];
-        _data.move_vector(last_idx, idx);
-        _label_map[last_label] = idx;
-        _data.pop_back();
-        _index_to_label.resize(last_idx);
         return turbo::OkStatus();
     }
 
@@ -89,10 +98,14 @@ namespace tann {
         std::shared_lock l(_mutex);
         auto query = to_span<uint8_t>(qctx->raw_query);
         auto data_size = _data.size();
+
         auto first_travel_size = std::min(data_size, qctx->k);
         label_type label;
         std::priority_queue<std::pair<distance_type , label_type>> topResults;
         for (size_t i = 0; i < first_travel_size; i++) {
+            if(_data.is_deleted(i)) {
+                continue;
+            }
             label = _index_to_label[i];
             if(qctx->is_allowed && !(*qctx->is_allowed)(label)) {
                 continue;
@@ -103,6 +116,9 @@ namespace tann {
 
         distance_type lastdist = topResults.empty() ? std::numeric_limits<distance_type>::max() : topResults.top().first;
         for (size_t i = qctx->k; i < data_size; i++) {
+            if(_data.is_deleted(i)) {
+                continue;
+            }
             label = _index_to_label[i];
             if(qctx->is_allowed && !(*qctx->is_allowed)(label)) {
                 continue;
@@ -122,6 +138,7 @@ namespace tann {
         while (!topResults.empty()) {
             auto it = topResults.top();
             qctx->results.emplace_back(it.first, it.second);
+            topResults.pop();
         }
         if(qctx->get_raw_vector) {
             qctx->vectors.resize(qctx->results.size());

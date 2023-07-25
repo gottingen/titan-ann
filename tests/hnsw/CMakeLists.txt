@@ -25,3 +25,45 @@ carbin_cc_test(
         tann::tann
         ${CARBIN_DEPS_LINK}
 )
+
+carbin_cc_test(
+        NAME
+        leveled_graph_test
+        SOURCES
+        leveled_graph_test.cc
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        "-ggdb3"
+        "-g"
+        DEPS
+        tann::tann
+        ${CARBIN_DEPS_LINK}
+)
+
+carbin_cc_test(
+        NAME
+        multi_thread_replace_test
+        SOURCES
+        multi_thread_replace_test.cc
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        "-ggdb3"
+        "-g"
+        DEPS
+        tann::tann
+        ${CARBIN_DEPS_LINK}
+)
+
+carbin_cc_test(
+        NAME
+        search_closer_first_test
+        SOURCES
+        search_closer_first_test.cc
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        "-ggdb3"
+        "-g"
+        DEPS
+        tann::tann
+        ${CARBIN_DEPS_LINK}
+)

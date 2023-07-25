@@ -109,11 +109,12 @@ namespace tann {
             _label_lookup.erase(label_replaced);
             _label_lookup[label] = internal_id_replaced;
             lock_table.unlock();
-
+            /*
             auto r = unmark_deleted_internal(internal_id_replaced);
             if (!r.ok()) {
                 return r;
             }
+             */
             return update_point(option, data_point, internal_id_replaced, 1.0);
         }
     }
@@ -212,7 +213,7 @@ namespace tann {
                 metric_distance_computations += size;
             }
 
-            for (size_t j = 1; j <= size; j++) {
+            for (size_t j = 1; j < size; j++) {
                 location_t candidate_id = data[j];
                 if (visited_array[candidate_id] != visited_array_tag) {
                     visited_array[candidate_id] = visited_array_tag;
@@ -302,7 +303,7 @@ namespace tann {
             cur_c = _data.prefer_add_vector();
             _cur_element_count++;
             _label_lookup[label] = cur_c;
-            TLOG_DEBUG("add vector label: {} location: {}", label, cur_c);
+            TLOG_TRACE("add vector label: {} location: {}", label, cur_c);
         }
 
         std::unique_lock<std::mutex> lock_el(_link_list_locks[cur_c]);
@@ -342,7 +343,7 @@ namespace tann {
                         std::unique_lock<std::mutex> lock(_link_list_locks[currObj]);
                         auto node = _final_graph.mutable_node(currObj, l_level);
                         size_t size = node.size();
-
+                        TLOG_TRACE("try node {} level {} links {}", currObj, l_level, size);
                         for (int i = 0; i < size; i++) {
                             location_t cand = node[i];
                             if (cand > _option.max_elements)
@@ -456,6 +457,7 @@ namespace tann {
 
         auto node = _final_graph.mutable_node(cur_c, level);
         size_t Mcurmax = node.capacity();
+        TLOG_TRACE("mutually_connect_new_element Mcurmax {} {} {} ", Mcurmax, cur_c, level);
         get_neighbors_by_heuristic2(top_candidates, _option.m);
         if (top_candidates.size() > _option.m)
             return turbo::OutOfRangeError("Should be not be more than M_ candidates returned by the heuristic");
@@ -487,7 +489,7 @@ namespace tann {
                 if (level > node.level())
                     return turbo::InternalError("Trying to make a link on a non-existent level");
 
-                node[idx] = selectedNeighbors[idx];
+                node.set_link(idx, selectedNeighbors[idx]);
             }
         }
 
@@ -496,7 +498,7 @@ namespace tann {
             std::unique_lock<std::mutex> lock(_link_list_locks[selectedNeighbors[idx]]);
 
             auto other_node = _final_graph.mutable_node(selectedNeighbors[idx], level);
-
+            TLOG_TRACE("other_node {} {}", selectedNeighbors[idx], level);
             size_t sz_link_list_other = other_node.size();
 
             if (sz_link_list_other > Mcurmax)
@@ -519,7 +521,7 @@ namespace tann {
             // If cur_c is already present in the neighboring connections of `selectedNeighbors[idx]` then no need to modify any connections or run the heuristics.
             if (!is_cur_c_present) {
                 if (sz_link_list_other < Mcurmax) {
-                    other_node[sz_link_list_other] = cur_c;
+                    other_node.at(sz_link_list_other) = cur_c;
                     other_node.set_size(sz_link_list_other + 1);
                 } else {
                     // finding the "weakest" element to replace it with the new one
@@ -536,7 +538,7 @@ namespace tann {
 
                     int indx = 0;
                     while (!candidates.empty()) {
-                        other_node[indx] = candidates.top().second;
+                        other_node.set_link(indx, candidates.top().second);
                         candidates.pop();
                         indx++;
                     }
@@ -635,7 +637,7 @@ namespace tann {
                     size_t candSize = candidates.size();
                     ll_cur.set_size(candSize);
                     for (size_t idx = 0; idx < candSize; idx++) {
-                        ll_cur[idx] = candidates.top().second;
+                        ll_cur.set_link(idx, candidates.top().second);
                         candidates.pop();
                     }
                 }

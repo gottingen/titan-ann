@@ -22,6 +22,7 @@
 #include "turbo/meta/span.h"
 #include "turbo/files/sequential_write_file.h"
 #include "turbo/files/sequential_read_file.h"
+
 namespace tann {
 
     class LeveledGraph {
@@ -37,14 +38,16 @@ namespace tann {
         public:
             Node() = default;
 
-            Node(int level, turbo::Span<location_t> span) : _level(level),
-                      _data(span.data(), span.size()) {
+            Node(location_t lid, int level, int cur_level, turbo::Span<location_t> span) : _lid(lid), _level(level),
+                                                                                           _cur_level(cur_level),
+                                                                                           _data(span.data(),
+                                                                                                 span.size()) {
 
             }
 
-            Node(const Node&) = default;
+            Node(const Node &) = default;
 
-            Node &operator=(const Node&) = default;
+            Node &operator=(const Node &) = default;
 
             [[nodiscard]] int level() const {
                 return _level;
@@ -55,18 +58,31 @@ namespace tann {
             }
 
             [[nodiscard]] uint32_t capacity() const {
+                TLOG_TRACE("capacity lid: {} level: {} capacity: {}", _lid, _level, _data.size() - 1);
                 return _data.size() - 1;
             }
 
-            location_t &operator[](std::size_t i) {
+            const location_t &operator[](std::size_t i) const {
+                TLOG_CHECK(i + 1 <= _data.size(), "at lid: {} cur level {} loc {}", _lid, _cur_level, i);
                 return _data[i + 1];
             }
 
-            location_t &at(location_t i) {
+            location_t &at(location_t i) const {
+                TLOG_TRACE("at lid: {} cur level {} loc {}", _lid, _cur_level, i);
+                TLOG_CHECK(i + 1 < _data.size(), "at lid: {} cur level {} loc {}", _lid, _cur_level, i);
                 return _data[i + 1];
+            }
+
+            void set_link(location_t i, location_t link) {
+                TLOG_CHECK(i + 1 < _data.size(), "set_size lid: {} cur level {} loc {} link {}", _lid, _cur_level, i,
+                           link);
+                _data[i + 1] = link;
             }
 
             void set_size(location_t n) {
+                TLOG_CHECK(n < _data.size(), "set_size lid: {} cur level {} loc {} capacity {}", _lid, _cur_level, n,
+                           _data.size() - 1);
+                TLOG_TRACE("set_size lid: {} cur level {} size {} capacity {}", _lid, _cur_level, n, _data.size() - 1);
                 _data[0] = n;
             }
 
@@ -77,7 +93,9 @@ namespace tann {
         private:
             friend class LeveledGraph;
 
+            location_t _lid{0};
             int _level{-1};
+            int _cur_level{-1};
             turbo::Span<location_t> _data;
         };
 
@@ -85,8 +103,8 @@ namespace tann {
         LeveledGraph() = default;
 
         void initialize(location_t max_elements, location_t max_nbor) {
-                          _max_nbor = max_nbor;
-                          _nodes.resize(max_elements);
+            _max_nbor = max_nbor;
+            _nodes.resize(max_elements);
 
         }
 
@@ -96,11 +114,12 @@ namespace tann {
 
         turbo::Status setup_location(location_t lid, int level) {
             TLOG_CHECK(lid < _nodes.size());
+            TLOG_TRACE("set up location: {}, level: {}", lid, level);
             _nodes[lid].level = level;
             if (level == 0) {
                 _nodes[lid].links.resize(_max_nbor * 2 + 1);
             } else {
-                _nodes[lid].links.resize((_max_nbor + 1) * (level + 1));
+                _nodes[lid].links.resize((_max_nbor + 1) * (level + 2));
             }
             return turbo::OkStatus();
         }
@@ -112,21 +131,41 @@ namespace tann {
         Node mutable_node(location_t lid, int level) {
             auto &n = _nodes[lid];
             TLOG_CHECK(level <= n.level);
-            auto sp = turbo::Span<location_t>(const_cast<location_t*>(n.links.data() + (_max_nbor + 1) * level), _max_nbor + 1);
-            Node node(n.level, sp);
-            return node;
+            if (level == 0) {
+                auto sp = turbo::Span<location_t>(const_cast<location_t *>(n.links.data()),
+                                                  _max_nbor * 2 + 1);
+                Node node(lid, n.level, level, sp);
+                return node;
+            } else {
+                auto sp = turbo::Span<location_t>(
+                        const_cast<location_t *>(n.links.data() + (_max_nbor + 1) * (level + 1)),
+                        _max_nbor + 1);
+                Node node(lid, n.level, level, sp);
+                return node;
+            }
         }
 
         [[nodiscard]] Node const_node(location_t lid, int level) const {
             auto &n = _nodes[lid];
             TLOG_CHECK(level <= n.level);
-            auto sp = turbo::Span<location_t>(const_cast<location_t*>(n.links.data() + (_max_nbor + 1) * level), _max_nbor + 1);
-            Node node(n.level, static_cast<turbo::Span<location_t>>(sp));
-            return node;
+            if (level == 0) {
+                auto sp = turbo::Span<location_t>(const_cast<location_t *>(n.links.data()),
+                                                  _max_nbor * 2 + 1);
+                Node node(lid, n.level, level, sp);
+                return node;
+            } else {
+                auto sp = turbo::Span<location_t>(
+                        const_cast<location_t *>(n.links.data() + (_max_nbor + 1) * (level + 1)),
+                        _max_nbor + 1);
+                Node node(lid, n.level, level, sp);
+                return node;
+            }
         }
+
         [[nodiscard]] turbo::Status save(turbo::SequentialWriteFile &file);
 
         [[nodiscard]] turbo::Status load(turbo::SequentialReadFile &file);
+
     private:
         location_t _max_nbor{0};
         std::vector<LeveledNode> _nodes;

@@ -23,15 +23,19 @@ class HnswIndexTestFixture {
 public:
     HnswIndexTestFixture() {
         rng.seed(47);
-        auto ptr = new tann::HnswIndexOption;
-        ptr->data_type = tann::DataType::DT_FLOAT;
-        ptr->dimension = 16;
-        ptr->metric = tann::METRIC_L2;
-        option.reset(ptr);
+        hnsw_option.data_type = tann::DataType::DT_FLOAT;
+        hnsw_option.dimension = 16;
+        hnsw_option.metric = tann::METRIC_L2;
+        option = reinterpret_cast<tann::IndexOption*>(&hnsw_option);
 
         batch1.reset(new float[d * max_elements]);
         for (int i = 0; i < d * max_elements; i++) {
             batch1[i] = distrib_real(rng);
+        }
+
+        batch2.reset(new float[d * max_elements]);
+        for (int i = 0; i < d * max_elements; i++) {
+            batch2[i] = distrib_real(rng);
         }
 
         rand_labels.resize(max_elements);
@@ -39,11 +43,12 @@ public:
             rand_labels[i] = i;
         }
         std::shuffle(rand_labels.begin(), rand_labels.end(), rng);
-        index.reset(new tann::HnswIndex);
+
         wop.replace_deleted = false;
         wop1.replace_deleted = true;
 
-        auto rs = index->initialize(option.get());
+        index.reset(new tann::HnswIndex);
+        auto rs = index->initialize(option);
         assert(rs.ok());
 
     }
@@ -54,15 +59,75 @@ public:
 
     int d = 16;
     int num_elements = 1000;
+    int num_threads = 4;
     int max_elements = 2 * num_elements;
     std::mt19937 rng;
-    std::unique_ptr<tann::IndexOption> option;
+    tann::IndexOption *option;
+    tann::HnswIndexOption hnsw_option;
     std::uniform_real_distribution<> distrib_real;
     std::unique_ptr<float[]> batch1;
+    std::unique_ptr<float[]> batch2;
     std::vector<int> rand_labels;
     std::unique_ptr<tann::HnswIndex> index;
     tann::WriteOption wop;
     tann::WriteOption wop1;
 };
+
+
+
+template<class Function>
+inline void ParallelFor(size_t start, size_t end, size_t numThreads, Function fn) {
+    if (numThreads <= 0) {
+        numThreads = std::thread::hardware_concurrency();
+    }
+
+    if (numThreads == 1) {
+        for (size_t id = start; id < end; id++) {
+            fn(id, 0);
+        }
+    } else {
+        std::vector<std::thread> threads;
+        std::atomic<size_t> current(start);
+
+        // keep track of exceptions in threads
+        // https://stackoverflow.com/a/32428427/1713196
+        std::exception_ptr lastException = nullptr;
+        std::mutex lastExceptMutex;
+
+        for (size_t threadId = 0; threadId < numThreads; ++threadId) {
+            threads.push_back(std::thread([&, threadId] {
+                while (true) {
+                    size_t id = current.fetch_add(1);
+
+                    if (id >= end) {
+                        break;
+                    }
+
+                    try {
+                        fn(id, threadId);
+                    } catch (...) {
+                        std::unique_lock<std::mutex> lastExcepLock(lastExceptMutex);
+                        lastException = std::current_exception();
+                        /*
+                         * This will work even when current is the largest value that
+                         * size_t can fit, because fetch_add returns the previous value
+                         * before the increment (what will result in overflow
+                         * and produce 0 instead of current + 1).
+                         */
+                        current = end;
+                        break;
+                    }
+                }
+            }));
+        }
+        for (auto &thread : threads) {
+            thread.join();
+        }
+        if (lastException) {
+            std::rethrow_exception(lastException);
+        }
+    }
+}
+
 
 #endif //TANN_HNSW_TEST_FIXTURE_H
