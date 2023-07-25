@@ -36,7 +36,7 @@ namespace tann {
 
         ~FlatIndex() override = default;
 
-        [[nodiscard]] turbo::Status initialize(std::unique_ptr<IndexOption> option) override;
+        [[nodiscard]] turbo::Status initialize(const IndexOption  *option) override;
 
         turbo::Status add_vector(const WriteOption &option, turbo::Span<uint8_t> vec, const label_type &label) override;
 
@@ -65,9 +65,10 @@ namespace tann {
         }
 
     private:
+        IndexOption _option;
         VectorSpace _vs;
         std::shared_mutex _mutex;
-        VectorSet _data TURBO_GUARDED_BY(_mutex);
+        VectorSet _data;
         std::vector<label_type> _index_to_label;
         turbo::flat_hash_map<label_type, std::size_t> _label_map TURBO_GUARDED_BY(_mutex);
     };

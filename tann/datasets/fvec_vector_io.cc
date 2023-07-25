@@ -36,7 +36,7 @@ namespace tann {
         auto span = to_span<uint8_t>(raw_mem);
         turbo::Status vst = turbo::OkStatus();
         while (_file->is_eof() && vst.ok()) {
-            vst = read_vector(&span);
+            vst = read_vector(span);
             dst.add_vector(span);
         }
         if(!turbo::IsReachFileEnd(vst)) {
@@ -45,12 +45,12 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FvecVectorSetReader::read_vector(turbo::Span<uint8_t> *vector) {
+    turbo::Status FvecVectorSetReader::read_vector(turbo::Span<uint8_t> &vector) {
         if (_file->is_eof()) {
             return turbo::ReachFileEnd("");
         }
-        TLOG_CHECK(_vector_bytes <= vector->size(), "not enough space to read vector");
-        auto r = _file->read(vector->data(), _vector_bytes);
+        TLOG_CHECK(_vector_bytes <= vector.size(), "not enough space to read vector");
+        auto r = _file->read(vector.data(), _vector_bytes);
         if (!r.ok()) {
             return r.status();
         }
@@ -62,11 +62,11 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::ResultStatus<std::size_t> FvecVectorSetReader::read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) {
+    turbo::ResultStatus<std::size_t> FvecVectorSetReader::read_batch(turbo::Span<uint8_t> &vector, std::size_t batch_size) {
         std::size_t i = 0;
         for (; i < batch_size; i++) {
-            turbo::Span<uint8_t> v = turbo::Span<uint8_t>(vector->data() + i * _vector_bytes, _vector_bytes);
-            auto r = read_vector(&v);
+            turbo::Span<uint8_t> v = turbo::Span<uint8_t>(vector.data() + i * _vector_bytes, _vector_bytes);
+            auto r = read_vector(v);
             if (!r.ok()) {
                 if(turbo::IsReachFileEnd(r)) {
                     break;
@@ -86,7 +86,7 @@ namespace tann {
         for(auto & be : bs) {
             for(size_t i =0; i < be.size(); i++) {
                 auto span = be.at(i);
-                auto r = write_vector(&span);
+                auto r = write_vector(span);
                 if(!r.ok()) {
                     return r;
                 }
@@ -95,14 +95,14 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FvecVectorSetWriter::write_vector(turbo::Span<uint8_t> *vector) {
-        TLOG_CHECK(_vector_bytes <= vector->size(), "not enough space to read vector");
+    turbo::Status FvecVectorSetWriter::write_vector(turbo::Span<uint8_t> vector) {
+        TLOG_CHECK(_vector_bytes <= vector.size(), "not enough space to read vector");
         uint32_t ndims = _option.dimension;
         auto r = _file->write(reinterpret_cast<const char *>(&ndims), sizeof(ndims));
         if (!r.ok()) {
             return r;
         }
-        r = _file->write(reinterpret_cast<const char *>(vector->data()), _vector_bytes);
+        r = _file->write(reinterpret_cast<const char *>(vector.data()), _vector_bytes);
         if (!r.ok()) {
             return r;
         }
@@ -110,10 +110,10 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FvecVectorSetWriter::write_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) {
+    turbo::Status FvecVectorSetWriter::write_batch(turbo::Span<uint8_t> vector, std::size_t batch_size) {
         for(std::size_t i = 0; i < batch_size; i++) {
-            turbo::Span<uint8_t> v = turbo::Span<uint8_t>(vector->data() + i * _vector_bytes, _vector_bytes);
-            auto r = write_vector(&v);
+            turbo::Span<uint8_t> v = turbo::Span<uint8_t>(vector.data() + i * _vector_bytes, _vector_bytes);
+            auto r = write_vector(v);
             if(!r.ok()) {
                 return r;
             }

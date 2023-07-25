@@ -78,21 +78,25 @@ namespace tann {
 
         [[nodiscard]] turbo::Span<uint8_t> at(std::size_t i) const {
             TLOG_CHECK(i < _ndim, "overflow");
+            TLOG_CHECK(turbo::simd::is_aligned(_data + i * _vector_byte_size), "not aligned {}", turbo::Ptr(_data + i * _vector_byte_size));
             return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
         [[nodiscard]] turbo::Span<uint8_t> at(std::size_t i) {
             TLOG_CHECK(i < _ndim, "overflow");
+            TLOG_CHECK(turbo::simd::is_aligned(_data + i * _vector_byte_size), "not aligned {}", turbo::Ptr(_data + i * _vector_byte_size));
             return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
         [[nodiscard]] turbo::Span<uint8_t> operator[](std::size_t i) const {
             TLOG_CHECK(i < _ndim, "overflow");
+            TLOG_CHECK(turbo::simd::is_aligned(_data + i * _vector_byte_size), "not aligned {}", turbo::Ptr(_data + i * _vector_byte_size));
             return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
         [[nodiscard]] turbo::Span<uint8_t> operator[](std::size_t i) {
             TLOG_CHECK(i < _ndim, "overflow");
+            TLOG_CHECK(turbo::simd::is_aligned(_data + i * _vector_byte_size), "not aligned {}", turbo::Ptr(_data + i * _vector_byte_size));
             return turbo::Span<uint8_t>{_data + i * _vector_byte_size, _vector_byte_size};
         }
 
@@ -109,7 +113,7 @@ namespace tann {
             _ndim += nvec;
             TLOG_CHECK(_ndim < _capacity);
             TLOG_CHECK(vector.size() == _vector_byte_size * nvec);
-            std::memcpy(vector.data(), _data + i * _vector_byte_size, vector.size());
+            std::memcpy(_data + i * _vector_byte_size,vector.data(), vector.size());
             return i;
         }
 
@@ -117,7 +121,7 @@ namespace tann {
             auto i = _ndim;
             _ndim += nvec;
             TLOG_CHECK(_ndim < _capacity);
-            std::memcpy(vector, _data + i * _vector_byte_size, nvec * _vector_byte_size);
+            std::memcpy(_data + i * _vector_byte_size,vector,  nvec * _vector_byte_size);
             return i;
         }
 
@@ -130,12 +134,12 @@ namespace tann {
         void set_vector(const std::size_t i, const turbo::Span<uint8_t> &vector) {
             TLOG_CHECK(i < _ndim);
             TLOG_CHECK(vector.size() == _vector_byte_size);
-            std::memcpy(vector.data(), _data + i * _vector_byte_size, vector.size());
+            std::memcpy(_data + i * _vector_byte_size,vector.data(),  vector.size());
         }
 
         void set_vector(std::size_t i, uint8_t *vector, std::size_t nvec) {
             TLOG_CHECK(i + nvec < _ndim);
-            std::memcpy(vector, _data + i * _vector_byte_size, nvec * _vector_byte_size);
+            std::memcpy(_data + i * _vector_byte_size,vector,  nvec * _vector_byte_size);
         }
 
         void clear_vector(std::size_t i) {

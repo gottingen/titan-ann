@@ -15,7 +15,6 @@
 #define TANN_CORE_SERIALIZE_OPTION_H_
 
 #include "tann/core/types.h"
-#include "tann/common/constants.h"
 
 namespace tann {
 

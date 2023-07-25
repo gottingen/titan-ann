@@ -13,54 +13,47 @@
 //
 
 #include "tann/hnsw/hnsw_index.h"
+#include "tann/io/utility.h"
 
 namespace tann {
     turbo::Status HnswIndex::check_option() {
-        if(!_option) {
-            return turbo::InvalidArgumentError("nullptr off option");
-        }
         // check options
-        if(_option->dimension == 0) {
-            return turbo::InvalidArgumentError("invalid dimension : {}, please set dimension", _option->dimension);
+        if (_option.dimension == 0) {
+            return turbo::InvalidArgumentError("invalid dimension : {}, please set dimension", _option.dimension);
         }
         return turbo::OkStatus();
     }
 
 
-    turbo::Status HnswIndex::initialize(std::unique_ptr<IndexOption> option) {
-        auto *option_ptr = reinterpret_cast<HnswIndexOption*>(option.release());
-        _option.reset(option_ptr);
+    turbo::Status HnswIndex::initialize(const IndexOption * option) {
+        auto *option_ptr = reinterpret_cast<const HnswIndexOption *>(option);
+        _option = *option_ptr;
 
         // check parameters
-        auto  r = check_option();
-        if(!r.ok()) {
+        auto r = check_option();
+        if (!r.ok()) {
             return r;
         }
 
-        r = _vs.init(_option->dimension, _option->metric, _option->data_type);
-        if(!r.ok()) {
+        r = _vs.init(_option.dimension, _option.metric, _option.data_type);
+        if (!r.ok()) {
             return r;
         }
 
-        r = _data.init(&_vs, _option->batch_size);
-        if(!r.ok()) {
+        r = _data.init(&_vs, _option.batch_size);
+        if (!r.ok()) {
             return r;
         }
 
-        _max_elements = _option->max_elements;
-        _ef_construction = _option->ef_construction;
-        _ef = _option->ef;
-        _allow_replace_deleted = _option->allow_replace_deleted;
-        _level_generator.seed(_option->random_seed);
-        _update_probability_generator.seed(_option->random_seed + 1);
+        _level_generator.seed(_option.random_seed);
+        _update_probability_generator.seed(_option.random_seed + 1);
 
-        _M = _option->m;
-        _maxM = _M;
+        _maxM = _option.m;
 
-        _index_scratch.resize(_max_elements);
-        _final_graph.initialize(_max_elements, _maxM);
-        _visited_list_pool = std::make_unique<VisitedListPool>(1, _max_elements);
-        std::vector<std::mutex> temp(_max_elements);
+        _index_scratch.resize(_option.max_elements);
+        _final_graph.initialize(_option.max_elements, _maxM);
+        _visited_list_pool = std::make_unique<VisitedListPool>(1, _option.max_elements);
+        std::vector<std::mutex> temp(_option.max_elements);
         _link_list_locks = std::move(temp);
         std::vector<std::mutex> temp1(MAX_LABEL_OPERATION_LOCKS);
         _label_op_locks = std::move(temp1);
@@ -69,7 +62,7 @@ namespace tann {
         _max_level = -1;
         _cur_element_count = 0;
 
-        _mult = 1 / log(1.0 * static_cast<double >(_M));
+        _mult = 1 / log(1.0 * static_cast<double >(_option.m));
         return turbo::OkStatus();
     }
 
@@ -93,10 +86,6 @@ namespace tann {
     //
     turbo::Status
     HnswIndex::add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, const label_type &label) {
-        if (!_allow_replace_deleted && option.replace_deleted) {
-            return turbo::InvalidArgumentError("Replacement of deleted elements is disabled in constructor");
-        }
-
         // lock all operations with element by label
         std::unique_lock<std::mutex> lock_label(get_label_op_mutex(label));
         if (!option.replace_deleted) {
@@ -104,15 +93,8 @@ namespace tann {
             return r.status();
         }
         // check if there is vacant place
-        location_t internal_id_replaced;
-        std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
-        bool is_vacant_place = !_deleted_elements.empty();
-        if (is_vacant_place) {
-            internal_id_replaced = *_deleted_elements.begin();
-            _deleted_elements.erase(internal_id_replaced);
-        }
-        lock_deleted_elements.unlock();
-
+        location_t internal_id_replaced ;
+        bool is_vacant_place = _data.get_vacant(internal_id_replaced);
         // if there is no vacant place then add or update point
         // else add point to vacant place
         if (!is_vacant_place) {
@@ -127,17 +109,17 @@ namespace tann {
             _label_lookup.erase(label_replaced);
             _label_lookup[label] = internal_id_replaced;
             lock_table.unlock();
-
+            /*
             auto r = unmark_deleted_internal(internal_id_replaced);
             if (!r.ok()) {
                 return r;
             }
+             */
             return update_point(option, data_point, internal_id_replaced, 1.0);
         }
     }
 
     [[nodiscard]] turbo::Status HnswIndex::search_vector(QueryContext *qctx) {
-        std::priority_queue<std::pair<distance_type, label_type >> result;
         if (_cur_element_count == 0) {
             return turbo::OkStatus();
         }
@@ -157,7 +139,7 @@ namespace tann {
 
                 for (int i = 0; i < size; i++) {
                     location_t cand = node[i];
-                    if (cand < 0 || cand > _max_elements)
+                    if (cand < 0 || cand > _option.max_elements)
                         return turbo::InternalError("cand error");
                     auto d = _data.get_distance(query_data, cand);
 
@@ -172,9 +154,9 @@ namespace tann {
 
         links_priority_queue top_candidates;
         if (_data.deleted_size()) {
-            top_candidates = search_base_layer_st<true, true>(currObj, qctx, std::max(_ef, qctx->k));
+            top_candidates = search_base_layer_st<true, true>(currObj, qctx, std::max(_option.ef, qctx->k));
         } else {
-            top_candidates = search_base_layer_st<false, true>(currObj, qctx, std::max(_ef, qctx->k));
+            top_candidates = search_base_layer_st<false, true>(currObj, qctx, std::max(_option.ef, qctx->k));
         }
 
         while (top_candidates.size() > qctx->k) {
@@ -182,7 +164,7 @@ namespace tann {
         }
         while (!top_candidates.empty()) {
             std::pair<distance_type, location_t> rez = top_candidates.top();
-            result.emplace(std::pair<distance_type, location_t>(rez.first, get_external_label(rez.second)));
+            qctx->results.emplace_back(std::pair<distance_type, location_t>(rez.first, get_external_label(rez.second)));
             top_candidates.pop();
         }
         return turbo::OkStatus();
@@ -231,7 +213,7 @@ namespace tann {
                 metric_distance_computations += size;
             }
 
-            for (size_t j = 1; j <= size; j++) {
+            for (size_t j = 1; j < size; j++) {
                 location_t candidate_id = data[j];
                 if (visited_array[candidate_id] != visited_array_tag) {
                     visited_array[candidate_id] = visited_array_tag;
@@ -277,10 +259,6 @@ namespace tann {
         assert(internalId < _cur_element_count);
         if (!_data.is_deleted(internalId)) {
             _data.mark_deleted(internalId);
-            if (_allow_replace_deleted) {
-                std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
-                _deleted_elements.insert(internalId);
-            }
         } else {
             return turbo::AlreadyExistsError("The requested to delete element is already deleted");
         }
@@ -298,11 +276,9 @@ namespace tann {
             auto search = _label_lookup.find(label);
             if (search != _label_lookup.end()) {
                 location_t existingInternalId = search->second;
-                if (_allow_replace_deleted) {
-                    if (_data.is_deleted(existingInternalId)) {
-                        return turbo::UnavailableError(
-                                "Can't use addPoint to update deleted elements if replacement of deleted elements is enabled.");
-                    }
+                if (_data.is_deleted(existingInternalId)) {
+                    return turbo::UnavailableError(
+                            "Can't use addPoint to update deleted elements if replacement of deleted elements is enabled.");
                 }
                 lock_table.unlock();
 
@@ -320,14 +296,14 @@ namespace tann {
                 return existingInternalId;
             }
 
-            if (_cur_element_count >= _max_elements) {
+            if (_cur_element_count >= _option.max_elements) {
                 return turbo::OutOfRangeError("The number of elements exceeds the specified limit");
             }
 
             cur_c = _data.prefer_add_vector();
             _cur_element_count++;
             _label_lookup[label] = cur_c;
-            TLOG_DEBUG("add vector label: {} location: {}", label, cur_c);
+            TLOG_TRACE("add vector label: {} location: {}", label, cur_c);
         }
 
         std::unique_lock<std::mutex> lock_el(_link_list_locks[cur_c]);
@@ -367,10 +343,10 @@ namespace tann {
                         std::unique_lock<std::mutex> lock(_link_list_locks[currObj]);
                         auto node = _final_graph.mutable_node(currObj, l_level);
                         size_t size = node.size();
-
+                        TLOG_TRACE("try node {} level {} links {}", currObj, l_level, size);
                         for (int i = 0; i < size; i++) {
                             location_t cand = node[i];
-                            if (cand > _max_elements)
+                            if (cand > _option.max_elements)
                                 return turbo::DataLossError("cand error");
                             auto d = _data.get_distance(cur_c, cand);
                             if (d < curdist) {
@@ -391,7 +367,7 @@ namespace tann {
                 links_priority_queue top_candidates = search_base_layer(currObj, cur_c, l_level);
                 if (epDeleted) {
                     top_candidates.emplace(_data.get_distance(cur_c, enterpoint_copy), enterpoint_copy);
-                    if (top_candidates.size() > _ef_construction)
+                    if (top_candidates.size() > _option.ef_construction)
                         top_candidates.pop();
                 }
                 auto rs = mutually_connect_new_element(cur_c, top_candidates, l_level, false);
@@ -436,7 +412,7 @@ namespace tann {
 
         while (!candidateSet.empty()) {
             std::pair<distance_type, location_t> curr_el_pair = candidateSet.top();
-            if ((-curr_el_pair.first) > lowerBound && top_candidates.size() == _ef_construction) {
+            if ((-curr_el_pair.first) > lowerBound && top_candidates.size() == _option.ef_construction) {
                 break;
             }
             candidateSet.pop();
@@ -457,12 +433,12 @@ namespace tann {
                 visited_array[candidate_id] = visited_array_tag;
 
                 distance_type dist1 = _data.get_distance(loc, candidate_id);
-                if (top_candidates.size() < _ef_construction || lowerBound > dist1) {
+                if (top_candidates.size() < _option.ef_construction || lowerBound > dist1) {
                     candidateSet.emplace(-dist1, candidate_id);
                     if (!_data.is_deleted(candidate_id))
                         top_candidates.emplace(dist1, candidate_id);
 
-                    if (top_candidates.size() > _ef_construction)
+                    if (top_candidates.size() > _option.ef_construction)
                         top_candidates.pop();
 
                     if (!top_candidates.empty())
@@ -481,12 +457,13 @@ namespace tann {
 
         auto node = _final_graph.mutable_node(cur_c, level);
         size_t Mcurmax = node.capacity();
-        get_neighbors_by_heuristic2(top_candidates, _M);
-        if (top_candidates.size() > _M)
+        TLOG_TRACE("mutually_connect_new_element Mcurmax {} {} {} ", Mcurmax, cur_c, level);
+        get_neighbors_by_heuristic2(top_candidates, _option.m);
+        if (top_candidates.size() > _option.m)
             return turbo::OutOfRangeError("Should be not be more than M_ candidates returned by the heuristic");
 
         std::vector<location_t> selectedNeighbors;
-        selectedNeighbors.reserve(_M);
+        selectedNeighbors.reserve(_option.m);
         while (!top_candidates.empty()) {
             selectedNeighbors.push_back(top_candidates.top().second);
             top_candidates.pop();
@@ -512,7 +489,7 @@ namespace tann {
                 if (level > node.level())
                     return turbo::InternalError("Trying to make a link on a non-existent level");
 
-                node[idx] = selectedNeighbors[idx];
+                node.set_link(idx, selectedNeighbors[idx]);
             }
         }
 
@@ -521,7 +498,7 @@ namespace tann {
             std::unique_lock<std::mutex> lock(_link_list_locks[selectedNeighbors[idx]]);
 
             auto other_node = _final_graph.mutable_node(selectedNeighbors[idx], level);
-
+            TLOG_TRACE("other_node {} {}", selectedNeighbors[idx], level);
             size_t sz_link_list_other = other_node.size();
 
             if (sz_link_list_other > Mcurmax)
@@ -544,7 +521,7 @@ namespace tann {
             // If cur_c is already present in the neighboring connections of `selectedNeighbors[idx]` then no need to modify any connections or run the heuristics.
             if (!is_cur_c_present) {
                 if (sz_link_list_other < Mcurmax) {
-                    other_node[sz_link_list_other] = cur_c;
+                    other_node.at(sz_link_list_other) = cur_c;
                     other_node.set_size(sz_link_list_other + 1);
                 } else {
                     // finding the "weakest" element to replace it with the new one
@@ -561,7 +538,7 @@ namespace tann {
 
                     int indx = 0;
                     while (!candidates.empty()) {
-                        other_node[indx] = candidates.top().second;
+                        other_node.set_link(indx, candidates.top().second);
                         candidates.pop();
                         indx++;
                     }
@@ -588,7 +565,7 @@ namespace tann {
 
     turbo::Status
     HnswIndex::update_point(const WriteOption &option, turbo::Span<uint8_t> data_point, location_t internalId,
-                           float updateNeighborProbability) {
+                            float updateNeighborProbability) {
         // update the feature vector associated with existing point with new vector
         AlignedQuery<uint8_t> aligned_vector;
         auto vector_data = to_span<uint8_t>(data_point);
@@ -635,7 +612,7 @@ namespace tann {
                 links_priority_queue candidates;
                 size_t size = sCand.find(neigh) == sCand.end() ? sCand.size() : sCand.size() -
                                                                                 1;  // sCand guaranteed to have size >= 1
-                size_t elementsToKeep = std::min(_ef_construction, size);
+                size_t elementsToKeep = std::min(_option.ef_construction, size);
                 for (auto &&cand: sCand) {
                     if (cand == neigh)
                         continue;
@@ -660,7 +637,7 @@ namespace tann {
                     size_t candSize = candidates.size();
                     ll_cur.set_size(candSize);
                     for (size_t idx = 0; idx < candSize; idx++) {
-                        ll_cur[idx] = candidates.top().second;
+                        ll_cur.set_link(idx, candidates.top().second);
                         candidates.pop();
                     }
                 }
@@ -719,7 +696,7 @@ namespace tann {
                 if (epDeleted) {
                     filteredTopCandidates.emplace(_data.get_distance(dataPointInternalId, entryPointInternalId),
                                                   entryPointInternalId);
-                    if (filteredTopCandidates.size() > _ef_construction)
+                    if (filteredTopCandidates.size() > _option.ef_construction)
                         filteredTopCandidates.pop();
                 }
 
@@ -785,10 +762,6 @@ namespace tann {
         assert(internalId < _cur_element_count);
         if (_data.is_deleted(internalId)) {
             _data.unmark_deleted(internalId);
-            if (_allow_replace_deleted) {
-                std::unique_lock<std::mutex> lock_deleted_elements(_deleted_elements_lock);
-                _deleted_elements.erase(internalId);
-            }
         } else {
             return turbo::UnavailableError("The requested to undelete element is not deleted");
         }
@@ -804,7 +777,42 @@ namespace tann {
     turbo::Status HnswIndex::save_index(const std::string &path, const SerializeOption &option) {
         turbo::SequentialWriteFile file;
         auto r = file.open(path);
-        if(!r.ok()) {
+        if (!r.ok()) {
+            return r;
+        }
+
+        r = write_binary_pod(file, kHnswMagic);
+        if (!r.ok()) {
+            return r;
+        }
+        /// write option
+        r = write_binary_pod(file, _option);
+        if (!r.ok()) {
+            return r;
+        }
+        /// index status
+        r = write_binary_pod(file, _enterpoint_node);
+        if (!r.ok()) {
+            return r;
+        }
+        r = write_binary_pod(file, _max_level);
+        if (!r.ok()) {
+            return r;
+        }
+
+        r = write_binary_pod(file, _mult);
+        if (!r.ok()) {
+            return r;
+        }
+        /// save raw data
+        r = _data.save(&file);
+        if (!r.ok()) {
+            return r;
+        }
+
+        /// save graph
+        r = _final_graph.save(file);
+        if (!r.ok()) {
             return r;
         }
 
@@ -812,9 +820,93 @@ namespace tann {
     }
 
     turbo::Status HnswIndex::load_index(const std::string &path, const SerializeOption &option) {
+        turbo::SequentialReadFile file;
+        auto r = file.open(path);
+        if (!r.ok()) {
+            return r;
+        }
+        // read and check magic
+        size_t magic;
+        r = read_binary_pod(file, magic);
+        if (!r.ok()) {
+            return r;
+        }
+        if (magic != kHnswMagic) {
+            return turbo::UnavailableError("file format error, not hnsw index file");
+        }
+
+        /// read option
+        HnswIndexOption op;
+        r = read_binary_pod(file, op);
+        if (!r.ok()) {
+            return r;
+        }
+        // check option
+        r = check_load_option(op);
+        if (!r.ok()) {
+            return r;
+        }
+
+        /// index status
+        r = read_binary_pod(file, _enterpoint_node);
+        if (!r.ok()) {
+            return r;
+        }
+        r = read_binary_pod(file, _max_level);
+        if (!r.ok()) {
+            return r;
+        }
+
+        r = read_binary_pod(file, _mult);
+        if (!r.ok()) {
+            return r;
+        }
+        // raw data
+        r = _data.load(&file);
+        if (!r.ok()) {
+            return r;
+        }
+        // graph
+        r = _final_graph.load(file);
+        if (!r.ok()) {
+            return r;
+        }
         return turbo::OkStatus();
     }
 
-    template links_priority_queue HnswIndex::search_base_layer_st<true, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
-    template links_priority_queue HnswIndex::search_base_layer_st<false, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
+    turbo::Status HnswIndex::check_load_option(const HnswIndexOption &op) {
+        if (op.dimension != _option.dimension) {
+            return turbo::InvalidArgumentError("index option confict dimension: {}, read from index: {}",
+                                               _option.dimension, op.dimension);
+        }
+
+        if (op.m != _option.m) {
+            return turbo::InvalidArgumentError("index option confict m: {}, read from index: {}", _option.m, op.m);
+        }
+        if (op.batch_size != _option.batch_size) {
+            return turbo::InvalidArgumentError("index option confict batch_size: {}, read from index: {}",
+                                               _option.batch_size, op.batch_size);
+        }
+        if (op.metric != _option.metric) {
+            return turbo::InvalidArgumentError("index option confict metric: {}, read from index: {}",
+                                               turbo::nameof_enum(_option.metric), turbo::nameof_enum(op.metric));
+        }
+
+        if (op.data_type != _option.data_type) {
+            return turbo::InvalidArgumentError("index option confict data_type: {}, read from index: {}",
+                                               turbo::nameof_enum(_option.data_type), turbo::nameof_enum(op.data_type));
+        }
+        if (op.max_elements != _option.max_elements) {
+            return turbo::InvalidArgumentError("index option confict max_elements: {}, read from index: {}",
+                                               _option.max_elements, op.max_elements);
+        }
+
+        return turbo::OkStatus();
+    }
+
+    template links_priority_queue
+    HnswIndex::search_base_layer_st<true, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
+
+    template links_priority_queue
+    HnswIndex::search_base_layer_st<false, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
 }  // namespace tann

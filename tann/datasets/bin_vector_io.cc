@@ -57,10 +57,10 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status BinaryVectorSetReader::read_vector(turbo::Span<uint8_t> *vector) {
-        TLOG_CHECK(_vector_bytes <= vector->size(), "not enough space to read vector");
+    turbo::Status BinaryVectorSetReader::read_vector(turbo::Span<uint8_t> &vector) {
+        TLOG_CHECK(_vector_bytes <= vector.size(), "not enough space to read vector");
         TLOG_CHECK(_vector_bytes > 0, "vector bytes size not set");
-        auto r = _file->read(vector->data(), _vector_bytes);
+        auto r = _file->read(vector.data(), _vector_bytes);
         if (!r.ok()) {
             return r.status();
         }
@@ -69,9 +69,9 @@ namespace tann {
     }
 
     turbo::ResultStatus<std::size_t>
-    BinaryVectorSetReader::read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) {
-        TLOG_CHECK(_vector_bytes * batch_size <= vector->size(), "not enough space to read vector");
-        auto r = _file->read(vector->data(), _vector_bytes * batch_size);
+    BinaryVectorSetReader::read_batch(turbo::Span<uint8_t> &vector, std::size_t batch_size) {
+        TLOG_CHECK(_vector_bytes * batch_size <= vector.size(), "not enough space to read vector");
+        auto r = _file->read(vector.data(), _vector_bytes * batch_size);
         if (!r.ok()) {
             return r.status();
         }
@@ -108,12 +108,12 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status BinaryVectorSetWriter::write_vector(turbo::Span<uint8_t> *vector) {
+    turbo::Status BinaryVectorSetWriter::write_vector(turbo::Span<uint8_t> vector) {
         if(_has_write >= _option.n_vectors) {
             return turbo::OutOfRangeError("read the max vector size");
         }
-        TLOG_CHECK(_vector_bytes <= vector->size(), "not enough space to read vector");
-        auto r = _file->write(reinterpret_cast<const char *>(vector->data()), _vector_bytes);
+        TLOG_CHECK(_vector_bytes <= vector.size(), "not enough space to read vector");
+        auto r = _file->write(reinterpret_cast<const char *>(vector.data()), _vector_bytes);
         if (!r.ok()) {
             return r;
         }
@@ -121,16 +121,16 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status BinaryVectorSetWriter::write_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) {
-        if(_has_write + batch_size >= _option.n_vectors) {
+    turbo::Status BinaryVectorSetWriter::write_batch(turbo::Span<uint8_t> vector, std::size_t batch_size) {
+        if(_has_write + batch_size > _option.n_vectors) {
             return turbo::OutOfRangeError("read the max vector size");
         }
-        TLOG_CHECK(_vector_bytes * batch_size <= vector->size(), "not enough space to read vector");
-        auto r = _file->write(reinterpret_cast<const char *>(vector->data()), _vector_bytes * batch_size);
+        TLOG_CHECK(_vector_bytes * batch_size <= vector.size(), "not enough space to read vector");
+        auto r = _file->write(reinterpret_cast<const char *>(vector.data()), _vector_bytes * batch_size);
         if (!r.ok()) {
             return r;
         }
-        ++_has_write;
+        _has_write += batch_size;
         return turbo::OkStatus();
     }
 }  // namespace tann

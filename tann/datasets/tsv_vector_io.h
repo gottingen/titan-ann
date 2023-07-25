@@ -27,9 +27,9 @@ namespace tann {
 
         turbo::Status load(VectorSet &dst) override;
 
-        turbo::Status read_vector(turbo::Span<uint8_t> *vector) override;
+        turbo::Status read_vector(turbo::Span<uint8_t> &vector) override;
 
-        turbo::ResultStatus<std::size_t> read_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) override;
+        turbo::ResultStatus<std::size_t> read_batch(turbo::Span<uint8_t> &vector, std::size_t batch_size) override;
     private:
         turbo::Status init() override;
     private:
@@ -44,9 +44,9 @@ namespace tann {
 
         turbo::Status save(VectorSet &dst) override;
 
-        turbo::Status write_vector(turbo::Span<uint8_t> *vector) override;
+        turbo::Status write_vector(turbo::Span<uint8_t> vector) override;
 
-        turbo::Status write_batch(turbo::Span<uint8_t> *vector, std::size_t batch_size) override;
+        turbo::Status write_batch(turbo::Span<uint8_t> vector, std::size_t batch_size) override;
 
     private:
         turbo::Status init() override;

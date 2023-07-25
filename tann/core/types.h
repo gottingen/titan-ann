@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <queue>
+#include <limits>
 #include "turbo/log/logging.h"
 
 namespace tann {
@@ -88,4 +89,19 @@ namespace tann {
             std::vector<std::pair<distance_type, location_t>>, CompareByFirst> links_priority_queue;
 
 } // namespace tann
+
+namespace tann::constants {
+
+    /// for common
+    static constexpr size_t kUnknownSize = std::numeric_limits<size_t>::max();
+    static constexpr size_t kMaxElements = 100000;
+    static constexpr size_t kBatchSize = 256;
+
+    static constexpr location_t kUnknownLocation = std::numeric_limits<location_t>::max();
+    /// for hnsw
+    static constexpr size_t kHnswM = 16;
+    static constexpr size_t kHnswEf = 50;
+    static constexpr size_t kHnswEfConstruction = 200;
+    static constexpr size_t kHnswRandomSeed = 100;
+}  // namespace tann::constants
 #endif  // TANN_CORE_TYPES_H_

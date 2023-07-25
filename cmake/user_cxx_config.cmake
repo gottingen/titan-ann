@@ -37,7 +37,7 @@ endif ()
 # ${CARBIN_RANDOM_RANDEN_COPTS}
 # set it to haswell arch
 ##############################################################################
-set(CARBIN_CXX_OPTIONS ${CARBIN_DEFAULT_COPTS} ${CARBIN_ARCH_OPTION} ${CARBIN_RANDOM_RANDEN_COPTS})
+set(CARBIN_CXX_OPTIONS ${CARBIN_DEFAULT_COPTS} ${CARBIN_ARCH_OPTION} ${CARBIN_RANDOM_RANDEN_COPTS} "-g3")
 ###############################
 #
 # define you options here

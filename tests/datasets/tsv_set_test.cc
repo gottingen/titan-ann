@@ -57,7 +57,7 @@ TEST_CASE_FIXTURE(BinSetTest, "write read") {
     auto span = tann::to_span<uint8_t>(vmem);
     CHECK_EQ(span.size(), 128 * sizeof(float));
     for (size_t i = 0; i < 100; i++) {
-        r = writer.write_vector(&span);
+        r = writer.write_vector(span);
         CHECK(r.ok());
     }
     CHECK_EQ(writer.has_write(), 100);
@@ -81,7 +81,7 @@ TEST_CASE_FIXTURE(BinSetTest, "write read") {
     size_t i = 0;
     auto s = turbo::OkStatus();
     while(s.ok()) {
-        s = reader.read_vector(&rspan);
+        s = reader.read_vector(rspan);
         i++;
         CHECK(r.ok());
         if(!r.ok()) {

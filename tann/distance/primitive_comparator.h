@@ -139,10 +139,9 @@ namespace tann {
 
         template<typename T>
         inline static double compare_l2(const turbo::Span<T> &a, const turbo::Span<T> &b) {
+            TLOG_CHECK( turbo::simd::is_aligned(a.data()), "{} not aligned", turbo::Ptr(a.data()));
+            TLOG_CHECK( turbo::simd::is_aligned(b.data()), "{} not aligned", turbo::Ptr(b.data()));
             using b_type = turbo::simd::batch<T, turbo::simd::default_arch>;
-            bool is_aligned = turbo::simd::is_aligned(static_cast<const T *>(a.data())) &&
-                              turbo::simd::is_aligned(static_cast<const T *>(b.data()));
-            TLOG_CHECK(is_aligned, "the memory must be aligned");
             static_assert(sizeof(T) >= 4, "sizeof(T) >= 4");
             std::size_t inc = b_type::size;
             std::size_t size = a.size();
@@ -151,8 +150,8 @@ namespace tann {
             b_type sum_v = b_type::broadcast(0.0);
             double sum = 0.0;
             for (std::size_t i = 0; i < vec_size; i += inc) {
-                b_type avec = b_type::load(&a[i], turbo::simd::aligned_mode());
-                b_type bvec = b_type::load(&b[i], turbo::simd::aligned_mode());
+                b_type avec = b_type::load(&a[i], turbo::simd::unaligned_mode());
+                b_type bvec = b_type::load(&b[i], turbo::simd::unaligned_mode());
                 auto diff = avec - bvec;
                 sum_v += turbo::simd::mul(diff, diff);
             }

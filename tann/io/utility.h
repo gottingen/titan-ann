@@ -17,15 +17,81 @@
 
 #include "turbo/files/sequential_write_file.h"
 #include "turbo/files/sequential_read_file.h"
+#include "turbo/format/print.h"
+
 namespace tann {
     template<typename T>
-    static void write_binary_pod(turbo::SequentialWriteFile &out, const T &podRef) {
-        out.write((char *) &podRef, sizeof(T));
+    [[nodiscard]] static inline turbo::Status write_binary_pod(turbo::SequentialWriteFile &out, const T &podRef) {
+        return out.write((char *) &podRef, sizeof(T));
     }
 
     template<typename T>
-    static void read_binary_pod(turbo::SequentialReadFile &in, T &podRef) {
-        in.read((char *) &podRef, sizeof(T));
+    [[nodiscard]] static inline  turbo::Status read_binary_pod(turbo::SequentialReadFile &in, T &podRef) {
+        auto r = in.read((char *) &podRef, sizeof(T));
+        if(!r.ok()) {
+            return r.status();
+        }
+        if(r.value() != sizeof(T)) {
+            return turbo::DataLossError("not enough data");
+        }
+        return turbo::OkStatus();
+    }
+
+    template<typename T>
+    [[nodiscard]] static inline turbo::Status write_binary_vector(turbo::SequentialWriteFile &out, const std::vector<T> &list) {
+        size_t s = list.size();
+        auto r = write_binary_pod(out, s);
+        if(!r.ok()) {
+            return r;
+        }
+        return out.write((char *) list.data(), sizeof(T) * s);
+    }
+
+    template<typename T>
+    [[nodiscard]] static inline  turbo::Status read_binary_vector(turbo::SequentialReadFile &in, std::vector<T> &list) {
+        size_t s;
+        auto r = read_binary_pod(in, s);
+        if(!r.ok()) {
+            return r;
+        }
+        list.resize(s);
+        auto rs = in.read(list.data(), sizeof(T) * s);
+        if(!rs.ok()) {
+            return rs.status();
+        }
+        if(rs.value() != sizeof(T) * s) {
+            return turbo::DataLossError("not enough data");
+        }
+        return turbo::OkStatus();
+    }
+
+    [[nodiscard]] static inline turbo::Status write_binary_string(turbo::SequentialWriteFile &out, const std::string_view &str) {
+        size_t size = str.size();
+        auto r = write_binary_pod(out, size);
+        if(!r.ok()) {
+            return r;
+        }
+        r = out.write(str);
+        if(!r.ok()) {
+            return r;
+        }
+        return turbo::OkStatus();
+    }
+
+    [[nodiscard]] static inline  turbo::Status read_binary_string(turbo::SequentialReadFile &in,  std::string &str) {
+        size_t size;
+        auto r = read_binary_pod(in, size);
+        if(!r.ok()) {
+            return r;
+        }
+        auto rs = in.read(&str, size);
+        if(!rs.ok()) {
+            return rs.status();
+        }
+        if(rs.value() != size) {
+            return turbo::DataLossError("not enough data");
+        }
+        return turbo::OkStatus();
     }
 
 }  // namespace tann
