@@ -16,8 +16,12 @@
 #define TANN_HNSW_TEST_FIXTURE_H
 
 #include "tann/hnsw/hnsw_index.h"
+#include "tann/flat/flat_index.h"
+#include "doctest/doctest.h"
 #include <thread>
 #include <chrono>
+
+using tann::label_type;
 
 class HnswIndexTestFixture {
 public:
@@ -26,7 +30,7 @@ public:
         hnsw_option.data_type = tann::DataType::DT_FLOAT;
         hnsw_option.dimension = 16;
         hnsw_option.metric = tann::METRIC_L2;
-        option = reinterpret_cast<tann::IndexOption*>(&hnsw_option);
+        option = reinterpret_cast<tann::IndexOption *>(&hnsw_option);
 
         batch1.reset(new float[d * max_elements]);
         for (int i = 0; i < d * max_elements; i++) {
@@ -73,7 +77,44 @@ public:
     tann::WriteOption wop1;
 };
 
+class HnswIndexFilterFixture {
+public:
+    HnswIndexFilterFixture() {
+        data.resize(n * d);
+        query.resize(nq * d);
+        rng.seed(47);
+        std::uniform_real_distribution<> distrib;
 
+        for (label_type i = 0; i < n * d; ++i) {
+            data[i] = distrib(rng);
+        }
+        for (label_type i = 0; i < nq * d; ++i) {
+            query[i] = distrib(rng);
+        }
+        hnsw_option.data_type = tann::DataType::DT_FLOAT;
+        hnsw_option.dimension = 16;
+        hnsw_option.metric = tann::METRIC_L2;
+        option = reinterpret_cast<tann::IndexOption *>(&hnsw_option);
+        auto rs = hindex.initialize(option);
+        CHECK_EQ(rs.ok(), true);
+
+        rs = findex.initialize(option);
+        CHECK_EQ(rs.ok(), true);
+    }
+
+    std::vector<float> data;
+    std::vector<float> query;
+
+    std::mt19937 rng;
+    int d = 16;
+    label_type n = 100;
+    label_type nq = 10;
+    size_t k = 10;
+    tann::IndexOption *option;
+    tann::HnswIndexOption hnsw_option;
+    tann::HnswIndex hindex;
+    tann::FlatIndex findex;
+};
 
 template<class Function>
 inline void ParallelFor(size_t start, size_t end, size_t numThreads, Function fn) {
@@ -120,7 +161,7 @@ inline void ParallelFor(size_t start, size_t end, size_t numThreads, Function fn
                 }
             }));
         }
-        for (auto &thread : threads) {
+        for (auto &thread: threads) {
             thread.join();
         }
         if (lastException) {

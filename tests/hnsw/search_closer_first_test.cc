@@ -14,7 +14,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "doctest/doctest.h"
-
+#include "hnsw_test_fixture.h"
 #include <assert.h>
 
 #include <vector>
@@ -22,46 +22,11 @@
 #include "tann/hnsw/hnsw_index.h"
 #include <thread>
 #include <chrono>
-#include "tann/flat/flat_index.h"
 
 namespace {
 
-    using idx_t = tann::label_type;
+    TEST_CASE_FIXTURE(HnswIndexFilterFixture, "closer") {
 
-    TEST_CASE("closer") {
-        int d = 16;
-        idx_t n = 100;
-        idx_t nq = 10;
-        size_t k = 10;
-
-        std::vector<float> data(n * d);
-        std::vector<float> query(nq * d);
-
-        std::mt19937 rng;
-        rng.seed(47);
-        std::uniform_real_distribution<> distrib;
-
-        for (idx_t i = 0; i < n * d; ++i) {
-            data[i] = distrib(rng);
-        }
-        for (idx_t i = 0; i < nq * d; ++i) {
-            query[i] = distrib(rng);
-        }
-
-        tann::IndexOption *option;
-        tann::HnswIndexOption hnsw_option;
-
-        hnsw_option.data_type = tann::DataType::DT_FLOAT;
-        hnsw_option.dimension = 16;
-        hnsw_option.metric = tann::METRIC_L2;
-        option = reinterpret_cast<tann::IndexOption *>(&hnsw_option);
-
-        tann::HnswIndex hindex;
-        auto rs = hindex.initialize(option);
-        CHECK_EQ(rs.ok(), true);
-        tann::FlatIndex findex;
-        rs = findex.initialize(option);
-        CHECK_EQ(rs.ok(), true);
         TLOG_INFO("insert data");
         tann::WriteOption op;
         for (size_t i = 0; i < n; ++i) {

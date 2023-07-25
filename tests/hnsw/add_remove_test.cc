@@ -12,9 +12,8 @@
 // limitations under the License.
 //
 
-#include "hnsw_test_fixture.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-
+#include "hnsw_test_fixture.h"
 #include "doctest/doctest.h"
 
 #include "tann/hnsw/hnsw_index.h"

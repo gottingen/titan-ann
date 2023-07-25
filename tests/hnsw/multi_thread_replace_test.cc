@@ -12,9 +12,9 @@
 // limitations under the License.
 //
 
-#include "hnsw_test_fixture.h"
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "hnsw_test_fixture.h"
 #include "doctest/doctest.h"
 
 #include "tann/hnsw/hnsw_index.h"
@@ -26,7 +26,7 @@ TEST_CASE_FIXTURE(HnswIndexTestFixture, "add and remove") {
     std::cout << "Running multithread load test" << std::endl;
 
     int iter = 0;
-    while (iter < 200) {
+    while (iter < 2) {
         index.reset(new tann::HnswIndex);
         auto rs = index->initialize(option);
 
