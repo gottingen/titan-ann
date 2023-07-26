@@ -50,6 +50,7 @@ namespace tann {
 
         [[nodiscard]] virtual bool need_model() const = 0;
 
+        [[nodiscard]] virtual EngineType engine_type() const = 0;
     };
 }  // namespace tann
 

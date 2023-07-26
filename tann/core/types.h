@@ -26,6 +26,7 @@ namespace tann {
     typedef double distance_type;
 
     enum class EngineType {
+        ENGINE_NONE,
         ENGINE_FLAT,
         ENGINE_PQ,
         ENGINE_VAMANA,

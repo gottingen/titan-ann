@@ -64,6 +64,10 @@ namespace tann {
             return false;
         }
 
+        [[nodiscard]] EngineType engine_type() const override {
+            return EngineType::ENGINE_FLAT;
+        }
+
     private:
         IndexOption _option;
         VectorSpace _vs;
