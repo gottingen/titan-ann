@@ -57,6 +57,10 @@ namespace tann {
 
         [[nodiscard]] turbo::Status load_index(const std::string &path, const SerializeOption &option) override;
 
+        [[nodiscard]] EngineType engine_type() const override {
+            return EngineType::ENGINE_HNSW;
+        }
+
         [[nodiscard]] std::size_t size() const override {
             return _cur_element_count;
         }
