@@ -97,8 +97,10 @@ namespace tann::constants {
     static constexpr size_t kUnknownSize = std::numeric_limits<size_t>::max();
     static constexpr size_t kMaxElements = 100000;
     static constexpr size_t kBatchSize = 256;
+    static constexpr size_t kLockSlots = 65536;
 
     static constexpr location_t kUnknownLocation = std::numeric_limits<location_t>::max();
+    static constexpr label_type kUnknownLabel = std::numeric_limits<label_type>::max();
     /// for hnsw
     static constexpr size_t kHnswM = 16;
     static constexpr size_t kHnswEf = 50;

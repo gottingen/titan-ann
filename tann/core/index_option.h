@@ -22,9 +22,11 @@ namespace tann {
         // common option
         DataType data_type{DataType::DT_NONE};
         MetricType metric{MetricType::UNDEFINED};
+        EngineType engine_type{EngineType::ENGINE_HNSW};
         std::size_t dimension{0};
         std::size_t batch_size{constants::kBatchSize};
         std::size_t max_elements{constants::kMaxElements};
+        bool enable_replace_vacant{true};
     };
 
     struct HnswIndexOption : public IndexOption {
