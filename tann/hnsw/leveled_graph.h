@@ -128,6 +128,13 @@ namespace tann {
             return _nodes[lid].level;
         }
 
+        uint32_t capacity_for_level(int level) const {
+            if(level == 0) {
+                return _max_nbor * 2;
+            }
+            return _max_nbor;
+        }
+
         Node mutable_node(location_t lid, int level) {
             auto &n = _nodes[lid];
             TLOG_CHECK(level <= n.level);

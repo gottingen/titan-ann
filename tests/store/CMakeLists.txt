@@ -27,9 +27,9 @@ carbin_cc_test(
 
 carbin_cc_test(
         NAME
-        vector_set_test
+        mem_vector_store_test
         SOURCES
-        vector_set_test.cc
+        mem_vector_store_test.cc
         COPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS

@@ -19,6 +19,7 @@
 #include <queue>
 #include <limits>
 #include "turbo/log/logging.h"
+#include "tann/common/config.h"
 
 namespace tann {
     typedef uint32_t location_t;
@@ -89,6 +90,13 @@ namespace tann {
     typedef std::priority_queue<std::pair<distance_type, location_t>,
             std::vector<std::pair<distance_type, location_t>>, CompareByFirst> links_priority_queue;
 
+    struct WriteOption {
+        bool lazy_delete{false};
+        bool replace_deleted{true};
+        bool is_normalized{false};
+        bool is_aligned_memory{false};
+    };
+
 } // namespace tann
 
 namespace tann::constants {
@@ -97,8 +105,10 @@ namespace tann::constants {
     static constexpr size_t kUnknownSize = std::numeric_limits<size_t>::max();
     static constexpr size_t kMaxElements = 100000;
     static constexpr size_t kBatchSize = 256;
+    static constexpr size_t kLockSlots = 65536;
 
     static constexpr location_t kUnknownLocation = std::numeric_limits<location_t>::max();
+    static constexpr label_type kUnknownLabel = std::numeric_limits<label_type>::max();
     /// for hnsw
     static constexpr size_t kHnswM = 16;
     static constexpr size_t kHnswEf = 50;

@@ -13,9 +13,10 @@
 //
 
 
-#include "tann/hnsw/hnsw_index.h"
+#include "tann/core/index_core.h"
 #include "turbo/flags/flags.h"
 #include <thread>
+#include <random>
 
 
 // Multithreaded executor
@@ -96,19 +97,18 @@ int main(int argc, char **argv) {
     app.add_option("-t, --thread", num_threads, "Number of threads for operations with index")->default_val(20);
     TURBO_FLAGS_PARSE(app, argc, argv);
     // Initing index
-    std::unique_ptr<tann::IndexOption> option;
-    auto ptr = new tann::HnswIndexOption;
-    ptr->data_type = tann::DataType::DT_FLOAT;
-    ptr->dimension = 16;
-    ptr->metric = tann::METRIC_L2;
-    ptr->ef_construction = 200;
-    ptr->m = 16;
-    ptr->max_elements = 10000;
+    tann::IndexOption option;
+    tann::HnswIndexOption hnsw_option;
+    option.data_type = tann::DataType::DT_FLOAT;
+    option.dimension = 16;
+    option.metric = tann::METRIC_L2;
+    option.engine_type = tann::EngineType::ENGINE_HNSW;
+    option.max_elements = 10000;
+    hnsw_option.ef_construction = 200;
+    hnsw_option.m = 16;
 
-    option.reset(ptr);
-
-    std::unique_ptr<tann::HnswIndex> index = std::make_unique<tann::HnswIndex>();
-    auto r = index->initialize(option.get());
+    std::unique_ptr<tann::IndexCore> index = std::make_unique<tann::IndexCore>();
+    auto r = index->initialize(option, hnsw_option);
     if (!r.ok()) {
         turbo::Println(r.ToString());
     }
@@ -116,20 +116,19 @@ int main(int argc, char **argv) {
     std::mt19937 rng;
     rng.seed(47);
     std::uniform_real_distribution<> distrib_real;
-    float *data = new float[ptr->dimension * ptr->max_elements];
-    for (int i = 0; i < ptr->dimension * ptr->max_elements; i++) {
+    float *data = new float[option.dimension * option.max_elements];
+    for (int i = 0; i < option.dimension * option.max_elements; i++) {
         data[i] = distrib_real(rng);
     }
 
     // Add data to index
-    ParallelFor(0, ptr->max_elements, num_threads, [&](size_t row, size_t threadId) {
+    ParallelFor(0, option.max_elements, num_threads, [&](size_t row, size_t threadId) {
         tann::WriteOption wop;
-        auto ra = index->add_vector(wop, turbo::Span<uint8_t>((uint8_t *) (data + ptr->dimension * row),
-                                                              ptr->dimension * sizeof(float)), row);
+        auto ra = index->add_vector(wop, turbo::Span<uint8_t>((uint8_t *) (data + option.dimension * row),
+                                                              option.dimension * sizeof(float)), row);
         if (!ra.ok()) {
-            turbo::Println("{}", ra.ToString());
+            turbo::Println("{}", ra.status().ToString());
         }
-        turbo::Println("add vector {}", row);
     });
 
     turbo::Println("build index done");
@@ -139,7 +138,7 @@ int main(int argc, char **argv) {
     // Query the elements for themselves with filter and check returned labels
 
     int k = 10;
-    std::vector<tann::label_type> neighbors(option->max_elements * k);
+    std::vector<tann::label_type> neighbors(option.max_elements * k);
     /*
     for (int row = 0; row < option->max_elements; ++row) {
         tann::QueryContext query(turbo::Span<uint8_t>(reinterpret_cast<uint8_t *>(data + option->dimension * row),
@@ -154,12 +153,14 @@ int main(int argc, char **argv) {
         }
     }*/
 
-    ParallelFor(0, option->max_elements, num_threads, [&](size_t row, size_t threadId) {
-        tann::QueryContext query(turbo::Span<uint8_t>(reinterpret_cast<uint8_t*>(data + option->dimension * row), option->dimension * sizeof(float )));
+    ParallelFor(0, option.max_elements, num_threads, [&](size_t row, size_t threadId) {
+        tann::SearchContext query(turbo::Span<uint8_t>(reinterpret_cast<uint8_t*>(data + option.dimension * row), option.dimension * sizeof(float )));
         query.k = k;
         query.is_allowed = &pickIdsDivisibleByTwo;
-        auto rs = index->search_vector(&query);
-        auto &result = query.results;
+        tann::SearchResult res;
+        auto rs = index->search_vector(&query, res);
+        auto &result = res.results;
+        turbo::Println("results: {}",result.size());
         for (int i = 0; i < result.size(); i++) {
             turbo::Println("results: {}",turbo::FormatRange("{}", result, ", "));
             neighbors[row * k + i] = result[i].second;

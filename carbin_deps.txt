@@ -16,7 +16,7 @@
 ####################################################################################
 ###########
 # turbo
-gottingen/turbo@v0.9.24 -DCARBIN_BUILD_TEST=OFF \
+gottingen/turbo@v0.9.26 -DCARBIN_BUILD_TEST=OFF \
                                 -DCARBIN_BUILD_BENCHMARK=OFF \
                                 -DCARBIN_BUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBRARY=OFF \
                                 -DBUILD_STATIC_LIBRARY=ON \

@@ -19,7 +19,6 @@
 
 #include <vector>
 #include <iostream>
-#include "tann/hnsw/hnsw_index.h"
 #include <thread>
 #include <chrono>
 
@@ -39,20 +38,22 @@ namespace {
         }
 
         TLOG_INFO("search data");
-        // test searchKnnCloserFirst of BruteforceSearch
+        // test search_vector of hnsw and flat
         for (size_t j = 0; j < nq; ++j) {
             auto *p = reinterpret_cast<uint8_t *>(query.data() + j * d);
-            tann::QueryContext query_h(turbo::Span<uint8_t>(p, d * sizeof(float)));
+            tann::SearchContext query_h(turbo::Span<uint8_t>(p, d * sizeof(float)));
             query_h.k = k;
-            tann::QueryContext query_f(turbo::Span<uint8_t>(p, d * sizeof(float)));
+            tann::SearchContext query_f(turbo::Span<uint8_t>(p, d * sizeof(float)));
             query_f.k = k;
-            auto r1 = hindex.search_vector(&query_h);
-            auto r2 = findex.search_vector(&query_f);
+            tann::SearchResult result_h;
+            tann::SearchResult result_f;
+            auto r1 = hindex.search_vector(&query_h, result_h);
+            auto r2 = findex.search_vector(&query_f, result_f);
             CHECK_EQ(r1.ok(), true);
             CHECK_EQ(r2.ok(), true);
-            auto gd = query_h.results;
-            auto res = query_f.results;
-            assert(gd.size() == res.size());
+            auto gd = result_h.results;
+            auto res = result_f.results;
+            CHECK_EQ(gd.size(), res.size());
             size_t t = gd.size();
             for (size_t i = 0; i < res.size(); i++) {
                 CHECK_EQ(gd[i].second, res[i].second);
