@@ -32,13 +32,13 @@ namespace tann {
 
         turbo::Status add_vector(const WriteOption &options, location_t lid, bool ever_added) override;
 
-        turbo::Status remove_vector(location_t lid);
+        turbo::Status remove_vector(location_t lid) override;
 
         turbo::Status search_vector(QueryContext *qctx) override;
 
-        virtual turbo::Status save(turbo::SequentialWriteFile *file) = 0;
+        turbo::Status save(turbo::SequentialWriteFile *file) override;
 
-        virtual turbo::Status load(turbo::SequentialReadFile *file) = 0;
+        turbo::Status load(turbo::SequentialReadFile *file) override;
 
     private:
         turbo::Status add_vector_internal(const WriteOption &options, location_t lid);
@@ -47,7 +47,7 @@ namespace tann {
 
         std::vector<location_t> get_connections_with_lock(location_t lid, int level);
 
-        void get_neighbors_by_heuristic2(links_priority_queue &top_candidates, const size_t M);
+        void get_neighbors_by_heuristic(links_priority_queue &top_candidates, const size_t M);
 
         turbo::Status repair_connections_for_update(location_t entryPointInternalId, location_t dataPointInternalId,
                                                     int dataPointLevel, int maxLevel);

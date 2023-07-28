@@ -19,6 +19,7 @@
 #include <vector>
 #include "tann/core/types.h"
 #include "tann/core/allocator.h"
+#include "tann/common/config.h"
 
 namespace tann {
 

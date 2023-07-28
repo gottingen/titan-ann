@@ -13,9 +13,24 @@
 //
 
 #include "tann/hnsw/hnsw_engine.h"
+#include "tann/io/utility.h"
 
 namespace tann {
+    turbo::Status HnswEngine::initialize(const std::any &option, VectorSpace *vs, MemVectorStore *store) {
+        _data_store = store;
+        _option = std::any_cast<HnswIndexOption>(option);
+        _level_generator.seed(_option.random_seed);
+        _maxM = _option.m;
 
+        _final_graph.initialize(_option.max_elements, _maxM);
+        _visited_list_pool = std::make_unique<VisitedListPool>(1, _option.max_elements);
+        std::vector<std::mutex> temp(_option.max_elements);
+        _link_list_locks = std::move(temp);
+        // initializations for special treatment of the first node
+        _enterpoint_node = -1;
+        _max_level = -1;
+        _mult = 1 / log(1.0 * static_cast<double >(_option.m));
+    }
     turbo::Status HnswEngine::add_vector(const WriteOption &options,location_t lid, bool ever_added) {
         if(ever_added) {
             return update_vector_internal(options, lid);
@@ -284,7 +299,7 @@ namespace tann {
                 }
 
                 // Retrieve neighbours using heuristic and set connections.
-                get_neighbors_by_heuristic2(candidates, layer == 0 ? _maxM * 2 : _maxM);
+                get_neighbors_by_heuristic(candidates, layer == 0 ? _maxM * 2 : _maxM);
 
                 {
                     std::unique_lock<std::mutex> lock(_link_list_locks[neigh]);
@@ -434,7 +449,7 @@ namespace tann {
         auto node = _final_graph.mutable_node(cur_c, level);
         size_t Mcurmax = node.capacity();
         TLOG_TRACE("mutually_connect_new_element Mcurmax {} {} {} ", Mcurmax, cur_c, level);
-        get_neighbors_by_heuristic2(top_candidates, _option.m);
+        get_neighbors_by_heuristic(top_candidates, _option.m);
         if (top_candidates.size() > _option.m)
             return turbo::OutOfRangeError("Should be not be more than M_ candidates returned by the heuristic");
 
@@ -510,7 +525,7 @@ namespace tann {
                         candidates.emplace(_data_store->get_distance(other_node[j], selectedNeighbors[idx]), other_node[j]);
                     }
 
-                    get_neighbors_by_heuristic2(candidates, Mcurmax);
+                    get_neighbors_by_heuristic(candidates, Mcurmax);
 
                     int indx = 0;
                     while (!candidates.empty()) {
@@ -549,7 +564,7 @@ namespace tann {
         memcpy(result.data(), list.data(), size * sizeof(location_t));
         return result;
     }
-    void HnswEngine::get_neighbors_by_heuristic2(links_priority_queue &top_candidates, const size_t M) {
+    void HnswEngine::get_neighbors_by_heuristic(links_priority_queue &top_candidates, const size_t M) {
         if (top_candidates.size() < M) {
             return;
         }
@@ -585,5 +600,60 @@ namespace tann {
             top_candidates.emplace(-curent_pair.first, curent_pair.second);
         }
     }
+
+    turbo::Status HnswEngine::save(turbo::SequentialWriteFile *file) {
+        /// index status
+        auto r = write_binary_pod(*file, _enterpoint_node);
+        if (!r.ok()) {
+            return r;
+        }
+        r = write_binary_pod(*file, _max_level);
+        if (!r.ok()) {
+            return r;
+        }
+
+        r = write_binary_pod(*file, _mult);
+        if (!r.ok()) {
+            return r;
+        }
+
+        /// save graph
+        r = _final_graph.save(*file);
+        if (!r.ok()) {
+            return r;
+        }
+
+        return turbo::OkStatus();
+    }
+
+    turbo::Status HnswEngine::load(turbo::SequentialReadFile *file) {
+
+        /// index status
+        auto r = read_binary_pod(*file, _enterpoint_node);
+        if (!r.ok()) {
+            return r;
+        }
+        r = read_binary_pod(*file, _max_level);
+        if (!r.ok()) {
+            return r;
+        }
+
+        r = read_binary_pod(*file, _mult);
+        if (!r.ok()) {
+            return r;
+        }
+        // graph
+        r = _final_graph.load(*file);
+        if (!r.ok()) {
+            return r;
+        }
+        return turbo::OkStatus();
+    }
+
+    template links_priority_queue
+    HnswEngine::search_base_layer_st<true, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
+
+    template links_priority_queue
+    HnswEngine::search_base_layer_st<false, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
 
 }  // namespace tann
