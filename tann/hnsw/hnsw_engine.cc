@@ -16,21 +16,23 @@
 #include "tann/io/utility.h"
 
 namespace tann {
-    turbo::Status HnswEngine::initialize(const std::any &option, MemVectorStore *store) {
+    turbo::Status HnswEngine::initialize(const IndexOption& base_option, const std::any &option, MemVectorStore *store) {
         _data_store = store;
+        _base_option = base_option;
         _option = std::any_cast<HnswIndexOption>(option);
         _level_generator.seed(_option.random_seed);
         _maxM = _option.m;
 
-        _final_graph.initialize(_option.max_elements, _maxM);
-        _visited_list_pool = std::make_unique<VisitedListPool>(1, _option.max_elements);
-        std::vector<std::mutex> temp(_option.max_elements);
+        _final_graph.initialize(_base_option.max_elements, _maxM);
+        _visited_list_pool = std::make_unique<VisitedListPool>(1, _base_option.max_elements);
+        std::vector<std::mutex> temp(_base_option.max_elements);
         _link_list_locks = std::move(temp);
         _mult = 1 / log(1.0 * static_cast<double >(_option.m));
         return turbo::OkStatus();
     }
     turbo::Status HnswEngine::add_vector(WorkSpace*ws, location_t lid) {
         auto hws = reinterpret_cast<HnswWorkSpace*>(ws);
+
         if(ws->is_update) {
             return update_vector_internal(hws, lid);
         } else {
@@ -71,7 +73,7 @@ namespace tann {
 
                 for (int i = 0; i < size; i++) {
                     location_t cand = node[i];
-                    if (cand > _option.max_elements)
+                    if (cand > _base_option.max_elements)
                         return turbo::InternalError("cand error");
                     auto d = _data_store->get_distance(query_data, cand);
 
@@ -206,7 +208,7 @@ namespace tann {
                         TLOG_TRACE("try node {} level {} links {}", currObj, l_level, size);
                         for (int i = 0; i < size; i++) {
                             location_t cand = node[i];
-                            if (cand > _option.max_elements)
+                            if (cand > _base_option.max_elements)
                                 return turbo::DataLossError("cand error");
                             auto d = _data_store->get_distance(lid, cand);
                             if (d < curdist) {
@@ -223,9 +225,12 @@ namespace tann {
             for (int l_level = std::min(cur_level, max_level_copy); l_level >= 0; l_level--) {
                 if (l_level > max_level_copy || l_level < 0)  // possible?
                     return turbo::OutOfRangeError("Level error");
-                hws->top_candidates.clear();
                 auto &top_candidates = hws->top_candidates;
-                top_candidates.reserve(_option.ef_construction);
+                auto &candidate_set = hws->candidate_set;
+                candidate_set.clear();
+                candidate_set.reserve(_option.ef_construction + 1);
+                top_candidates.clear();
+                top_candidates.reserve(_option.ef_construction + 1);
                 search_base_layer(hws, currObj, lid, l_level);
                 if (epDeleted) {
                     top_candidates.insert(_data_store->get_distance(lid, enterpoint_copy), enterpoint_copy);
@@ -357,10 +362,12 @@ namespace tann {
             auto & candidate_set= hws->candidate_set;
             top_candidates.clear();
             top_candidates.reserve(_option.ef_construction);
+            candidate_set.clear();
+            candidate_set.reserve(_option.ef_construction);
             search_base_layer(hws, currObj, dataPointInternalId, level);
             candidate_set.swap(top_candidates);
-            top_candidates.reserve(_option.ef_construction);
             top_candidates.clear();
+            top_candidates.reserve(_option.ef_construction);
             for(size_t i = 0; i < candidate_set.size(); ++i) {
                 if(candidate_set[i].lid != dataPointInternalId) {
                     top_candidates.insert(candidate_set[i]);
@@ -392,7 +399,6 @@ namespace tann {
 
         auto &top_candidates = hws->top_candidates;
         auto &candidateSet = hws->candidate_set;
-        top_candidates.reserve(_option.ef_construction );
         distance_type lowerBound;
         if (!_data_store->is_deleted(ep_id)) {
             distance_type dist = _data_store->get_distance(loc, ep_id);
@@ -448,7 +454,7 @@ namespace tann {
         TLOG_TRACE("mutually_connect_new_element Mcurmax {} {} {} ", Mcurmax, cur_c, level);
         get_neighbors_by_heuristic(hws, _option.m);
         if (hws->top_candidates.size() > _option.m)
-            return turbo::OutOfRangeError("Should be not be more than _M:{} candidates returned by the heuristic", _option.m);
+            return turbo::OutOfRangeError("Should be not be more than size:{} _M:{} candidates returned by the heuristic", hws->top_candidates.size(), _option.m);
 
 
         auto &candidate_set = hws->candidate_set;
@@ -561,7 +567,7 @@ namespace tann {
         return result;
     }
     void HnswEngine::get_neighbors_by_heuristic(HnswWorkSpace *ws, const size_t M) {
-        auto top_candidates = ws->top_candidates;
+        auto &top_candidates = ws->top_candidates;
         if (top_candidates.size() < M) {
             return;
         }
@@ -652,6 +658,10 @@ namespace tann {
     HnswEngine::search_base_layer_st<false, true>(location_t ep_id, HnswWorkSpace *qctx) const;
 
 }  // namespace tann
-ENGINE_REGISTER(tann::EngineType::ENGINE_HNSW, [](const std::any &option)-> tann::Engine*{
-    return new tann::HnswEngine();
-});
+
+tann::Engine* HnswIndexCreator(const std::any &option) {
+    auto ptr = new tann::HnswEngine();
+    TLOG_INFO(" engine create done {}", turbo::Ptr(ptr));
+    return ptr;
+}
+ENGINE_REGISTER(tann::EngineType::ENGINE_HNSW, HnswIndexCreator);

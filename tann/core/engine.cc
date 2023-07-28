@@ -12,21 +12,31 @@
 // limitations under the License.
 //
 #include "tann/core/engine.h"
+#include "tann/hnsw/hnsw_engine.h"
+#include "tann/flat/flat_engine.h"
 
 namespace tann {
 
-    static std::array<std::function<Engine*(const std::any& option)>, 256> factory;
+    static std::function<Engine*(const std::any& option)> factory[256];
 
     int EngineRegisterInternal(EngineType type, std::function<Engine*(const std::any& option)> func) {
         auto idx = static_cast<int>(type);
         factory[idx] = std::move(func);
+        return 0;
     }
 
     Engine *create_index_core(EngineType type, const std::any &option) {
+        /*
         auto idx = static_cast<int>(type);
         if(factory[idx]) {
             return factory[idx](option);
         }
         return nullptr;
+         */
+         if(type == EngineType::ENGINE_HNSW) {
+             return new HnswEngine();
+         } else if(type == EngineType::ENGINE_FLAT) {
+             return new FlatEngine();
+         }
     }
 }  // namespace tann

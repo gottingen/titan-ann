@@ -31,7 +31,7 @@ namespace tann {
     public:
         ~FlatEngine() override = default;
 
-        turbo::Status initialize(const std::any &option, MemVectorStore *store) override;
+        turbo::Status initialize(const IndexOption & base_option, const std::any &option, MemVectorStore *store) override;
 
         turbo::Status add_vector(WorkSpace*ws, location_t lid) override;
 
@@ -57,7 +57,7 @@ namespace tann {
             return false;
         }
     private:
-        HnswIndexOption _option;
+        IndexOption _base_option;
         MemVectorStore *_data_store;
     };
 }

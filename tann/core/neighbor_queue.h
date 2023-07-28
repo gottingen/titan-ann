@@ -147,6 +147,7 @@ namespace tann {
         void clear() {
             _size = 0;
             _cur = 0;
+            _capacity = 0;
         }
 
         void swap(NeighborQueue & rhs) {

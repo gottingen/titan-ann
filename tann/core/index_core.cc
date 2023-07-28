@@ -17,6 +17,7 @@
 namespace tann {
 
     [[nodiscard]] turbo::Status IndexCore::initialize(const IndexOption &option, const std::any &core_option) {
+        TLOG_INFO("initialize index core");
         _base_option = option;
         auto r = _vector_space.init(_base_option.dimension, _base_option.metric, _base_option.data_type);
         if (!r.ok()) {
@@ -30,24 +31,35 @@ namespace tann {
         if (!r.ok()) {
             return r;
         }
-        _engine.reset(create_index_core(_base_option.engine_type, core_option));
+        TLOG_INFO(" data_store initialize done");
+        auto ptr = create_index_core(_base_option.engine_type, core_option);
+        TLOG_INFO(" engine create done {}", turbo::Ptr(ptr));
+        _engine.reset(ptr);
         if(!_engine) {
             return turbo::InvalidArgumentError("can not create index by input param");
         }
-        r = _engine->initialize(core_option, &_data_store);
+        TLOG_INFO(" engine create done");
+        r = _engine->initialize(option, core_option, &_data_store);
+        TLOG_INFO(" engine initialize done");
         if (!r.ok()) {
             return r;
         }
+        TLOG_INFO(" engine initialize done");
         for(size_t i = 0; i < option.number_thread; i++) {
             auto ws = _engine->make_workspace();
+            if(!ws) {
+                return turbo::ResourceExhaustedError("no memory");
+            }
             _ws_pool.push(ws);
         }
+        TLOG_INFO("work space pool size:{}", _ws_pool.size());
+        is_initial = true;
         return turbo::OkStatus();
     }
 
     turbo::ResultStatus<InsertResult>
     IndexCore::add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, const label_type &label) {
-
+        assert(is_initial);
         WorkSpaceGuard guard(_ws_pool);
         auto ws = guard.work_space();
         ws->set_up(option, data_point);
@@ -67,6 +79,7 @@ namespace tann {
             is_vacant = true;
         }
         if(lid == constants::kUnknownLocation) {
+            is_vacant = false;
             auto rv = _data_store.prefer_add_vector(label);
             if(!rv.ok()) {
                 return rv.status();
@@ -185,5 +198,8 @@ namespace tann {
 
     EngineType IndexCore::engine_type() const {
         return _base_option.engine_type;
+    }
+    size_t IndexCore::remove_size() const {
+        return _data_store.deleted_size();
     }
 }  // namespace tann

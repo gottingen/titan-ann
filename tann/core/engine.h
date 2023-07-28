@@ -31,7 +31,7 @@ namespace tann {
     public:
         virtual ~Engine() = default;
 
-        virtual turbo::Status initialize(const std::any &option, MemVectorStore *store) = 0;
+        virtual turbo::Status initialize(const IndexOption &base_option, const std::any &option, MemVectorStore *store) = 0;
 
         virtual turbo::Status add_vector(WorkSpace*ws, location_t lid) = 0;
 

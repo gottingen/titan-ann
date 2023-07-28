@@ -58,12 +58,15 @@ namespace tann {
 
         [[nodiscard]] virtual EngineType engine_type() const;
 
+        [[nodiscard]] virtual size_t remove_size() const;
+
     private:
         VectorSpace _vector_space;
         IndexOption _base_option;
         MemVectorStore _data_store;
         std::unique_ptr<Engine> _engine;
-        ConcurrentQueue<WorkSpace*> _ws_pool;
+        ConcurrentQueue<WorkSpace *> _ws_pool;
+        bool is_initial{false};
 
     };
 }  // namespace tann

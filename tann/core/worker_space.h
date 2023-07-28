@@ -34,6 +34,8 @@ namespace tann {
             search_context = sc;
             make_aligned_query(sc->original_query, raw_query);
             query_view = to_span<uint8_t>(raw_query);
+            best_l_nodes.clear();
+            best_l_nodes.reserve(sc->k);
         }
 
         // for write

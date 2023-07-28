@@ -15,7 +15,8 @@
 
 namespace tann {
 
-    turbo::Status FlatEngine::initialize(const std::any &option, MemVectorStore *store) {
+    turbo::Status FlatEngine::initialize(const IndexOption & base_option,const std::any &option, MemVectorStore *store) {
+        _base_option = base_option;
         _data_store = store;
         return turbo::OkStatus();
     }
@@ -49,7 +50,7 @@ namespace tann {
                 continue;
             }
             auto d = _data_store->get_distance(query,i);
-            topk_results.insert({label, i, d});
+            topk_results.insert({d, label, i});
         }
 
         distance_type lastdist = topk_results.empty() ? std::numeric_limits<distance_type>::max() : topk_results.top().distance;
@@ -63,7 +64,7 @@ namespace tann {
             }
             auto d = _data_store->get_distance(query,i);
             if(d < lastdist) {
-                topk_results.insert({label, static_cast<location_t>(i), d});
+                topk_results.insert({d, label, static_cast<location_t>(i)});
                 if(!topk_results.empty()) {
                     lastdist = topk_results.top().distance;
                 }

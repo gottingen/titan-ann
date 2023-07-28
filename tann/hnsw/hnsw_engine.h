@@ -29,7 +29,7 @@ namespace tann {
     public:
         ~HnswEngine() override = default;
 
-        turbo::Status initialize(const std::any &option, MemVectorStore *store) override;
+        turbo::Status initialize(const IndexOption& base_option, const std::any &option, MemVectorStore *store) override;
 
         turbo::Status add_vector(WorkSpace*ws, location_t lid) override;
 
@@ -76,6 +76,7 @@ namespace tann {
         template<bool has_deletions, bool collect_metrics>
         void search_base_layer_st(location_t ep_id, HnswWorkSpace *hws) const;
     private:
+        IndexOption _base_option;
         HnswIndexOption _option;
         MemVectorStore *_data_store;
         // initializations for special treatment of the first node

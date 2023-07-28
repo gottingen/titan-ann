@@ -30,7 +30,9 @@ namespace tann {
         bool enable_replace_vacant{true};
     };
 
-    struct HnswIndexOption : public IndexOption {
+    struct FlatIndexOption {};
+
+    struct HnswIndexOption : public IndexOption{
         size_t m{constants::kHnswM};
         size_t ef_construction{constants::kHnswEfConstruction};
         size_t ef{constants::kHnswEf};
