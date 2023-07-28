@@ -108,7 +108,7 @@ namespace tann {
         return s;
     }
 
-    turbo::Status IndexCore::search_vector(SearchContext *sc, SearchResult &result) {
+    turbo::Status IndexCore::search_vector(SearchContext *sc, SearchResult &results) {
         // guard for vector data update
         WorkSpaceGuard guard(_ws_pool);
         auto ws = guard.work_space();
@@ -117,7 +117,6 @@ namespace tann {
             _vector_space.distance_factor->preprocess_base_points(ws->query_view, _vector_space.dimension);
         }
         _engine->setup_workspace(ws);
-        SearchResult results;
         UpdateSharedLockGuard write_guard(&_data_store);
        auto r = _engine->search_vector(ws);
        if(!r.ok()) {

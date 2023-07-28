@@ -53,7 +53,7 @@ namespace {
             CHECK_EQ(r2.ok(), true);
             auto gd = result_h.results;
             auto res = result_f.results;
-            assert(gd.size() == res.size());
+            CHECK_EQ(gd.size(), res.size());
             size_t t = gd.size();
             for (size_t i = 0; i < res.size(); i++) {
                 CHECK_EQ(gd[i].second, res[i].second);

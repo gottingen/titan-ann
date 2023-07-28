@@ -95,6 +95,7 @@ namespace tann {
             search_base_layer_st<false, true>(currObj, hnsw_ws);
         }
         auto &top_candidates = hnsw_ws->top_candidates;
+        TLOG_INFO("tsize:{} search_l:{}", top_candidates.size(), hnsw_ws->search_l);
         while (top_candidates.size() > hnsw_ws->search_l) {
             top_candidates.pop();
         }
@@ -114,7 +115,7 @@ namespace tann {
         vl_type visited_array_tag = vl->curV;
         auto ef = hws->search_l;
         auto &top_candidates = hws->top_candidates;
-        auto candidate_set = hws->candidate_set;
+        auto &candidate_set = hws->candidate_set;
 
         auto isIdAllowed = hws->search_context->is_allowed;
         distance_type lowerBound;
@@ -139,6 +140,7 @@ namespace tann {
             // 2. current node distance > the largest distance that has got and (no filter and no deletions)
             if ((-current_node_pair.distance) > lowerBound &&
                 (top_candidates.size() == ef || (!isIdAllowed && !has_deletions))) {
+                TLOG_INFO("heap size: {}", top_candidates.size());
                 break;
             }
             candidate_set.pop();
@@ -151,7 +153,7 @@ namespace tann {
                 metric_hops++;
                 metric_distance_computations += size;
             }
-
+            TLOG_INFO("lid: {}, c size: {}", current_node_id, data.size());
             for (size_t j = 1; j < size; j++) {
                 location_t candidate_id = data[j];
                 if (visited_array[candidate_id] != visited_array_tag) {
@@ -159,7 +161,7 @@ namespace tann {
                     auto data_point = to_span<uint8_t>(hws->query_view);
                     distance_type dist = _data_store->get_distance(data_point, candidate_id);
 
-                    if (lowerBound > dist) {
+                    if (top_candidates.size() < ef || lowerBound > dist) {
                         candidate_set.insert(-dist, candidate_id);
 
                         if ((!has_deletions || !_data_store->is_deleted(candidate_id)) &&
@@ -171,6 +173,7 @@ namespace tann {
                     }
                 }
             }
+            TLOG_INFO("heap size: {}, c size: {}", top_candidates.size(), candidate_set.size());
         }
 
         _visited_list_pool->releaseVisitedList(vl);
