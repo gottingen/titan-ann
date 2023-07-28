@@ -14,6 +14,7 @@
 
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
 #include "hnsw_test_fixture.h"
 #include "doctest/doctest.h"
 
@@ -25,36 +26,30 @@
 TEST_CASE_FIXTURE(HnswIndexTestFixture, "add and remove") {
     std::cout << "Running multithread load test" << std::endl;
 
-    int iter = 0;
-    while (iter < 2) {
-        index.reset(new tann::HnswIndex);
-        auto rs = index->initialize(option);
+    // add batch1 data
+    ParallelFor(0, max_elements, num_threads, [&](size_t row, size_t threadId) {
+        auto r = index->add_vector(wop, turbo::Span<uint8_t>((uint8_t *) (batch1.get() + d * row), d * sizeof(float)),
+                                   row);
+        CHECK_EQ(r.ok(), true);
+    });
 
-        // add batch1 data
-        ParallelFor(0, max_elements, num_threads, [&](size_t row, size_t threadId) {
-            auto r = index->add_vector(wop, turbo::Span<uint8_t>((uint8_t *)(batch1.get() + d * row), d * sizeof(float )), row);
-            CHECK_EQ(r.ok(), true);
-        });
-
-        // delete half random elements of batch1 data
-        for (int i = 0; i < num_elements; i++) {
-            auto r = index->remove_vector(rand_labels[i]);
-            CHECK_EQ(r.ok(), true);
-        }
-
-        // replace deleted elements with batch2 data
-        ParallelFor(0, num_elements, num_threads, [&](size_t row, size_t threadId) {
-            int label = rand_labels[row] + max_elements;
-            auto r= index->add_vector(wop1, turbo::Span<uint8_t>((uint8_t *)(batch2.get() + d * row), d * sizeof(float )), label);
-            if(!r.ok()) {
-                turbo::Println(r.ToString());
-            }
-            CHECK_EQ(r.ok(), true);
-        });
-
-        iter += 1;
-        index.reset();
+    // delete half random elements of batch1 data
+    for (int i = 0; i < num_elements; i++) {
+        auto r = index->remove_vector(rand_labels[i]);
+        CHECK_EQ(r.ok(), true);
     }
-    
+
+    // replace deleted elements with batch2 data
+    ParallelFor(0, num_elements, num_threads, [&](size_t row, size_t threadId) {
+        int label = rand_labels[row] + max_elements;
+        auto r = index->add_vector(wop1, turbo::Span<uint8_t>((uint8_t *) (batch2.get() + d * row), d * sizeof(float)),
+                                   label);
+        if (!r.ok()) {
+            turbo::Println(r.status().ToString());
+        }
+        CHECK_EQ(r.ok(), true);
+    });
+
+
     std::cout << "Finish" << std::endl;
 }

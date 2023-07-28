@@ -15,11 +15,11 @@
 #ifndef TANN_HNSW_TEST_FIXTURE_H
 #define TANN_HNSW_TEST_FIXTURE_H
 
-#include "tann/hnsw/hnsw_index.h"
-#include "tann/flat/flat_index.h"
+#include "tann/core/index_core.h"
 #include "doctest/doctest.h"
 #include <thread>
 #include <chrono>
+#include <random>
 
 using tann::label_type;
 
@@ -27,10 +27,11 @@ class HnswIndexTestFixture {
 public:
     HnswIndexTestFixture() {
         rng.seed(47);
-        hnsw_option.data_type = tann::DataType::DT_FLOAT;
-        hnsw_option.dimension = 16;
-        hnsw_option.metric = tann::METRIC_L2;
-        option = reinterpret_cast<tann::IndexOption *>(&hnsw_option);
+        option.data_type = tann::DataType::DT_FLOAT;
+        option.dimension = 16;
+        option.metric = tann::METRIC_L2;
+        option.engine_type = tann::EngineType::ENGINE_HNSW;
+        option.number_thread = 4;
 
         batch1.reset(new float[d * max_elements]);
         for (int i = 0; i < d * max_elements; i++) {
@@ -51,10 +52,13 @@ public:
         wop.replace_deleted = false;
         wop1.replace_deleted = true;
 
-        index.reset(new tann::HnswIndex);
-        auto rs = index->initialize(option);
+        index.reset(new tann::IndexCore);
+        auto rs = index->initialize(option, hnsw_option);
         assert(rs.ok());
-
+        if(!rs.ok()) {
+            TLOG_INFO(rs.ToString());
+        }
+        TLOG_INFO("ctor done");
     }
 
     ~HnswIndexTestFixture() {
@@ -66,16 +70,17 @@ public:
     int num_threads = 4;
     int max_elements = 2 * num_elements;
     std::mt19937 rng;
-    tann::IndexOption *option;
+    tann::IndexOption option;
     tann::HnswIndexOption hnsw_option;
     std::uniform_real_distribution<> distrib_real;
     std::unique_ptr<float[]> batch1;
     std::unique_ptr<float[]> batch2;
     std::vector<int> rand_labels;
-    std::unique_ptr<tann::HnswIndex> index;
+    std::unique_ptr<tann::IndexCore> index;
     tann::WriteOption wop;
     tann::WriteOption wop1;
 };
+
 
 class HnswIndexFilterFixture {
 public:
@@ -91,14 +96,20 @@ public:
         for (label_type i = 0; i < nq * d; ++i) {
             query[i] = distrib(rng);
         }
-        hnsw_option.data_type = tann::DataType::DT_FLOAT;
-        hnsw_option.dimension = 16;
-        hnsw_option.metric = tann::METRIC_L2;
-        option = reinterpret_cast<tann::IndexOption *>(&hnsw_option);
-        auto rs = hindex.initialize(option);
+        hoption.data_type = tann::DataType::DT_FLOAT;
+        hoption.dimension = 16;
+        hoption.metric = tann::METRIC_L2;
+        hoption.engine_type = tann::EngineType::ENGINE_HNSW;
+
+        foption.data_type = tann::DataType::DT_FLOAT;
+        foption.dimension = 16;
+        foption.metric = tann::METRIC_L2;
+        foption.engine_type = tann::EngineType::ENGINE_FLAT;
+
+        auto rs = hindex.initialize(hoption, hnsw_option);
         CHECK_EQ(rs.ok(), true);
 
-        rs = findex.initialize(option);
+        rs = findex.initialize(foption, {});
         CHECK_EQ(rs.ok(), true);
     }
 
@@ -110,11 +121,13 @@ public:
     label_type n = 100;
     label_type nq = 10;
     size_t k = 10;
-    tann::IndexOption *option;
+    tann::IndexOption hoption;
+    tann::IndexOption foption;
     tann::HnswIndexOption hnsw_option;
-    tann::HnswIndex hindex;
-    tann::FlatIndex findex;
+    tann::IndexCore hindex;
+    tann::IndexCore findex;
 };
+
 
 template<class Function>
 inline void ParallelFor(size_t start, size_t end, size_t numThreads, Function fn) {
