@@ -32,7 +32,7 @@ namespace tann {
 
     struct FlatIndexOption {};
 
-    struct HnswIndexOption : public IndexOption{
+    struct HnswIndexOption {
         size_t m{constants::kHnswM};
         size_t ef_construction{constants::kHnswEfConstruction};
         size_t ef{constants::kHnswEf};

@@ -38,5 +38,6 @@ namespace tann {
          } else if(type == EngineType::ENGINE_FLAT) {
              return new FlatEngine();
          }
+         return nullptr;
     }
 }  // namespace tann
