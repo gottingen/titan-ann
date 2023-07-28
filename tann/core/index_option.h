@@ -23,9 +23,10 @@ namespace tann {
         DataType data_type{DataType::DT_NONE};
         MetricType metric{MetricType::UNDEFINED};
         EngineType engine_type{EngineType::ENGINE_HNSW};
-        std::size_t dimension{0};
-        std::size_t batch_size{constants::kBatchSize};
-        std::size_t max_elements{constants::kMaxElements};
+        size_t dimension{0};
+        size_t batch_size{constants::kBatchSize};
+        size_t max_elements{constants::kMaxElements};
+        size_t number_thread{4};
         bool enable_replace_vacant{true};
     };
 
@@ -34,13 +35,6 @@ namespace tann {
         size_t ef_construction{constants::kHnswEfConstruction};
         size_t ef{constants::kHnswEf};
         size_t random_seed{constants::kHnswRandomSeed};
-    };
-
-    struct WriteOption {
-        bool lazy_delete{false};
-        bool replace_deleted{true};
-        bool is_normalized{false};
-        bool is_aligned_memory{false};
     };
 
 }  // namespace tann

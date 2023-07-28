@@ -19,34 +19,50 @@
 #include "tann/core/types.h"
 #include "turbo/base/status.h"
 #include "tann/core/index_option.h"
-#include "tann/core/query_context.h"
+#include "tann/core/worker_space.h"
 #include "tann/store/mem_vector_store.h"
 #include "turbo/files/sequential_write_file.h"
 #include "turbo/files/sequential_read_file.h"
+
+#include "turbo/base/turbo_error.h"
 
 namespace tann {
     class Engine {
     public:
         virtual ~Engine() = default;
-        virtual turbo::Status initialize(const std::any& option, VectorSpace *vs, MemVectorStore*store) = 0;
-        virtual turbo::Status add_vector(const WriteOption &options,location_t lid, bool ever_added) = 0;
+
+        virtual turbo::Status initialize(const std::any &option, MemVectorStore *store) = 0;
+
+        virtual turbo::Status add_vector(WorkSpace*ws, location_t lid) = 0;
 
         virtual turbo::Status remove_vector(location_t lid) = 0;
 
-        virtual turbo::Status search_vector(QueryContext *qctx) = 0;
+        virtual WorkSpace* make_workspace() = 0;
+
+        virtual void setup_workspace(WorkSpace*ws) = 0;
+
+        virtual turbo::Status search_vector(WorkSpace *ws) = 0;
 
         virtual turbo::Status save(turbo::SequentialWriteFile *file) = 0;
+
         virtual turbo::Status load(turbo::SequentialReadFile *file) = 0;
+
+        virtual bool support_dynamic() const = 0;
+
+        virtual bool need_model() const = 0;
     };
 
-    inline Engine* create_index_core(EngineType type) {
-        switch (type) {
-            case EngineType::ENGINE_FLAT:
-                return nullptr;
-            case EngineType::ENGINE_HNSW:
-                return nullptr;
-        }
-        return nullptr;
-    }
-}
+    Engine *create_index_core(EngineType type, const std::any &option);
+
+    extern int EngineRegisterInternal(EngineType type, std::function<Engine *(const std::any &option)> creator);
+}  // namespace tann
+
+template<tann::EngineType engine>
+class EngineRegisterHelper {
+};
+
+#define ENGINE_REGISTER(engine_type, creator)                   \
+    const int TURBO_MAYBE_UNUSED TURBO_CONCAT(engine_type_dummy_, __LINE__) =              \
+        ::tann::EngineRegisterInternal((engine_type), (creator)); \
+    template <> class EngineRegisterHelper<(tann::EngineType)(engine_type)> {};
 #endif  // TANN_CORE_ENGINE_H_

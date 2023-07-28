@@ -16,7 +16,7 @@
 
 namespace tann {
 
-    [[nodiscard]] turbo::Status IndexCore::initialize(const IndexOption &option, std::any &core_option) {
+    [[nodiscard]] turbo::Status IndexCore::initialize(const IndexOption &option, const std::any &core_option) {
         _base_option = option;
         auto r = _vector_space.init(_base_option.dimension, _base_option.metric, _base_option.data_type);
         if (!r.ok()) {
@@ -30,27 +30,36 @@ namespace tann {
         if (!r.ok()) {
             return r;
         }
-        _engine.reset(create_index_core(_base_option.engine_type));
-        r = _engine->initialize(core_option, &_vector_space, &_data_store);
+        _engine.reset(create_index_core(_base_option.engine_type, core_option));
+        if(!_engine) {
+            return turbo::InvalidArgumentError("can not create index by input param");
+        }
+        r = _engine->initialize(core_option, &_data_store);
         if (!r.ok()) {
             return r;
+        }
+        for(size_t i = 0; i < option.number_thread; i++) {
+            auto ws = _engine->make_workspace();
+            _ws_pool.push(ws);
         }
         return turbo::OkStatus();
     }
 
-    [[nodiscard]] turbo::Status
+    turbo::ResultStatus<InsertResult>
     IndexCore::add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, const label_type &label) {
-        turbo::Span<uint8_t> vector_data = to_span<uint8_t>(data_point);
-        AlignedQuery<uint8_t> aligned_vector;
+
+        WorkSpaceGuard guard(_ws_pool);
+        auto ws = guard.work_space();
+        ws->set_up(option, data_point);
+
         if(!option.is_normalized && _vector_space.distance_factor->preprocessing_required()) {
-            vector_data = make_aligned_query(vector_data, aligned_vector);
-            _vector_space.distance_factor->preprocess_base_points(vector_data, _vector_space.dimension);
+            _vector_space.distance_factor->preprocess_base_points(ws->query_view, _vector_space.dimension);
         }
         // lock label for below operation
         LabelLockGuard label_guard(&_data_store, label);
         // guard for vector data write
         UpdateLockGuard write_guard(&_data_store);
-        location_t  lid;
+        location_t  lid = constants::kUnknownLocation;
         // try get vacant
         bool is_vacant = false;
         if(option.replace_deleted) {
@@ -65,13 +74,14 @@ namespace tann {
             lid = rv.value();
         }
         // set data to data store
-        _data_store.set_vector(lid, vector_data);
-
-        auto r= _engine->add_vector(option, lid, is_vacant);
+        _data_store.set_vector(lid, ws->query_view);
+        ws->is_update = is_vacant;
+        auto r= _engine->add_vector(ws, lid);
         if(!r.ok()) {
             return r;
         }
-        return turbo::OkStatus();
+
+        return InsertResult{ws->timer.elapsed_nano()};
     }
 
     turbo::Status IndexCore::remove_vector(const label_type &label) {
@@ -85,10 +95,38 @@ namespace tann {
         return s;
     }
 
-    turbo::Status IndexCore::search_vector(QueryContext *qctx) {
+    turbo::Status IndexCore::search_vector(SearchContext *sc, SearchResult &result) {
         // guard for vector data update
+        WorkSpaceGuard guard(_ws_pool);
+        auto ws = guard.work_space();
+        ws->set_up(sc);
+        if(!sc->is_normalized && _vector_space.distance_factor->preprocessing_required()) {
+            _vector_space.distance_factor->preprocess_base_points(ws->query_view, _vector_space.dimension);
+        }
+        _engine->setup_workspace(ws);
+        SearchResult results;
         UpdateSharedLockGuard write_guard(&_data_store);
-       return _engine->search_vector(qctx);
+       auto r = _engine->search_vector(ws);
+       if(!r.ok()) {
+           return r;
+       }
+
+        auto rsize = ws->best_l_nodes.size();
+        for (int i = 0; i < rsize; ++i) {
+            results.results.emplace_back(ws->best_l_nodes[i].distance, ws->best_l_nodes[i].label);
+        }
+        if(sc->get_raw_vector) {
+            results.vectors.resize(rsize);
+            for(size_t i = 0; i < rsize; ++i) {
+                std::vector<uint8_t> tmp;
+                tmp.resize(_vector_space.vector_byte_size);
+                auto sp = to_span<uint8_t>(tmp);
+                _data_store.copy_vector(ws->best_l_nodes[i].lid, sp);
+                results.vectors[i] = std::move(tmp);
+            }
+        }
+        results.cost_ns = ws->timer.elapsed_nano();
+        return turbo::OkStatus();
     }
 
     turbo::Status IndexCore::save_index(const std::string &path, const SerializeOption &option) {
@@ -127,5 +165,25 @@ namespace tann {
             return r;
         }
         return turbo::OkStatus();
+    }
+
+    std::size_t IndexCore::size() const {
+        return _data_store.size();
+    }
+
+    std::size_t IndexCore::dimension() const {
+        return _vector_space.dimension;
+    }
+
+    bool IndexCore::support_dynamic() const {
+        return _engine->support_dynamic();
+    }
+
+    bool IndexCore::need_model() const {
+        return _engine->need_model();
+    }
+
+    EngineType IndexCore::engine_type() const {
+        return _base_option.engine_type;
     }
 }  // namespace tann

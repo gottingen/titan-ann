@@ -15,7 +15,7 @@
 #define TANN_CORE_INDEX_CORE_H_
 
 #include <any>
-#include "tann/core/query_context.h"
+#include "tann/core/search_context.h"
 #include "tann/core/vector_space.h"
 #include "tann/core/types.h"
 #include "tann/core/engine.h"
@@ -35,34 +35,35 @@ namespace tann {
         // Let the engine use lazy initialization and aggregate the initialization
         // parameters into the index configuration, which will be more convenient when
         // using the factory class method
-        [[nodiscard]] turbo::Status initialize(const IndexOption &option, std::any &core_option);
+        [[nodiscard]] turbo::Status initialize(const IndexOption &option, const std::any &core_option);
 
-        [[nodiscard]] turbo::Status
+        [[nodiscard]] turbo::ResultStatus<InsertResult>
         add_vector(const WriteOption &option, turbo::Span<uint8_t> data_point, const label_type &label);
 
         [[nodiscard]] turbo::Status remove_vector(const label_type &label);
 
-        [[nodiscard]] virtual turbo::Status search_vector(QueryContext *qctx);
+        [[nodiscard]] virtual turbo::Status search_vector(SearchContext *qctx, SearchResult &result);
 
         [[nodiscard]] virtual turbo::Status save_index(const std::string &path, const SerializeOption &option);
 
-        [[nodiscard]] virtual turbo::Status load_index(const std::string &path, const SerializeOption &option) = 0;
+        [[nodiscard]] virtual turbo::Status load_index(const std::string &path, const SerializeOption &option);
 
-        [[nodiscard]] virtual std::size_t size() const = 0;
+        [[nodiscard]] virtual std::size_t size() const;
 
-        [[nodiscard]] virtual std::size_t dimension() const = 0;
+        [[nodiscard]] virtual std::size_t dimension() const;
 
-        [[nodiscard]] virtual bool dynamic() const = 0;
+        [[nodiscard]] virtual bool support_dynamic() const;
 
-        [[nodiscard]] virtual bool need_model() const = 0;
+        [[nodiscard]] virtual bool need_model() const;
 
-        [[nodiscard]] virtual EngineType engine_type() const = 0;
+        [[nodiscard]] virtual EngineType engine_type() const;
 
     private:
         VectorSpace _vector_space;
         IndexOption _base_option;
         MemVectorStore _data_store;
         std::unique_ptr<Engine> _engine;
+        ConcurrentQueue<WorkSpace*> _ws_pool;
 
     };
 }  // namespace tann

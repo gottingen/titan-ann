@@ -16,7 +16,7 @@
 #include "tann/io/utility.h"
 
 namespace tann {
-    turbo::Status HnswEngine::initialize(const std::any &option, VectorSpace *vs, MemVectorStore *store) {
+    turbo::Status HnswEngine::initialize(const std::any &option, MemVectorStore *store) {
         _data_store = store;
         _option = std::any_cast<HnswIndexOption>(option);
         _level_generator.seed(_option.random_seed);
@@ -26,32 +26,40 @@ namespace tann {
         _visited_list_pool = std::make_unique<VisitedListPool>(1, _option.max_elements);
         std::vector<std::mutex> temp(_option.max_elements);
         _link_list_locks = std::move(temp);
-        // initializations for special treatment of the first node
-        _enterpoint_node = -1;
-        _max_level = -1;
         _mult = 1 / log(1.0 * static_cast<double >(_option.m));
+        return turbo::OkStatus();
     }
-    turbo::Status HnswEngine::add_vector(const WriteOption &options,location_t lid, bool ever_added) {
-        if(ever_added) {
-            return update_vector_internal(options, lid);
+    turbo::Status HnswEngine::add_vector(WorkSpace*ws, location_t lid) {
+        auto hws = reinterpret_cast<HnswWorkSpace*>(ws);
+        if(ws->is_update) {
+            return update_vector_internal(hws, lid);
         } else {
-            return add_vector_internal(options, lid);
+            return add_vector_internal(hws, lid);
         }
+    }
+
+    WorkSpace* HnswEngine::make_workspace() {
+        return new HnswWorkSpace();
+    }
+
+    void HnswEngine::setup_workspace(WorkSpace*ws)  {
+        auto *hnsw_ws = reinterpret_cast<HnswWorkSpace *>(ws);
+        hnsw_ws->search_l = std::max(_option.ef, hnsw_ws->search_context->k);
     }
 
     turbo::Status HnswEngine::remove_vector(location_t lid) {
         return turbo::OkStatus();
     }
 
-    turbo::Status HnswEngine::search_vector(QueryContext *qctx) {
+    turbo::Status HnswEngine::search_vector(WorkSpace *base_ws) {
         if (_data_store->size() == 0) {
             return turbo::OkStatus();
         }
-
+        auto *hnsw_ws = reinterpret_cast<HnswWorkSpace *>(base_ws);
         location_t currObj = _enterpoint_node;
-        auto query_data = to_span<uint8_t>(qctx->raw_query);
+        auto query_data = to_span<uint8_t>(hnsw_ws->query_view);
         distance_type curdist = _data_store->get_distance(query_data, _enterpoint_node);
-
+        // travel all level > 0 (only 1 level) and find nearest ep
         for (int level = _max_level; level > 0; level--) {
             bool changed = true;
             while (changed) {
@@ -63,7 +71,7 @@ namespace tann {
 
                 for (int i = 0; i < size; i++) {
                     location_t cand = node[i];
-                    if (cand < 0 || cand > _option.max_elements)
+                    if (cand > _option.max_elements)
                         return turbo::InternalError("cand error");
                     auto d = _data_store->get_distance(query_data, cand);
 
@@ -75,60 +83,65 @@ namespace tann {
                 }
             }
         }
-
-        links_priority_queue top_candidates;
+        hnsw_ws->top_candidates.clear();
+        hnsw_ws->top_candidates.reserve(hnsw_ws->search_l);
+        hnsw_ws->candidate_set.clear();
+        hnsw_ws->candidate_set.reserve(2 * hnsw_ws->search_l);
         if (_data_store->deleted_size()) {
-            top_candidates = search_base_layer_st<true, true>(currObj, qctx, std::max(_option.ef, qctx->k));
+            search_base_layer_st<true, true>(currObj, hnsw_ws);
         } else {
-            top_candidates = search_base_layer_st<false, true>(currObj, qctx, std::max(_option.ef, qctx->k));
+            search_base_layer_st<false, true>(currObj, hnsw_ws);
         }
-
-        while (top_candidates.size() > qctx->k) {
+        auto &top_candidates = hnsw_ws->top_candidates;
+        while (top_candidates.size() > hnsw_ws->search_l) {
             top_candidates.pop();
         }
         while (!top_candidates.empty()) {
-            std::pair<distance_type, location_t> rez = top_candidates.top();
-            qctx->results.emplace_back(std::pair<distance_type, location_t>(rez.first, _data_store->get_label(rez.second).value()));
+            auto rez = top_candidates.top();
+            rez.label = _data_store->get_label(rez.lid).value();
+            hnsw_ws->best_l_nodes.insert(rez);
             top_candidates.pop();
         }
         return turbo::OkStatus();
     }
 
     template<bool has_deletions, bool collect_metrics>
-    links_priority_queue HnswEngine::search_base_layer_st(location_t ep_id, QueryContext *qctx, size_t ef) const {
+    void HnswEngine::search_base_layer_st(location_t ep_id, HnswWorkSpace *hws) const {
         VisitedList *vl = _visited_list_pool->getFreeVisitedList();
         vl_type *visited_array = vl->mass;
         vl_type visited_array_tag = vl->curV;
+        auto ef = hws->search_l;
+        auto &top_candidates = hws->top_candidates;
+        auto candidate_set = hws->candidate_set;
 
-        links_priority_queue top_candidates;
-        links_priority_queue candidate_set;
-
-        auto isIdAllowed = qctx->is_allowed;
+        auto isIdAllowed = hws->search_context->is_allowed;
         distance_type lowerBound;
         if ((!has_deletions || !_data_store->is_deleted(ep_id)) &&
             ((!isIdAllowed) || (*isIdAllowed)(_data_store->get_label(ep_id).value()))) {
-            auto data_point = to_span<uint8_t>(qctx->raw_query);
+            auto data_point = to_span<uint8_t>(hws->query_view);
             distance_type dist = _data_store->get_distance(data_point, ep_id);
             lowerBound = dist;
-            top_candidates.emplace(dist, ep_id);
-            candidate_set.emplace(-dist, ep_id);
+            top_candidates.insert(dist, ep_id);
+            candidate_set.insert(-dist, ep_id);
         } else {
             lowerBound = std::numeric_limits<distance_type>::max();
-            candidate_set.emplace(-lowerBound, ep_id);
+            candidate_set.insert(-lowerBound, ep_id);
         }
 
         visited_array[ep_id] = visited_array_tag;
 
         while (!candidate_set.empty()) {
-            std::pair<distance_type, location_t> current_node_pair = candidate_set.top();
-
-            if ((-current_node_pair.first) > lowerBound &&
+            auto current_node_pair = candidate_set.top();
+            // stop search condition
+            // 1. current node distance > the largest distance that has got and result size reach limit
+            // 2. current node distance > the largest distance that has got and (no filter and no deletions)
+            if ((-current_node_pair.distance) > lowerBound &&
                 (top_candidates.size() == ef || (!isIdAllowed && !has_deletions))) {
                 break;
             }
             candidate_set.pop();
 
-            location_t current_node_id = current_node_pair.second;
+            location_t current_node_id = current_node_pair.lid;
             auto data = _final_graph.const_node(current_node_id, 0);
             size_t size = data.size();
             //bool cur_node_deleted = isMarkedDeleted(current_node_id);
@@ -141,31 +154,27 @@ namespace tann {
                 location_t candidate_id = data[j];
                 if (visited_array[candidate_id] != visited_array_tag) {
                     visited_array[candidate_id] = visited_array_tag;
-                    auto data_point = to_span<uint8_t>(qctx->raw_query);
+                    auto data_point = to_span<uint8_t>(hws->query_view);
                     distance_type dist = _data_store->get_distance(data_point, candidate_id);
 
-                    if (top_candidates.size() < ef || lowerBound > dist) {
-                        candidate_set.emplace(-dist, candidate_id);
+                    if (lowerBound > dist) {
+                        candidate_set.insert(-dist, candidate_id);
 
                         if ((!has_deletions || !_data_store->is_deleted(candidate_id)) &&
                             ((!isIdAllowed) || (*isIdAllowed)(_data_store->get_label(candidate_id).value())))
-                            top_candidates.emplace(dist, candidate_id);
-
-                        if (top_candidates.size() > ef)
-                            top_candidates.pop();
+                            top_candidates.insert(dist, candidate_id);
 
                         if (!top_candidates.empty())
-                            lowerBound = top_candidates.top().first;
+                            lowerBound = top_candidates.top().distance;
                     }
                 }
             }
         }
 
         _visited_list_pool->releaseVisitedList(vl);
-        return top_candidates;
     }
 
-    turbo::Status HnswEngine::add_vector_internal(const WriteOption &options,location_t lid) {
+    turbo::Status HnswEngine::add_vector_internal(HnswWorkSpace *hws,location_t lid) {
 
         std::unique_lock<std::mutex> lock_el(_link_list_locks[lid]);
         int cur_level = get_random_level(_mult);
@@ -183,7 +192,8 @@ namespace tann {
             return r;
         }
 
-        if ((signed) currObj != -1) {
+        // not first one
+        if (TURBO_LIKELY(currObj != constants::kUnknownLocation)) {
             if (cur_level < max_level_copy) {
                 distance_type curdist = _data_store->get_distance(lid, currObj);
                 for (int l_level = max_level_copy; l_level > cur_level; l_level--) {
@@ -213,14 +223,14 @@ namespace tann {
             for (int l_level = std::min(cur_level, max_level_copy); l_level >= 0; l_level--) {
                 if (l_level > max_level_copy || l_level < 0)  // possible?
                     return turbo::OutOfRangeError("Level error");
-
-                links_priority_queue top_candidates = search_base_layer(currObj, lid, l_level);
+                hws->top_candidates.clear();
+                auto &top_candidates = hws->top_candidates;
+                top_candidates.reserve(_option.ef_construction);
+                search_base_layer(hws, currObj, lid, l_level);
                 if (epDeleted) {
-                    top_candidates.emplace(_data_store->get_distance(lid, enterpoint_copy), enterpoint_copy);
-                    if (top_candidates.size() > _option.ef_construction)
-                        top_candidates.pop();
+                    top_candidates.insert(_data_store->get_distance(lid, enterpoint_copy), enterpoint_copy);
                 }
-                auto rs = mutually_connect_new_element(lid, top_candidates, l_level, false);
+                auto rs = mutually_connect_new_element(hws, lid, l_level, false);
                 if (!rs.ok()) {
                     return rs.status();
                 }
@@ -246,7 +256,7 @@ namespace tann {
         return (int) r;
     }
 
-    turbo::Status HnswEngine::update_vector_internal(const WriteOption &options,location_t lid) {
+    turbo::Status HnswEngine::update_vector_internal(HnswWorkSpace *hws,location_t lid) {
         // update the feature vector associated with existing point with new vector
         int maxLevelCopy = _max_level;
         location_t entryPointCopy = _enterpoint_node;
@@ -279,27 +289,21 @@ namespace tann {
                 // if (neigh == internalId)
                 //     continue;
 
-                links_priority_queue candidates;
-                size_t size = sCand.find(neigh) == sCand.end() ? sCand.size() : sCand.size() -
-                                                                                1;  // sCand guaranteed to have size >= 1
+                auto &candidates = hws->top_candidates;
+                size_t size = sCand.find(neigh) == sCand.end() ? sCand.size() : sCand.size() -1;  // sCand guaranteed to have size >= 1
                 size_t elementsToKeep = std::min(_option.ef_construction, size);
+                candidates.clear();
+                candidates.reserve(elementsToKeep);
                 for (auto &&cand: sCand) {
                     if (cand == neigh)
                         continue;
 
                     distance_type distance = _data_store->get_distance(neigh, cand);
-                    if (candidates.size() < elementsToKeep) {
-                        candidates.emplace(distance, cand);
-                    } else {
-                        if (distance < candidates.top().first) {
-                            candidates.pop();
-                            candidates.emplace(distance, cand);
-                        }
-                    }
+                    candidates.insert(distance, cand);
                 }
 
                 // Retrieve neighbours using heuristic and set connections.
-                get_neighbors_by_heuristic(candidates, layer == 0 ? _maxM * 2 : _maxM);
+                get_neighbors_by_heuristic(hws, _final_graph.capacity_for_level(layer));
 
                 {
                     std::unique_lock<std::mutex> lock(_link_list_locks[neigh]);
@@ -307,17 +311,17 @@ namespace tann {
                     size_t candSize = candidates.size();
                     ll_cur.set_size(candSize);
                     for (size_t idx = 0; idx < candSize; idx++) {
-                        ll_cur.set_link(idx, candidates.top().second);
+                        ll_cur.set_link(idx, candidates.top().lid);
                         candidates.pop();
                     }
                 }
             }
         }
 
-        return repair_connections_for_update(entryPointCopy, lid, elemLevel, maxLevelCopy);
+        return repair_connections_for_update(hws, entryPointCopy, lid, elemLevel, maxLevelCopy);
     }
 
-    turbo::Status HnswEngine::repair_connections_for_update(
+    turbo::Status HnswEngine::repair_connections_for_update(HnswWorkSpace *hws,
             location_t entryPointInternalId,
             location_t dataPointInternalId,
             int dataPointLevel,
@@ -349,28 +353,29 @@ namespace tann {
             return turbo::InternalError("Level of item to be updated cannot be bigger than max level");
 
         for (int level = dataPointLevel; level >= 0; level--) {
-            links_priority_queue topCandidates = search_base_layer(currObj, dataPointInternalId, level);
-
-            std::priority_queue<std::pair<distance_type, location_t>, std::vector<std::pair<distance_type, location_t>>, CompareByFirst> filteredTopCandidates;
-            while (!topCandidates.empty()) {
-                if (topCandidates.top().second != dataPointInternalId)
-                    filteredTopCandidates.push(topCandidates.top());
-
-                topCandidates.pop();
+            auto &top_candidates = hws->top_candidates;
+            auto & candidate_set= hws->candidate_set;
+            top_candidates.clear();
+            top_candidates.reserve(_option.ef_construction);
+            search_base_layer(hws, currObj, dataPointInternalId, level);
+            candidate_set.swap(top_candidates);
+            top_candidates.reserve(_option.ef_construction);
+            top_candidates.clear();
+            for(size_t i = 0; i < candidate_set.size(); ++i) {
+                if(candidate_set[i].lid != dataPointInternalId) {
+                    top_candidates.insert(candidate_set[i]);
+                }
             }
-
             // Since element_levels_ is being used to get `dataPointLevel`, there could be cases where `topCandidates` could just contains entry point itself.
             // To prevent self loops, the `topCandidates` is filtered and thus can be empty.
-            if (!filteredTopCandidates.empty()) {
+            if (!top_candidates.empty()) {
                 bool epDeleted = _data_store->is_deleted(entryPointInternalId);
                 if (epDeleted) {
-                    filteredTopCandidates.emplace(_data_store->get_distance(dataPointInternalId, entryPointInternalId),
+                    top_candidates.insert(_data_store->get_distance(dataPointInternalId, entryPointInternalId),
                                                   entryPointInternalId);
-                    if (filteredTopCandidates.size() > _option.ef_construction)
-                        filteredTopCandidates.pop();
                 }
 
-                auto r = mutually_connect_new_element(dataPointInternalId, filteredTopCandidates, level, true);
+                auto r = mutually_connect_new_element(hws, dataPointInternalId, level, true);
                 if (!r.ok()) {
                     return r.status();
                 }
@@ -380,34 +385,34 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    links_priority_queue HnswEngine::search_base_layer(location_t ep_id, location_t loc, int layer) {
+    void HnswEngine::search_base_layer(HnswWorkSpace *hws, location_t ep_id, location_t loc, int layer) {
         VisitedList *vl = _visited_list_pool->getFreeVisitedList();
         vl_type *visited_array = vl->mass;
         vl_type visited_array_tag = vl->curV;
 
-        links_priority_queue top_candidates;
-        links_priority_queue candidateSet;
-
+        auto &top_candidates = hws->top_candidates;
+        auto &candidateSet = hws->candidate_set;
+        top_candidates.reserve(_option.ef_construction );
         distance_type lowerBound;
         if (!_data_store->is_deleted(ep_id)) {
             distance_type dist = _data_store->get_distance(loc, ep_id);
-            top_candidates.emplace(dist, ep_id);
+            top_candidates.insert(dist, ep_id);
             lowerBound = dist;
-            candidateSet.emplace(-dist, ep_id);
+            candidateSet.insert(-dist, ep_id);
         } else {
             lowerBound = std::numeric_limits<distance_type>::max();
-            candidateSet.emplace(-lowerBound, ep_id);
+            candidateSet.insert(-lowerBound, ep_id);
         }
         visited_array[ep_id] = visited_array_tag;
 
         while (!candidateSet.empty()) {
-            std::pair<distance_type, location_t> curr_el_pair = candidateSet.top();
-            if ((-curr_el_pair.first) > lowerBound && top_candidates.size() == _option.ef_construction) {
+            auto curr_el_pair = candidateSet.top();
+            if ((-curr_el_pair.distance) > lowerBound && top_candidates.size() == _option.ef_construction) {
                 break;
             }
             candidateSet.pop();
 
-            location_t curNodeNum = curr_el_pair.second;
+            location_t curNodeNum = curr_el_pair.lid;
 
             std::unique_lock<std::mutex> lock(_link_list_locks[curNodeNum]);
 
@@ -423,44 +428,34 @@ namespace tann {
                 visited_array[candidate_id] = visited_array_tag;
 
                 distance_type dist1 = _data_store->get_distance(loc, candidate_id);
-                if (top_candidates.size() < _option.ef_construction || lowerBound > dist1) {
-                    candidateSet.emplace(-dist1, candidate_id);
-                    if (!_data_store->is_deleted(candidate_id))
-                        top_candidates.emplace(dist1, candidate_id);
-
-                    if (top_candidates.size() > _option.ef_construction)
-                        top_candidates.pop();
-
-                    if (!top_candidates.empty())
-                        lowerBound = top_candidates.top().first;
-                }
+                candidateSet.insert(-dist1, candidate_id);
+                if (!_data_store->is_deleted(candidate_id))
+                    top_candidates.insert(dist1, candidate_id);
+                if (!top_candidates.empty())
+                    lowerBound = top_candidates.top().distance;
             }
         }
         _visited_list_pool->releaseVisitedList(vl);
-
-        return top_candidates;
     }
 
 
     turbo::ResultStatus<location_t>
-    HnswEngine::mutually_connect_new_element(location_t cur_c, links_priority_queue &top_candidates, int level,
+    HnswEngine::mutually_connect_new_element(HnswWorkSpace *hws,location_t cur_c, int level,
                                             bool isUpdate) {
 
         auto node = _final_graph.mutable_node(cur_c, level);
         size_t Mcurmax = node.capacity();
         TLOG_TRACE("mutually_connect_new_element Mcurmax {} {} {} ", Mcurmax, cur_c, level);
-        get_neighbors_by_heuristic(top_candidates, _option.m);
-        if (top_candidates.size() > _option.m)
-            return turbo::OutOfRangeError("Should be not be more than M_ candidates returned by the heuristic");
+        get_neighbors_by_heuristic(hws, _option.m);
+        if (hws->top_candidates.size() > _option.m)
+            return turbo::OutOfRangeError("Should be not be more than _M:{} candidates returned by the heuristic", _option.m);
 
-        std::vector<location_t> selectedNeighbors;
-        selectedNeighbors.reserve(_option.m);
-        while (!top_candidates.empty()) {
-            selectedNeighbors.push_back(top_candidates.top().second);
-            top_candidates.pop();
-        }
 
-        location_t next_closest_entry_point = selectedNeighbors.back();
+        auto &candidate_set = hws->candidate_set;
+        auto &top_candidates = hws->top_candidates;
+        candidate_set.swap(top_candidates);
+        //
+        location_t next_closest_entry_point = candidate_set[0].lid;
 
         {
             // lock only during the update
@@ -473,28 +468,28 @@ namespace tann {
             if (node.size() && !isUpdate) {
                 return turbo::InternalError("The newly inserted element should have blank link list");
             }
-            node.set_size(selectedNeighbors.size());
-            for (size_t idx = 0; idx < selectedNeighbors.size(); idx++) {
+            node.set_size(candidate_set.size());
+            for (size_t idx = 0; idx < candidate_set.size(); idx++) {
                 if (node[idx] && !isUpdate)
                     return turbo::InternalError("Possible memory corruption");
                 if (level > node.level())
                     return turbo::InternalError("Trying to make a link on a non-existent level");
 
-                node.set_link(idx, selectedNeighbors[idx]);
+                node.set_link(idx, candidate_set[idx].lid);
             }
         }
 
-        auto loop_size = selectedNeighbors.size();
+        auto loop_size = candidate_set.size();
         for (size_t idx = 0; idx < loop_size; idx++) {
-            std::unique_lock<std::mutex> lock(_link_list_locks[selectedNeighbors[idx]]);
+            std::unique_lock<std::mutex> lock(_link_list_locks[candidate_set[idx].lid]);
 
-            auto other_node = _final_graph.mutable_node(selectedNeighbors[idx], level);
-            TLOG_TRACE("other_node {} {}", selectedNeighbors[idx], level);
+            auto other_node = _final_graph.mutable_node(candidate_set[idx].lid, level);
+            TLOG_TRACE("other_node {} {}", candidate_set[idx].lid, level);
             size_t sz_link_list_other = other_node.size();
 
             if (sz_link_list_other > Mcurmax)
                 return turbo::InternalError("Bad value of sz_link_list_other");
-            if (selectedNeighbors[idx] == cur_c)
+            if (candidate_set[idx].lid == cur_c)
                 return turbo::InternalError("Trying to connect an element to itself");
             if (level > other_node.level())
                 return turbo::InternalError("Trying to make a link on a non-existent level");
@@ -516,21 +511,22 @@ namespace tann {
                     other_node.set_size(sz_link_list_other + 1);
                 } else {
                     // finding the "weakest" element to replace it with the new one
-                    distance_type d_max = _data_store->get_distance(cur_c, selectedNeighbors[idx]);
+                    distance_type d_max = _data_store->get_distance(cur_c, candidate_set[idx].lid);
                     // Heuristic:
-                    std::priority_queue<std::pair<distance_type, location_t>, std::vector<std::pair<distance_type, location_t>>, CompareByFirst> candidates;
-                    candidates.emplace(d_max, cur_c);
+                    top_candidates.clear();
+                    top_candidates.reserve(Mcurmax + 1);
+                    top_candidates.insert(d_max, cur_c);
 
                     for (size_t j = 0; j < sz_link_list_other; j++) {
-                        candidates.emplace(_data_store->get_distance(other_node[j], selectedNeighbors[idx]), other_node[j]);
+                        top_candidates.insert(_data_store->get_distance(other_node[j], candidate_set[idx].lid), other_node[j]);
                     }
 
-                    get_neighbors_by_heuristic(candidates, Mcurmax);
+                    get_neighbors_by_heuristic(hws, Mcurmax);
 
                     int indx = 0;
-                    while (!candidates.empty()) {
-                        other_node.set_link(indx, candidates.top().second);
-                        candidates.pop();
+                    while (!top_candidates.empty()) {
+                        other_node.set_link(indx, top_candidates.top().lid);
+                        top_candidates.pop();
                         indx++;
                     }
 
@@ -564,40 +560,39 @@ namespace tann {
         memcpy(result.data(), list.data(), size * sizeof(location_t));
         return result;
     }
-    void HnswEngine::get_neighbors_by_heuristic(links_priority_queue &top_candidates, const size_t M) {
+    void HnswEngine::get_neighbors_by_heuristic(HnswWorkSpace *ws, const size_t M) {
+        auto top_candidates = ws->top_candidates;
         if (top_candidates.size() < M) {
             return;
         }
 
-        std::priority_queue<std::pair<distance_type, location_t>> queue_closest;
-        std::vector<std::pair<distance_type, location_t>> return_list;
-        while (!top_candidates.empty()) {
-            queue_closest.emplace(-top_candidates.top().first, top_candidates.top().second);
-            top_candidates.pop();
-        }
+        //auto &candidate_set = ws->candidate_set;
+        auto &return_list= ws->return_list;
+        return_list.clear();
 
-        while (!queue_closest.empty()) {
+        auto size = top_candidates.size();
+        for(size_t i = 0; i < size; ++i) {
             if (return_list.size() >= M)
                 break;
-            std::pair<distance_type, location_t> curent_pair = queue_closest.top();
-            distance_type dist_to_query = -curent_pair.first;
-            queue_closest.pop();
+            auto curent_pair = top_candidates[i];
+            distance_type dist_to_query = curent_pair.distance;
             bool good = true;
 
-            for (std::pair<distance_type, location_t> second_pair: return_list) {
-                distance_type curdist = _data_store->get_distance(second_pair.second, curent_pair.second);
+            for (auto second_pair : return_list) {
+                distance_type curdist = _data_store->get_distance(second_pair.second, curent_pair.lid);
                 if (curdist < dist_to_query) {
                     good = false;
                     break;
                 }
             }
             if (good) {
-                return_list.push_back(curent_pair);
+                return_list.emplace_back(curent_pair.distance, curent_pair.lid);
             }
         }
-
+        top_candidates.clear();
+        top_candidates.reserve(M);
         for (std::pair<distance_type, location_t> curent_pair: return_list) {
-            top_candidates.emplace(-curent_pair.first, curent_pair.second);
+            top_candidates.insert(curent_pair.first, curent_pair.second);
         }
     }
 
@@ -650,10 +645,13 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    template links_priority_queue
-    HnswEngine::search_base_layer_st<true, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
+    template void
+    HnswEngine::search_base_layer_st<true, true>(location_t ep_id, HnswWorkSpace *qctx) const;
 
-    template links_priority_queue
-    HnswEngine::search_base_layer_st<false, true>(location_t ep_id, QueryContext *qctx, size_t ef) const;
+    template void
+    HnswEngine::search_base_layer_st<false, true>(location_t ep_id, HnswWorkSpace *qctx) const;
 
 }  // namespace tann
+ENGINE_REGISTER(tann::EngineType::ENGINE_HNSW, [](const std::any &option)-> tann::Engine*{
+    return new tann::HnswEngine();
+});

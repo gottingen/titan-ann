@@ -19,6 +19,7 @@
 #include <queue>
 #include <limits>
 #include "turbo/log/logging.h"
+#include "tann/common/config.h"
 
 namespace tann {
     typedef uint32_t location_t;
@@ -88,6 +89,13 @@ namespace tann {
 
     typedef std::priority_queue<std::pair<distance_type, location_t>,
             std::vector<std::pair<distance_type, location_t>>, CompareByFirst> links_priority_queue;
+
+    struct WriteOption {
+        bool lazy_delete{false};
+        bool replace_deleted{true};
+        bool is_normalized{false};
+        bool is_aligned_memory{false};
+    };
 
 } // namespace tann
 

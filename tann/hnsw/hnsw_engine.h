@@ -20,6 +20,7 @@
 #include "tann/core/engine.h"
 #include "tann/hnsw/leveled_graph.h"
 #include "tann/hnsw/visited_list_pool.h"
+#include "tann/hnsw/hnsw_work_space.h"
 
 namespace tann {
 
@@ -28,47 +29,62 @@ namespace tann {
     public:
         ~HnswEngine() override = default;
 
-        turbo::Status initialize(const std::any &option, VectorSpace *vs, MemVectorStore *store) override;
+        turbo::Status initialize(const std::any &option, MemVectorStore *store) override;
 
-        turbo::Status add_vector(const WriteOption &options, location_t lid, bool ever_added) override;
+        turbo::Status add_vector(WorkSpace*ws, location_t lid) override;
+
+        WorkSpace* make_workspace() override;
+
+        void setup_workspace(WorkSpace*ws) override;
 
         turbo::Status remove_vector(location_t lid) override;
 
-        turbo::Status search_vector(QueryContext *qctx) override;
+        turbo::Status search_vector(WorkSpace *ws) override;
 
         turbo::Status save(turbo::SequentialWriteFile *file) override;
 
         turbo::Status load(turbo::SequentialReadFile *file) override;
 
-    private:
-        turbo::Status add_vector_internal(const WriteOption &options, location_t lid);
+        bool support_dynamic() const override {
+            return true;
+        }
 
-        turbo::Status update_vector_internal(const WriteOption &options, location_t lid);
+        bool need_model() const override {
+            return false;
+        }
+
+    private:
+        turbo::Status add_vector_internal(HnswWorkSpace *ws, location_t lid);
+
+        turbo::Status update_vector_internal(HnswWorkSpace *ws, location_t lid);
 
         std::vector<location_t> get_connections_with_lock(location_t lid, int level);
 
-        void get_neighbors_by_heuristic(links_priority_queue &top_candidates, const size_t M);
+        void get_neighbors_by_heuristic(HnswWorkSpace *ws, const size_t M);
 
-        turbo::Status repair_connections_for_update(location_t entryPointInternalId, location_t dataPointInternalId,
+        turbo::Status repair_connections_for_update(HnswWorkSpace *ws, location_t entryPointInternalId, location_t dataPointInternalId,
                                                     int dataPointLevel, int maxLevel);
 
-        links_priority_queue search_base_layer(location_t ep_id, location_t loc, int layer);
+        void search_base_layer(HnswWorkSpace *ws, location_t ep_id, location_t loc, int layer);
 
         turbo::ResultStatus<location_t>
-        mutually_connect_new_element(location_t cur_c, links_priority_queue &top_candidates, int level,
+        mutually_connect_new_element(HnswWorkSpace *ws,location_t cur_c, int level,
                                      bool isUpdate);
 
         int get_random_level(double reverse_size);
 
         template<bool has_deletions, bool collect_metrics>
-        links_priority_queue search_base_layer_st(location_t ep_id, QueryContext *qctx, size_t ef) const;
+        void search_base_layer_st(location_t ep_id, HnswWorkSpace *hws) const;
     private:
         HnswIndexOption _option;
         MemVectorStore *_data_store;
+        // initializations for special treatment of the first node
+        int _max_level{-1};
+        location_t _enterpoint_node{constants::kUnknownLocation};
+
+        // init in initialize
         double _mult{0.0};
-        int _max_level{0};
         size_t _maxM{0};
-        location_t _enterpoint_node{0};
         LeveledGraph _final_graph;
 
         std::mutex _global_lock;
