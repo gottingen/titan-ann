@@ -21,7 +21,6 @@
 #include "tann/distance/primitive_distance.h"
 #include <vector>
 #include "turbo/format/print.h"
-#include "tann/common/utils.h"
 #include "test_util.h"
 #include "turbo/meta/type_traits.h"
 #include "tann/core/allocator.h"

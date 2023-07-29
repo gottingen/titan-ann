@@ -20,6 +20,8 @@
 namespace tann {
 
     struct HnswWorkSpace : public WorkSpace {
+        // frequently using memory
+        // make it pooling avoid alloc and free
         NeighborQueue top_candidates;
         NeighborQueue candidate_set;
         std::vector<std::pair<distance_type, location_t>> return_list;

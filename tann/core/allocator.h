@@ -9,6 +9,9 @@
 #include "turbo/meta/span.h"
 #include "tann/core/types.h"
 #include <vector>
+#include <exception>
+
+#define TANN_IS_ALIGNED(X, Y) ((uint64_t)(X) % (uint64_t)(Y) == 0)
 
 namespace tann {
     class Allocator {
@@ -22,6 +25,35 @@ namespace tann {
 
         typedef turbo::simd::aligned_allocator<uint8_t, alignment_bytes> allocator_type;
         static allocator_type alloc;
+
+        static inline void print_error_and_terminate(std::stringstream &error_stream) {
+            throw std::runtime_error(error_stream.str());
+        }
+
+        static inline void report_misalignment_of_requested_size(size_t align) {
+            std::stringstream stream;
+            stream << "Requested memory size is not a multiple of " << align << ". Can not be allocated.";
+            print_error_and_terminate(stream);
+        }
+
+        static inline void report_memory_allocation_failure() {
+            std::stringstream stream;
+            stream << "Memory Allocation Failed.";
+            print_error_and_terminate(stream);
+        }
+
+        static inline void alloc_aligned(void **ptr, size_t size, size_t align) {
+            *ptr = nullptr;
+            if (TANN_IS_ALIGNED(size, align) == 0)
+                report_misalignment_of_requested_size(align);
+#ifndef _WINDOWS
+            *ptr = ::aligned_alloc(align, size);
+#else
+            *ptr = ::_aligned_malloc(size, align); // note the swapped arguments!
+#endif
+            if (*ptr == nullptr)
+                report_memory_allocation_failure();
+        }
     };
 
     ///////////////////////

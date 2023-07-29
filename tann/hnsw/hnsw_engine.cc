@@ -13,7 +13,7 @@
 //
 
 #include "tann/hnsw/hnsw_engine.h"
-#include "tann/io/utility.h"
+#include "tann/common/utility.h"
 
 namespace tann {
     turbo::Status HnswEngine::initialize(const IndexOption& base_option, const std::any &option, MemVectorStore *store) {

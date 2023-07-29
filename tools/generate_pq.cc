@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 #include "tann/common/math_utils.h"
-#include "tann/vamana/pq.h"
-#include "tann/vamana/partition.h"
+#include "tann/diskann/pq.h"
+#include "tann/diskann/partition.h"
 #include "tann_cli.h"
 
 #define KMEANS_ITERS_FOR_PQ 15

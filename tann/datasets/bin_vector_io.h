@@ -25,8 +25,6 @@ namespace tann {
 
         ~BinaryVectorSetReader() override = default;
 
-        turbo::Status load(VectorSet &dst) override;
-
         turbo::Status read_vector(turbo::Span<uint8_t> &vector) override;
 
         turbo::ResultStatus<std::size_t> read_batch(turbo::Span<uint8_t> &vector, std::size_t batch_size) override;
@@ -39,8 +37,6 @@ namespace tann {
         BinaryVectorSetWriter() = default;
 
         ~BinaryVectorSetWriter() override = default;
-
-        turbo::Status save(VectorSet &dst) override;
 
         turbo::Status write_vector(turbo::Span<uint8_t> vector) override;
 

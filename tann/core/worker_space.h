@@ -22,6 +22,7 @@
 namespace tann {
 
     struct WorkSpace {
+        virtual ~WorkSpace() = default;
         SearchContext *search_context{nullptr};
         NeighborQueue best_l_nodes;
         turbo::Span<uint8_t> query_view;

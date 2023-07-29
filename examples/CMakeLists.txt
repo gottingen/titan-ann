@@ -31,6 +31,5 @@ carbin_cc_binary(
 )
 ]]
 
-add_subdirectory(vamana)
 add_subdirectory(hnsw)
 

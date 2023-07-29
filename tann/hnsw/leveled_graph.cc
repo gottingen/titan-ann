@@ -13,7 +13,7 @@
 //
 
 #include "tann/hnsw/leveled_graph.h"
-#include "tann/io/utility.h"
+#include "tann/common/utility.h"
 
 namespace tann {
 

@@ -32,7 +32,9 @@ make test
 * [ssd filter](examples/vamana/filtered_ssd_index.md)
 * [real time index](examples/vamana/dynamic_index.md)
 
-
+# engine type
+* flat
+* hnsw
 # metric types
 
 * METRIC_L1,
