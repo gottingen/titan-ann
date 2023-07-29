@@ -15,6 +15,9 @@
 #include "turbo/strings/str_split.h"
 #include "turbo/strings/str_trim.h"
 #include "turbo/strings/numbers.h"
+#include "tann/core/allocator.h"
+#include "turbo/meta/reflect.h"
+
 namespace tann {
 
     namespace detail {
@@ -64,22 +67,6 @@ namespace tann {
         template turbo::Status convert_to_string<float>(std::size_t ndim, turbo::Span<uint8_t> vector, std::string *result);
     }  // namespace detail
     turbo::Status TsvVectorSetReader::init() {
-        return turbo::OkStatus();
-    }
-
-    turbo::Status TsvVectorSetReader::load(VectorSet &dst) {
-        std::vector<uint8_t> raw_mem;
-        raw_mem.resize(_vector_bytes);
-        auto span = to_span<uint8_t>(raw_mem);
-        turbo::Status fst = turbo::OkStatus();
-        turbo::Status vst = turbo::OkStatus();
-        while(_file->is_eof() && vst.ok()) {
-            vst = read_vector(span);
-            dst.add_vector(span);
-        }
-        if(!turbo::IsReachFileEnd(vst)) {
-            return vst;
-        }
         return turbo::OkStatus();
     }
 
@@ -147,20 +134,6 @@ namespace tann {
 
 
     turbo::Status TsvVectorSetWriter::init(){
-        return turbo::OkStatus();
-    }
-
-    turbo::Status TsvVectorSetWriter::save(VectorSet &dst) {
-        auto & bs = dst.vector_batch();
-        for(auto & be : bs) {
-            for(size_t i =0; i < be.size(); i++) {
-                auto span = be.at(i);
-                auto r = write_vector(span);
-                if(!r.ok()) {
-                    return r;
-                }
-            }
-        }
         return turbo::OkStatus();
     }
 

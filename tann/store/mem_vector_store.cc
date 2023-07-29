@@ -14,9 +14,8 @@
 
 #include "tann/store/mem_vector_store.h"
 #include "turbo/log/logging.h"
-#include "tann/common/ann_exception.h"
 #include "tann/datasets/bin_vector_io.h"
-#include "tann/io/utility.h"
+#include "tann/common/utility.h"
 #include "turbo/times/stop_watcher.h"
 
 namespace tann {
@@ -237,9 +236,7 @@ namespace tann {
         tann::VectorBatch vb;
         auto r = vb.init(_vs->vector_byte_size, _option.batch_size);
         //auto r = _data.back().init(_vs, _option.batch_size);
-        if (!r.ok()) {
-            throw ANNException("no memory", -1);
-        }
+        TLOG_CHECK(r.ok());
         _data.push_back(std::move(vb));
     }
 

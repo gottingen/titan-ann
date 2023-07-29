@@ -30,20 +30,6 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FvecVectorSetReader::load(VectorSet &dst) {
-        std::vector<uint8_t> raw_mem;
-        raw_mem.resize(_vector_bytes);
-        auto span = to_span<uint8_t>(raw_mem);
-        turbo::Status vst = turbo::OkStatus();
-        while (_file->is_eof() && vst.ok()) {
-            vst = read_vector(span);
-            dst.add_vector(span);
-        }
-        if(!turbo::IsReachFileEnd(vst)) {
-            return vst;
-        }
-        return turbo::OkStatus();
-    }
 
     turbo::Status FvecVectorSetReader::read_vector(turbo::Span<uint8_t> &vector) {
         if (_file->is_eof()) {
@@ -81,19 +67,6 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status FvecVectorSetWriter::save(VectorSet &dst) {
-        auto & bs = dst.vector_batch();
-        for(auto & be : bs) {
-            for(size_t i =0; i < be.size(); i++) {
-                auto span = be.at(i);
-                auto r = write_vector(span);
-                if(!r.ok()) {
-                    return r;
-                }
-            }
-        }
-        return turbo::OkStatus();
-    }
 
     turbo::Status FvecVectorSetWriter::write_vector(turbo::Span<uint8_t> vector) {
         TLOG_CHECK(_vector_bytes <= vector.size(), "not enough space to read vector");

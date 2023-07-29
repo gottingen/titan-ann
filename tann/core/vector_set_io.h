@@ -18,7 +18,6 @@
 #include "turbo/files/sequential_write_file.h"
 #include "turbo/files/sequential_read_file.h"
 #include "tann/core/serialize_option.h"
-#include "tann/store/vector_set.h"
 
 namespace tann {
 
@@ -28,8 +27,6 @@ namespace tann {
         virtual ~VectorSetReader() = default;
 
         turbo::Status initialize(turbo::SequentialReadFile *file, const SerializeOption &option);
-
-        virtual turbo::Status load(VectorSet &dst) = 0;
 
         virtual turbo::Status read_vector(turbo::Span<uint8_t> &vector) = 0;
 
@@ -64,8 +61,6 @@ namespace tann {
         virtual ~VectorSetWriter() = default;
 
         turbo::Status initialize(turbo::SequentialWriteFile *file, const SerializeOption &option);
-
-        virtual turbo::Status save(VectorSet &dst) = 0;
 
         virtual turbo::Status write_vector(turbo::Span<uint8_t> vector) = 0;
 

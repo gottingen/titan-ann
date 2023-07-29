@@ -50,7 +50,7 @@ include(user_deps)
 include(user_cxx_config)
 
 add_subdirectory(tann)
-add_subdirectory(tools)
+#add_subdirectory(tools)
 ####################################################################
 # belows are auto, edit it be cation
 ####################################################################

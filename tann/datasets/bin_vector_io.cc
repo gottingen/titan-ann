@@ -36,26 +36,6 @@ namespace tann {
         return turbo::OkStatus();
     }
 
-    turbo::Status BinaryVectorSetReader::load(VectorSet &dst) {
-        TLOG_CHECK(_vector_bytes == dst.get_vector_space()->vector_byte_size);
-        TLOG_CHECK(_ndims == dst.get_vector_space()->dimension);
-        TLOG_CHECK(_option.data_type == dst.get_vector_space()->data_type);
-        dst.resize(_nvecs);
-        auto &bs = dst.vector_batch();
-        for (auto &b: bs) {
-            auto sp = b.to_span();
-            auto r = _file->read(sp.data(), sp.size());
-            if (!r.ok()) {
-                if (turbo::IsReachFileEnd(r.status())) {
-                    // this may not case for VectorSet have resized
-                    return turbo::OkStatus();
-                }
-                return r.status();
-            }
-            _has_read += sp.size();
-        }
-        return turbo::OkStatus();
-    }
 
     turbo::Status BinaryVectorSetReader::read_vector(turbo::Span<uint8_t> &vector) {
         TLOG_CHECK(_vector_bytes <= vector.size(), "not enough space to read vector");
@@ -91,19 +71,6 @@ namespace tann {
         r = _file->write(reinterpret_cast<const char *>(&dim), sizeof(dim));
         if (!r.ok()) {
             return r;
-        }
-        return turbo::OkStatus();
-    }
-
-    turbo::Status BinaryVectorSetWriter::save(VectorSet &dst) {
-        auto &bs = dst.vector_batch();
-        for (auto &b: bs) {
-            auto sp = b.to_span();
-            auto r = _file->write(reinterpret_cast<const char *>(sp.data()), sp.size());
-            if (!r.ok()) {
-                return r;
-            }
-            _has_write += sp.size();
         }
         return turbo::OkStatus();
     }

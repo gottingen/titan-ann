@@ -19,6 +19,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "doctest/doctest.h"
+#include "tann/core/allocator.h"
+#include "turbo/format/print.h"
 
 class BinSetTest {
 public:
