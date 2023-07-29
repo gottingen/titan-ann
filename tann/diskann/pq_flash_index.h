@@ -7,13 +7,13 @@
 
 #include "tann/io/aligned_file_reader.h"
 #include "tann/common/concurrent_queue.h"
-#include "tann/vamana/neighbor.h"
-#include "tann/vamana/parameters.h"
-#include "tann/vamana/percentile_stats.h"
-#include "tann/vamana/pq.h"
+#include "tann/diskann/neighbor.h"
+#include "tann/diskann/parameters.h"
+#include "tann/diskann/percentile_stats.h"
+#include "tann/diskann/pq.h"
 #include "tann/common/utils.h"
 #include "turbo/platform/port.h"
-#include "tann/vamana/scratch.h"
+#include "tann/diskann/scratch.h"
 #include "turbo/container/flat_hash_map.h"
 #include "turbo/container/flat_hash_set.h"
 

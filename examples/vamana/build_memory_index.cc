@@ -3,7 +3,7 @@
 
 #include <omp.h>
 #include <cstring>
-#include "tann/vamana/index.h"
+#include "tann/diskann/index.h"
 #include "tann/common/utils.h"
 
 #ifndef _WINDOWS

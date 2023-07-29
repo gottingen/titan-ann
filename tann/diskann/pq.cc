@@ -1,28 +1,21 @@
-// Copyright 2023 The titan-search Authors.
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 #include "mkl/mkl.h"
-#include "tann/vamana/pq.h"
-#include "tann/vamana/partition.h"
-#include "tann/common/utils.h"
+
+#include "tann/diskann/pq.h"
+#include "tann/diskann/partition.h"
 #include "tann/common/math_utils.h"
 #include "turbo/container/flat_hash_map.h"
 
+// block size for reading/processing large files and matrices in blocks
+#define BLOCK_SIZE 5000000
+
 namespace tann {
-    FixedChunkQuantizeTable::FixedChunkQuantizeTable() {
+    FixedChunkPQTable::FixedChunkPQTable() {
     }
 
-    FixedChunkQuantizeTable::~FixedChunkQuantizeTable() {
+    FixedChunkPQTable::~FixedChunkPQTable() {
         if (tables != nullptr)
             delete[] tables;
         if (tables_tr != nullptr)
@@ -35,7 +28,7 @@ namespace tann {
             delete[] rotmat_tr;
     }
 
-    void FixedChunkQuantizeTable::load_pq_centroid_bin(const char *pq_table_file, size_t num_chunks) {
+    void FixedChunkPQTable::load_pq_centroid_bin(const char *pq_table_file, size_t num_chunks) {
         uint64_t nr, nc;
         std::string rotmat_file = std::string(pq_table_file) + "_rotation_matrix.bin";
         std::unique_ptr<size_t[]> file_offset_data;
@@ -64,9 +57,9 @@ namespace tann {
 
         tann::load_bin<float>(pq_table_file, tables, nr, nc, file_offset_data[0]);
 
-        if ((nr != constants::kNumQuantizeCentroids)) {
+        if ((nr != NUM_PQ_CENTROIDS)) {
             tann::cout << "Error reading pq_pivots file " << pq_table_file << ". file_num_centers  = " << nr
-                       << " but expecting " << constants::kNumQuantizeCentroids << " centers";
+                       << " but expecting " << NUM_PQ_CENTROIDS << " centers";
             throw tann::ANNException("Error reading pq_pivots file at pivots data.", -1, __FUNCSIG__, __FILE__,
                                      __LINE__);
         }
@@ -94,7 +87,7 @@ namespace tann {
         }
 
         this->n_chunks = nr - 1;
-        tann::cout << "Loaded PQ Pivots: #ctrs: " << constants::kNumQuantizeCentroids << ", #dims: " << this->ndims
+        tann::cout << "Loaded PQ Pivots: #ctrs: " << NUM_PQ_CENTROIDS << ", #dims: " << this->ndims
                    << ", #chunks: " << this->n_chunks << std::endl;
 
         if (turbo::filesystem::exists(rotmat_file)) {
@@ -115,11 +108,11 @@ namespace tann {
         }
     }
 
-    uint32_t FixedChunkQuantizeTable::get_num_chunks() {
+    uint32_t FixedChunkPQTable::get_num_chunks() {
         return static_cast<uint32_t>(n_chunks);
     }
 
-    void FixedChunkQuantizeTable::preprocess_query(float *query_vec) {
+    void FixedChunkPQTable::preprocess_query(float *query_vec) {
         for (uint32_t d = 0; d < ndims; d++) {
             query_vec[d] -= centroid[d];
         }
@@ -135,7 +128,7 @@ namespace tann {
     }
 
     // assumes pre-processed query
-    void FixedChunkQuantizeTable::populate_chunk_distances(const float *query_vec, float *dist_vec) {
+    void FixedChunkPQTable::populate_chunk_distances(const float *query_vec, float *dist_vec) {
         memset(dist_vec, 0, 256 * n_chunks * sizeof(float));
         // chunk wise distance computation
         for (size_t chunk = 0; chunk < n_chunks; chunk++) {
@@ -151,7 +144,7 @@ namespace tann {
         }
     }
 
-    float FixedChunkQuantizeTable::l2_distance(const float *query_vec, uint8_t *base_vec) {
+    float FixedChunkPQTable::l2_distance(const float *query_vec, uint8_t *base_vec) {
         float res = 0;
         for (size_t chunk = 0; chunk < n_chunks; chunk++) {
             for (size_t j = chunk_offsets[chunk]; j < chunk_offsets[chunk + 1]; j++) {
@@ -163,7 +156,7 @@ namespace tann {
         return res;
     }
 
-    float FixedChunkQuantizeTable::inner_product(const float *query_vec, uint8_t *base_vec) {
+    float FixedChunkPQTable::inner_product(const float *query_vec, uint8_t *base_vec) {
         float res = 0;
         for (size_t chunk = 0; chunk < n_chunks; chunk++) {
             for (size_t j = chunk_offsets[chunk]; j < chunk_offsets[chunk + 1]; j++) {
@@ -177,8 +170,8 @@ namespace tann {
         // conversion)
     }
 
-    // assumes no rotation is involved
-    void FixedChunkQuantizeTable::inflate_vector(uint8_t *base_vec, float *out_vec) {
+// assumes no rotation is involved
+    void FixedChunkPQTable::inflate_vector(uint8_t *base_vec, float *out_vec) {
         for (size_t chunk = 0; chunk < n_chunks; chunk++) {
             for (size_t j = chunk_offsets[chunk]; j < chunk_offsets[chunk + 1]; j++) {
                 const float *centers_dim_vec = tables_tr + (256 * j);
@@ -187,7 +180,7 @@ namespace tann {
         }
     }
 
-    void FixedChunkQuantizeTable::populate_chunk_inner_products(const float *query_vec, float *dist_vec) {
+    void FixedChunkPQTable::populate_chunk_inner_products(const float *query_vec, float *dist_vec) {
         memset(dist_vec, 0, 256 * n_chunks * sizeof(float));
         // chunk wise distance computation
         for (size_t chunk = 0; chunk < n_chunks; chunk++) {
@@ -207,18 +200,43 @@ namespace tann {
         }
     }
 
-
-    // Need to replace calls to these functions with calls to vector& based
-    // functions above
     void
-    Quantize::aggregate_coords(const uint32_t *ids, const size_t n_ids, const uint8_t *all_coords, const size_t ndims,
-                               uint8_t *out) {
+    aggregate_coords(const std::vector<uint32_t> &ids, const uint8_t *all_coords, const size_t ndims, uint8_t *out) {
+        for (size_t i = 0; i < ids.size(); i++) {
+            memcpy(out + i * ndims, all_coords + ids[i] * ndims, ndims * sizeof(uint8_t));
+        }
+    }
+
+    void pq_dist_lookup(const uint8_t *pq_ids, const size_t n_pts, const size_t pq_nchunks, const float *pq_dists,
+                        std::vector<float> &dists_out) {
+        //_mm_prefetch((char*) dists_out, _MM_HINT_T0);
+        _mm_prefetch((char *) pq_ids, _MM_HINT_T0);
+        _mm_prefetch((char *) (pq_ids + 64), _MM_HINT_T0);
+        _mm_prefetch((char *) (pq_ids + 128), _MM_HINT_T0);
+        dists_out.clear();
+        dists_out.resize(n_pts, 0);
+        for (size_t chunk = 0; chunk < pq_nchunks; chunk++) {
+            const float *chunk_dists = pq_dists + 256 * chunk;
+            if (chunk < pq_nchunks - 1) {
+                _mm_prefetch((char *) (chunk_dists + 256), _MM_HINT_T0);
+            }
+            for (size_t idx = 0; idx < n_pts; idx++) {
+                uint8_t pq_centerid = pq_ids[pq_nchunks * idx + chunk];
+                dists_out[idx] += chunk_dists[pq_centerid];
+            }
+        }
+    }
+
+// Need to replace calls to these functions with calls to vector& based
+// functions above
+    void aggregate_coords(const uint32_t *ids, const size_t n_ids, const uint8_t *all_coords, const size_t ndims,
+                          uint8_t *out) {
         for (size_t i = 0; i < n_ids; i++) {
             memcpy(out + i * ndims, all_coords + ids[i] * ndims, ndims * sizeof(uint8_t));
         }
     }
 
-    void Quantize::pq_dist_lookup(const uint8_t *pq_ids, const size_t n_pts, const size_t pq_nchunks, const float *pq_dists,
+    void pq_dist_lookup(const uint8_t *pq_ids, const size_t n_pts, const size_t pq_nchunks, const float *pq_dists,
                         float *dists_out) {
         _mm_prefetch((char *) dists_out, _MM_HINT_T0);
         _mm_prefetch((char *) pq_ids, _MM_HINT_T0);
@@ -237,12 +255,12 @@ namespace tann {
         }
     }
 
-    // given training data in train_data of dimensions num_train * dim, generate
-    // PQ pivots using k-means algorithm to partition the co-ordinates into
-    // num_pq_chunks (if it divides dimension, else rounded) chunks, and runs
-    // k-means in each chunk to compute the PQ pivots and stores in bin format in
-    // file pq_pivots_path as a s num_centers*dim floating point binary file
-    int Quantize::generate_pq_pivots(const float *const passed_train_data, size_t num_train, uint32_t dim, uint32_t num_centers,
+// given training data in train_data of dimensions num_train * dim, generate
+// PQ pivots using k-means algorithm to partition the co-ordinates into
+// num_pq_chunks (if it divides dimension, else rounded) chunks, and runs
+// k-means in each chunk to compute the PQ pivots and stores in bin format in
+// file pq_pivots_path as a s num_centers*dim floating point binary file
+    int generate_pq_pivots(const float *const passed_train_data, size_t num_train, uint32_t dim, uint32_t num_centers,
                            uint32_t num_pq_chunks, uint32_t max_k_means_reps, std::string pq_pivots_path,
                            bool make_zero_mean) {
         if (num_pq_chunks > dim) {
@@ -378,7 +396,7 @@ namespace tann {
         return 0;
     }
 
-    int Quantize::generate_opq_pivots(const float *passed_train_data, size_t num_train, uint32_t dim, uint32_t num_centers,
+    int generate_opq_pivots(const float *passed_train_data, size_t num_train, uint32_t dim, uint32_t num_centers,
                             uint32_t num_pq_chunks, std::string opq_pivots_path, bool make_zero_mean) {
         if (num_pq_chunks > dim) {
             tann::cout << " Error: number of chunks more than dimension" << std::endl;
@@ -473,7 +491,7 @@ namespace tann {
         for (uint32_t d1 = 0; d1 < dim; d1++)
             *(rotmat_tr.get() + d1 * dim + d1) = 1;
 
-        for (uint32_t rnd = 0; rnd < constants::kMaxOpqItems; rnd++) {
+        for (uint32_t rnd = 0; rnd < MAX_OPQ_ITERS; rnd++) {
             // rotate the training data using the current rotation matrix
             cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, (MKL_INT) num_train, (MKL_INT) dim, (MKL_INT) dim,
                         1.0f,
@@ -571,13 +589,13 @@ namespace tann {
         return 0;
     }
 
-    // streams the base file (data_file), and computes the closest centers in each
-    // chunk to generate the compressed data_file and stores it in
-    // pq_compressed_vectors_path.
-    // If the numbber of centers is < 256, it stores as byte vector, else as
-    // 4-byte vector in binary format.
+// streams the base file (data_file), and computes the closest centers in each
+// chunk to generate the compressed data_file and stores it in
+// pq_compressed_vectors_path.
+// If the numbber of centers is < 256, it stores as byte vector, else as
+// 4-byte vector in binary format.
     template<typename T>
-    int Quantize::generate_pq_data_from_pivots(const std::string &data_file, uint32_t num_centers, uint32_t num_pq_chunks,
+    int generate_pq_data_from_pivots(const std::string &data_file, uint32_t num_centers, uint32_t num_pq_chunks,
                                      const std::string &pq_pivots_path, const std::string &pq_compressed_vectors_path,
                                      bool use_opq) {
         size_t read_blk_size = 64 * 1024 * 1024;
@@ -659,15 +677,15 @@ namespace tann {
         compressed_file_writer.write((char *) &num_points, sizeof(uint32_t));
         compressed_file_writer.write((char *) &num_pq_chunks_u32, sizeof(uint32_t));
 
-        size_t block_size = num_points <= constants::kQuantizeBlockSize ? num_points : constants::kQuantizeBlockSize;
+        size_t block_size = num_points <= BLOCK_SIZE ? num_points : BLOCK_SIZE;
 
 #ifdef SAVE_INFLATED_PQ
         std::ofstream inflated_file_writer(inflated_pq_file, std::ios::binary);
-            inflated_file_writer.write((char *)&num_points, sizeof(uint32_t));
-            inflated_file_writer.write((char *)&basedim32, sizeof(uint32_t));
+        inflated_file_writer.write((char *)&num_points, sizeof(uint32_t));
+        inflated_file_writer.write((char *)&basedim32, sizeof(uint32_t));
 
-            std::unique_ptr<float[]> block_inflated_base = std::make_unique<float[]>(block_size * dim);
-            std::memset(block_inflated_base.get(), 0, block_size * dim * sizeof(float));
+        std::unique_ptr<float[]> block_inflated_base = std::make_unique<float[]>(block_size * dim);
+        std::memset(block_inflated_base.get(), 0, block_size * dim * sizeof(float));
 #endif
 
         std::unique_ptr<uint32_t[]> block_compressed_base =
@@ -741,8 +759,8 @@ namespace tann {
                     block_compressed_base[j * num_pq_chunks + i] = closest_center[j];
 #ifdef SAVE_INFLATED_PQ
                     for (size_t k = 0; k < cur_chunk_size; k++)
-                            block_inflated_base[j * dim + chunk_offsets[i] + k] =
-                                cur_pivot_data[closest_center[j] * cur_chunk_size + k] + centroid[chunk_offsets[i] + k];
+                        block_inflated_base[j * dim + chunk_offsets[i] + k] =
+                            cur_pivot_data[closest_center[j] * cur_chunk_size + k] + centroid[chunk_offsets[i] + k];
 #endif
                 }
             }
@@ -774,14 +792,14 @@ namespace tann {
     }
 
     template<typename T>
-    void Quantize::generate_disk_quantized_data(const std::string &data_file_to_use, const std::string &disk_pq_pivots_path,
-                                      const std::string &disk_pq_compressed_vectors_path, tann::MetricType compareMetric,
+    void generate_disk_quantized_data(const std::string &data_file_to_use, const std::string &disk_pq_pivots_path,
+                                      const std::string &disk_pq_compressed_vectors_path, tann::Metric compareMetric,
                                       const double p_val, size_t &disk_pq_dims) {
         size_t train_size, train_dim;
         float *train_data;
 
         // instantiates train_data with random sample updates train_size
-        Partition::gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size, train_dim);
+        gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size, train_dim);
         tann::cout << "Training data with " << train_size << " samples loaded." << std::endl;
 
         if (disk_pq_dims > train_dim)
@@ -789,9 +807,9 @@ namespace tann {
 
         std::cout << "Compressing base for disk-PQ into " << disk_pq_dims << " chunks " << std::endl;
         generate_pq_pivots(train_data, train_size, (uint32_t) train_dim, 256, (uint32_t) disk_pq_dims,
-                           constants::kNumKmeansRepsQuantize,
+                           NUM_KMEANS_REPS_PQ,
                            disk_pq_pivots_path, false);
-        if (compareMetric == tann::MetricType::METRIC_IP)
+        if (compareMetric == tann::Metric::INNER_PRODUCT)
             generate_pq_data_from_pivots<float>(data_file_to_use, 256, (uint32_t) disk_pq_dims, disk_pq_pivots_path,
                                                 disk_pq_compressed_vectors_path);
         else
@@ -802,29 +820,29 @@ namespace tann {
     }
 
     template<typename T>
-    void Quantize::generate_quantized_data(const std::string &data_file_to_use, const std::string &pq_pivots_path,
-                                 const std::string &pq_compressed_vectors_path, tann::MetricType compareMetric,
+    void generate_quantized_data(const std::string &data_file_to_use, const std::string &pq_pivots_path,
+                                 const std::string &pq_compressed_vectors_path, tann::Metric compareMetric,
                                  const double p_val, const size_t num_pq_chunks, const bool use_opq,
                                  const std::string &codebook_prefix) {
         size_t train_size, train_dim;
         float *train_data;
         if (!turbo::filesystem::exists(codebook_prefix)) {
             // instantiates train_data with random sample updates train_size
-            Partition::gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size, train_dim);
+            gen_random_slice<T>(data_file_to_use.c_str(), p_val, train_data, train_size, train_dim);
             tann::cout << "Training data with " << train_size << " samples loaded." << std::endl;
 
             bool make_zero_mean = true;
-            if (compareMetric == tann::MetricType::METRIC_IP)
+            if (compareMetric == tann::Metric::INNER_PRODUCT)
                 make_zero_mean = false;
             if (use_opq) // we also do not center the data for OPQ
                 make_zero_mean = false;
 
             if (!use_opq) {
-                generate_pq_pivots(train_data, train_size, (uint32_t) train_dim, constants::kNumQuantizeCentroids,
+                generate_pq_pivots(train_data, train_size, (uint32_t) train_dim, NUM_PQ_CENTROIDS,
                                    (uint32_t) num_pq_chunks,
-                                   constants::kNumQuantizeBits, pq_pivots_path, make_zero_mean);
+                                   NUM_KMEANS_REPS_PQ, pq_pivots_path, make_zero_mean);
             } else {
-                generate_opq_pivots(train_data, train_size, (uint32_t) train_dim, constants::kNumQuantizeCentroids,
+                generate_opq_pivots(train_data, train_size, (uint32_t) train_dim, NUM_PQ_CENTROIDS,
                                     (uint32_t) num_pq_chunks,
                                     pq_pivots_path, make_zero_mean);
             }
@@ -832,65 +850,65 @@ namespace tann {
         } else {
             tann::cout << "Skip Training with predefined pivots in: " << pq_pivots_path << std::endl;
         }
-        generate_pq_data_from_pivots<T>(data_file_to_use, constants::kNumQuantizeCentroids, (uint32_t) num_pq_chunks, pq_pivots_path,
+        generate_pq_data_from_pivots<T>(data_file_to_use, NUM_PQ_CENTROIDS, (uint32_t) num_pq_chunks, pq_pivots_path,
                                         pq_compressed_vectors_path, use_opq);
     }
 
 // Instantations of supported templates
 
-    template TURBO_DLL int Quantize::generate_pq_data_from_pivots<int8_t>(const std::string &data_file, uint32_t num_centers,
+    template TURBO_DLL int generate_pq_data_from_pivots<int8_t>(const std::string &data_file, uint32_t num_centers,
                                                                 uint32_t num_pq_chunks,
                                                                 const std::string &pq_pivots_path,
                                                                 const std::string &pq_compressed_vectors_path,
                                                                 bool use_opq);
 
-    template TURBO_DLL int Quantize::generate_pq_data_from_pivots<uint8_t>(const std::string &data_file, uint32_t num_centers,
+    template TURBO_DLL int generate_pq_data_from_pivots<uint8_t>(const std::string &data_file, uint32_t num_centers,
                                                                  uint32_t num_pq_chunks,
                                                                  const std::string &pq_pivots_path,
                                                                  const std::string &pq_compressed_vectors_path,
                                                                  bool use_opq);
 
-    template TURBO_DLL int Quantize::generate_pq_data_from_pivots<float>(const std::string &data_file, uint32_t num_centers,
+    template TURBO_DLL int generate_pq_data_from_pivots<float>(const std::string &data_file, uint32_t num_centers,
                                                                uint32_t num_pq_chunks,
                                                                const std::string &pq_pivots_path,
                                                                const std::string &pq_compressed_vectors_path,
                                                                bool use_opq);
 
-    template TURBO_DLL void Quantize::generate_disk_quantized_data<int8_t>(const std::string &data_file_to_use,
+    template TURBO_DLL void generate_disk_quantized_data<int8_t>(const std::string &data_file_to_use,
                                                                  const std::string &disk_pq_pivots_path,
                                                                  const std::string &disk_pq_compressed_vectors_path,
-                                                                 tann::MetricType compareMetric, const double p_val,
+                                                                 tann::Metric compareMetric, const double p_val,
                                                                  size_t &disk_pq_dims);
 
-    template TURBO_DLL void Quantize::generate_disk_quantized_data<uint8_t>(
+    template TURBO_DLL void generate_disk_quantized_data<uint8_t>(
             const std::string &data_file_to_use, const std::string &disk_pq_pivots_path,
-            const std::string &disk_pq_compressed_vectors_path, tann::MetricType compareMetric, const double p_val,
+            const std::string &disk_pq_compressed_vectors_path, tann::Metric compareMetric, const double p_val,
             size_t &disk_pq_dims);
 
-    template TURBO_DLL void Quantize::generate_disk_quantized_data<float>(const std::string &data_file_to_use,
+    template TURBO_DLL void generate_disk_quantized_data<float>(const std::string &data_file_to_use,
                                                                 const std::string &disk_pq_pivots_path,
                                                                 const std::string &disk_pq_compressed_vectors_path,
-                                                                tann::MetricType compareMetric, const double p_val,
+                                                                tann::Metric compareMetric, const double p_val,
                                                                 size_t &disk_pq_dims);
 
-    template TURBO_DLL void Quantize::generate_quantized_data<int8_t>(const std::string &data_file_to_use,
+    template TURBO_DLL void generate_quantized_data<int8_t>(const std::string &data_file_to_use,
                                                             const std::string &pq_pivots_path,
                                                             const std::string &pq_compressed_vectors_path,
-                                                            tann::MetricType compareMetric, const double p_val,
+                                                            tann::Metric compareMetric, const double p_val,
                                                             const size_t num_pq_chunks, const bool use_opq,
                                                             const std::string &codebook_prefix);
 
-    template TURBO_DLL void Quantize::generate_quantized_data<uint8_t>(const std::string &data_file_to_use,
+    template TURBO_DLL void generate_quantized_data<uint8_t>(const std::string &data_file_to_use,
                                                              const std::string &pq_pivots_path,
                                                              const std::string &pq_compressed_vectors_path,
-                                                             tann::MetricType compareMetric, const double p_val,
+                                                             tann::Metric compareMetric, const double p_val,
                                                              const size_t num_pq_chunks, const bool use_opq,
                                                              const std::string &codebook_prefix);
 
-    template TURBO_DLL void Quantize::generate_quantized_data<float>(const std::string &data_file_to_use,
+    template TURBO_DLL void generate_quantized_data<float>(const std::string &data_file_to_use,
                                                            const std::string &pq_pivots_path,
                                                            const std::string &pq_compressed_vectors_path,
-                                                           tann::MetricType compareMetric, const double p_val,
+                                                           tann::Metric compareMetric, const double p_val,
                                                            const size_t num_pq_chunks, const bool use_opq,
                                                            const std::string &codebook_prefix);
-}  // namespace tann
+} // namespace tann

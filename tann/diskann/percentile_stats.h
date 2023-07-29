@@ -14,7 +14,7 @@
 
 #include <string>
 #include <vector>
-#include "tann/vamana/parameters.h"
+#include "tann/diskann/parameters.h"
 
 namespace tann {
     struct QueryStats {

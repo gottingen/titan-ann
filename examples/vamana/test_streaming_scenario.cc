@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-#include "tann/vamana/index.h"
+#include "tann/diskann/index.h"
 #include <numeric>
 #include <omp.h>
 #include <string.h>
 #include <time.h>
-#include "tann/vamana/timer.h"
+#include "tann/diskann/timer.h"
 #include <future>
 
 #include "tann/common/utils.h"

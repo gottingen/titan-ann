@@ -14,7 +14,7 @@
 //
 #include "turbo/flags/flags.h"
 #include "turbo/format/print.h"
-#include "tann/vamana/filter_utils.h"
+#include "tann/diskann/filter_utils.h"
 #include "tann/common/utils.h"
 #include "tann/distance/distance.h"
 

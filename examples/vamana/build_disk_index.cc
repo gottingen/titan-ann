@@ -4,10 +4,10 @@
 #include <omp.h>
 
 #include "tann/common/utils.h"
-#include "tann/vamana/disk_utils.h"
+#include "tann/diskann/disk_utils.h"
 #include "tann/common/math_utils.h"
-#include "tann/vamana/index.h"
-#include "tann/vamana/partition.h"
+#include "tann/diskann/index.h"
+#include "tann/diskann/partition.h"
 #include "turbo/flags/flags.h"
 
 

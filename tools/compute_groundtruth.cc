@@ -29,7 +29,7 @@
 
 #endif
 
-#include "tann/vamana/filter_utils.h"
+#include "tann/diskann/filter_utils.h"
 #include "tann/common/utils.h"
 
 // WORKS FOR UPTO 2 BILLION POINTS (as we use INT INSTEAD OF UNSIGNED)

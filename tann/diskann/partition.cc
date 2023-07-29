@@ -17,8 +17,10 @@
 
 #include "tann/common/utils.h"
 #include "tann/common/math_utils.h"
+#include "tann/diskann/index.h"
+#include "tann/diskann/parameters.h"
 #include "tann/io/memory_mapper.h"
-#include "tann/vamana/partition.h"
+#include "tann/diskann/partition.h"
 
 #ifdef _WINDOWS
 #include <xmmintrin.h>
@@ -31,7 +33,7 @@
 
 namespace tann {
     template<typename T>
-    void Partition::gen_random_slice(const std::string base_file, const std::string output_prefix, double sampling_rate) {
+    void gen_random_slice(const std::string base_file, const std::string output_prefix, double sampling_rate) {
         size_t read_blk_size = 64 * 1024 * 1024;
         cached_ifstream base_reader(base_file.c_str(), read_blk_size);
         std::ofstream sample_writer(std::string(output_prefix + "_data.bin").c_str(), std::ios::binary);
@@ -89,7 +91,7 @@ namespace tann {
      ************************************/
 
     template<typename T>
-    void Partition::gen_random_slice(const std::string data_file, double p_val, float *&sampled_data, size_t &slice_size,
+    void gen_random_slice(const std::string data_file, double p_val, float *&sampled_data, size_t &slice_size,
                           size_t &ndims) {
         size_t npts;
         uint32_t npts32, ndims32;
@@ -136,7 +138,7 @@ namespace tann {
 // same as above, but samples from the matrix inputdata instead of a file of
 // npts*ndims to return sampled_data of size slice_size*ndims.
     template<typename T>
-    void Partition::gen_random_slice(const T *inputdata, size_t npts, size_t ndims, double p_val, float *&sampled_data,
+    void gen_random_slice(const T *inputdata, size_t npts, size_t ndims, double p_val, float *&sampled_data,
                           size_t &slice_size) {
         std::vector<std::vector<float>> sampled_vectors;
         const T *cur_vector_T;
@@ -167,7 +169,7 @@ namespace tann {
         }
     }
 
-    int Partition::estimate_cluster_sizes(float *test_data_float, size_t num_test, float *pivots, const size_t num_centers,
+    int estimate_cluster_sizes(float *test_data_float, size_t num_test, float *pivots, const size_t num_centers,
                                const size_t test_dim, const size_t k_base, std::vector<size_t> &cluster_sizes) {
         cluster_sizes.clear();
 
@@ -214,7 +216,7 @@ namespace tann {
     }
 
     template<typename T>
-    int Partition::shard_data_into_clusters(const std::string data_file, float *pivots, const size_t num_centers, const size_t dim,
+    int shard_data_into_clusters(const std::string data_file, float *pivots, const size_t num_centers, const size_t dim,
                                  const size_t k_base, std::string prefix_path) {
         size_t read_blk_size = 64 * 1024 * 1024;
         //  uint64_t write_blk_size = 64 * 1024 * 1024;
@@ -299,7 +301,7 @@ namespace tann {
 // useful for partitioning large dataset. we first generate only the IDS for
 // each shard, and retrieve the actual vectors on demand.
     template<typename T>
-    int Partition::shard_data_into_clusters_only_ids(const std::string data_file, float *pivots, const size_t num_centers,
+    int shard_data_into_clusters_only_ids(const std::string data_file, float *pivots, const size_t num_centers,
                                           const size_t dim, const size_t k_base, std::string prefix_path) {
         size_t read_blk_size = 64 * 1024 * 1024;
         //  uint64_t write_blk_size = 64 * 1024 * 1024;
@@ -375,7 +377,7 @@ namespace tann {
 
     template<typename T>
     int
-    Partition::retrieve_shard_data_from_ids(const std::string data_file, std::string idmap_filename, std::string data_filename) {
+    retrieve_shard_data_from_ids(const std::string data_file, std::string idmap_filename, std::string data_filename) {
         size_t read_blk_size = 64 * 1024 * 1024;
         //  uint64_t write_blk_size = 64 * 1024 * 1024;
         // create cached reader + writer
@@ -443,7 +445,7 @@ namespace tann {
     // The total number of points across all shards will be k_base * num_points.
 
     template<typename T>
-    int Partition::partition(const std::string data_file, const float sampling_rate, size_t num_parts, size_t max_k_means_reps,
+    int partition(const std::string data_file, const float sampling_rate, size_t num_parts, size_t max_k_means_reps,
                   const std::string prefix_path, size_t k_base) {
         size_t train_dim;
         size_t num_train;
@@ -482,9 +484,8 @@ namespace tann {
         return 0;
     }
 
-    /*
     template<typename T>
-    int Partition::partition_with_ram_budget(const std::string data_file, const double sampling_rate, double ram_budget,
+    int partition_with_ram_budget(const std::string data_file, const double sampling_rate, double ram_budget,
                                   size_t graph_degree, const std::string prefix_path, size_t k_base) {
         size_t train_dim;
         size_t num_train;
@@ -561,71 +562,71 @@ namespace tann {
         delete[] test_data_float;
         return num_parts;
     }
-*/
+
 // Instantations of supported templates
 
-    template void TURBO_DLL Partition::gen_random_slice<int8_t>(const std::string base_file, const std::string output_prefix,
+    template void TURBO_DLL gen_random_slice<int8_t>(const std::string base_file, const std::string output_prefix,
                                                      double sampling_rate);
 
-    template void TURBO_DLL Partition::gen_random_slice<uint8_t>(const std::string base_file, const std::string output_prefix,
+    template void TURBO_DLL gen_random_slice<uint8_t>(const std::string base_file, const std::string output_prefix,
                                                       double sampling_rate);
 
-    template void TURBO_DLL Partition::gen_random_slice<float>(const std::string base_file, const std::string output_prefix,
+    template void TURBO_DLL gen_random_slice<float>(const std::string base_file, const std::string output_prefix,
                                                     double sampling_rate);
 
-    template void TURBO_DLL Partition::gen_random_slice<float>(const float *inputdata, size_t npts, size_t ndims, double p_val,
+    template void TURBO_DLL gen_random_slice<float>(const float *inputdata, size_t npts, size_t ndims, double p_val,
                                                     float *&sampled_data, size_t &slice_size);
 
-    template void TURBO_DLL Partition::gen_random_slice<uint8_t>(const uint8_t *inputdata, size_t npts, size_t ndims,
+    template void TURBO_DLL gen_random_slice<uint8_t>(const uint8_t *inputdata, size_t npts, size_t ndims,
                                                       double p_val, float *&sampled_data, size_t &slice_size);
 
-    template void TURBO_DLL Partition::gen_random_slice<int8_t>(const int8_t *inputdata, size_t npts, size_t ndims,
+    template void TURBO_DLL gen_random_slice<int8_t>(const int8_t *inputdata, size_t npts, size_t ndims,
                                                      double p_val, float *&sampled_data, size_t &slice_size);
 
-    template void TURBO_DLL Partition::gen_random_slice<float>(const std::string data_file, double p_val, float *&sampled_data,
+    template void TURBO_DLL gen_random_slice<float>(const std::string data_file, double p_val, float *&sampled_data,
                                                     size_t &slice_size, size_t &ndims);
 
-    template void TURBO_DLL Partition::gen_random_slice<uint8_t>(const std::string data_file, double p_val,
+    template void TURBO_DLL gen_random_slice<uint8_t>(const std::string data_file, double p_val,
                                                       float *&sampled_data, size_t &slice_size, size_t &ndims);
 
-    template void TURBO_DLL Partition::gen_random_slice<int8_t>(const std::string data_file, double p_val,
+    template void TURBO_DLL gen_random_slice<int8_t>(const std::string data_file, double p_val,
                                                      float *&sampled_data, size_t &slice_size, size_t &ndims);
 
-    template TURBO_DLL int Partition::partition<int8_t>(const std::string data_file, const float sampling_rate,
+    template TURBO_DLL int partition<int8_t>(const std::string data_file, const float sampling_rate,
                                              size_t num_centers, size_t max_k_means_reps,
                                              const std::string prefix_path, size_t k_base);
 
-    template TURBO_DLL int Partition::partition<uint8_t>(const std::string data_file, const float sampling_rate,
+    template TURBO_DLL int partition<uint8_t>(const std::string data_file, const float sampling_rate,
                                               size_t num_centers, size_t max_k_means_reps,
                                               const std::string prefix_path, size_t k_base);
 
-    template TURBO_DLL int Partition::partition<float>(const std::string data_file, const float sampling_rate,
+    template TURBO_DLL int partition<float>(const std::string data_file, const float sampling_rate,
                                             size_t num_centers, size_t max_k_means_reps,
                                             const std::string prefix_path, size_t k_base);
-    /*
-    template TURBO_DLL int Partition::partition_with_ram_budget<int8_t>(const std::string data_file,
+
+    template TURBO_DLL int partition_with_ram_budget<int8_t>(const std::string data_file,
                                                              const double sampling_rate, double ram_budget,
                                                              size_t graph_degree, const std::string prefix_path,
                                                              size_t k_base);
 
-    template TURBO_DLL int Partition::partition_with_ram_budget<uint8_t>(const std::string data_file,
+    template TURBO_DLL int partition_with_ram_budget<uint8_t>(const std::string data_file,
                                                               const double sampling_rate, double ram_budget,
                                                               size_t graph_degree, const std::string prefix_path,
                                                               size_t k_base);
 
-    template TURBO_DLL int Partition::partition_with_ram_budget<float>(const std::string data_file, const double sampling_rate,
+    template TURBO_DLL int partition_with_ram_budget<float>(const std::string data_file, const double sampling_rate,
                                                             double ram_budget, size_t graph_degree,
                                                             const std::string prefix_path, size_t k_base);
-    */
-    template TURBO_DLL int Partition::retrieve_shard_data_from_ids<float>(const std::string data_file,
+
+    template TURBO_DLL int retrieve_shard_data_from_ids<float>(const std::string data_file,
                                                                std::string idmap_filename,
                                                                std::string data_filename);
 
-    template TURBO_DLL int Partition::retrieve_shard_data_from_ids<uint8_t>(const std::string data_file,
+    template TURBO_DLL int retrieve_shard_data_from_ids<uint8_t>(const std::string data_file,
                                                                  std::string idmap_filename,
                                                                  std::string data_filename);
 
-    template TURBO_DLL int Partition::retrieve_shard_data_from_ids<int8_t>(const std::string data_file,
+    template TURBO_DLL int retrieve_shard_data_from_ids<int8_t>(const std::string data_file,
                                                                 std::string idmap_filename,
                                                                 std::string data_filename);
 }  // namespace tann

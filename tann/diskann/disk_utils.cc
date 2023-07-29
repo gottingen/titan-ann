@@ -8,15 +8,15 @@
 #endif
 
 #include "tann/common/logger.h"
-#include "tann/vamana/disk_utils.h"
+#include "tann/diskann/disk_utils.h"
 #include "tann/io/cached_io.h"
-#include "tann/vamana/index.h"
+#include "tann/diskann/index.h"
 #include "mkl/mkl.h"
 #include "omp.h"
-#include "tann/vamana/percentile_stats.h"
-#include "tann/vamana/partition.h"
-#include "tann/vamana/pq_flash_index.h"
-#include "tann/vamana/timer.h"
+#include "tann/diskann/percentile_stats.h"
+#include "tann/diskann/partition.h"
+#include "tann/diskann/pq_flash_index.h"
+#include "tann/diskann/timer.h"
 #include "turbo/container/flat_hash_set.h"
 
 namespace tann {

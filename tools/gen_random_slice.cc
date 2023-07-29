@@ -12,7 +12,7 @@
 #include <map>
 #include <sstream>
 #include <string>
-#include "tann/vamana/partition.h"
+#include "tann/diskann/partition.h"
 #include "tann/common/utils.h"
 #include "tann_cli.h"
 

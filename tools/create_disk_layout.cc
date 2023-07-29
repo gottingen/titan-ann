@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "tann/common/utils.h"
-#include "tann/vamana/disk_utils.h"
+#include "tann/diskann/disk_utils.h"
 #include "tann/io/cached_io.h"
 #include "tann_cli.h"
 

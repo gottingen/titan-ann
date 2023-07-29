@@ -17,7 +17,7 @@
 # below are examples, after initialization, modify it to your own.
 ###########################################################################
 ###carbin_example
-file(GLOB_RECURSE VAM_SRC vamana/*.cc)
+file(GLOB_RECURSE DISKANN_SRC diskann/*.cc)
 file(GLOB_RECURSE COMMON_SRC common/*.cc)
 file(GLOB_RECURSE CORE_SRC core/*.cc)
 file(GLOB_RECURSE STORE_SRC store/*.cc)
@@ -27,9 +27,10 @@ file(GLOB_RECURSE CORE_SRC core/*.cc)
 file(GLOB_RECURSE FLAT_SRC flat/*.cc)
 file(GLOB_RECURSE DS_SRC datasets/*.cc)
 file(GLOB_RECURSE HNSW_SRC hnsw/*.cc)
+file(GLOB_RECURSE VAMANA_SRC vamana/*.cc)
 set(TANN_LIB_SRC
         ${COMMON_SRC}
-        ${VAM_SRC}
+        ${DISKANN_SRC}
         ${STORE_SRC}
         ${IO_SRC}
         ${DISTANCE_SRC}
@@ -38,6 +39,7 @@ set(TANN_LIB_SRC
         ${DS_SRC}
         ${CORE_SRC}
         ${HNSW_SRC}
+        ${VAMANA_SRC}
         )
 add_definitions(
         -DUSE_AVX2

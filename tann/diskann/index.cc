@@ -8,7 +8,7 @@
 #include "turbo/container/dynamic_bitset.h"
 
 #include "tann/io/memory_mapper.h"
-#include "tann/vamana/timer.h"
+#include "tann/diskann/timer.h"
 #include "turbo/platform/port.h"
 
 #if defined(RELEASE_UNUSED_TCMALLOC_MEMORY_AT_CHECKPOINTS) && defined(TANN_BUILD)
@@ -19,7 +19,7 @@
 #include <xmmintrin.h>
 #endif
 
-#include "tann/vamana/index.h"
+#include "tann/diskann/index.h"
 
 #define MAX_POINTS_FOR_USING_BITSET 10000000
 

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #include <vector>
-#include "tann/vamana/scratch.h"
+#include "tann/diskann/scratch.h"
 
 namespace tann {
     //

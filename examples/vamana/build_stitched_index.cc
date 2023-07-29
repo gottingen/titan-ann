@@ -7,7 +7,7 @@
 #include <random>
 #include <string>
 #include <tuple>
-#include "tann/vamana/filter_utils.h"
+#include "tann/diskann/filter_utils.h"
 #include <omp.h>
 
 #ifndef _WINDOWS
@@ -17,9 +17,9 @@
 #endif
 
 #include "turbo/flags/flags.h"
-#include "tann/vamana/index.h"
+#include "tann/diskann/index.h"
 #include "tann/io/memory_mapper.h"
-#include "tann/vamana/parameters.h"
+#include "tann/diskann/parameters.h"
 #include "tann/common/utils.h"
 
 typedef std::tuple<std::vector<std::vector<uint32_t>>, uint64_t> stitch_indices_return_values;

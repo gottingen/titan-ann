@@ -9,9 +9,9 @@
 #include <tuple>
 
 #include <omp.h>
-#include "tann/vamana/filter_utils.h"
-#include "tann/vamana/index.h"
-#include "tann/vamana/parameters.h"
+#include "tann/diskann/filter_utils.h"
+#include "tann/diskann/index.h"
+#include "tann/diskann/parameters.h"
 #include "tann/common/utils.h"
 
 namespace tann {

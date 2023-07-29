@@ -3,8 +3,8 @@
 
 #include "tann/common/common_includes.h"
 
-#include "tann/vamana/timer.h"
-#include "tann/vamana/pq_flash_index.h"
+#include "tann/diskann/timer.h"
+#include "tann/diskann/pq_flash_index.h"
 #include "tann/distance/cosine_similarity.h"
 
 #ifdef _WINDOWS

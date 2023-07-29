@@ -9,11 +9,11 @@
 #include "tann/common/locking.h"
 #include "tann/common/natural_number_map.h"
 #include "tann/common/natural_number_set.h"
-#include "tann/vamana/neighbor.h"
-#include "tann/vamana/parameters.h"
+#include "tann/diskann/neighbor.h"
+#include "tann/diskann/parameters.h"
 #include "tann/common/utils.h"
 #include "turbo/platform/port.h"
-#include "tann/vamana/scratch.h"
+#include "tann/diskann/scratch.h"
 #include "tann/store/in_mem_data_store.h"
 
 #define OVERHEAD_FACTOR 1.1

@@ -17,7 +17,7 @@
 #include <time.h>
 #include <typeinfo>
 
-#include "tann/vamana/partition.h"
+#include "tann/diskann/partition.h"
 #include "tann/common/utils.h"
 #include "tann_cli.h"
 

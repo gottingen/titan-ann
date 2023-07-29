@@ -47,6 +47,7 @@ namespace tann {
         }
     public:
         std::size_t k{0};
+        std::size_t search_list{0};
         BaseFilterFunctor *is_allowed{nullptr};
         bool get_raw_vector{false};
         bool is_normalized{false};
